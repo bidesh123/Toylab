@@ -1,0 +1,53 @@
+<def tag="index-page" for="Card">
+  <page merge title="Cards">
+    <body: class="index-page card" param/>
+
+    <content: param>
+      <header param="content-header">
+        <h2 param="heading">Cards</h2>
+
+        <p param="count" if>There <count prefix="are"/></p>
+      </header>
+
+      <section param="content-body">
+
+        <span param="new-link"><a action="new" to="&model"/></span>  <!-- modified fg -->
+
+        <page-nav param="top-page-nav"/>
+
+        <collection param/>
+
+        <page-nav param="bottom-page-nav"/>
+
+
+      </section>
+    </content:>
+  </page>
+</def>
+
+
+<index-page>
+  <count:>You have <count prefix="are" label="card"/> on your Toy Office desk</count:>
+  <new-link:>
+    <form with="&Card.new">
+      <submit label="add a new card on your desk" />
+      <after-submit uri="/cards" />
+    </form>
+  </new-link:>
+</index-page>
+
+<def tag="card" for="Card">
+  <card class="card" param="default" merge>
+    <header: param>
+      <h4 param="heading">
+        <a>
+          <if test="&this.reference_name"><%=  this.reference_name %></if>
+          <else><%= image_tag "toy_magnifier.png" %></else>
+        </a>
+      </h4>
+    </header:>
+    <body: param >
+      <!-- <count:items if="&this.items.count>0" label="subitem" param/> -->
+    </body:>
+  </card>
+</def>

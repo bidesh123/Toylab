@@ -1,0 +1,285 @@
+/**** Generic Toy Office styling  ****/
+
+body, div, p, ol, ul, td, tr, input, textarea, .input {
+  font-family: serif;
+  font-size:   16px;
+  background: #eee; color: black;
+  line-height: 18px;
+}
+
+h, th, h input, th input {
+  font-family: verdana, arial, helvetica, sans-serif;
+  text-align: left;
+  padding: 0;
+  font-size: 10;
+}
+
+.page-header{
+  background: white;
+}
+
+h1, div {
+  margin-top: 12px;
+  padding-left: 12px;
+}
+
+.navigation, .search, .editor {
+  background: white;
+}
+
+submit {
+  font-size:large;
+}
+
+.numeric, .aspect-numeric-body-cell, .sort-of-numeric {
+  text-align: right;
+}
+
+.grey {
+  background-color: #f7f7f7;
+}
+
+.tiny-gray {
+  font-size: x-small;
+  color: #999;
+}/**** Styling for navigation ****/
+
+.navigation .nav-item {
+                       color: black ;
+    }
+
+.navigation .nav-item {
+  background-color: #9cf;
+                       color: blue ;
+}
+
+a {
+                       color: #000;
+  text-decoration: none;
+}
+a:link    {            color: #730; }
+a:visited {            color: #370; }
+a:hover   {            color: #96c; }
+a:active  {            color: #666; }
+
+span.navLink {
+                       color: #ddd;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 8pt;
+}
+
+span.navLink a {
+                        color: #f00;
+}
+
+span.navLink a:link    { color: #11f; }
+span.navLink a:visited { color: #11f; }
+span.navLink a:hover   { color: #0f0; }
+span.navLink a:active  { color: #f0f; }
+
+/**** Styling for inline elements ****/
+
+h {
+  background-color: #bbb; color:#11f;
+}
+
+h1 {
+  padding: 0px;
+}
+
+img { border : 0px; }
+
+/**** Styling for block elements  ****/
+
+div {
+  /*background-color: #1ff;*/
+}
+
+div.card_body {
+  font-size: 12px;
+}
+
+p {
+  background-color: #fc9;
+}
+
+pre {
+  background-color: #11f;
+  padding: 10px;
+  font-size: 11px;
+}
+
+/**** Styling for table elements  ****/
+
+table {
+  background-color: white;
+}
+
+table.pair-head {
+  width:100%;
+}
+
+tr {
+
+}
+
+th {
+  background-color: #fc9; color:#036;
+}
+
+th.header-pair-name {
+  width:62%;
+  color:#333;
+}
+
+td {
+  background-color: white;
+}
+
+td.spacer {
+  background-color: #eee;
+}
+
+td.header-pair-body {
+  text-align: right;
+  color:#999;
+}
+
+/**** Styling for input elements  ****/
+
+input, textarea, .input {
+  width: 100%;
+}
+
+input {
+  background-color: #bbb; color:#fdf;
+}
+
+textarea {
+  background-color: #dfd; color:#222;
+}
+
+.input {
+  background-color: #0f7; color:#11f;
+}
+
+h input, th input {
+  background-color: #dfd;; color:#333;
+}
+
+th .editor {
+  background-color: #fc9; color:#036;
+}
+
+th.empty-title-cell {
+  background-color: #fc9; color:#036; padding-bottom : 1px;
+}
+
+/**** Styling for validation  ****/
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+/**** Styling for Toy Office Logo ****/
+
+.logo {
+  background-color: white;
+  font-family: "Arial Black";
+  font-size: 24pt;
+  font-weight: 100;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.logo .toy {
+  background-color: #eee; color: #999  ;
+}
+
+.logo .office {
+  background-color: #999; color: #fcc ;
+  }
+
+div.logo {
+  margin-top: 0px;
+  padding-left: 0px;
+}
+
+/**** Styling for UI  ****/
+
+div.uploadStatus {
+  margin: 5px;
+}
+
+div.progressBar {
+  margin: 5px;
+}
+
+div.progressBar div.border {
+  background-color: #fff;
+  border: 1px solid gray;
+  width: 100%;
+}
+
+div.progressBar div.background {
+  background-color: #333;
+  height: 18px;
+  width: 0%;
+}
+
+/**** Styling for toy content  ****/
+
+.cell, .aspect-name-cell, .aspect-body-cell {
+  padding-right: 12px;
+}
+
+.aspect-kind-cell {
+  text-align: left;
+}
+
+.aspect-name-cell {
+  text-align: left; background: white;
+}
+
+.aspect-body-cell {
+  text-align: left; background: white;
+}
+
+/**** Other styling ****/
+
+td.debug {
+  padding      : 4px;
+  padding-right: 8px;
+}
+
