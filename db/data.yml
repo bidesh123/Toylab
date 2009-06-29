@@ -45,13 +45,11 @@ cards:
     - Invoice
     - B101
     - 2009-04-20 02:10:14
-    - 2009-06-08 23:35:05
+    - 2009-06-23 03:12:27
     - 
-    - |-
-      Money Back Guarantee: we have the best warranty in the business. Check out our reviews at www.invoicereviews.com/frankenstef
-      This text does not mean anything but is an example of what you could use Toy Office for.
+    - This invoice is just one example of what you can do with Toy Office. For example, here you could have your warranty or any text you'd like to appear on your invoice.
     - 
-    - 
+    - "110"
   - - "47"
     - Date
     - 10 May 2009
@@ -83,7 +81,7 @@ cards:
     - City
     - Ville Mont-Royal
     - 2009-04-20 02:17:16
-    - 2009-05-09 18:05:44
+    - 2009-06-18 03:01:47
     - "49"
     - ""
     - 
@@ -106,24 +104,6 @@ cards:
     - 
     - "2"
     - "46"
-  - - "64"
-    - ""
-    - ""
-    - 2009-05-07 06:42:29
-    - 2009-05-07 06:42:29
-    - 
-    - ""
-    - "1"
-    - 
-  - - "65"
-    - ""
-    - asdgasdg
-    - 2009-05-07 06:42:51
-    - 2009-05-07 06:42:51
-    - 
-    - ""
-    - "2"
-    - 
   - - "66"
     - Shipping
     - FedEx
@@ -135,9 +115,9 @@ cards:
     - 
   - - "67"
     - Product
-    - Tennis Racket
+    - Flag
     - 2009-05-07 06:49:31
-    - 2009-06-13 03:20:42
+    - 2009-06-23 05:16:43
     - 
     - 
     - "3"
@@ -153,9 +133,9 @@ cards:
     - "46"
   - - "69"
     - Price
-    - "179.97"
+    - "19.95"
     - 2009-05-09 23:49:19
-    - 2009-06-13 03:22:20
+    - 2009-06-23 05:16:48
     - "67"
     - ""
     - "5"
@@ -187,15 +167,6 @@ cards:
     - 
     - "7"
     - 
-  - - "75"
-    - 
-    - "c'est le 5e item de la facture, devrait \xC3\xAAtre dans la premi\xC3\xA8re colonne parce qu'il n'a pas de kind et qu'il a un list id"
-    - 2009-05-10 20:08:38
-    - 2009-06-04 22:16:49
-    - 
-    - 
-    - "5"
-    - "46"
   - - "76"
     - Price
     - "299.95"
@@ -240,4 +211,519 @@ cards:
     - "70"
     - 
     - 
+    - 
+  - - "85"
+    - Recette
+    - Veau aux carottes
+    - 2009-06-15 05:17:02
+    - 2009-06-24 04:22:17
+    - ""
+    - ""
+    - "10"
+    - "100"
+  - - "87"
+    - Ingredient
+    - cubed veal
+    - 
+    - 2009-06-24 04:21:48
+    - 
+    - 
+    - 
+    - "85"
+  - - "88"
+    - Quantity
+    - "2"
+    - 
+    - 2009-06-24 04:22:04
+    - "87"
+    - 
+    - 
+    - 
+  - - "89"
+    - Units
+    - lbs
+    - 
+    - 
+    - "88"
+    - 
+    - 
+    - 
+  - - "95"
+    - 
+    - this is an example of a vague cell, without a column header
+    - 2009-06-19 21:22:44
+    - 2009-06-23 23:28:36
+    - 
+    - 
+    - "5"
+    - "46"
+  - - "96"
+    - Recette
+    - Poule au riz
+    - 2009-06-20 03:16:30
+    - 2009-06-24 04:41:24
+    - "63"
+    - "Cut the salt pork into 1/8 inch cubic lardoons.\n\n\
+      Let the lardoons melt over low heat, then remove them, leaving the fat.\n\n\
+      Sear the meat in the rendered fat at high heat, then remove.\n\n\
+      Cut the onions into thin slices and melt them slowly over very low heat. The longer the melt, the better the caramel taste.\n\n\
+      Add the meat , cover with chicken broth and simmer in the oven for a few hours at 325F\xC2\xB0.Cut the onions into thin slices and melt them slowly over  very low heat. The longer the melt, the better the caramel taste.\n\n\
+      Add the meat , cover with chicken broth and simmer in the oven for a few hours at 325F\xC2\xB0.\n\n\
+      Add a cup of rice and put it back in the oven for an hour."
+    - "1"
+    - "100"
+  - - "100"
+    - ""
+    - Recipes
+    - 
+    - 2009-06-26 02:11:39
+    - 
+    - 
+    - 
+    - 
+  - - "104"
+    - color
+    - red
+    - 2009-06-23 02:40:44
+    - 2009-06-23 02:40:58
+    - "74"
+    - 
+    - "11"
+    - 
+  - - "105"
+    - color
+    - blue
+    - 2009-06-23 02:41:03
+    - 2009-06-23 03:05:44
+    - "74"
+    - 
+    - "12"
+    - 
+  - - "106"
+    - 
+    - 
+    - 2009-06-23 06:05:13
+    - 2009-06-23 06:05:13
+    - "28606640"
+    - 
+    - "13"
+    - 
+  - - "107"
+    - 
+    - 
+    - 2009-06-23 06:05:36
+    - 2009-06-23 06:05:36
+    - "28606640"
+    - 
+    - "14"
+    - 
+  - - "110"
+    - ""
+    - Invoices
+    - 2009-06-23 22:15:37
+    - 2009-06-23 22:58:37
+    - 
+    - ""
+    - "15"
+    - 
+  - - "111"
+    - 
+    - vague cells are stacked in the first column
+    - 2009-06-23 23:24:56
+    - 2009-06-24 02:37:29
+    - 
+    - 
+    - "6"
+    - "46"
+  - - "112"
+    - 
+    - like this
+    - 2009-06-23 23:24:56
+    - 2009-06-24 02:37:43
+    - 
+    - 
+    - "6"
+    - "46"
+  - - "113"
+    - 
+    - professeurs de langue
+    - 2009-06-24 02:52:12
+    - 2009-06-24 18:31:15
+    - 
+    - 
+    - "16"
+    - 
+  - - "114"
+    - ""
+    - Camping List
+    - 2009-06-24 03:06:53
+    - 2009-06-24 04:04:34
+    - 
+    - |-
+      author's notes:
+      
+      This is just one example of what you can do with Toy Office. Why you can even make a Camping List. All the participants can enter items and change them because it's live of the web. So let's play along and enter data into our super easy Camping List.
+      
+      Jan and I put this list together to coordinate our efforts when we went canoe camping. Canoe camping is such that if you forget something, you have to make do, no 7-11. I hope you enjoy the list and that it helps you be the happy camper.
+    - "17"
+    - 
+  - - "115"
+    - 
+    - tent
+    - 2009-06-24 03:34:22
+    - 2009-06-24 03:34:41
+    - 
+    - 
+    - "1"
+    - "114"
+  - - "116"
+    - 
+    - sleeping bags
+    - 2009-06-24 03:34:43
+    - 2009-06-24 03:35:57
+    - 
+    - 
+    - "2"
+    - "114"
+  - - "117"
+    - 
+    - cooler
+    - 2009-06-24 03:36:01
+    - 2009-06-24 03:36:57
+    - 
+    - 
+    - "3"
+    - "114"
+  - - "118"
+    - Last Tested
+    - August 2007
+    - 2009-06-24 03:44:02
+    - 2009-06-24 03:44:35
+    - "114"
+    - 
+    - "18"
+    - 
+  - - "119"
+    - to do
+    - put together a fire-making kit
+    - 2009-06-24 03:47:48
+    - 2009-06-24 03:47:59
+    - "114"
+    - 
+    - "19"
+    - 
+  - - "120"
+    - to do
+    - repair the canoe
+    - 2009-06-24 03:47:59
+    - 2009-06-24 03:48:22
+    - "114"
+    - 
+    - "20"
+    - 
+  - - "121"
+    - 
+    - waterproof matches
+    - 2009-06-24 03:55:50
+    - 2009-06-24 03:56:23
+    - 
+    - 
+    - "1"
+    - "119"
+  - - "122"
+    - 
+    - lighter
+    - 2009-06-24 03:56:00
+    - 2009-06-24 03:56:35
+    - 
+    - 
+    - "2"
+    - "119"
+  - - "123"
+    - 
+    - firestarter
+    - 2009-06-24 03:56:35
+    - 2009-06-24 03:56:46
+    - 
+    - 
+    - "3"
+    - "119"
+  - - "124"
+    - quantity
+    - "2"
+    - 2009-06-24 04:16:48
+    - 2009-06-24 04:19:07
+    - "116"
+    - 
+    - "21"
+    - 
+  - - "132"
+    - 
+    - "journ\xC3\xA9e \xC3\xA0 Bowker"
+    - 2009-06-24 18:25:52
+    - 2009-06-24 18:26:31
+    - 
+    - 
+    - "22"
+    - 
+  - - "133"
+    - date
+    - 24 juin 2009
+    - 2009-06-24 18:26:31
+    - 2009-06-24 18:28:00
+    - "132"
+    - ""
+    - "23"
+    - 
+  - - "134"
+    - "heure de d\xC3\xA9part"
+    - 12h00
+    - 2009-06-24 18:28:23
+    - 2009-06-24 18:29:13
+    - "132"
+    - 
+    - "24"
+    - 
+  - - "135"
+    - 
+    - se baigner
+    - 2009-06-24 18:29:29
+    - 2009-06-24 18:29:40
+    - 
+    - 
+    - "1"
+    - "132"
+  - - "136"
+    - 
+    - montrer toy office
+    - 2009-06-24 18:29:43
+    - 2009-06-26 04:51:03
+    - 
+    - ""
+    - "2"
+    - "132"
+  - - "137"
+    - 
+    - "aller en cano\xC3\xAB"
+    - 2009-06-24 18:29:55
+    - 2009-06-24 18:30:13
+    - 
+    - 
+    - "3"
+    - "132"
+  - - "139"
+    - 
+    - Pierre
+    - 2009-06-24 18:31:38
+    - 2009-06-24 18:31:45
+    - 
+    - 
+    - "1"
+    - "113"
+  - - "140"
+    - 
+    - "Fran\xC3\xA7ois"
+    - 2009-06-24 18:31:47
+    - 2009-06-24 18:31:52
+    - 
+    - 
+    - "2"
+    - "113"
+  - - "141"
+    - langue
+    - "fran\xC3\xA7ais"
+    - 2009-06-24 18:32:01
+    - 2009-06-26 02:20:02
+    - "139"
+    - ""
+    - "25"
+    - 
+  - - "142"
+    - langue
+    - anglais
+    - 2009-06-24 18:32:20
+    - 2009-06-26 02:20:31
+    - "139"
+    - ""
+    - "26"
+    - 
+  - - "143"
+    - langue
+    - allemand
+    - 2009-06-24 18:32:37
+    - 2009-06-26 02:21:12
+    - "139"
+    - ""
+    - "27"
+    - 
+  - - "144"
+    - langue
+    - espagnol
+    - 2009-06-24 18:32:53
+    - 2009-06-26 02:22:16
+    - "139"
+    - ""
+    - "28"
+    - 
+  - - "145"
+    - 
+    - "choses \xC3\xA0 apporter \xC3\xA0 Sawin"
+    - 2009-06-26 02:11:53
+    - 2009-06-26 02:12:24
+    - 
+    - 
+    - "29"
+    - 
+  - - "146"
+    - 
+    - bobettes
+    - 2009-06-26 02:12:42
+    - 2009-06-26 02:12:56
+    - 
+    - 
+    - "1"
+    - "145"
+  - - "147"
+    - 
+    - maillot
+    - 2009-06-26 02:12:59
+    - 2009-06-26 02:16:02
+    - 
+    - 
+    - "2"
+    - "145"
+  - - "148"
+    - 
+    - cooler
+    - 2009-06-26 02:15:55
+    - 2009-06-26 02:16:36
+    - 
+    - 
+    - "3"
+    - "145"
+  - - "149"
+    - "quantit\xC3\xA9"
+    - "3"
+    - 2009-06-26 02:16:51
+    - 2009-06-26 02:17:48
+    - "146"
+    - 
+    - "30"
+    - 
+  - - "150"
+    - langage
+    - ruby
+    - 2009-06-26 02:22:48
+    - 2009-06-26 02:25:12
+    - "140"
+    - 
+    - "31"
+    - 
+  - - "151"
+    - langue
+    - "fran\xC3\xA7ais"
+    - 2009-06-26 02:23:09
+    - 2009-06-26 02:23:33
+    - "140"
+    - 
+    - "32"
+    - 
+  - - "152"
+    - langue
+    - anglais
+    - 2009-06-26 02:23:12
+    - 2009-06-26 02:23:37
+    - "140"
+    - 
+    - "33"
+    - 
+  - - "153"
+    - langue
+    - espagnol
+    - 2009-06-26 02:23:14
+    - 2009-06-26 02:23:42
+    - "140"
+    - 
+    - "34"
+    - 
+  - - "155"
+    - 
+    - 
+    - 2009-06-26 03:14:48
+    - 2009-06-26 03:14:48
+    - 
+    - 
+    - "1"
+    - "110"
+  - - "156"
+    - 
+    - "corriger le bug qui fait appara\xC3\xAEtre le mot langue 4 fois"
+    - 2009-06-26 03:31:32
+    - 2009-06-26 03:34:58
+    - 
+    - 
+    - "1"
+    - "136"
+  - - "157"
+    - 
+    - "pr\xC3\xA9sentation \xC3\xA0 Alice"
+    - 2009-06-26 03:32:21
+    - 2009-06-26 04:51:17
+    - 
+    - 
+    - "2"
+    - "136"
+  - - "158"
+    - 
+    - quatre fois c'est vraiment trop
+    - 2009-06-26 04:41:19
+    - 2009-06-26 04:41:51
+    - "156"
+    - 
+    - "35"
+    - 
+  - - "159"
+    - 
+    - trying to mix up items and aspects
+    - 2009-06-26 04:53:45
+    - 2009-06-26 06:16:46
+    - 
+    - 
+    - "36"
+    - 
+  - - "160"
+    - aspect number
+    - "1"
+    - 2009-06-26 04:54:13
+    - 2009-06-26 05:06:09
+    - "159"
+    - ""
+    - "37"
+    - 
+  - - "161"
+    - 
+    - "2"
+    - 2009-06-26 05:07:09
+    - 2009-06-26 05:38:11
+    - "159"
+    - trying to mix things up a bit
+    - "38"
+    - 
+  - - "162"
+    - 
+    - an item has no kind, just a name and a number
+    - 2009-06-26 05:08:46
+    - 2009-06-26 05:44:28
+    - 
+    - 
+    - "1"
+    - "159"
+  - - "163"
+    - but
+    - you may add aspects to the right of it
+    - 2009-06-26 05:11:07
+    - 2009-06-26 06:19:05
+    - "162"
+    - so you should see the number no???
+    - "39"
     - 
