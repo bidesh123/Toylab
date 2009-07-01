@@ -33,6 +33,10 @@ class Card < ActiveRecord::Base
     end
   end
 
+  def next_up
+    whole_id || list_id || id
+  end
+
   def numeric?
     true if Float(name) rescue false
   end

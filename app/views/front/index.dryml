@@ -4,12 +4,13 @@
 
   <content:>
     <header class="content-header">
-      <h1 style="color:#999">François' own little<br /><app-name/></h1>
       <section class="welcome-message">
-        <h3>Welcome to François' Toy Office</h3>
-
-        Feel free to browse, many items are open to the public.
-        Log in or Sign Up for more priviledges.
+      <h1 style="color:#999">François' own little Toy Office</h1>
+        <div><h3>Welcome to François' Toy Office</h3></div>
+        <div>
+          Feel free to browse, many items are open to the public.
+          Log in or Sign Up for more privileges.
+        </div>
       </section>
     </header>
 

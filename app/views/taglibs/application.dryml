@@ -22,10 +22,14 @@
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
-  <a><%= image_tag "toy_magnifier.png" %></a>
+  <a><%= image_tag "toy_magnifier.png", :class => "zoom" %></a>
 </def>
 
 <def tag="empty-cell">
-  <td class="grey-empty-cell">&nbsp;</td>
+  <td class="grey-empty-cell"><span param="default">&nbsp;</span></td>
+</def>
+
+<def tag="border-cell">
+  <td class="border-cell"><span param="default"></span></td>
 </def>
 

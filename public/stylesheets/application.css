@@ -14,6 +14,9 @@ h, th, h input, th input {
   font-size: 10;
 }
 
+th, td {
+}
+
 .page-header{
   background: white;
 }
@@ -23,10 +26,7 @@ h1, div {
   padding-left: 12px;
 }
 
-.navigation, .search, .editor {
-  background: white;
-}
-
+form.button_to
 submit {
   font-size:large;
 }
@@ -41,42 +41,60 @@ submit {
 
 .tiny-gray {
   font-size: x-small;
-  color: #999;
+                         color: #999;
 }/**** Styling for navigation ****/
 
+.navigation, .search, .editor {
+  background: white;
+}
+
 .navigation .nav-item {
-                       color: black ;
+                         color: black ;
     }
 
 .navigation .nav-item {
   background-color: #9cf;
-                       color: blue ;
+                         color: blue ;
 }
 
 a {
-                       color: #000;
+                         color: #000;
   text-decoration: none;
 }
-a:link    {            color: #730; }
-a:visited {            color: #370; }
-a:hover   {            color: #96c; }
-a:active  {            color: #666; }
+a:link    {              color: #730; }
+a:visited {              color: #370; }
+a:hover   {              color: #96c; }
+a:active  {              color: #666; }
 
 span.navLink {
-                       color: #ddd;
+                         color: #ddd;
   font-family: Arial, sans-serif;
   font-weight: bold;
   font-size: 8pt;
 }
 
 span.navLink a {
-                        color: #f00;
+                         color: #f00;
 }
 
 span.navLink a:link    { color: #11f; }
 span.navLink a:visited { color: #11f; }
 span.navLink a:hover   { color: #0f0; }
 span.navLink a:active  { color: #f0f; }
+
+.toy-nav {
+  font-family: Arial, sans-serif;
+  font-size: 16pt;
+}
+
+.add-dependent:hover {
+  background: #8bf;
+}
+
+.add-aspect {
+  font-size: 20pt;
+
+}
 
 /**** Styling for inline elements ****/
 
@@ -108,6 +126,10 @@ pre {
   background-color: #11f;
   padding: 10px;
   font-size: 11px;
+}
+
+td.transparent {
+  background-color: #eee;
 }
 
 /**** Styling for table elements  ****/
@@ -145,6 +167,11 @@ td.header-pair-body {
   text-align: right;
   color:#999;
 }
+
+td.border-cell {
+  border-right: 1px solid #eee;
+}
+
 
 /**** Styling for input elements  ****/
 

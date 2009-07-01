@@ -530,7 +530,7 @@ module Hobo
 
 
     def create_response(new_action, options={}, &b)
-      flash[:notice] = "The #{@this.class.name.titleize.downcase} was created successfully" if !request.xhr? && valid?
+      #flash[:notice] = "The #{@this.class.name.titleize.downcase} was created successfully" if !request.xhr? && valid?
 
       response_block(&b) or
         if valid?
@@ -601,7 +601,7 @@ module Hobo
       options = args.extract_options!
       self.this ||= args.first || find_instance
       this.user_destroy(current_user)
-      flash[:notice] = "The #{model.name.titleize.downcase} was deleted" unless request.xhr?
+      #flash[:notice] = "The #{model.name.titleize.downcase} was deleted" unless request.xhr?
       destroy_response(&b)
     end
 
