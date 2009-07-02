@@ -28,8 +28,15 @@
 <def tag="empty-cell">
   <td class="grey-empty-cell"><span param="default">&nbsp;</span></td>
 </def>
+<def tag="right-border-cell">
+  <td class="right-border-cell"><span param="default"></span></td>
+</def>
 
-<def tag="border-cell">
-  <td class="border-cell"><span param="default"></span></td>
+<def tag="bottom-border-cell">
+  <td class="bottom-border-cell"><span param="default"></span></td>
+</def>
+
+<def tag="bottom-right-border-cell">
+  <td class="bottom-right-border-cell"><span param="default"></span></td>
 </def>
 

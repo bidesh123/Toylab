@@ -52,7 +52,7 @@ div.completions_popup ul li {
 .field_list td { padding: 5px; vertical-align: middle; }
 .field_list td.field_label {
     text-align: left; width: 1px; white-space: nowrap; vertical-align: top;
-    padding-top: 10px; padding-bottom: 10px;
+    padding-top: 20px; padding-bottom: 10px;
 }
 .field_list input[type=text] { width: 100%; }
 .field_list input, .field_list textarea { margin: -2px 0 0 0; }

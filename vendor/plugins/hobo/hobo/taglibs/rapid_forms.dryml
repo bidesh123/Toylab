@@ -188,9 +188,9 @@ AJAX based submission can be enabled by simply adding an `update` attribute. e.g
       page_path_hidden = hidden_field_tag("page_path", page_path) 
     end
     
-    hiddens_div = element(:div, {:class => "hidden-fields"}, [http_method_hidden, page_path_hidden, auth_token, hiddens].join)
+    hiddens_span = element(:span, {:class => "hidden-fields"}, [http_method_hidden, page_path_hidden, auth_token, hiddens].join)
      
-    body = [hiddens_div, body].join
+    body = [hiddens_span, body].join
     
     if action.nil? # don't add automatic css classes if the action was specified
       if web_method

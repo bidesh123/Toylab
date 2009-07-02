@@ -3,14 +3,127 @@
 
 <!-- ====================== tag definitions ================================ -->
 
-<def tag="aspects-kinds-row">
-   <% @depth ||= 0 %>
-   <unless         test  ="&attributes['kinds_off' ]">
-    <tr class="aspects-kinds-row">
-      <aspect-kind-cells unless="&attributes['whole_off']" />
+<def tag="aspects">
+  <%= attributes.to_s %>
+  <table>
+    <aspects-rows merge-attrs />
+  </table>
+</def>
+
+<def tag="card" for="Card"><!-- why non recursive ? -->
+  <!--
+  <div unless="&attributes['whole_off'] || attributes['header_off']" param="content-header">
+    <h4 param="heading"><toy-header /></h4>
+    <record-flags fields="" param/>
+  </div>
+  -->
+  <div param="aspects">
+    <aspects merge-attrs />
+  </div>
+  <div param="cells">
+    <cells merge-attrs />
+  </div>
+  <div param="controls">
+    <trash />
+  </div>
+  <div param="debug-toy" if="&false">
+    <%= scope.deep[:debug_log] %>
+  </div>
+  <div param="development">
+    <div></div>
+    <development-stuff param="development"/>
+  </div>
+</def>
+
+<def tag="bottom-border-cells">
+  <bottom-border-cell       />
+  <bottom-border-cell       />
+  <bottom-right-border-cell />
+</def>
+
+<def tag="aspect-kind-cells">
+  <empty-title       />
+  <aspect-kind-cell  />
+  <right-border-cell />
+</def>
+
+<def tag="aspect-name-cells">
+  <show-cell         />
+  <aspect-name-cell  />
+  <right-border-cell />
+</def>
+
+<def tag="aspect-body-cells">
+  <empty-cell        />
+  <aspect-body-cell  />
+  <right-border-cell />
+</def>
+
+<def tag="bottoms-borders-cells">
+  <% @depth+=1 %>
+  <if test="&@depth<99">
+    <bottom-border-cells/>
+    <repeat with="&this.aspects" if="&this.aspects">
+      <bottoms-borders-cells merge-attrs />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-kinds-cells">
+  <% @depth+=1 %>
+  <if test="&@depth<99">
+    <aspect-kind-cells/>
+    <repeat with="&this.aspects" if="&this.aspects">
+      <aspects-kinds-cells merge-attrs />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-names-cells">
+  <% @depth+=1 %>
+  <if test="&@depth<99">
+    <aspect-name-cells/>
+    <repeat with="&this.aspects" if="&this.aspects">
+      <aspects-names-cells merge-attrs />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-bodies-cells">
+  <% @depth+=1 %>
+  <if test="&@depth<99">
+    <aspect-body-cells/>
+    <repeat with="&this.aspects" if="&this.aspects">
+      <aspects-bodies-cells merge-attrs />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="bottoms-borders-row"> <!-- coming soon -->
+  <% @depth ||= 0 %>
+  <unless                 test=  "&attributes['bottom_borders_off' ] ||
+                                   attributes['borders_off' ]">
+    <tr class="bottoms-borders-row">
+      <bottom-border-cells unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-kinds-cells />
-        <border-cell />
+        <bottoms-borders-cells />
+      </repeat>
+      <spacer-cell  />
+    </tr>
+  </unless>
+</def>
+
+<def tag="aspects-kinds-row">
+  <% @depth ||= 0 %>
+  <unless                  test=  "&attributes['kinds_off' ]">
+    <tr class="aspects-kinds-row">
+      <aspect-kind-cells   unless="&attributes['whole_off']" />
+      <repeat with="&this.aspects" if="&this.aspects">
+        <aspects-kinds-cells merge-attrs/>
       </repeat>
       <spacer-cell  />
     </tr>
@@ -19,12 +132,11 @@
 
 <def tag="aspects-names-row">
    <% @depth ||= 0 %>
-   <unless         test="&attributes['names_off' ]">
+   <unless                 test=  "&attributes['names_off' ]">
     <tr class="aspects-names-row">
-      <aspect-name-cells unless="&attributes['whole_off']" />
+      <aspect-name-cells   unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-names-cells/>
-        <border-cell />
+        <aspects-names-cells merge-attrs/>
       </repeat>
       <add-aspect-cell />
     </tr>
@@ -33,12 +145,11 @@
 
 <def tag="aspects-bodies-row">
   <% @depth ||= 0 %>
-  <unless         test="&attributes['bodies_off']">
+  <unless                  test=  "&attributes['bodies_off']">
      <tr class="aspects-bodies-row">
-      <aspect-body-cells unless="&attributes['whole_off']" />
+      <aspect-body-cells   unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-bodies-cells />
-        <border-cell          />
+        <aspects-bodies-cells merge-attrs />
       </repeat>
       <spacer-cell />
     </tr>
@@ -58,11 +169,13 @@
     <!-- why not edit-page ?? -->
     <show-page>
       <content-header:>
-        <toy-header />
+        <% whole_off = "&false" %>
+        <!-- <toy-header if="&whole_off"/>  -->
       </content-header:>
 
       <content-body:  >
-        <card whole-off />
+        <% whole_off = "&false" %>
+        <card whole-off if="&whole_off==true" /><else><card /></else>
         <whole />
       </content-body: >
       <aside:></aside:>
@@ -110,19 +223,23 @@
 </def>
 
 <def tag="toy-header">
+  <%= attributes[:whole_off] %>
   <table class="toy-header">
     <tr>
-      <if test="&this.kind"  ><th class="kind"  ><h1      ><editor:kind   blank-message="kind"   /></h1></th></if>
-      <else>
+      <if test="&this.kind">
+        <th class="kind"            ><h1><editor:kind   blank-message="kind"   /></h1></th>
+      </if><else><if test="&this.list">
         <!-- why h1 AND th both ?? -->
-        <if test="&this.list"><th class="number"><h1      ><editor:number blank-message="number" /></h1></th></if>
-        <else                ><th class="empty-title-cell"><editor:kind   blank-message="kind"        /></th></else>
-      </else>
+        <th class="number"          ><h1><editor:number blank-message="number" /></h1></th>
+      </if><else>
+        <th class="empty-title-cell"    ><editor:kind   blank-message="kind"   /></th>
+      </else></else>
+    </tr>
+    <tr>
       <td                         class="name"  ><h1      ><editor:name   blank-message="name"   /></h1></td>
     </tr>
     <tr>
       <td                         class="body"  ><h3      ><body-editor                          /></h3></td>
-      <empty-cell />
     </tr>
   </table>
   <record-flags fields="" param/>
@@ -177,29 +294,6 @@
 </def>
 
 
-<def tag="card" for="Card"><!-- why non recursive ? -->
-  <div unless="&attributes['whole_off'] || attributes['header_off']" param="content-header">
-    <h4 param="heading"><toy-header /></h4>
-    <record-flags fields="" param/>
-  </div>
-  <div param="aspects">
-    <aspects merge-attrs />
-  </div>
-  <div param="cells">
-    <cells merge-attrs />
-  </div>
-  <div param="controls">
-    <trash />
-  </div>
-  <div param="debug-toy" if="&false">
-    <%= scope.deep[:debug_log] %>
-  </div>
-  <div param="development">
-    <div></div>
-    <development-stuff param="development"/>
-  </div>
-</def>
-
 <def tag="whole">
   <div if="&this.whole">
     <tiny><view:name /> is the </tiny><editor:kind blank-message="kind" /><tiny> of </tiny><a:whole param="parent-link" />
@@ -220,12 +314,6 @@
   <editor field="body" blank-message="text"/>
 </def>
 
-<def tag="aspects">
-  <table>
-    <aspects-rows merge-attrs />
-  </table>
-</def>
-
 <def tag="items">
   <table>
     <items-rows with="&@deep_items" merge-attrs />
@@ -234,9 +322,10 @@
 </def>
 
 <def tag="aspects-rows">
-   <aspects-kinds-row  merge-attrs />
-   <aspects-names-row  merge-attrs />
-   <aspects-bodies-row merge-attrs />
+   <aspects-kinds-row   merge-attrs />
+   <aspects-names-row   merge-attrs />
+   <aspects-bodies-row  merge-attrs />
+   <bottoms-borders-row merge-attrs  />
 </def>
 
 <def tag="items-rows">
@@ -272,53 +361,6 @@
   <td>item cell 2 &nbsp; </td>
 </def>
 
-<def tag="aspects-kinds-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <th><aspect-kind-cells/></th>
-    <repeat with="&this.aspects" if="&this.aspects">
-      <aspects-kinds-cells/>
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="aspects-names-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <td><aspect-name-cells/></td>
-    <repeat with="&this.aspects" if="&this.aspects">
-      <aspects-names-cells/>
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="aspects-bodies-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <td><aspect-body-cells/></td>
-    <repeat with="&this.aspects" if="&this.aspects">
-      <aspects-bodies-cells/>
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="aspect-kind-cells">
-  <empty-title />
-  <aspect-kind-cell />
-</def>
-
-<def tag="aspect-name-cells">
-  <show-cell />
-  <aspect-name-cell />
-</def>
-
-<def tag="aspect-body-cells">
-  <empty-cell />
-  <aspect-body-cell />
-</def>
 
 <def tag="aspect-kind-cell">
   <th class="aspect-kind-cell"><editor:kind blank-message="kind" /></th>
@@ -344,7 +386,7 @@
 </def>
 
 <def tag="add-aspect-cell">
-  <td><add-aspect /></td>
+  <td class="add-aspect"><add-aspect /></td>
 </def>
 
 

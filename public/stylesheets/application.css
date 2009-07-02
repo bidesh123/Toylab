@@ -1,6 +1,6 @@
 /**** Generic Toy Office styling  ****/
 
-body, div, p, ol, ul, td, tr, input, textarea, .input {
+body, div, p, ol, ul, input, textarea, .input {
   font-family: serif;
   font-size:   16px;
   background: #eee; color: black;
@@ -10,8 +10,8 @@ body, div, p, ol, ul, td, tr, input, textarea, .input {
 h, th, h input, th input {
   font-family: verdana, arial, helvetica, sans-serif;
   text-align: left;
-  padding: 0;
-  font-size: 10;
+  padding: 0px;
+  font-size: 10px;
 }
 
 th, td {
@@ -24,11 +24,6 @@ th, td {
 h1, div {
   margin-top: 12px;
   padding-left: 12px;
-}
-
-form.button_to
-submit {
-  font-size:large;
 }
 
 .numeric, .aspect-numeric-body-cell, .sort-of-numeric {
@@ -66,6 +61,10 @@ a:visited {              color: #370; }
 a:hover   {              color: #96c; }
 a:active  {              color: #666; }
 
+input.add-aspect {
+  font-size: 20pt;
+}
+
 span.navLink {
                          color: #ddd;
   font-family: Arial, sans-serif;
@@ -89,11 +88,6 @@ span.navLink a:active  { color: #f0f; }
 
 .add-dependent:hover {
   background: #8bf;
-}
-
-.add-aspect {
-  font-size: 20pt;
-
 }
 
 /**** Styling for inline elements ****/
@@ -128,10 +122,6 @@ pre {
   font-size: 11px;
 }
 
-td.transparent {
-  background-color: #eee;
-}
-
 /**** Styling for table elements  ****/
 
 table {
@@ -143,16 +133,6 @@ table.pair-head {
 }
 
 tr {
-
-}
-
-th {
-  background-color: #fc9; color:#036;
-}
-
-th.header-pair-name {
-  width:62%;
-  color:#333;
 }
 
 td {
@@ -168,12 +148,52 @@ td.header-pair-body {
   color:#999;
 }
 
-td.border-cell {
+td.right-border-cell,
+td.bottom-right-border-cell {
   border-right: 1px solid #eee;
 }
 
+td.bottom-border-cell,
+td.bottom-right-border-cell {
+  border-bottom: 1px solid #eee;
+}
+
+
+td.transparent {
+  background-color: #eee;
+}
+
+td.add-aspect {
+  background-color: #eee;
+}
+
+th {
+  background-color: #fc9; color:#036;
+}
+
+th.empty-title-cell {
+  background-color: #fc9; color:#036; padding-bottom : 1px;
+}
+
+th.header-pair-name {
+  width:62%;
+  color:#333;
+}
 
 /**** Styling for input elements  ****/
+form {
+    padding-top:0px;
+}
+
+form.button_to
+submit {
+  font-size:large;
+}
+
+form.card {
+  margin:0px;
+  background:#eee;
+}
 
 input, textarea, .input {
   width: 100%;
@@ -199,10 +219,8 @@ th .editor {
   background-color: #fc9; color:#036;
 }
 
-th.empty-title-cell {
-  background-color: #fc9; color:#036; padding-bottom : 1px;
+.add-aspect input {
 }
-
 /**** Styling for validation  ****/
 
 .fieldWithErrors {
@@ -225,7 +243,7 @@ th.empty-title-cell {
   font-size: 12px;
   margin: -7px;
   background-color: #c00;
-  color: #fff;
+  color: white;
 }
 
 #errorExplanation p {
@@ -274,7 +292,7 @@ div.progressBar {
 }
 
 div.progressBar div.border {
-  background-color: #fff;
+  background-color: white;
   border: 1px solid gray;
   width: 100%;
 }
@@ -300,7 +318,7 @@ div.progressBar div.background {
 }
 
 .aspect-body-cell {
-  text-align: left; background: white;
+  text-align: left; background : white;
 }
 
 /**** Other styling ****/
@@ -310,3 +328,4 @@ td.debug {
   padding-right: 8px;
 }
 
+.show-page .content-header {border-bottom: 0px dotted #888;}
