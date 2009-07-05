@@ -34651,3 +34651,393 @@ Processing CardsController#update (for 127.0.0.1 at 2009-07-02 03:16:28) [PUT]
   [4;36;1mUser Load (1.3ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
   [4;35;1mCard Load (0.7ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 200) [0m
 Completed in 239ms (View: 0, DB: 3) | 200 OK [http://localhost/cards/200?_method=PUT]
+  [4;36;1mSQL (2.2ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing FrontController#index (for 127.0.0.1 at 2009-07-02 14:12:06) [GET]
+  [4;35;1mUser Load (0.9ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+Rendering front/index
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/core.dryml in 0.04s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_core.dryml in 0.27s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_support.dryml in 0.02s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_document_tags.dryml in 0.13s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_pages.dryml in 0.37s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_editing.dryml in 0.12s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_forms.dryml in 0.42s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_navigation.dryml in 0.09s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_plus.dryml in 0.24s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_generics.dryml in 0.06s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid_lifecycles.dryml in 0.02s
+  DRYML: Compiled vendor/plugins/hobo/hobo/taglibs/rapid.dryml in 1.81s
+  DRYML: Compiled app/views/taglibs/auto/rapid/cards.dryml in 0.05s
+  DRYML: Compiled app/views/taglibs/auto/rapid/pages.dryml in 0.48s
+  DRYML: Compiled app/views/taglibs/auto/rapid/forms.dryml in 0.17s
+  DRYML: Compiled app/views/taglibs/themes/clean/clean.dryml in 0.03s
+  DRYML: Compiled app/views/taglibs/application.dryml in 2.62s
+  DRYML: Compiled app/views/front/index.dryml in 2.71s
+  [4;36;1mUser Load (0.9ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+Completed in 2805ms (View: 2795, DB: 1) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#index (for 127.0.0.1 at 2009-07-02 14:12:12) [GET]
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (2.7ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id IS NULL AND whole_id IS NULL) [0m
+  [4;36;1mCard Load (2.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE (list_id IS NULL AND whole_id IS NULL) LIMIT 30 OFFSET 0[0m
+Rendering cards/index
+  DRYML: Compiled app/views/cards/index.dryml in 0.23s
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" LIMIT 30[0m
+Completed in 423ms (View: 401, DB: 8) | 200 OK [http://localhost/cards]
+  [4;36;1mSQL (0.7ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing FrontController#index (for 127.0.0.1 at 2009-07-02 14:12:15) [GET]
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+Rendering front/index
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+Completed in 264ms (View: 195, DB: 1) | 200 OK [http://localhost/]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing FrontController#index (for 127.0.0.1 at 2009-07-02 14:22:29) [GET]
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+Rendering front/index
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" LIMIT 30[0m
+Completed in 271ms (View: 262, DB: 1) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.7ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#index (for 127.0.0.1 at 2009-07-02 14:22:33) [GET]
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (2.8ms)[0m   [0;1mSELECT * FROM "cards" WHERE (list_id IS NULL AND whole_id IS NULL) [0m
+  [4;35;1mCard Load (2.6ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id IS NULL AND whole_id IS NULL) LIMIT 30 OFFSET 0[0m
+Rendering cards/index
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+Completed in 412ms (View: 322, DB: 8) | 200 OK [http://localhost/cards]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#create (for 127.0.0.1 at 2009-07-02 14:22:52) [POST]
+  Parameters: {"page_path"=>"cards/index", "authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "after_submit"=>"/cards"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (1.5ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id IS NULL) ORDER BY number DESC LIMIT 1[0m
+  [4;36;1mCard Create (0.4ms)[0m   [0;1mINSERT INTO "cards" ("kind", "name", "number", "created_at", "body", "updated_at", "whole_id", "list_id") VALUES(NULL, NULL, 48, '2009-07-02 18:22:52', NULL, '2009-07-02 18:22:52', NULL, NULL)[0m
+Redirected to /cards
+Completed in 20ms (DB: 3) | 302 Found [http://localhost/cards]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#index (for 127.0.0.1 at 2009-07-02 14:22:52) [GET]
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (2.9ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id IS NULL AND whole_id IS NULL) [0m
+  [4;36;1mCard Load (2.8ms)[0m   [0;1mSELECT * FROM "cards" WHERE (list_id IS NULL AND whole_id IS NULL) LIMIT 30 OFFSET 0[0m
+Rendering cards/index
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" LIMIT 30[0m
+Completed in 346ms (View: 323, DB: 8) | 200 OK [http://localhost/cards]
+  [4;36;1mSQL (0.7ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:22:56) [GET]
+  Parameters: {"id"=>"201"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  DRYML: Compiled app/views/cards/show.dryml in 0.99s
+  [4;35;1mCard Load (0.4ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+  [4;35;1mCard Load (0.3ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mCard Load (21.6ms)[0m   [0;1mSELECT * FROM "cards" [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM "cards" [0m
+Completed in 1446ms (View: 1411, DB: 26) | 200 OK [http://localhost/cards/201]
+  [4;36;1mSQL (0.7ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#update (for 127.0.0.1 at 2009-07-02 14:23:21) [PUT]
+  Parameters: {"authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "render"=>{"0"=>{"result"=>"new_field_value", "id"=>"uid1", "function"=>"Hobo.onFieldEditComplete"}}, "id"=>"201", "card"=>{"kind"=>"coupeur"}, "editorId"=>"uid1"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+  [4;35;1mCard Update (0.5ms)[0m   [0mUPDATE "cards" SET "updated_at" = '2009-07-02 18:23:21', "kind" = 'coupeur' WHERE "id" = 201[0m
+Completed in 161ms (View: 0, DB: 3) | 200 OK [http://localhost/cards/201?_method=PUT]
+  [4;36;1mSQL (0.8ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#update (for 127.0.0.1 at 2009-07-02 14:23:28) [PUT]
+  Parameters: {"authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "render"=>{"0"=>{"result"=>"new_field_value", "id"=>"uid2", "function"=>"Hobo.onFieldEditComplete"}}, "id"=>"201", "card"=>{"name"=>"jo"}, "editorId"=>"uid2"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+  [4;35;1mCard Update (0.6ms)[0m   [0mUPDATE "cards" SET "updated_at" = '2009-07-02 18:23:28', "name" = 'jo' WHERE "id" = 201[0m
+Completed in 232ms (View: 0, DB: 3) | 200 OK [http://localhost/cards/201?_method=PUT]
+  [4;36;1mSQL (0.8ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:24:25) [GET]
+  Parameters: {"id"=>"201"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  [4;35;1mCard Load (0.3ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mUser Load (0.9ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+  [4;35;1mCard Load (0.3ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mCard Load (21.9ms)[0m   [0;1mSELECT * FROM "cards" [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM "cards" [0m
+Completed in 715ms (View: 679, DB: 26) | 200 OK [http://localhost/cards/201]
+  [4;36;1mSQL (0.7ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#create (for 127.0.0.1 at 2009-07-02 14:25:04) [POST]
+  Parameters: {"page_path"=>"cards/show", "authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "card"=>{"whole_id"=>"201"}, "after_submit"=>"/cards/201"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (1.4ms)[0m   [0;1mSELECT * FROM "cards" WHERE (list_id IS NULL) ORDER BY number DESC LIMIT 1[0m
+  [4;35;1mCard Create (22.7ms)[0m   [0mINSERT INTO "cards" ("kind", "name", "number", "created_at", "body", "updated_at", "whole_id", "list_id") VALUES(NULL, NULL, 49, '2009-07-02 18:25:04', NULL, '2009-07-02 18:25:04', 201, NULL)[0m
+Redirected to /cards/201
+Completed in 42ms (DB: 26) | 302 Found [http://localhost/cards]
+  [4;36;1mSQL (0.8ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:25:05) [GET]
+  Parameters: {"id"=>"201"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  [4;35;1mCard Load (0.4ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+  [4;35;1mCard Load (0.7ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mCard Load (0.3ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 202) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCard Load (22.0ms)[0m   [0mSELECT * FROM "cards" [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM "cards" [0m
+Completed in 729ms (View: 692, DB: 27) | 200 OK [http://localhost/cards/201]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#create (for 127.0.0.1 at 2009-07-02 14:25:13) [POST]
+  Parameters: {"page_path"=>"cards/show", "authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "card"=>{"whole_id"=>"201"}, "after_submit"=>"/cards/201"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (1.2ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id IS NULL) ORDER BY number DESC LIMIT 1[0m
+  [4;36;1mCard Create (0.3ms)[0m   [0;1mINSERT INTO "cards" ("kind", "name", "number", "created_at", "body", "updated_at", "whole_id", "list_id") VALUES(NULL, NULL, 50, '2009-07-02 18:25:13', NULL, '2009-07-02 18:25:13', 201, NULL)[0m
+Redirected to /cards/201
+Completed in 20ms (DB: 3) | 302 Found [http://localhost/cards]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:25:13) [GET]
+  Parameters: {"id"=>"201"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  [4;36;1mCard Load (0.4ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" LIMIT 30[0m
+  [4;36;1mCard Load (1.0ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;35;1mCard Load (0.3ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 202) [0m
+  [4;36;1mCard Load (0.2ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 203) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCard Load (23.1ms)[0m   [0mSELECT * FROM "cards" [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM "cards" [0m
+Completed in 769ms (View: 731, DB: 29) | 200 OK [http://localhost/cards/201]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#update (for 127.0.0.1 at 2009-07-02 14:25:28) [PUT]
+  Parameters: {"authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "render"=>{"0"=>{"result"=>"new_field_value", "id"=>"uid6", "function"=>"Hobo.onFieldEditComplete"}}, "id"=>"203", "card"=>{"name"=>""}, "editorId"=>"uid6"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 203) [0m
+  [4;36;1mCard Update (0.4ms)[0m   [0;1mUPDATE "cards" SET "updated_at" = '2009-07-02 18:25:28', "name" = '' WHERE "id" = 203[0m
+Completed in 162ms (View: 0, DB: 2) | 200 OK [http://localhost/cards/203?_method=PUT]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#update (for 127.0.0.1 at 2009-07-02 14:25:55) [PUT]
+  Parameters: {"authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "render"=>{"0"=>{"result"=>"new_field_value", "id"=>"uid5", "function"=>"Hobo.onFieldEditComplete"}}, "id"=>"202", "card"=>{"name"=>"Francois, dit  Jo"}, "editorId"=>"uid5"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 202) [0m
+  [4;36;1mCard Update (0.4ms)[0m   [0;1mUPDATE "cards" SET "updated_at" = '2009-07-02 18:25:55', "name" = 'Francois, dit Jo' WHERE "id" = 202[0m
+Completed in 162ms (View: 0, DB: 3) | 200 OK [http://localhost/cards/202?_method=PUT]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#update (for 127.0.0.1 at 2009-07-02 14:27:01) [PUT]
+  Parameters: {"authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "render"=>{"0"=>{"result"=>"new_field_value", "id"=>"uid8", "function"=>"Hobo.onFieldEditComplete"}}, "id"=>"202", "card"=>{"body"=>"Allo Jo,\n                Tu iras voir Google avec ce beau cadre"}, "editorId"=>"uid8"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 202) [0m
+  [4;36;1mCard Update (0.4ms)[0m   [0;1mUPDATE "cards" SET "updated_at" = '2009-07-02 18:27:01', "body" = 'Allo Jo,
+ Tu iras voir Google avec ce beau cadre' WHERE "id" = 202[0m
+Completed in 162ms (View: 0, DB: 2) | 200 OK [http://localhost/cards/202?_method=PUT]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#create (for 127.0.0.1 at 2009-07-02 14:27:08) [POST]
+  Parameters: {"page_path"=>"cards/show", "authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "card"=>{"list_id"=>"201"}, "after_submit"=>"/cards/201"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id = 201) ORDER BY number DESC LIMIT 1[0m
+  [4;36;1mCard Create (0.3ms)[0m   [0;1mINSERT INTO "cards" ("kind", "name", "number", "created_at", "body", "updated_at", "whole_id", "list_id") VALUES(NULL, NULL, 1, '2009-07-02 18:27:08', NULL, '2009-07-02 18:27:08', NULL, 201)[0m
+Redirected to /cards/201
+Completed in 19ms (DB: 3) | 302 Found [http://localhost/cards]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:27:09) [GET]
+  Parameters: {"id"=>"201"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  [4;36;1mCard Load (0.8ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 204) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 204) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 204) [0m
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+  [4;35;1mCard Load (1.0ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mCard Load (0.3ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 202) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 203) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCard Load (22.8ms)[0m   [0mSELECT * FROM "cards" [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM "cards" [0m
+Completed in 782ms (View: 743, DB: 30) | 200 OK [http://localhost/cards/201]
+  [4;35;1mSQL (0.7ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#update (for 127.0.0.1 at 2009-07-02 14:28:18) [PUT]
+  Parameters: {"authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "render"=>{"0"=>{"result"=>"new_field_value", "id"=>"uid7", "function"=>"Hobo.onFieldEditComplete"}}, "id"=>"204", "card"=>{"name"=>"Pour une primaire, la question c'est \"a quoi ca peut bien servir?"}, "editorId"=>"uid7"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 204) [0m
+  [4;36;1mCard Update (0.4ms)[0m   [0;1mUPDATE "cards" SET "updated_at" = '2009-07-02 18:28:18', "name" = 'Pour une primaire, la question c''est "a quoi ca peut bien servir?' WHERE "id" = 204[0m
+Completed in 163ms (View: 0, DB: 2) | 200 OK [http://localhost/cards/204?_method=PUT]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#create (for 127.0.0.1 at 2009-07-02 14:28:35) [POST]
+  Parameters: {"page_path"=>"cards/show", "authenticity_token"=>"02583d57d72bceadff5c4276ce9cee0d747179b1", "card"=>{"list_id"=>"201"}, "after_submit"=>"/cards/201"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (1.3ms)[0m   [0mSELECT * FROM "cards" WHERE (list_id = 201) ORDER BY number DESC LIMIT 1[0m
+  [4;36;1mCard Create (0.3ms)[0m   [0;1mINSERT INTO "cards" ("kind", "name", "number", "created_at", "body", "updated_at", "whole_id", "list_id") VALUES(NULL, NULL, 2, '2009-07-02 18:28:35', NULL, '2009-07-02 18:28:35', NULL, 201)[0m
+Redirected to /cards/201
+Completed in 20ms (DB: 3) | 302 Found [http://localhost/cards]
+  [4;35;1mSQL (0.8ms)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:28:36) [GET]
+  Parameters: {"id"=>"201"}
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  [4;36;1mCard Load (1.0ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 204) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 204) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 204) [0m
+  [4;36;1mCard Load (0.2ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".list_id = 205) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 205) [0m
+  [4;36;1mCard Load (0.2ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 205) [0m
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" LIMIT 30[0m
+  [4;36;1mCard Load (0.9ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;35;1mCard Load (0.3ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 202) [0m
+  [4;36;1mCard Load (0.2ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 203) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mCard Load (22.6ms)[0m   [0;1mSELECT * FROM "cards" [0m
+  [4;35;1mCACHE (0.0ms)[0m   [0mSELECT * FROM "cards" [0m
+Completed in 722ms (View: 682, DB: 31) | 200 OK [http://localhost/cards/201]
+  [4;36;1mSQL (0.7ms)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+
+
+Processing CardsController#show (for 127.0.0.1 at 2009-07-02 14:42:05) [GET]
+  Parameters: {"id"=>"201"}
+  [4;35;1mUser Load (0.8ms)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 1) [0m
+  [4;36;1mCard Load (0.6ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 201) [0m
+Rendering cards/show
+  [4;35;1mCard Load (1.0ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mCard Load (0.2ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".list_id = 204) [0m
+  [4;35;1mCard Load (0.6ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards"."id" = 204) [0m
+  [4;36;1mCard Load (0.2ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 204) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".list_id = 205) [0m
+  [4;36;1mCard Load (0.5ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards"."id" = 205) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 205) [0m
+  [4;36;1mUser Load (0.8ms)[0m   [0;1mSELECT * FROM "users" LIMIT 30[0m
+  [4;35;1mCard Load (0.9ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;36;1mCard Load (0.3ms)[0m   [0;1mSELECT * FROM "cards" WHERE ("cards".whole_id = 202) [0m
+  [4;35;1mCard Load (0.2ms)[0m   [0mSELECT * FROM "cards" WHERE ("cards".whole_id = 203) [0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".whole_id = 201) [0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT count(*) AS count_all FROM "cards" WHERE ("cards".list_id = 201) [0m
+  [4;35;1mCard Load (22.9ms)[0m   [0mSELECT * FROM "cards" [0m
+  [4;36;1mCACHE (0.0ms)[0m   [0;1mSELECT * FROM "cards" [0m
+Completed in 793ms (View: 752, DB: 31) | 200 OK [http://localhost/cards/201]
