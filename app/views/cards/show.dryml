@@ -30,6 +30,7 @@
     <!-- why not edit-page ?? -->
     <show-page>
       <content-header:>
+        <context />
         <!-- % whole_off = "&false" %       -->
         <!-- <toy-header if="&whole_off"/>  -->
       </content-header:>
@@ -41,7 +42,6 @@
         </if><else>
           <card                        />
         </else>
-        <context />
       </content-body: >
       <aside:></aside:>
     </show-page>
