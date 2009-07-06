@@ -3,12 +3,104 @@
 
 <!-- ====================== tag definitions ================================ -->
 
+<def tag="context">
+  <div if="&this.whole || this.list">
+    <ul style="list-style-type: none"><out whole-off /></ul>
+  </div>
+</def>
+
+<def tag="out">
+  <if            test="&this.whole"  >
+    <out         with="&this.whole" />
+  </if><else><if test="&this.list"   >
+    <out         with="&this.list"  />
+  </if></else>
+  <li unless="&attributes[:whole_off]" style="display:inline" ><a><%= this.reference_name %></a></li>
+</def>
+
 <def tag="aspects">
   <%= attributes.to_s %>
   <table>
     <aspects-rows merge-attrs />
   </table>
 </def>
+
+<def tag="toy-show">
+  <set-scoped deep="&@card.look_deep" >
+    <!-- why not edit-page ?? -->
+    <show-page>
+      <content-header:>
+        <!-- % whole_off = "&false" %       -->
+        <!-- <toy-header if="&whole_off"/>  -->
+      </content-header:>
+
+      <content-body:  >
+        <%         whole_off = "&false" %>
+        <if test="&whole_off ==  true">
+          <card    whole-off="&whole_off" />
+        </if><else>
+          <card                        />
+        </else>
+        <context />
+      </content-body: >
+      <aside:></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
+<def tag="trash">
+  <%
+    tooltip             = "Delete #{this.reference_name}"
+    number_of_aspects   = this.aspects.length
+    number_of_items     = this.items.length
+    if number_of_aspects > 0
+      if number_of_items > 0
+        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+      else
+        tooltip += " and its #{number_of_aspects} items"
+      end
+    else # 0 aspects
+      if number_of_items > 0
+        tooltip += " and its #{number_of_items  } items"
+      end
+    end
+  %>
+  <delete-button image="toy_magnifier.png" title="#{tooltip}" />
+</def>
+
+<def tag="delete-button" attrs="label, update, in-place, image, confirm, fade, subsite">
+<%=
+  in_place = false if in_place.nil? && this == @this && request.method == :get
+  url = object_url(this, :method => :delete, :subsite => subsite)
+  if (Hobo::Dryml.last_if = url && can_delete?)
+    attributes = attributes.merge(if image
+                                    { :type => "image", :src => "images/toy_trash.png" }
+                                  else
+                                    { :type => "button"                                }
+                                  end)
+    label ||= "Remove"
+    confirm = "Are you sure?" if confirm.nil?
+
+    add_classes!(attributes,
+                 image ? "image-button" : "button",
+                 "delete-button delete-#{this.class.name.underscore.dasherize}-button")
+    if url
+        if url then confirm=attributes.to_s else confirm='no url' end
+      if in_place == false
+        attributes[:confirm] = confirm if confirm
+        attributes[:method] = :delete
+        button_to(label, url, attributes)
+      else
+        fade = true if fade.nil?
+        attributes[:value] = label
+        attributes[:onclick] = "Hobo.removeButton(this, '#{url}', #{js_updates(update)}, {fade:#{fade}, confirm: #{confirm.inspect}})"
+        element(:input, attributes, nil, true, true)
+      end
+    end
+  else
+    ""
+  end
+%></def>
 
 <def tag="card" for="Card"><!-- why non recursive ? -->
   <!--
@@ -26,10 +118,10 @@
   <div param="controls">
     <trash />
   </div>
-  <div param="debug-toy" if="&false">
+  <div param="debug-toy" if="&true">
     <%= scope.deep[:debug_log] %>
   </div>
-  <div param="development">
+  <div param="development" if="&false">
     <div></div>
     <development-stuff param="development"/>
   </div>
@@ -164,25 +256,6 @@
   </li>
 </def>
 
-<def tag="toy-show">
-  <set-scoped deep="&@card.look_deep" >
-    <!-- why not edit-page ?? -->
-    <show-page>
-      <content-header:>
-        <% whole_off = "&false" %>
-        <!-- <toy-header if="&whole_off"/>  -->
-      </content-header:>
-
-      <content-body:  >
-        <% whole_off = "&false" %>
-        <card whole-off if="&whole_off==true" /><else><card /></else>
-        <whole />
-      </content-body: >
-      <aside:></aside:>
-    </show-page>
-  </set-scoped>
-</def>
-
 <def tag="add-aspect">
   <if test="&this">
     <set  redirection=                      "&this.id"     />
@@ -215,11 +288,11 @@
 </def>
 
 <def tag="show-cell">
-      <if test="&this">
-        <td><show-card-inline /></td>
-      </if><else>
-        <empty-cell />
-      </else>
+  <if test="&this">
+    <td><show-card-inline /></td>
+  </if><else>
+    <empty-cell />
+  </else>
 </def>
 
 <def tag="toy-header">
@@ -255,7 +328,6 @@
 </def>
 
 <def tag="content-rows">
-<if test="&true">
   <tr repeat="&scope.deep[:columns][:cells].transpose">
     <set   counter="&0" />
     <repeat>
@@ -276,7 +348,6 @@
       </else>
     </repeat>
   </tr>
-</if>
 </def>
 
 <def tag="title-rows">
@@ -295,15 +366,11 @@
 
 
 <def tag="whole">
-  <div if="&this.whole">
-    <tiny><view:name /> is the </tiny><editor:kind blank-message="kind" /><tiny> of </tiny><a:whole param="parent-link" />
-  </div>
+  <tiny><view:name /> is the </tiny><editor:kind blank-message="kind" /><tiny> of </tiny><a:whole param="parent-link" />
 </def>
 
 <def tag="list">
-  <div if="&this.list">
-    <tiny><view:name /> is item </tiny><editor:number blank-message="number"  /><tiny> in </tiny><a:list param="parent-link" />
-  </div>
+  <tiny><view:name /> is item </tiny><editor:number blank-message="number"  /><tiny> in </tiny><a:list param="parent-link" />
 </def>
 
 <def tag="tiny">
@@ -414,10 +481,6 @@
   <td class="transparent"><trash /></td>
 </def>
 
-<def tag="trash">
-  <delete-button image="toy_trash.png" />
-</def>
-
 <def tag="trace-cell">
   <td>trace cell</td>
 </def>
@@ -426,8 +489,8 @@
 <show-page>
   <content-header:>
     <table>
-      <if test="&this.long_body?"><name-head-row/></if>
-      <else>                      <pair-head-row/></else>
+      <if test="&this.long_body?"><name-head-row /></if>
+      <else>                      <pair-head-row /></else>
     </table>
   </content-header:>
   <content-aside:></content-aside:>

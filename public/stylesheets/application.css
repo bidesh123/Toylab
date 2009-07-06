@@ -1,3 +1,11 @@
+$toy='#999';
+$o='#f9c';
+$f1='#fc9';
+$f2='#ff9';
+$i='#cfc';
+$c='#9cf';
+$e='#c9f';
+
 /**** Generic Toy Office styling  ****/
 
 body, div, p, ol, ul, input, textarea, .input {
@@ -150,12 +158,12 @@ td.header-pair-body {
 
 td.right-border-cell,
 td.bottom-right-border-cell {
-  border-right: 1px solid #eee;
+  border-right: 4px solid #eee;
 }
 
 td.bottom-border-cell,
 td.bottom-right-border-cell {
-  border-bottom: 1px solid #eee;
+  border-bottom: 4px solid #eee;
 }
 
 
@@ -196,11 +204,19 @@ form.card {
 }
 
 input, textarea, .input {
-  width: 100%;
+  width: auto;
 }
 
 input {
   background-color: #bbb; color:#fdf;
+}
+
+input.delete-button {
+  background-color: #9cf; color:#333; border:none;
+}
+
+input.delete-button:hover {
+  background: #f9c;
 }
 
 textarea {
