@@ -1,17 +1,36 @@
-$toy='#999';
-$o='#f9c';
-$f1='#fc9';
-$f2='#ff9';
-$i='#cfc';
-$c='#9cf';
-$e='#c9f';
+.not-used-but-nice-bright-red  {background-color:#e10;}
+.not-used-violet  {background-color:#708;}
+.bright-1  {background-color:#e10;}
+.bright-2  {background-color:#b40;}
+.bright-3  {background-color:#870;}
+.bright-4  {background-color:#5a0;}
+.bright-5  {background-color:#2d0;}
+.bright-6  {background-color:#0e1;}
+.bright-7  {background-color:#0b4;}
+.bright-8  {background-color:#087;}
+.bright-9  {background-color:#05a;}
+.bright-10 {background-color:#02d;}
+.bright-11 {background-color:#10e;}
+.bright-12 {background-color:#40b;}
+.bright-13 {background-color:#708;}
+.bright-14 {background-color:#a05;}
+.bright-15 {background-color:#d02;}
+
+
+.office    {background-color:#f00; color:#eee;}
+.o         {                       color:#f9c;} /*#f9c*/
+.ff        {                       color:#fc9;} /*#fc9*/
+.fi        {                       color:#ff9;} /*#ff9*/
+.i         {                       color:#cfc;} /*#cfc*/
+.c         {                       color:#9cf;} /*#9cf*/
+.e         {                       color:#c9f;} /*#c9f*/
 
 /**** Generic Toy Office styling  ****/
 
 body, div, p, ol, ul, input, textarea, .input {
   font-family: serif;
   font-size:   16px;
-  background: #eee; color: black;
+  background-color: white; color: black;
   line-height: 18px;
 }
 
@@ -26,7 +45,7 @@ th, td {
 }
 
 .page-header{
-  background: white;
+  background-color: white;
 }
 
 h1, div {
@@ -39,7 +58,7 @@ h1, div {
 }
 
 .grey {
-  background-color: #f7f7f7;
+  background-color: purple;
 }
 
 .tiny-gray {
@@ -48,16 +67,12 @@ h1, div {
 }/**** Styling for navigation ****/
 
 .navigation, .search, .editor {
-  background: white;
 }
 
 .navigation .nav-item {
-                         color: black ;
     }
 
 .navigation .nav-item {
-  background-color: #9cf;
-                         color: blue ;
 }
 
 a {
@@ -95,13 +110,13 @@ span.navLink a:active  { color: #f0f; }
 }
 
 .add-dependent:hover {
-  background: #8bf;
+  background-color: purple;
 }
 
 /**** Styling for inline elements ****/
 
 h {
-  background-color: #bbb; color:#11f;
+  background-color: purple; color:#11f;
 }
 
 h1 {
@@ -121,11 +136,10 @@ div.card_body {
 }
 
 p {
-  background-color: #fc9;
 }
 
 pre {
-  background-color: #11f;
+  background-color: purple;
   padding: 10px;
   font-size: 11px;
 }
@@ -144,11 +158,10 @@ tr {
 }
 
 td {
-  background-color: white;
 }
 
 td.spacer {
-  background-color: #eee;
+  background-color:white;
 }
 
 td.header-pair-body {
@@ -158,29 +171,39 @@ td.header-pair-body {
 
 td.right-border-cell,
 td.bottom-right-border-cell {
-  border-right: 4px solid #eee;
+  border-right: 8px solid white;
 }
 
 td.bottom-border-cell,
 td.bottom-right-border-cell {
-  border-bottom: 4px solid #eee;
+  border-bottom: 8px solid white;
 }
 
 
 td.transparent {
-  background-color: #eee;
+  background-color: purple ;
 }
 
 td.add-aspect {
-  background-color: #eee;
+  background-color: white;
 }
 
 th {
-  background-color: #fc9; color:#036;
+  background-color: #666; color:white; font-family:"Arial Black",Gadget,sans-serif;
 }
 
+th.first {
+  font-size: 140%; padding:4px;
+}
+
+
+td.first {
+  font-size: 140%; padding:4px;
+}
+
+
 th.empty-title-cell {
-  background-color: #fc9; color:#036; padding-bottom : 1px;
+  background-color: white; color:#036; padding-bottom : 1px;
 }
 
 th.header-pair-name {
@@ -200,7 +223,6 @@ submit {
 
 form.card {
   margin:0px;
-  background:#eee;
 }
 
 input, textarea, .input {
@@ -208,31 +230,31 @@ input, textarea, .input {
 }
 
 input {
-  background-color: #bbb; color:#fdf;
+  background-color: #eee; color:black;
 }
 
 input.delete-button {
-  background-color: #9cf; color:#333; border:none;
+  background-color: #f34; color:#333; border:none;
 }
 
 input.delete-button:hover {
-  background: #f9c;
+  background-color: black; color:white;
 }
 
 textarea {
-  background-color: #dfd; color:#222;
+  color:#222;
 }
 
 .input {
-  background-color: #0f7; color:#11f;
+  background-color: purple; color:#11f;
 }
 
 h input, th input {
-  background-color: #dfd;; color:#333;
+  background-color: #666; color:white;
 }
 
 th .editor {
-  background-color: #fc9; color:#036;
+  color:white;
 }
 
 .add-aspect input {
@@ -241,7 +263,7 @@ th .editor {
 
 .fieldWithErrors {
   padding: 2px;
-  background-color: red;
+  background-color: purple;
   display: table;
 }
 #errorExplanation {
@@ -276,7 +298,7 @@ th .editor {
 /**** Styling for Toy Office Logo ****/
 
 .logo {
-  background-color: white;
+  background-color: purple;
   font-family: "Arial Black";
   font-size: 24pt;
   font-weight: 100;
@@ -285,17 +307,12 @@ th .editor {
 }
 
 .logo .toy {
-  background-color: #eee; color: #999  ;
+  background-color:#ccc; color: #666  ;
 }
 
 .logo .office {
-  background-color: #999; color: #fcc ;
+  background-color: #666; color: purple ;
   }
-
-div.logo {
-  margin-top: 0px;
-  padding-left: 0px;
-}
 
 /**** Styling for UI  ****/
 
@@ -308,13 +325,13 @@ div.progressBar {
 }
 
 div.progressBar div.border {
-  background-color: white;
+  background-color: #e01;
   border: 1px solid gray;
   width: 100%;
 }
 
 div.progressBar div.background {
-  background-color: #333;
+  background-color: #0f0;
   height: 18px;
   width: 0%;
 }
@@ -322,7 +339,7 @@ div.progressBar div.background {
 /**** Styling for toy content  ****/
 
 .cell, .aspect-name-cell, .aspect-body-cell {
-  padding-right: 12px;
+  padding-right: 40px;
 }
 
 .aspect-kind-cell {
@@ -330,11 +347,27 @@ div.progressBar div.background {
 }
 
 .aspect-name-cell {
-  text-align: left; background: white;
+  text-align: left; background-color: #eee;
+        border-top:    8px solid #eee;
+        border-left:   1px solid #eee;
+        border-right:  3px solid #eee;
+        border-bottom: 0px solid #eee;
+}
+
+.aspect-name-cell .first {
+  text-align: left; background-color: yellow;
+        border-top:    8px solid #eee;
+        border-left:   1px solid #eee;
+        border-right:  3px solid #eee;
+        border-bottom: 0px solid #eee;
 }
 
 .aspect-body-cell {
-  text-align: left; background : white;
+  text-align: left; background-color : white;
+        border-top:    0px solid #eee;
+        border-left:   1px solid #eee;
+        border-right:  3px solid #eee;
+        border-bottom: 3px solid #eee;
 }
 
 /**** Other styling ****/

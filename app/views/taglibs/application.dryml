@@ -8,15 +8,15 @@
 
 
 <def tag="app-name">
-  <div class="logo">
-  <b><span class="toy"                  >toy</span></b><span class="office"><span
-    style='color:#f9c;background:#999'  >o</span><span
-    style='color:#fc9;background:#999'  >f</span><span
-    style='color:#ff9;background:#999'  >f</span><span
-    style='color:#cfc;background:#999'  >i</span><span
-    style='color:#9cf;background:#999'  >c</span><span
-    style='color:#c9f;background:#999'  >e</span></span>
-  </div>
+  <span class="logo"><b><span
+    class="toy"   >toy</span></b><span
+    class="office"><span
+      class="o" >o</span><span
+      class="ff">f</span><span
+      class="fi">f</span><span
+      class="i" >i</span><span
+      class="c" >c</span><span
+      class="e" >e</span></span></span>
 </def>
 
 <def tag="nil-view">&nbsp;</def>
@@ -26,10 +26,9 @@
 </def>
 
 <def tag="empty-cell">
-  <td class="grey-empty-cell"><span param="default">&nbsp;</span></td>
+  <td unless="&attributes[:first]" class="grey-empty-cell"><span param="default">&nbsp;</span></td>
 </def>
 <def tag="right-border-cell">
-  <td class="right-border-cell"><span param="default"></span></td>
 </def>
 
 <def tag="bottom-border-cell">

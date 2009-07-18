@@ -59,7 +59,8 @@ class Card < ActiveRecord::Base
     column_number = names.index(wider_context)
     if column_number           # column already exists
       cells[column_number][row] ||= []
-      cells[column_number][row].reverse! << sub # this changes deep[:column][:cells]
+      cells[column_number][row].reverse!
+      cells[column_number][row]<< sub # this changes deep[:column][:cells]
       cells[column_number][row].reverse!
       deep[       :debug_log] += "<br/>Yes! It's there, in column #{column_number} of <br>---#{names.join '<br>---'},"
       deep[       :debug_log] += "<br/>so I add column #{column_number} of line #{row} to #{cells[column_number][row]}"

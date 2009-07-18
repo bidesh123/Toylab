@@ -876,7 +876,7 @@ Object.extend(Ajax.InPlaceEditor, {
     autoRows: 3,                                // Use when multi-line w/ rows == 1
     cancelControl: 'link',                      // 'link'|'button'|false
     cancelText: 'cancel',
-    clickToEditText: 'Click to edit',
+    clickToEditText: 'Click to enter or change text',
     externalControl: null,                      // id|elt
     externalControlOnly: false,
     fieldPostCreation: 'activate',              // 'activate'|'focus'|false
