@@ -1,0 +1,204 @@
+<toy-edit />
+
+<def tag="erase">
+  <if test="&this">
+<%  redirection = nil # this.id == scope.deep[:origin] ? (this.whole_id || this.list_id) : this.id
+    tooltip             = "Permanently erase #{this.reference_name}"
+    number_of_aspects   = this.aspects.length
+    number_of_items     = this.items.length
+    if number_of_aspects > 0
+      if number_of_items > 0
+        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+      else
+        tooltip += " and its #{number_of_aspects} items"
+      end
+    else # 0 aspects
+      if number_of_items > 0
+        tooltip += " and its #{number_of_items  } items"
+      end
+    end
+%>
+    <form method="post" with="&this" class="erase card" if="&false">
+      <submit label="X" title ="&tooltip" class="toy-nav erase tooltip"></submit>
+      <after-submit uri  ="/cards/#{redirection}/edit" />
+    </form>
+    <else>
+      <delete-button in-place="&false" label="x" />
+    </else>
+  </if>
+</def>
+
+<def tag="card" for="Card">
+  <table class="card first-card">
+    <self-and-aspects-row />
+    <list-row />
+  </table>
+</def>
+
+<def tag="recursive-card">
+  <table class="card inner">
+    <self-and-aspects-row />
+    <list-row />
+  </table>
+</def>
+
+<def tag="add-item">
+  <if test="&this">
+    <set  redirection=                      "&this.id"     />
+    <% tooltip = this.items.count > 0 ?
+        "Add another item to this list of #{this.items.count} items" :
+        "Start a list under #{this.reference_name}"
+    %>
+    <form with       ="&Card.new(:list_id  => this.id)"             >
+      <!-- <submit       label="&label" /> -->
+      <submit label="v&nbsp;" title ="&tooltip" class="toy-nav add-item tooltip">
+      </submit>
+      <after-submit uri  ="/cards/#{redirection}/edit"                    />
+    </form                                                          >
+  </if>
+</def>
+
+
+<def tag="add-aspect">
+  <if test="&this">
+    <set  redirection=                      "&this.id"     />
+    <% tooltip = "Specify "
+        (this.aspects.count > 0 ? "another " : "an ") +
+        "aspect of " +
+        this.reference_name
+    %>
+    <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
+      <!-- <submit       label="&label" /> -->
+      <submit label=">" title ="&tooltip" class ="toy-nav add-aspect" />
+      <after-submit uri  ="/cards/#{redirection}/edit" />
+    </form                                                          >
+  </if>
+</def>
+
+<def tag="self-and-aspects-row">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+      <core if="&true"/>
+      <else>ABC</else>
+    </td>
+    <td class="aspects-table">
+      <aspects-table />
+    </td>
+  </tr>
+</def>
+
+<def tag="aspects-table">
+  <table class="aspects-table" if="&this.aspects">
+    <tr class="aspects-row">
+      <repeat with="&this.aspects" if="&this.aspects">
+        <aspect-cell />
+      </repeat>
+      <spacer-cell />
+    </tr>
+  </table>
+</def>
+
+<def tag="list-row">
+  <tr class="list-row">
+    <td class="list-row>" colspan="2">
+      <table class="list-rows" if="&this.items">
+        <repeat with="&this.items">
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+  </tr>
+</def>
+
+<def tag="toy-edit">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header:><context if="&this.whole || this.list"/></content-header:>
+      <content-body:  ><card first                           /></content-body:  >
+      <aside:></aside:>
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="core-main">
+  <table class="core-main">
+    <tr class="kind">
+      <th class="kind-cell"><editor:kind blank-message="....." /></th>
+      <td class="core-add-aspect" rowspan="3">
+        <add-aspect if="&true" />
+        <else><form class="add-aspect">abx bcz</form></else>
+      </td>
+    </tr>
+    <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
+    <tr class="body"><td class="body-cell"><editor:body blank-message="....."/></td></tr>
+  </table>
+</def>
+
+
+<def tag="core-controls">
+  <table class="core-controls">
+    <tr class="core-controls">
+      <td class="core-add-item"><add-item   if="&true" /><else>add item</else  ></td>
+      <td class="core-trash"   ><trash      if="&true"  /><else>trash</else     ></td>
+    </tr>
+  </table>
+</def>
+
+
+<def tag="bottom-controls">
+  <table class="bottom-controls">
+    <tr class="bottom-controls">
+      <td class="core-add-item"><add-item   if="&true" /><else>add item</else  ></td>
+      <td class="go"   ><show-card-inline if="&true"/><else>go</else     ></td>
+    </tr>
+  </table>
+</def>
+
+
+<def tag="core">
+  <table class="core">
+    <tr class="core-main-row"   >
+      <th class="kind-cell"                  ><editor:kind blank-message="....." /></th>
+      <td class="core-add-aspect" rowspan="3"><add-aspect                        /></td>
+    </tr>
+    <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
+    <tr class="body"><td class="body-cell"><editor:body blank-message="....."/></td></tr>
+    <tr class="core-controls" >
+      <td class="bottom-controls">
+        <bottom-controls if="&true" /><else>bottom controls</else>
+      </td>
+      <td class="core-trash"     >
+        <erase           if="&true" /><else>trash          </else>
+      </td>
+    </tr>
+  </table>
+</def>
+
+<def tag="old-core">
+  <table class="core">
+    <tr class="core-main-row"   >
+      <td class="core-main-row"    ><core-main     if="&true" /><else>core main</else></td>
+    </tr>
+    <tr class="core-controls" >
+      <td class="core-controls"><core-controls  if="&true" /><else>core controls</else></td>
+    </tr>
+  </table>
+</def>
+
+<def tag="aspect-cell">
+  <td class="aspect-cell">
+    <recursive-card aspect if="&true"/>
+  </td>
+</def>
+
+
+<def tag="item-row">
+  <tr class="item-row">
+    <td class="item-cell">
+      <recursive-card item if="&true"/>
+    </td>
+  </tr>
+</def>
+
+
+

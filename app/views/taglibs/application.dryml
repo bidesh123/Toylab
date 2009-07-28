@@ -19,10 +19,48 @@
       class="e" >e</span></span></span>
 </def>
 
-<def tag="nil-view">&nbsp;</def>
+<def tag="context">
+  <div if="&this.whole || this.list">
+    <ul style="list-style-type:none; background:white">Go to enclosing card <out whole-off /></ul>
+  </div>
+</def>
 
+<def tag="out">
+  <if            test="&this.whole"  >
+    <out         with="&this.whole" />
+  </if><else><if test="&this.list"   >
+    <out         with="&this.list"  />
+  </if></else>
+  <li unless="&attributes[:whole_off]" style="display:inline;background:white">
+    <a><%= this.reference_name %></a>
+  </li>
+</def>
+
+<def tag="trash">
+  <%
+    tooltip             = "Permanently erase #{this.reference_name}"
+    number_of_aspects   = this.aspects.length
+    number_of_items     = this.items.length
+    if number_of_aspects > 0
+      if number_of_items > 0
+        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+      else
+        tooltip += " and its #{number_of_aspects} items"
+      end
+    else # 0 aspects
+      if number_of_items > 0
+        tooltip += " and its #{number_of_items  } items"
+      end
+    end
+    redirection = this.id
+  %>
+  <delete-button with="&this" after-submit="/card/#{redirection}/edit" label="&nbsp;XXX&nbsp;" title="#{tooltip}" />
+</def>
+
+<def tag="nil-view">&nbsp;</def>
+x
 <def tag="show-card-inline">
-  <a><%= image_tag "toy_magnifier.png", :class => "zoom" %></a>
+  <a class="go">go&nbsp;</a>
 </def>
 
 <def tag="empty-cell">
@@ -38,4 +76,42 @@
 <def tag="bottom-right-border-cell">
   <td class="bottom-right-border-cell"><span param="default"></span></td>
 </def>
+
+<def tag="add-aspect">
+  <if test="&this">
+    <set  redirection=                      "&this.id"     />
+    <% tooltip =
+      (this.aspects.count > 0 ? " Add another aspect of " : "Add aspects of ") +
+      this.reference_name
+    %>
+    <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
+      <!-- <submit       label="&label" /> -->
+      <submit label=">" title ="&tooltip" class ="toy-nav add-aspect" />
+      <after-submit uri  ="/cards/#{redirection}/edit" />
+    </form                                                          >
+  </if>
+</def>
+
+<def tag="add-item">
+  <if test="&this">
+    <set  redirection=                      "&this.id"     />
+    <% tooltip = this.items.count > 0 ?
+        "Add anotherrrrrrrrrrr item to this list #{this.items.count}" :
+        "Add a list below #{this.reference_name}"
+    %>
+    <form class="add-item"  with="&Card.new(:list_id  => this.id)"             >
+      <!-- <submit       label="&label" /> -->
+      <submit label="&nbsp;vvvv&nbsp;" title ="&tooltip" class="toy-nav add-item tooltip">
+      </submit>
+      <after-submit uri  ="/cards/#{redirection}/edit"                    />
+    </form                                                          >
+  </if>
+</def>
+
+<def tag="spacer-cell">
+  <td class="spacer">
+  <%= image_tag "spacer.gif", {:width => "4px"} %>
+  </td>
+</def>
+
 

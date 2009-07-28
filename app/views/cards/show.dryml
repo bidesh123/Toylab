@@ -161,23 +161,6 @@
   </table>
 </def>
 
-<def tag="context">
-  <div if="&this.whole || this.list">
-    <ul style="list-style-type:none; background:white">Go to enclosing card <out whole-off /></ul>
-  </div>
-</def>
-
-<def tag="out">
-  <if            test="&this.whole"  >
-    <out         with="&this.whole" />
-  </if><else><if test="&this.list"   >
-    <out         with="&this.list"  />
-  </if></else>
-  <li unless="&attributes[:whole_off]" style="display:inline;background:white">
-    <a><%= this.reference_name %></a>
-  </li>
-</def>
-
 <def tag="toy-show">
   <set-scoped deep="&@card.look_deep" >
     <!-- why not edit-page ?? -->
@@ -199,26 +182,6 @@
       <aside:></aside:>
     </show-page>
   </set-scoped>
-</def>
-
-<def tag="trash">
-  <%
-    tooltip             = "Delete #{this.reference_name}"
-    number_of_aspects   = this.aspects.length
-    number_of_items     = this.items.length
-    if number_of_aspects > 0
-      if number_of_items > 0
-        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
-      else
-        tooltip += " and its #{number_of_aspects} items"
-      end
-    else # 0 aspects
-      if number_of_items > 0
-        tooltip += " and its #{number_of_items  } items"
-      end
-    end
-  %>
-  <delete-button image="toy_magnifier.png" title="#{tooltip}" />
 </def>
 
 <def tag="delete-button" attrs="label, update, in-place, image, confirm, fade, subsite">
@@ -271,7 +234,7 @@
   <div param="controls">
     <trash />
   </div>
-  <div param="debug-toy" if="&true">
+  <div param="debug-toy" if="&false">
     <%= scope.deep[:debug_log] %>
   </div>
   <div param="development" if="&false">
@@ -288,66 +251,12 @@
   </li>
 </def>
 
-<def tag="add-aspect">
-  <if test="&this">
-    <set  redirection=                      "&this.id"     />
-    <% tooltip =
-      (this.aspects.count > 0 ? " Add another aspect of " : "Add aspects of ") +
-      this.reference_name
-    %>
-    <form with       ="&Card.new(:whole_id => this.id)"             >
-      <!-- <submit       label="&label" /> -->
-      <submit label=">" title ="&tooltip" class ="toy-nav add-aspect" />
-      <after-submit uri  ="/cards/#{redirection}" />
-    </form                                                          >
-  </if>
-</def>
-
-<def tag="add-item">
-  <if test="&this">
-    <set  redirection=                      "&this.id"     />
-    <% tooltip = this.items.count > 0 ?
-        "Add another item to this list #{this.items.count}" :
-        "Add an indented list below #{this.reference_name}"
-    %>
-    <form with       ="&Card.new(:list_id  => this.id)"             >
-      <!-- <submit       label="&label" /> -->
-      <submit label="V" title ="&tooltip" class="toy-nav add-item tooltip">
-      </submit>
-      <after-submit uri  ="/cards/#{redirection}"                    />
-    </form                                                          >
-  </if>
-</def>
-
 <def tag="show-cell">
   <if test="&this">
     <td><show-card-inline /></td>
   </if><else>
     <empty-cell />
   </else>
-</def>
-
-<def tag="toy-header">
-  <%= attributes[:whole_off] %>
-  <table class="toy-header">
-    <tr>
-      <if test="&this.kind">
-        <th class="kind"            ><h1><editor:kind   blank-message="kind"   /></h1></th>
-      </if><else><if test="&this.list">
-        <!-- why h1 AND th both ?? -->
-        <th class="number"          ><h1><editor:number blank-message="number" /></h1></th>
-      </if><else>
-        <th class="empty-title-cell"    ><editor:kind   blank-message="kind"   /></th>
-      </else></else>
-    </tr>
-    <tr>
-      <td                         class="name"  ><h1      ><editor:name   blank-message="name"   /></h1></td>
-    </tr>
-    <tr>
-      <td                         class="body"  ><h3      ><body-editor                          /></h3></td>
-    </tr>
-  </table>
-  <record-flags fields="" param/>
 </def>
 
 <def tag="cell">
@@ -409,10 +318,6 @@
   <small><small param="default" /></small>
 </def>
 
-<def tag="body-editor">
-  <editor field="body" blank-message="..." click-to-edit-text="aha" label="oho" />
-</def>
-
 <def tag="items">
   <table>
     <items-rows with="&@deep_items" merge-attrs />
@@ -454,13 +359,6 @@
 </def>
 
 
-<def tag="spacer-cell">
-  <td class="spacer">
-  <%= image_tag "spacer.gif" %>
-  </td>
-
-</def>
-
 <def tag="add-item-row">
   <add-item />
 </def>
@@ -471,7 +369,7 @@
 
 
 <def tag="empty-title">
-  <th class="empty-title-cell">&nbsp;</th>  
+  <th class="empty-title-cell">&nbsp;</th>
 </def>
 
 <def tag="development-stuff">
@@ -499,6 +397,29 @@
 </def>
 
 <!--
+<def tag="toy-header">
+  < %= attributes[:whole_off] %>
+  toy header is not used any more
+  <table class="toy-header">
+    <tr>
+      <if test="&this.kind">
+        <th class="kind"            ><h1><editor:kind   blank-message="kind"   /></h1></th>
+      </if><else><if test="&this.list">
+        <th class="number"          ><h1><editor:number blank-message="number" /></h1></th>
+      </if><else>
+        <th class="empty-title-cell"    ><editor:kind   blank-message="kind"   /></th>
+      </else></else>
+    </tr>
+    <tr>
+      <td   class="name"            ><h1><editor:name   blank-message="name" /></h1></td>
+    </tr>
+    <tr>
+      <td   class="body"            ><h3><editor:body   blank-message="name" /></h3></td>
+    </tr>
+  </table>
+  <record-flags fields="" param/>
+</def>
+
 <show-page>
   <content-header:>
     <table>

@@ -6,7 +6,7 @@
       <header param="content-header">
         <h2 param="heading">Cards</h2>
 
-        <p param="count" if>There <count prefix="are"/></p>
+        <p param="count" if>There <count /></p>
       </header>
 
       <section param="content-body">
@@ -27,11 +27,11 @@
 
 
 <index-page>
-  <count:>You have <count prefix="are" label="card"/> on your Toy Office desk</count:>
+  <count:>You have <count label="card"/> on your Toy Office desk</count:>
     <top-page-nav:>where is my page nav?</top-page-nav:>
   <new-link:>
     <form with="&Card.new">
-      <submit label="add a new card on your desk" />
+      <submit label="Add a new card on your desk" />
       <after-submit uri="/cards" />
     </form>
   </new-link:>

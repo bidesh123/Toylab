@@ -33,6 +33,10 @@ class Card < ActiveRecord::Base
     end
   end
 
+  def edit_deep
+    {:origin => id}
+  end
+
   def next_up
     whole_id || list_id || id
   end

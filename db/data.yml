@@ -54,34 +54,38 @@ cards:
     - Date
     - 10 May 2009
     - 2009-04-20 02:15:57
-    - 2009-05-09 18:10:09
+    - 2009-07-18 04:37:54
     - "46"
-    - ""
+    - |-
+      You can add paragraphs like these to any Toy Office card. 
+      That date can be the heading for a whole chapter.
     - 
     - 
   - - "48"
-    - Customer
+    - Client
     - Hardy Real Estate
     - 2009-04-20 02:16:18
-    - 2009-05-09 18:08:44
+    - 2009-07-17 05:26:05
     - "46"
     - ""
     - 
     - 
   - - "49"
-    - Address
-    - 440 Greenoch
+    - Bill to
+    - residence
     - 2009-04-20 02:16:59
-    - 2009-05-09 19:20:58
+    - 2009-07-17 21:51:48
     - "48"
-    - ""
+    - |-
+      440 Greenoch
+      Ville Mont-Royal
     - 
     - 
   - - "50"
-    - City
-    - Ville Mont-Royal
+    - Phone
+    - (514) 558-8929
     - 2009-04-20 02:17:16
-    - 2009-06-18 03:01:47
+    - 2009-07-17 21:52:56
     - "49"
     - ""
     - 
@@ -105,12 +109,12 @@ cards:
     - "2"
     - "46"
   - - "66"
-    - Shipping
+    - Ship
     - FedEx
     - 2009-05-07 06:47:12
-    - 2009-06-12 14:12:50
+    - 2009-07-17 21:54:09
     - "46"
-    - 
+    - customer needs it by Tuesday at the latest
     - "3"
     - 
   - - "67"
@@ -158,15 +162,6 @@ cards:
     - 
     - "6"
     - 
-  - - "74"
-    - Units
-    - ea.
-    - 2009-05-10 17:49:02
-    - 2009-05-10 17:50:25
-    - "69"
-    - 
-    - "7"
-    - 
   - - "76"
     - Price
     - "299.95"
@@ -174,7 +169,7 @@ cards:
     - 2009-06-04 22:42:31
     - "63"
     - 
-    - "8"
+    - "7"
     - 
   - - "77"
     - Color
@@ -183,7 +178,7 @@ cards:
     - 2009-06-04 22:42:27
     - "63"
     - 
-    - "9"
+    - "8"
     - 
   - - "78"
     - Color
@@ -213,10 +208,10 @@ cards:
     - 
     - 
   - - "85"
-    - Recette
+    - Recipe
     - Veau aux carottes
     - 2009-06-15 05:17:02
-    - 2009-06-24 04:22:17
+    - 2009-07-06 20:11:13
     - ""
     - ""
     - "10"
@@ -248,21 +243,12 @@ cards:
     - 
     - 
     - 
-  - - "95"
-    - 
-    - this is an example of a vague cell, without a column header
-    - 2009-06-19 21:22:44
-    - 2009-06-23 23:28:36
-    - 
-    - 
-    - "5"
-    - "46"
   - - "96"
-    - Recette
+    - Recipe
     - Poule au riz
     - 2009-06-20 03:16:30
-    - 2009-06-24 04:41:24
-    - "63"
+    - 2009-07-06 20:11:42
+    - ""
     - "Cut the salt pork into 1/8 inch cubic lardoons.\n\n\
       Let the lardoons melt over low heat, then remove them, leaving the fat.\n\n\
       Sear the meat in the rendered fat at high heat, then remove.\n\n\
@@ -276,28 +262,10 @@ cards:
     - ""
     - Recipes
     - 
-    - 2009-06-26 02:11:39
+    - 2009-07-18 04:43:14
     - 
+    - "This collection of recipies is the product of a long collaboration between Maryelle Charton Gaudreau, daughter of famous Montreal host Alice B\xC3\xA9\xC3\xAFque Charton, and her daughter in law Isabelle Tremblay."
     - 
-    - 
-    - 
-  - - "104"
-    - color
-    - red
-    - 2009-06-23 02:40:44
-    - 2009-06-23 02:40:58
-    - "74"
-    - 
-    - "11"
-    - 
-  - - "105"
-    - color
-    - blue
-    - 2009-06-23 02:41:03
-    - 2009-06-23 03:05:44
-    - "74"
-    - 
-    - "12"
     - 
   - - "106"
     - 
@@ -306,7 +274,7 @@ cards:
     - 2009-06-23 06:05:13
     - "28606640"
     - 
-    - "13"
+    - "10"
     - 
   - - "107"
     - 
@@ -315,7 +283,7 @@ cards:
     - 2009-06-23 06:05:36
     - "28606640"
     - 
-    - "14"
+    - "11"
     - 
   - - "110"
     - ""
@@ -324,48 +292,31 @@ cards:
     - 2009-06-23 22:58:37
     - 
     - ""
-    - "15"
+    - "12"
     - 
-  - - "111"
-    - 
-    - vague cells are stacked in the first column
-    - 2009-06-23 23:24:56
-    - 2009-06-24 02:37:29
-    - 
-    - 
-    - "6"
-    - "46"
-  - - "112"
-    - 
-    - like this
-    - 2009-06-23 23:24:56
-    - 2009-06-24 02:37:43
-    - 
-    - 
-    - "6"
-    - "46"
   - - "113"
-    - 
-    - professeurs de langue
+    - category
+    - Language Teachers
     - 2009-06-24 02:52:12
-    - 2009-06-24 18:31:15
+    - 2009-07-18 05:10:44
     - 
-    - 
-    - "16"
+    - "Cette liste est totalement invent\xC3\xA9e, mais met en valeur comment Toy Office met naturellement en page les situations difficiles avec une feuille de calcul ou pire avec une base de donn\xC3\xA9es, comme celle d'avoir plusieurs colonnes avec le m\xC3\xAAme nom\n\n\
+      Bien s\xC3\xBBr Toy Office ne fait encore de calculs, mais c'est une caract\xC3\xA9ristique que nous attendons tous."
+    - "13"
     - 
   - - "114"
     - ""
     - Camping List
     - 2009-06-24 03:06:53
-    - 2009-06-24 04:04:34
+    - 2009-07-06 03:56:36
     - 
     - |-
       author's notes:
       
       This is just one example of what you can do with Toy Office. Why you can even make a Camping List. All the participants can enter items and change them because it's live of the web. So let's play along and enter data into our super easy Camping List.
       
-      Jan and I put this list together to coordinate our efforts when we went canoe camping. Canoe camping is such that if you forget something, you have to make do, no 7-11. I hope you enjoy the list and that it helps you be the happy camper.
-    - "17"
+      Jan and I put this list together to coordinate our efforts when we went canoe camping. Canoe camping is such that if you forget something, you have to make do, no 7-11's around. I hope you enjoy the list and that it helps you be the happy camper.
+    - "14"
     - 
   - - "115"
     - 
@@ -401,7 +352,7 @@ cards:
     - 2009-06-24 03:44:35
     - "114"
     - 
-    - "18"
+    - "15"
     - 
   - - "119"
     - to do
@@ -410,7 +361,7 @@ cards:
     - 2009-06-24 03:47:59
     - "114"
     - 
-    - "19"
+    - "16"
     - 
   - - "120"
     - to do
@@ -419,7 +370,7 @@ cards:
     - 2009-06-24 03:48:22
     - "114"
     - 
-    - "20"
+    - "17"
     - 
   - - "121"
     - 
@@ -455,62 +406,8 @@ cards:
     - 2009-06-24 04:19:07
     - "116"
     - 
-    - "21"
+    - "18"
     - 
-  - - "132"
-    - 
-    - "journ\xC3\xA9e \xC3\xA0 Bowker"
-    - 2009-06-24 18:25:52
-    - 2009-06-24 18:26:31
-    - 
-    - 
-    - "22"
-    - 
-  - - "133"
-    - date
-    - 24 juin 2009
-    - 2009-06-24 18:26:31
-    - 2009-06-24 18:28:00
-    - "132"
-    - ""
-    - "23"
-    - 
-  - - "134"
-    - "heure de d\xC3\xA9part"
-    - 12h00
-    - 2009-06-24 18:28:23
-    - 2009-06-24 18:29:13
-    - "132"
-    - 
-    - "24"
-    - 
-  - - "135"
-    - 
-    - se baigner
-    - 2009-06-24 18:29:29
-    - 2009-06-24 18:29:40
-    - 
-    - 
-    - "1"
-    - "132"
-  - - "136"
-    - 
-    - montrer toy office
-    - 2009-06-24 18:29:43
-    - 2009-06-26 04:51:03
-    - 
-    - ""
-    - "2"
-    - "132"
-  - - "137"
-    - 
-    - "aller en cano\xC3\xAB"
-    - 2009-06-24 18:29:55
-    - 2009-06-24 18:30:13
-    - 
-    - 
-    - "3"
-    - "132"
   - - "139"
     - 
     - Pierre
@@ -536,7 +433,7 @@ cards:
     - 2009-06-26 02:20:02
     - "139"
     - ""
-    - "25"
+    - "20"
     - 
   - - "142"
     - langue
@@ -545,7 +442,7 @@ cards:
     - 2009-06-26 02:20:31
     - "139"
     - ""
-    - "26"
+    - "20"
     - 
   - - "143"
     - langue
@@ -554,7 +451,7 @@ cards:
     - 2009-06-26 02:21:12
     - "139"
     - ""
-    - "27"
+    - "21"
     - 
   - - "144"
     - langue
@@ -563,52 +460,7 @@ cards:
     - 2009-06-26 02:22:16
     - "139"
     - ""
-    - "28"
-    - 
-  - - "145"
-    - 
-    - "choses \xC3\xA0 apporter \xC3\xA0 Sawin"
-    - 2009-06-26 02:11:53
-    - 2009-06-26 02:12:24
-    - 
-    - 
-    - "29"
-    - 
-  - - "146"
-    - 
-    - bobettes
-    - 2009-06-26 02:12:42
-    - 2009-06-26 02:12:56
-    - 
-    - 
-    - "1"
-    - "145"
-  - - "147"
-    - 
-    - maillot
-    - 2009-06-26 02:12:59
-    - 2009-06-26 02:16:02
-    - 
-    - 
-    - "2"
-    - "145"
-  - - "148"
-    - 
-    - cooler
-    - 2009-06-26 02:15:55
-    - 2009-06-26 02:16:36
-    - 
-    - 
-    - "3"
-    - "145"
-  - - "149"
-    - "quantit\xC3\xA9"
-    - "3"
-    - 2009-06-26 02:16:51
-    - 2009-06-26 02:17:48
-    - "146"
-    - 
-    - "30"
+    - "22"
     - 
   - - "150"
     - langage
@@ -617,7 +469,7 @@ cards:
     - 2009-06-26 02:25:12
     - "140"
     - 
-    - "31"
+    - "23"
     - 
   - - "151"
     - langue
@@ -626,7 +478,7 @@ cards:
     - 2009-06-26 02:23:33
     - "140"
     - 
-    - "32"
+    - "24"
     - 
   - - "152"
     - langue
@@ -635,52 +487,7 @@ cards:
     - 2009-06-26 02:23:37
     - "140"
     - 
-    - "33"
-    - 
-  - - "153"
-    - langue
-    - espagnol
-    - 2009-06-26 02:23:14
-    - 2009-06-26 02:23:42
-    - "140"
-    - 
-    - "34"
-    - 
-  - - "155"
-    - 
-    - 
-    - 2009-06-26 03:14:48
-    - 2009-06-26 03:14:48
-    - 
-    - 
-    - "1"
-    - "110"
-  - - "156"
-    - 
-    - "corriger le bug qui fait appara\xC3\xAEtre le mot langue 4 fois"
-    - 2009-06-26 03:31:32
-    - 2009-06-26 03:34:58
-    - 
-    - 
-    - "1"
-    - "136"
-  - - "157"
-    - 
-    - "pr\xC3\xA9sentation \xC3\xA0 Alice"
-    - 2009-06-26 03:32:21
-    - 2009-06-26 04:51:17
-    - 
-    - 
-    - "2"
-    - "136"
-  - - "158"
-    - 
-    - quatre fois c'est vraiment trop
-    - 2009-06-26 04:41:19
-    - 2009-06-26 04:41:51
-    - "156"
-    - 
-    - "35"
+    - "25"
     - 
   - - "159"
     - 
@@ -689,7 +496,7 @@ cards:
     - 2009-06-26 06:16:46
     - 
     - 
-    - "36"
+    - "26"
     - 
   - - "160"
     - aspect number
@@ -698,7 +505,7 @@ cards:
     - 2009-06-26 05:06:09
     - "159"
     - ""
-    - "37"
+    - "27"
     - 
   - - "161"
     - 
@@ -707,7 +514,7 @@ cards:
     - 2009-06-26 05:38:11
     - "159"
     - trying to mix things up a bit
-    - "38"
+    - "28"
     - 
   - - "162"
     - 
@@ -725,5 +532,207 @@ cards:
     - 2009-06-26 06:19:05
     - "162"
     - so you should see the number no???
+    - "29"
+    - 
+  - - "207"
+    - 
+    - Le Logigram
+    - 2009-07-06 04:25:21
+    - 2009-07-06 04:33:48
+    - 
+    - "\xC2\xA9 Productivit\xC3\xA9 3 Lt\xC3\xA9e"
+    - "32"
+    - 
+  - - "208"
+    - 
+    - I
+    - 2009-07-06 04:34:21
+    - 2009-07-06 04:34:35
+    - 
+    - 
+    - "1"
+    - "207"
+  - - "209"
+    - 
+    - II
+    - 2009-07-06 04:34:24
+    - 2009-07-06 04:34:50
+    - 
+    - 
+    - "2"
+    - "207"
+  - - "210"
+    - 
+    - III
+    - 2009-07-06 04:34:26
+    - 2009-07-06 04:34:57
+    - 
+    - 
+    - "3"
+    - "207"
+  - - "211"
+    - 
+    - IV
+    - 2009-07-06 04:34:28
+    - 2009-07-06 04:35:03
+    - 
+    - 
+    - "4"
+    - "207"
+  - - "213"
+    - 
+    - "premier sujet \xC3\xA0 l'envers"
+    - 2009-07-06 04:35:42
+    - 2009-07-06 04:43:51
+    - "208"
+    - 
+    - "32"
+    - 
+  - - "214"
+    - 
+    - not a multiple-cell ?
+    - 2009-07-06 10:18:16
+    - 2009-07-06 10:19:39
+    - "209"
+    - <tr class="sub-cell" repeat="&this.reverse"> doesn't cut it
+    - "32"
+    - 
+  - - "215"
+    - 
+    - how about a second vague
+    - 2009-07-06 14:47:52
+    - 2009-07-06 14:48:05
+    - "209"
+    - 
+    - "33"
+    - 
+  - - "216"
+    - titled
+    - one
+    - 2009-07-06 14:48:41
+    - 2009-07-06 14:48:54
+    - "209"
+    - 
+    - "34"
+    - 
+  - - "217"
+    - titled
+    - two
+    - 2009-07-06 14:48:56
+    - 2009-07-06 14:49:07
+    - "209"
+    - 
+    - "35"
+    - 
+  - - "227"
+    - Recipe
+    - Blue potatoes
+    - 2009-07-06 15:51:34
+    - 2009-07-06 20:20:39
+    - 
+    - 
+    - "11"
+    - "100"
+  - - "246"
+    - ""
+    - How are cards like blocks
+    - 2009-07-17 05:53:57
+    - 2009-07-18 05:14:28
+    - 
+    - ""
+    - "36"
+    - 
+  - - "247"
+    - 
+    - Think of a block in a playroom
+    - 2009-07-17 22:06:22
+    - 2009-07-18 05:18:05
+    - "246"
+    - |-
+      It is simple to understand.
+      It has six faces
+      with different symbols and colors,
+      but 3 are hidden.
+      And most importantly it is very versatile
+      and anyone, even a child, can use it
+      to build simple physical structures.
+    - "37"
+    - 
+  - - "248"
+    - 
+    - a card in a toy office is like a block
+    - 2009-07-17 22:06:25
+    - 2009-07-18 05:19:18
+    - "246"
+    - |
+      It is a simple universal building block.
+      It has 6 faces
+      showing info, category and content
+      normally hiding behavior, history and blank.
+      And most importantly it is very versatile
+      and anyone, even a computer beginner, can use it
+      to easily build complex web applications.
+      
+      Where users can work together on anything from simples lists and recipes to invoices linked to customers and inventory. Such a web application would cost many thousands of dollars to produce and Toy Office lets you do it yourself.
+      
+      Toy Office, data base power , without the data base.
+
+    - "38"
+    - 
+  - - "249"
+    - Jean de La Fontaine
+    - La Cigale et la Fourmi
+    - 2009-07-18 02:53:39
+    - 2009-07-18 03:21:07
+    - 
+    - "La Cigale, ayant chant\xC3\xA9\n\
+      Tout l'\xC3\xA9t\xC3\xA9,\n\
+      Se trouva fort d\xC3\xA9pourvue\n\
+      Quand la bise fut venue :\n\
+      Pas un seul petit morceau\n\
+      De mouche ou de vermisseau.\n\
+      Elle alla crier famine\n\
+      Chez la Fourmi sa voisine,\n\
+      La priant de lui pr\xC3\xAAter\n\
+      Quelque grain pour subsister\n\
+      Jusqu'\xC3\xA0 la saison nouvelle.\n\
+      \"Je vous paierai, lui dit-elle,\n\
+      Avant l'O\xC3\xBBt, foi d'animal,\n\
+      Int\xC3\xA9r\xC3\xAAt et principal. \"\n\
+      La Fourmi n'est pas pr\xC3\xAAteuse :\n\
+      C'est l\xC3\xA0 son moindre d\xC3\xA9faut.\n\
+      Que faisiez-vous au temps chaud ?\n\
+      Dit-elle \xC3\xA0 cette emprunteuse.\n\
+      - Nuit et jour \xC3\xA0 tout venant\n\
+      Je chantais, ne vous d\xC3\xA9plaise.\n\
+      - Vous chantiez ? j'en suis fort aise.\n\
+      Eh bien! dansez maintenant. "
     - "39"
+    - 
+  - - "250"
+    - Date
+    - "1765"
+    - 2009-07-18 03:24:36
+    - 2009-07-18 03:24:46
+    - "249"
+    - 
+    - "40"
+    - 
+  - - "255"
+    - langage
+    - SmallTalk
+    - 2009-07-18 05:07:49
+    - 2009-07-18 05:08:05
+    - "139"
+    - 
+    - "41"
+    - 
+  - - "256"
+    - langage
+    - Pascal
+    - 2009-07-18 05:07:52
+    - 2009-07-18 05:08:39
+    - "139"
+    - 
+    - "42"
     - 

@@ -87,7 +87,7 @@ form .actions input { margin: 0; }
 }
 .flash.notice {background: #92ab6e;}
 .flash.error {background: #BC1C3D;}
-.section.with-flash { padding-top: 20px; }
+.section.with-flash { padding-top: 0px; }
 
 /* rails error message */
 .error-messages {
@@ -117,7 +117,7 @@ form .actions input { margin: 0; }
 .field-list td {width: auto;}
 .field-list .input-help { color: #888;}
 
-.content-header, .content-body, .content-footer {margin: 0 45px 15px; padding: 0;}
+.content-header, .content-body, .content-footer {margin:0px; margin-left: 1% ; padding: 0;}
 .content-header {padding: 5px 0;} 
 .content-body {padding: 15px 0;}
 .content-footer {padding-bottom: 20px;}
@@ -134,7 +134,7 @@ form .actions input { margin: 0; }
 .page-header .navigation a:hover,
 .page-header h1 a, 
 .page-header h1 a:hover
- {border: none; color: white; background: none;}
+ {border: none; color: white; background: gree;}
 .page-header .navigation a, .button {background:#9cf; color: #666}
 
 

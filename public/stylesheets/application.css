@@ -17,7 +17,7 @@
 .bright-15 {background-color:#d02;}
 
 
-.office    {background-color:#f00; color:#eee;}
+.appname{height:300px}
 .o         {                       color:#f9c;} /*#f9c*/
 .ff        {                       color:#fc9;} /*#fc9*/
 .fi        {                       color:#ff9;} /*#ff9*/
@@ -27,32 +27,38 @@
 
 /**** Generic Toy Office styling  ****/
 
+
 body, div, p, ol, ul, input, textarea, .input {
   font-family: serif;
-  font-size:   16px;
-  background-color: white; color: black;
-  line-height: 18px;
+  font-size:   18px;
+  background-color: transparent; color: black;
+  padding:0px;
+}
+
+div {
+  background-color:transparent; color: black;padding:0px;
 }
 
 h, th, h input, th input {
   font-family: verdana, arial, helvetica, sans-serif;
+  background-color: aqua;
   text-align: left;
   padding: 0px;
   font-size: 10px;
 }
 
-th, td {
-}
-
-.page-header{
-  background-color: white;
+page-header{
+  background-color: purple;
 }
 
 h1, div {
-  margin-top: 12px;
-  padding-left: 12px;
+  margin-top: 0px;
+  padding: 0px;
 }
 
+.page-header h1 {
+	margin: 0; padding: 0 0px 0px;
+}
 .numeric, .aspect-numeric-body-cell, .sort-of-numeric {
   text-align: right;
 }
@@ -84,15 +90,25 @@ a:visited {              color: #370; }
 a:hover   {              color: #96c; }
 a:active  {              color: #666; }
 
-input.add-aspect {
-  font-size: 20pt;
+a.go {
+  background-color:#9cf;color: #666;
+  font-family: "Arial Black", sans-serif;
+  font-size: 9px;
+  margin:0px;padding:0px
 }
 
+a.go:hover {
+  color: white;
+}
+
+.zoom {
+  text-decoration:none;
+ }
+
 span.navLink {
-                         color: #ddd;
-  font-family: Arial, sans-serif;
-  font-weight: bold;
-  font-size: 8pt;
+                         color: #666;
+  font-family: "Arial Black", sans-serif;
+  font-size: 9px;
 }
 
 span.navLink a {
@@ -106,7 +122,7 @@ span.navLink a:active  { color: #f0f; }
 
 .toy-nav {
   font-family: Arial, sans-serif;
-  font-size: 16pt;
+  font-size: 9px;
 }
 
 .add-dependent:hover {
@@ -135,6 +151,10 @@ div.card_body {
   font-size: 12px;
 }
 
+td.search {
+  text-align:right;
+}
+
 p {
 }
 
@@ -147,26 +167,255 @@ pre {
 /**** Styling for table elements  ****/
 
 table {
-  background-color: white;
+  background-color: transparent;
+  border-spacing:0px;
+}
+
+table.aspects-table {
+    background-color:transparent; border:0px solid black;margin:auto;
+}
+
+table.bottom:controls {
+  font-size:9px;
+  border-spacing:0px;
+}
+
+table.card {
+ background-color: transparent;
+}
+
+table.core{
+  border:       0px solid #999;
+  border-right: 0px solid #999;
+  border-bottom:0px solid #999;
+  margin:      0px;
+  background-color: green;
+  border-spacing:     0px;
+
+}
+
+table.core-controls{
+  border:       0px solid #999;
+  border-right: 0px solid #999;
+  border-bottom:0px solid #999;
+  margin:      0px;
+  background-color:green;
+  border-spacing:     0px;
+
+}
+
+table.first-card {
+  border-spacing:0px;
+}
+
+table.inner {
+  width:auto;
+  border:       0px solid #666;
+  border-right: 0px solid transparent;
+  border-bottom:10px solid transparent;
+  margin:      0px;
+  font-size:   12px;
+ }
+
+table.list-rows {
+    background-color:transparent;width:100%;
 }
 
 table.pair-head {
   width:100%;
 }
 
-tr {
+table.header {
+  width:100%;margin-top:45px;
+}
+
+tr { background-color:transparent;margin:0px;padding:0px;
+}
+
+tr.aspects-row {
+  background-color:transparent;
+}
+
+tr.bottom-row {
+  background-color:#f66;
+}
+
+tr.self-item-row {
+  background-color:#f88;height:auto;
+}
+
+tr.list-row {
+  background-color:transparent;margin:30px;border:20px solid aqua;
+}
+
+tr.item-row {
+  background-color:transparent;
+}
+
+tr.core-main-row{
+}
+
+tr.core-controls {
+    margin:0px;padding:0px;
+}
+
+th, td {
+}
+
+th {
+  background-color: #666; color:white; font-family:"Arial Black",Gadget,sans-serif;
+}
+
+th.first {
+  font-size: 140%; padding:4px;
+}
+
+
+th.empty-title-cell {
+  background-color: blue; color:#036; padding-bottom : 1px;
+}
+
+th.header-pair-name {
+  width:62%;
+  color:#333;
 }
 
 td {
+  background-color:transparent;
 }
 
-td.spacer {
-  background-color:white;
+td.add-aspect {
+  background-color: purple;
+}
+
+td.add-item {
+  width:30px;
+}
+
+td.aspect-cell {
+  background-color:transparent;border-top:10px solid #666;border-left:0px solid #666;
+}
+
+td.aspects-table {
+  background-color:transparent;
+}
+
+td.bottom-controls {
+  background-color:#9cf;
+
+}
+
+td.body-cell {
+  background-color:#eee;
+}
+
+td .card-body, textarea {
+  background-color:#eee;border:0px;
+}
+
+.core-main-row td{
+  background-color: fuchsia;border:0px solid blue;padding-right:3px;
+
+}
+
+td.core {
+  vertical-align:top;
+  border-right:8px solid white;
+}
+
+
+td.core-controls{
+  background-color: #9cf;
+  border:0px solid orange;padding:0px;margin:0px;width:auto;text-align:center;
+}
+
+td.core-add-aspect {
+  background-color:teal;border:5px solid green;width:auto;padding:1px;
+}
+
+td.core-add-item{
+  background-color: green;border:0px solid yellow;padding:0px;margin:0px;
+
+}
+
+td.core-add-item a.add-item{
+  background-color: green;border:0px solid yellow;padding:0px;margin:0px;text-align:center;
+
+}
+
+td.core-trash{
+  background-color: blue;border:0px solid purple;margin:0px;
+color:purple;
+}
+
+.card td.core-trash {
+  background-color: #f9c;border:0px solid yellow;padding:0px;margin:0px
+}
+
+td.core-trash form{
+  background-color: blue;border:0px solid red;padding:0px;margin:0px;
+
+}
+
+td.core-trash form div{
+  background-color: #f9c;border:0px solid purple;padding:0px;margin:0px;
+
+}
+
+td.core-trash form div input{
+  background-color: fuchsia;border:0px solid purple;padding:0px;margin:00px;
+  font-family:"Arial Black", sans-serif;
+color:#666;
+    }
+
+
+.card td.core-add-aspect {
+  background-color: #9cf;border:0px solid #630; vertical-align:middle;
+}
+
+.card td.core-add-item {
+  background-color: #9cf;border:0px solid #630;
+}
+
+td.first th.first{
+  font-size: 140%; padding:4px;
+}
+
+
+td.go {
+  background-color: #9cf;vertical-align:bottom;padding:0px;  height:1px; width:20px; text-align:center;
+
 }
 
 td.header-pair-body {
   text-align: right;
   color:#999;
+}
+
+table.inner td{
+  border-right: 0px solid transparent;
+}
+
+
+td.item-cell {
+  background-color:transparent;border-left:16px solid #ccc;
+}
+
+td.list-cell {
+  background-color:green;
+}
+
+td.search {
+  text-align:right;
+}
+
+
+td.spacer {
+  background-color:transparent;
+}
+
+td.transparent {
+  background-color: transparent ;
 }
 
 td.right-border-cell,
@@ -180,65 +429,83 @@ td.bottom-right-border-cell {
 }
 
 
-td.transparent {
-  background-color: purple ;
-}
-
-td.add-aspect {
-  background-color: white;
-}
-
-th {
-  background-color: #666; color:white; font-family:"Arial Black",Gadget,sans-serif;
-}
-
-th.first {
-  font-size: 140%; padding:4px;
-}
-
-
-td.first {
-  font-size: 140%; padding:4px;
-}
-
-
-th.empty-title-cell {
-  background-color: white; color:#036; padding-bottom : 1px;
-}
-
-th.header-pair-name {
-  width:62%;
-  color:#333;
+.card  {
+  border:0px solid green;
 }
 
 /**** Styling for input elements  ****/
 form {
+    background-color:black;
     padding-top:0px;
+    padding:0px;
 }
 
 form.button_to
 submit {
-  font-size:large;
+  font-size:small;
 }
 
 form.card {
   margin:0px;
 }
 
+form.add-aspect {
+  background-color:purple;margin:0px;padding:0px;border:0px solid red;
+}
+
+form.core-add-item {
+  background-color:fuchsia;margin:00px;padding:00px;border:0px solid green;
+}
+
+form.core-trash {
+  background-color:fuchsia;margin:00px;padding:00px;border:0px solid yellow;
+}
+
+form.erase {
+    padding:0px;margin:0px;
+}
+
 input, textarea, .input {
-  width: auto;
+  width: auto
 }
 
 input {
-  background-color: #eee; color:black;
+  background-color: orange; color:black;border:2px solid fuchsia;
 }
 
-input.delete-button {
-  background-color: #f34; color:#333; border:none;
+.card input.delete-button {
+  background-color: #f9c; color:#333;
+  border:none;margin:0px;padding:0px;
 }
 
 input.delete-button:hover {
   background-color: black; color:white;
+}
+
+input.add-aspect, input.add-item {
+  background-color:#9cf;margin:0px;padding:0px;
+  font-family: "Arial Black", sans-serif;
+  font-size: 8pt;
+}
+
+input.add-aspect {
+    padding-bottom:5px;padding-top:3px;border:0px solid red;
+}
+
+input.add-item {
+    padding-left:5px;padding-right:3px;border:0px solid red;
+}
+
+input.erase {
+  background-color:#f9c;
+  font-size:9px;
+  font-family: "Arial Black", sans-serif;
+  padding:0px;
+  margin:0px;
+}
+
+h input, th input {
+  background-color: #666; color:white;
 }
 
 textarea {
@@ -249,16 +516,10 @@ textarea {
   background-color: purple; color:#11f;
 }
 
-h input, th input {
-  background-color: #666; color:white;
-}
-
 th .editor {
   color:white;
 }
 
-.add-aspect input {
-}
 /**** Styling for validation  ****/
 
 .fieldWithErrors {
@@ -339,7 +600,7 @@ div.progressBar div.background {
 /**** Styling for toy content  ****/
 
 .cell, .aspect-name-cell, .aspect-body-cell {
-  padding-right: 40px;
+  padding-right: 8px;
 }
 
 .aspect-kind-cell {
@@ -347,15 +608,15 @@ div.progressBar div.background {
 }
 
 .aspect-name-cell {
-  text-align: left; background-color: #eee;
-        border-top:    8px solid #eee;
+  text-align: left; background-color: white;
+        border-top:    0px solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;
         border-bottom: 0px solid #eee;
 }
 
 .aspect-name-cell .first {
-  text-align: left; background-color: yellow;
+  text-align: left; background-color: fuchsia;
         border-top:    8px solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;
@@ -363,7 +624,7 @@ div.progressBar div.background {
 }
 
 .aspect-body-cell {
-  text-align: left; background-color : white;
+  text-align: left; background-color : #eee;
         border-top:    0px solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;
@@ -378,3 +639,14 @@ td.debug {
 }
 
 .show-page .content-header {border-bottom: 0px dotted #888;}
+a.card-link {text-decoration: none;}
+.page-header .navigation a:hover {
+    background-color: teal;
+}
+
+input[type="submit"]:hover{color:white;}
+
+
+.section.with-flash { padding-top: 0px; }
+.content-header, .content-body, .content-footer {margin: 0px; padding: 0px;}
+.page-header {position: relative; margin: 0px; padding: 0px;}
