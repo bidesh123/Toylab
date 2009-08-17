@@ -47,13 +47,13 @@ h, th, h input, th input {
   font-size: 10px;
 }
 
-page-header{
-  background-color: purple;
-}
-
 h1, div {
   margin-top: 0px;
   padding: 0px;
+}
+
+page-header{
+  background-color: purple;
 }
 
 .page-header h1 {
@@ -90,19 +90,23 @@ a:visited {              color: #370; }
 a:hover   {              color: #96c; }
 a:active  {              color: #666; }
 
-a.go {
+a.go, a.zoom-in {
   background-color:#9cf;color: #666;
   font-family: "Arial Black", sans-serif;
   font-size: 9px;
   margin:0px;padding:0px
 }
 
-a.go:hover {
+a.go:hover, a.zoom-in:hover {
   color: white;
 }
 
-.zoom {
+.zoom, zoom-in {
   text-decoration:none;
+ }
+
+.zoom-in {
+  background-color:transparent;
  }
 
 span.navLink {
@@ -189,7 +193,6 @@ table.core{
   border-right: 0px solid #999;
   border-bottom:0px solid #999;
   margin:      0px;
-  background-color: green;
   border-spacing:     0px;
 
 }
@@ -199,7 +202,7 @@ table.core-controls{
   border-right: 0px solid #999;
   border-bottom:0px solid #999;
   margin:      0px;
-  background-color:green;
+  background-color:orange;
   border-spacing:     0px;
 
 }
@@ -334,12 +337,12 @@ td.core-add-aspect {
 }
 
 td.core-add-item{
-  background-color: green;border:0px solid yellow;padding:0px;margin:0px;
+  background-color: yellow;border:0px solid yellow;padding:0px;margin:0px;
 
 }
 
 td.core-add-item a.add-item{
-  background-color: green;border:0px solid yellow;padding:0px;margin:0px;text-align:center;
+  background-color: blue;border:0px solid yellow;padding:0px;margin:0px;text-align:center;
 
 }
 
@@ -398,11 +401,11 @@ table.inner td{
 
 
 td.item-cell {
-  background-color:transparent;border-left:16px solid #ccc;
+  background-color:transparent;border-left:32px solid #666;
 }
 
 td.list-cell {
-  background-color:green;
+  background-color:fuchsia;
 }
 
 td.search {
@@ -650,3 +653,11 @@ input[type="submit"]:hover{color:white;}
 .section.with-flash { padding-top: 0px; }
 .content-header, .content-body, .content-footer {margin: 0px; padding: 0px;}
 .page-header {position: relative; margin: 0px; padding: 0px;}
+
+div.context li {
+  font-family: arial, helvetica, sans-serif;
+  text-align: left;
+  padding: 0px;
+  font-size: 10px;
+}
+

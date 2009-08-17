@@ -45,13 +45,14 @@
 <def tag="add-item">
   <if test="&this">
     <set  redirection=                      "&this.id"     />
-    <% tooltip = this.items.count > 0 ?
-        "Add another item to this list of #{this.items.count} items" :
-        "Start a list under #{this.reference_name}"
+    <% tooltip =
+         this.items.count > 0 ?
+           "Add another item under #{this.reference_name}, below the following #{this.items.count}" :
+           "Start a list under #{this.reference_name}"
     %>
     <form with       ="&Card.new(:list_id  => this.id)"             >
       <!-- <submit       label="&label" /> -->
-      <submit label="v&nbsp;" title ="&tooltip" class="toy-nav add-item tooltip">
+      <submit label="+" title ="&tooltip" class="toy-nav add-item tooltip">
       </submit>
       <after-submit uri  ="/cards/#{redirection}/edit"                    />
     </form                                                          >
@@ -62,14 +63,14 @@
 <def tag="add-aspect">
   <if test="&this">
     <set  redirection=                      "&this.id"     />
-    <% tooltip = "Specify "
+    <% tooltip = "Describe" +
         (this.aspects.count > 0 ? "another " : "an ") +
         "aspect of " +
         this.reference_name
     %>
     <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
       <!-- <submit       label="&label" /> -->
-      <submit label=">" title ="&tooltip" class ="toy-nav add-aspect" />
+      <submit label="+" title ="&tooltip" class ="toy-nav add-aspect" />
       <after-submit uri  ="/cards/#{redirection}/edit" />
     </form                                                          >
   </if>
