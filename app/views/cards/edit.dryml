@@ -63,7 +63,7 @@
 <def tag="add-aspect">
   <if test="&this">
     <set  redirection=                      "&this.id"     />
-    <% tooltip = "Describe" +
+    <% tooltip = "Describe " +
         (this.aspects.count > 0 ? "another " : "an ") +
         "aspect of " +
         this.reference_name
@@ -100,7 +100,7 @@
 </def>
 
 <def tag="list-row">
-  <tr class="list-row">
+  <tr class="list-row" if="&this.items">
     <td class="list-row>" colspan="2">
       <table class="list-rows" if="&this.items">
         <repeat with="&this.items">
@@ -122,16 +122,16 @@
 </def>
 
 <def tag="core-main">
-  <table class="core-main">
+  aba laba lou ou<table class="core-main">
     <tr class="kind">
-      <th class="kind-cell"><editor:kind blank-message="....." /></th>
+      <th class="kind-cell"><editor:kind blank-message="&nbsp;.." /></th>
       <td class="core-add-aspect" rowspan="3">
         <add-aspect if="&true" />
         <else><form class="add-aspect">abx bcz</form></else>
       </td>
     </tr>
-    <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
-    <tr class="body"><td class="body-cell"><editor:body blank-message="....."/></td></tr>
+    <tr class="name"><td class="name-cell"><editor:name blank-message="..pater.."/></td></tr>
+    <tr class="body"><td class="body-cell"><editor:body blank-message="..noster.."/></td></tr>
   </table>
 </def>
 
@@ -159,11 +159,27 @@
 <def tag="core">
   <table class="core">
     <tr class="core-main-row"   >
-      <th class="kind-cell"                  ><editor:kind blank-message="....." /></th>
+      <th class="kind-cell"                  >
+        <if test="&this.kind ">
+          <editor:kind                   blank-message="....." />
+        </if>
+        <else>
+          <editor:kind class="tiny-gray" blank-message="....." />
+        </else>
+      </th>
       <td class="core-add-aspect" rowspan="3"><add-aspect                        /></td>
     </tr>
     <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
-    <tr class="body"><td class="body-cell"><editor:body blank-message="....."/></td></tr>
+    <tr class="body">
+      <td class="body-cell">
+        <if test="&this.body ">
+          <editor:body                   blank-message="....." />
+        </if>
+        <else>
+          <editor:body class="tiny-gray" blank-message="....." />
+        </else>
+      </td>
+    </tr>
     <tr class="core-controls" >
       <td class="bottom-controls">
         <bottom-controls if="&true" /><else>bottom controls</else>

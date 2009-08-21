@@ -60,7 +60,7 @@
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
-    <% tooltip = "Zoom in on #{this.reference_name} only" %>
+    <% tooltip = "Zoom in on #{this.reference_name}" %>
   <a class="zoom-in" title="&tooltip">O</a>
 </def>
 

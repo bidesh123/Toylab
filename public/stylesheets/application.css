@@ -28,19 +28,23 @@
 /**** Generic Toy Office styling  ****/
 
 
-body, div, p, ol, ul, input, textarea, .input {
+body, p, ol, ul, input, textarea, .input {
   font-family: serif;
-  font-size:   18px;
   background-color: transparent; color: black;
   padding:0px;
 }
 
 div {
-  background-color:transparent; color: black;padding:0px;
+  background-color:transparent; color: black; padding:0px;
 }
 
+body {
+  background-color:#eee; padding:20px;
+}
+
+
 h, th, h input, th input {
-  font-family: verdana, arial, helvetica, sans-serif;
+  font-family: arial-black, verdana, arial, helvetica, sans-serif;
   background-color: aqua;
   text-align: left;
   padding: 0px;
@@ -52,12 +56,12 @@ h1, div {
   padding: 0px;
 }
 
-page-header{
+page-header {
   background-color: purple;
 }
 
 .page-header h1 {
-	margin: 0; padding: 0 0px 0px;
+	margin: 0; padding: 0 0px 10px;
 }
 .numeric, .aspect-numeric-body-cell, .sort-of-numeric {
   text-align: right;
@@ -67,10 +71,14 @@ page-header{
   background-color: purple;
 }
 
-.tiny-gray {
-  font-size: x-small;
-                         color: #999;
-}/**** Styling for navigation ****/
+
+.kind-cell .tiny-gray, .body-cell .tiny-gray {
+  line-height: 4px;
+  font-size: 4px;
+  color: #999;
+}
+
+/**** Styling for navigation ****/
 
 .navigation, .search, .editor {
 }
@@ -91,10 +99,10 @@ a:hover   {              color: #96c; }
 a:active  {              color: #666; }
 
 a.go, a.zoom-in {
-  background-color:#9cf;color: #666;
+  background-color:#9cf;color: #666;padding:0;padding-left:1px;padding-right:3px;
   font-family: "Arial Black", sans-serif;
   font-size: 9px;
-  margin:0px;padding:0px
+  margin:0px;
 }
 
 a.go:hover, a.zoom-in:hover {
@@ -151,12 +159,12 @@ div {
   /*background-color: #1ff;*/
 }
 
-div.card_body {
+div.card-body {
   font-size: 12px;
 }
 
-td.search {
-  text-align:right;
+div.content-body {
+  margin-top:12px;
 }
 
 p {
@@ -176,7 +184,7 @@ table {
 }
 
 table.aspects-table {
-    background-color:transparent; border:0px solid black;margin:auto;
+    background-color:transparent; border:0px solid black;margin:auto;padding:0;
 }
 
 table.bottom:controls {
@@ -192,7 +200,7 @@ table.core{
   border:       0px solid #999;
   border-right: 0px solid #999;
   border-bottom:0px solid #999;
-  margin:      0px;
+  margin:       0px;
   border-spacing:     0px;
 
 }
@@ -201,24 +209,15 @@ table.core-controls{
   border:       0px solid #999;
   border-right: 0px solid #999;
   border-bottom:0px solid #999;
-  margin:      0px;
+  margin:       0px;
   background-color:orange;
   border-spacing:     0px;
 
 }
 
-table.first-card {
-  border-spacing:0px;
+td.aspect-cell {
+    vertical-align:top;
 }
-
-table.inner {
-  width:auto;
-  border:       0px solid #666;
-  border-right: 0px solid transparent;
-  border-bottom:10px solid transparent;
-  margin:      0px;
-  font-size:   12px;
- }
 
 table.list-rows {
     background-color:transparent;width:100%;
@@ -229,10 +228,10 @@ table.pair-head {
 }
 
 table.header {
-  width:100%;margin-top:45px;
+  width:100%; margin-top:45px;
 }
 
-tr { background-color:transparent;margin:0px;padding:0px;
+tr { background-color:transparent; margin:0px; padding:0px;
 }
 
 tr.aspects-row {
@@ -248,7 +247,7 @@ tr.self-item-row {
 }
 
 tr.list-row {
-  background-color:transparent;margin:30px;border:20px solid aqua;
+  background-color:transparent; border:20px solid aqua;
 }
 
 tr.item-row {
@@ -259,7 +258,7 @@ tr.core-main-row{
 }
 
 tr.core-controls {
-    margin:0px;padding:0px;
+    margin:0px;padding:0px;height:16px;
 }
 
 th, td {
@@ -269,13 +268,24 @@ th {
   background-color: #666; color:white; font-family:"Arial Black",Gadget,sans-serif;
 }
 
-th.first {
-  font-size: 140%; padding:4px;
+table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card td.body-cell {
+  font-size: xx-large; padding:4px;
+  line-height: 100%;
 }
 
 
+table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      td.body-cell {
+  font-size: smaller; padding:0px;
+  line-height: 100%;
+}
+
+table.first-card th.kind-cell .tiny-gray, table.first-card td.body-cell .tiny-gray {
+  font-size: 4px; padding:0px;
+  line-height: 4px;
+}
+
 th.empty-title-cell {
-  background-color: blue; color:#036; padding-bottom : 1px;
+  background-color: white; color:#036; padding-bottom : 1px;
 }
 
 th.header-pair-name {
@@ -296,23 +306,23 @@ td.add-item {
 }
 
 td.aspect-cell {
-  background-color:transparent;border-top:10px solid #666;border-left:0px solid #666;
+  background-color:transparent;border-top:14px solid #ccc;padding-top: 9px;
 }
 
 td.aspects-table {
   background-color:transparent;
 }
 
-td.bottom-controls {
-  background-color:#9cf;
-
-}
-
 td.body-cell {
   background-color:#eee;
 }
 
-td .card-body, textarea {
+td.bottom-controls {
+  height:16px;
+  background-color:#9cf;
+}
+
+td .card-body {
   background-color:#eee;border:0px;
 }
 
@@ -342,12 +352,12 @@ td.core-add-item{
 }
 
 td.core-add-item a.add-item{
-  background-color: blue;border:0px solid yellow;padding:0px;margin:0px;text-align:center;
+  background-color: green;border:0px solid yellow;padding:0px;margin:0px;text-align:center;
 
 }
 
 td.core-trash{
-  background-color: blue;border:0px solid purple;margin:0px;
+  background-color: teal;border:0px solid purple;margin:0px;
 color:purple;
 }
 
@@ -356,7 +366,7 @@ color:purple;
 }
 
 td.core-trash form{
-  background-color: blue;border:0px solid red;padding:0px;margin:0px;
+  background-color: fuchsia;border:0px solid red;padding:0px;margin:0px;
 
 }
 
@@ -368,7 +378,7 @@ td.core-trash form div{
 td.core-trash form div input{
   background-color: fuchsia;border:0px solid purple;padding:0px;margin:00px;
   font-family:"Arial Black", sans-serif;
-color:#666;
+  color:#666;
     }
 
 
@@ -378,10 +388,6 @@ color:#666;
 
 .card td.core-add-item {
   background-color: #9cf;border:0px solid #630;
-}
-
-td.first th.first{
-  font-size: 140%; padding:4px;
 }
 
 
@@ -396,12 +402,11 @@ td.header-pair-body {
 }
 
 table.inner td{
-  border-right: 0px solid transparent;
 }
 
 
 td.item-cell {
-  background-color:transparent;border-left:32px solid #666;
+  background-color:transparent;border-left:16px solid #ccc;padding-left:10px; padding-top:10px;
 }
 
 td.list-cell {
@@ -429,6 +434,11 @@ td.bottom-right-border-cell {
 td.bottom-border-cell,
 td.bottom-right-border-cell {
   border-bottom: 8px solid white;
+}
+
+
+tr.self-and-aspects-row {
+  background-color:white;
 }
 
 
@@ -473,12 +483,12 @@ input, textarea, .input {
 }
 
 input {
-  background-color: orange; color:black;border:2px solid fuchsia;
+  background-color: transparent; color:black;border:2px solid white;
 }
 
 .card input.delete-button {
   background-color: #f9c; color:#333;
-  border:none;margin:0px;padding:0px;
+  border:none;margin:0px;padding:0px;height:12px;
 }
 
 input.delete-button:hover {
@@ -488,7 +498,7 @@ input.delete-button:hover {
 input.add-aspect, input.add-item {
   background-color:#9cf;margin:0px;padding:0px;
   font-family: "Arial Black", sans-serif;
-  font-size: 8pt;
+  font-size: 11px;
 }
 
 input.add-aspect {
@@ -496,12 +506,12 @@ input.add-aspect {
 }
 
 input.add-item {
-    padding-left:5px;padding-right:3px;border:0px solid red;
+    padding-left:1px;padding-right:3px;border:0px solid red;height:13px;
 }
 
 input.erase {
   background-color:#f9c;
-  font-size:9px;
+  font-size:8px;
   font-family: "Arial Black", sans-serif;
   padding:0px;
   margin:0px;
@@ -512,6 +522,7 @@ h input, th input {
 }
 
 textarea {
+  background-color:#eee;border:0px;
   color:#222;
 }
 
@@ -652,7 +663,6 @@ input[type="submit"]:hover{color:white;}
 
 .section.with-flash { padding-top: 0px; }
 .content-header, .content-body, .content-footer {margin: 0px; padding: 0px;}
-.page-header {position: relative; margin: 0px; padding: 0px;}
 
 div.context li {
   font-family: arial, helvetica, sans-serif;
@@ -661,3 +671,14 @@ div.context li {
   font-size: 10px;
 }
 
+div.page-header {
+    border-top: 0px solid yellow; background-color:transparent; margin: 0px; padding: 0px;
+}
+select.dev-user-changer {
+    display:inline-block;
+    margin:0px;padding:0px;background-color:transparent;
+}
+
+ul.account-nav {
+     display:inline-block;
+}

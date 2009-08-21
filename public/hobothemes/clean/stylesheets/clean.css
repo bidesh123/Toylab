@@ -30,6 +30,7 @@
 /* ------ */
 
 
+/*
 body {
 	width: 100%;
 	margin: 0 auto 20px;
@@ -89,6 +90,7 @@ form .actions input { margin: 0; }
 .flash.error {background: #BC1C3D;}
 .section.with-flash { padding-top: 0px; }
 
+*/
 /* rails error message */
 .error-messages {
 	background: #BC1C3D;
@@ -224,6 +226,7 @@ form .actions {margin: 30px 0; width: 100%; text-align: center;}
 
 /* styling of generic elements */
 .creator {font-weight: bold;}
+/*
 .card {
 	height: 100%; overflow: hidden;
 	background: white;
@@ -260,6 +263,7 @@ ul.collection > li { margin-left: 0; list-style: none;}
 	padding: 15px 0; margin-bottom: 20px; border-bottom: 1px dotted #888;
 }
 
+*/
 .table-plus .header {height: 100%; overflow: hidden;}
 .table-plus .header a {float: left; margin-right: 20px;}
 .table-plus div.search {float: right;}
