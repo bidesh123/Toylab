@@ -114,7 +114,10 @@
 <def tag="toy-edit">
   <set-scoped deep="&@card.edit_deep" >
     <edit-page>
-      <content-header:><context if="&this.whole || this.list"/></content-header:>
+      <content-header:>
+        <google />
+        <context if="&this.whole || this.list"/>
+      </content-header:>
       <content-body:  ><card first                           /></content-body:  >
       <aside:></aside:>
     </edit-page>

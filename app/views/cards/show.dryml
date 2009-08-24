@@ -179,7 +179,7 @@
           <card                           />
         </else>
       </content-body: >
-      <aside:></aside:>
+      <aside:><google /></aside:>
     </show-page>
   </set-scoped>
 </def>
