@@ -712,3 +712,7 @@ ul.cards h4 {
     border:0;
     padding: 2px;
 }
+
+div.card-body {
+    line-height: 100%;
+}
