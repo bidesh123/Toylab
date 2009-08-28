@@ -6,6 +6,7 @@ class Card < ActiveRecord::Base
     name        :string
     body        :text
     kind        :string
+    category    :string
     whole_id    :integer
     list_id     :integer
     timestamps
