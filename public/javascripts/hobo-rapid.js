@@ -201,7 +201,7 @@ var Hobo = {
                     onEnterEditMode: function() {
                         var blank_message = el.getAttribute("hobo-blank-message")
                         if (el.innerHTML.gsub("&nbsp;", " ") == blank_message) {
-                            el.innerHTML = ""
+                            el.innerHTML = "" 
                         } else {
                             Hobo.ipeOldValues[el.id] = el.innerHTML
                         }
@@ -757,7 +757,7 @@ Event.addBehavior({
     '.string.in-place-edit, .datetime.in-place-edit, .date.in-place-edit, .integer.in-place-edit, .float.in-place-edit, big-integer.in-place-edit' :
      function (ev) {
 
-         var ipe = Hobo._makeInPlaceEditor(this, {clickToEditText:"Click to enter or change text"})
+         var ipe = Hobo._makeInPlaceEditor(this)
          ipe.getText = function() {
              return this.element.innerHTML.gsub(/<br\s*\/?>/, "\n").unescapeHTML()
          }
