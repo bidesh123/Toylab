@@ -81,7 +81,7 @@
     
           <section param="content-body" with-flash-messages>
             <view:body param="description"/>
-            <field-list fields="kind, number, list" param/>
+            <field-list fields="kind, category, number, list" param/>
             <section param="collection-section">
               <h3 param="collection-heading">Items</h3>
               
