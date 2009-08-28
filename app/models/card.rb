@@ -20,7 +20,21 @@ class Card < ActiveRecord::Base
 
   acts_as_list         :column => :number, :scope => :list
 
+  attr_accessor :look_like_id
+
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
+
+  before_create :generate_looks_like
+
+  def generate_looks_like
+    return if look_like_id.blank?
+
+    # TODO: Find the aspects we need to build, and use them to recursively generate the aspects
+    roots = Card.find(look_like_id).items.map(&:aspects)
+    roots.map(&:kind).compact.uniq.each do |name|
+      self.aspects.build(:kind => name)
+    end
+  end
 
  # --- Toy --- #
 

@@ -125,6 +125,7 @@
            "Add a list or table that details #{this.reference_name}"
   %>
     <form class="add-item"  with="&Card.new(:list_id  => this.id)"             >
+      <%= hidden_field :card, :look_like_id, :value => @card.id %>
       <!-- <submit       label="&label" /> -->
       <submit label="v" title ="&tooltip" class="toy-nav add-item tooltip">
       </submit>
