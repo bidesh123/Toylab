@@ -18,13 +18,11 @@
       end
     end
 %>
-    <form method="post" with="&this" class="erase card" if="&false">
-      <submit label="X" title ="&tooltip" class="toy-nav erase tooltip"></submit>
+    <form method="post" with="&this" class="erase card">
+      <input type="hidden" value="delete" name="_method"/>
+      <submit image="/images/icons/delete.png" title ="&tooltip" class="toy-nav erase tooltip"></submit>
       <after-submit uri  ="/cards/#{redirection}/edit" />
     </form>
-    <else>
-      <delete-button in-place="&false" label="x" />
-    </else>
   </if>
 </def>
 
@@ -130,6 +128,24 @@
   </table>
 </def>
 
+<def tag="core-right-controls-td">
+  <td class="core-add-aspect" rowspan="3" style="display:none"><add-aspect /></td>
+</def>
+
+
+<def tag="core-bottom-controls-tr">
+  <tr class="core-controls" style="display:none">
+    <td class="bottom-controls">
+      <bottom-controls if="&true" /><else>bottom controls</else>
+    </td>
+    <td class="core-trash"     >
+      <erase           if="&true" /><else>trash          </else>
+    </td>
+  </tr>
+</def>
+
+
+
 <def tag="core">
   <table class="core">
     <tr class="core-main-row"   >
@@ -141,7 +157,7 @@
           <editor:kind class="tiny-gray" blank-message="....." />
         </else>
       </th>
-      <td class="core-add-aspect" rowspan="3" style="display:none"><add-aspect                        /></td>
+      <core-right-controls-td />
     </tr>
     <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
     <tr class="body">
@@ -154,14 +170,7 @@
         </else>
       </td>
     </tr>
-    <tr class="core-controls" style="display:none">
-      <td class="bottom-controls">
-        <bottom-controls if="&true" /><else>bottom controls</else>
-      </td>
-      <td class="core-trash"     >
-        <erase           if="&true" /><else>trash          </else>
-      </td>
-    </tr>
+    <core-bottom-controls-tr />
   </table>
 </def>
 

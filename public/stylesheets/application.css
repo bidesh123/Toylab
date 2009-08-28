@@ -358,26 +358,26 @@ td.core-add-item a.add-item{
 }
 
 td.core-trash{
-  background-color: teal;border:0px solid purple;margin:0px;
-color:purple;
+    background-color: #9cf;
+    color:purple;
 }
 
 .card td.core-trash {
-  background-color: #f9c;border:0px solid yellow;padding:0px;margin:0px
+  border:0px solid yellow;padding:0px;margin:0px
 }
 
 td.core-trash form{
-  background-color: fuchsia;border:0px solid red;padding:0px;margin:0px;
+  border:0px solid red;padding:0px;margin:0px;
 
 }
 
 td.core-trash form div{
-  background-color: #f9c;border:0px solid purple;padding:0px;margin:0px;
+  border:0px solid purple;padding:0px;margin:0px;
 
 }
 
 td.core-trash form div input{
-  background-color: fuchsia;border:0px solid purple;padding:0px;margin:00px;
+  border:0px solid purple;padding:0px;margin:00px;
   font-family:"Arial Black", sans-serif;
   color:#666;
     }
@@ -449,7 +449,6 @@ tr.self-and-aspects-row {
 
 /**** Styling for input elements  ****/
 form {
-    background-color:black;
     padding-top:0px;
     padding:0px;
 }
@@ -488,12 +487,12 @@ input {
 }
 
 .card input.delete-button {
-  background-color: #f9c; color:#333;
+  color:#333;
   border:none;margin:0px;padding:0px;
 }
 
 input.delete-button:hover {
-  background-color: black; color:white;
+  color:white;
 }
 
 input.add-aspect, input.add-item {
@@ -511,7 +510,6 @@ input.add-item {
 }
 
 input.erase {
-  background-color:#f9c;
   font-size:8px;
   font-family: "Arial Black", sans-serif;
   padding:0px;
@@ -523,11 +521,6 @@ input.button, a.zoom-in {
     font-size: 11px !important;
     padding: 0;
     margin: 0;
-}
-
-a.zoom-in {
-    position: relative;
-    top: -4px;
 }
 
 td.go {

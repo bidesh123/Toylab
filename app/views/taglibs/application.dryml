@@ -69,14 +69,14 @@
     end
     redirection = this.id
   %>
-  <delete-button with="&this" after-submit="/card/#{redirection}/edit" label="X" title="#{tooltip}" />
+  <delete-button with="&this" after-submit="/card/#{redirection}/edit" image="/images/icons/delete.png" title="#{tooltip}" />
 </def>
 
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
     <% tooltip = "Zoom in on #{this.reference_name}" %>
-  <a class="zoom-in" title="&tooltip">O</a>
+  <a class="zoom-in" title="&tooltip"><%= image_tag "icons/zoom_in.png" %></a>
 </def>
 
 <def tag="empty-cell">
