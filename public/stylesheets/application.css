@@ -697,3 +697,18 @@ select.dev-user-changer {
 ul.account-nav {
      display:inline-block;
 }
+
+ul.cards {
+    list-style-type: none;
+    margin:0; padding:0;
+    margin-top: 1em;
+}
+
+ul.cards h4 {
+    margin:0;padding:0;
+}
+
+.new-link form.new input.submit-button {
+    border:0;
+    padding: 2px;
+}
