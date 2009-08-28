@@ -60,7 +60,7 @@
 
 <def tag="add-aspect">
   <if test="&this">
-    <set  redirection=                      "&this.id"     />
+    <set  redirection=                      "&@card.id"     />
     <% tooltip = "Describe " +
         (this.aspects.count > 0 ? "another " : "an ") +
         "aspect of " +
