@@ -1,6 +1,7 @@
 /******** Reset default browser CSS styles. *********/
 /* Based on Blueprint */
 
+/*
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite,
@@ -15,9 +16,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	outline: 0;
 	font-weight: inherit;
 	font-style: inherit;
-	font-size: 100%;
 	font-family: inherit;
-	vertical-align: baseline;
 }
 
 code {
@@ -27,8 +26,6 @@ code {
 	outline: 0;
 	font-weight: inherit;
 	font-style: inherit;
-	font-size: 100%;
-	vertical-align: baseline;    
 }
 
 em {
@@ -37,9 +34,7 @@ em {
 	border: 0;
 	outline: 0;
 	font-weight: inherit;
-	font-size: 100%;
 	font-family: inherit;
-	vertical-align: baseline;
 }
 
 strong {
@@ -48,23 +43,22 @@ strong {
 	border: 0;
 	outline: 0;
 	font-style: inherit;
-	font-size: 100%;
 	font-family: inherit;
-	vertical-align: baseline;
 }
-
+*/
 /* Remember to define focus styles! */
 :focus {
 	outline: 0;
 }
+/*
 body {
 	line-height: 1;
 	color: black;
 	background: white;
 }
-
+*/
 /* Tables still need 'cellspacing="0"' in the markup. */
-table {
+/*table {
 	border-collapse: separate;
 	border-spacing: 0;
 }
@@ -73,6 +67,7 @@ caption, th, td {
 	font-weight: normal;
 }
 
+*/
 /* Remove possible quote marks (") from <q>, <blockquote>. */
 blockquote:before, blockquote:after,
 q:before, q:after {
@@ -82,14 +77,3 @@ blockquote, q {
 	quotes: "" "";
 }
 
-body {
-  font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-  font-size: 12px;
-}
-h1,h2,h3,h4,h5,h6 { font-weight: bold; }
-h1 { font-size: 36px;}
-h2 { font-size: 28px;}
-h3 { font-size: 18px;}
-h4 { font-size: 14px;}
-h5 { font-size: 12px;}
-h6 { font-size: 10px;}

@@ -3,35 +3,36 @@
 .page-header {color: white; background: #444;}
 .page-header .main-nav a {background: #666;}
 .page-header .main-nav a:hover {background: #222;}
+
 .content {background: white;}
 .button {color: white; background: #666;}
 .button:hover {background-color: #222;}
 .add-to-collection {background: #f5f5f5;}
 */
 /* Cubicle Blue */
-html, body {color: #193440; background: #193440;}
+/*html, body {color: #193440; background: #193440;}
 .page-header {color: white; background: #3F606E;}
 .page-header .navigation.main-nav a {background: #5B8BA0;}
-.page-header .navigation.main-nav li.current a {background: #FCFFF4; color: #222;}
+.page-header .navigation.main-nav li.current a {background: red; color: #222;}
 .page-header .navigation.main-nav a:hover {background: #193440;}
 .section.content {background: #FCFFF5;}
-.button {color: white; background: #5B8BA0;}
 .button:hover {background-color: #193440;}
 .add-to-collection {background: #E6E7DE;}
 .aside { background: #E5E5E5;}
-
+*/
 /* Column Layout */
 
 .section-group       {display: table; width: 100%;}
 .section-group-inner {display: table-row;}
 .section-group-inner > * {display: table-cell; vertical-align: top;}
-.aside {width: 210px;} /* works with % too */
+.aside {width: 30%;} /* works with % too */
 .aside { padding: 20px;}
 /* ------ */
 
 
+/*
 body {
-	width: 960px;  
+	width: 100%;
 	margin: 0 auto 20px;
 	font: 12px "Lucida Grande", "Trebuchet MS", Arial, sans-serif; line-height: 18px;
 }
@@ -56,7 +57,8 @@ a:hover {
 }
 h1 a, h2 a, h3 a {border: none; background: none;}
 
-input.text, input.string, input.email-address, input.password, input.search, input.integer, input.float, textarea {
+input.text, input.string, input.email-address, input.password, input.search,
+input.integer, input.float, textarea {
 	border-top:1px solid #7c7c7c;
 	border-left:1px solid #c3c3c3;
 	border-right:1px solid #c3c3c3;
@@ -86,8 +88,9 @@ form .actions input { margin: 0; }
 }
 .flash.notice {background: #92ab6e;}
 .flash.error {background: #BC1C3D;}
-.section.with-flash { padding-top: 20px; }
+.section.with-flash { padding-top: 0px; }
 
+*/
 /* rails error message */
 .error-messages {
 	background: #BC1C3D;
@@ -116,7 +119,7 @@ form .actions input { margin: 0; }
 .field-list td {width: auto;}
 .field-list .input-help { color: #888;}
 
-.content-header, .content-body, .content-footer {margin: 0 45px 15px; padding: 0;}
+.content-header, .content-body, .content-footer {margin:0px; margin-left: 1% ; padding: 0;}
 .content-header {padding: 5px 0;} 
 .content-body {padding: 15px 0;}
 .content-footer {padding-bottom: 20px;}
@@ -133,7 +136,9 @@ form .actions input { margin: 0; }
 .page-header .navigation a:hover,
 .page-header h1 a, 
 .page-header h1 a:hover
- {border: none; color: white; background: none;}
+ {border: none; color: white; background: gree;}
+.page-header .navigation a, .button {background:#9cf; color: #666}
+
 
 .page-header div.search {
  	float: right;
@@ -148,7 +153,7 @@ form .actions input { margin: 0; }
 }
 #search-results-panel {
 	position: absolute; top: 35px; right: 25px; z-index: 50;
-	width: 350px; height: 500px; overflow: auto; 
+	width: 400px; height: 500px; overflow: auto;
 	padding: 0 20px 20px; border: 1px solid #ddd;
 	color: black; background: #f2f2f2;
 }
@@ -171,7 +176,7 @@ form .actions input { margin: 0; }
 .account-nav li {
 	float: left; 
 	margin-left: 0; padding-left: 20px; 
-	color: #ddd;
+	color: red;
 	list-style: none;
 }
 .account-nav a {font-weight: bold;}
@@ -221,10 +226,10 @@ form .actions {margin: 30px 0; width: 100%; text-align: center;}
 
 /* styling of generic elements */
 .creator {font-weight: bold;}
+/*
 .card {
 	height: 100%; overflow: hidden;
-	margin: 10px 0;	padding: 12px; border: 1px solid #e8e8e8;
-	background: #f5f5f5;
+	background: white;
 	position: relative;
 }
 .card h4 {margin-top: 0;}
@@ -258,6 +263,7 @@ ul.collection > li { margin-left: 0; list-style: none;}
 	padding: 15px 0; margin-bottom: 20px; border-bottom: 1px dotted #888;
 }
 
+*/
 .table-plus .header {height: 100%; overflow: hidden;}
 .table-plus .header a {float: left; margin-right: 20px;}
 .table-plus div.search {float: right;}
@@ -302,7 +308,7 @@ div.select-many .item .remove-item { float: right; }
 
 .front-page .welcome-message {
 	padding: 10px 20px 20px; border: 1px solid #e8e8e8; 
-	color: #222; background: #eee;
+	color: #222; background: white;
 }
 .front-page .welcome-message h2 {
 	font-size: 18px; line-height: 27px;
