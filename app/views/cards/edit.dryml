@@ -121,31 +121,6 @@
   </set-scoped>
 </def>
 
-<def tag="core-main">
-  aba laba lou ou<table class="core-main">
-    <tr class="kind">
-      <th class="kind-cell"><editor:kind blank-message="&nbsp;.." /></th>
-      <td class="core-add-aspect" rowspan="3">
-        <add-aspect if="&true" />
-        <else><form class="add-aspect">abx bcz</form></else>
-      </td>
-    </tr>
-    <tr class="name"><td class="name-cell"><editor:name blank-message="..pater.."/></td></tr>
-    <tr class="body"><td class="body-cell"><editor:body blank-message="..noster.."/></td></tr>
-  </table>
-</def>
-
-
-<def tag="core-controls">
-  <table class="core-controls">
-    <tr class="core-controls">
-      <td class="core-add-item"><add-item   if="&true" /><else>add item</else  ></td>
-      <td class="core-trash"   ><trash      if="&true"  /><else>trash</else     ></td>
-    </tr>
-  </table>
-</def>
-
-
 <def tag="bottom-controls">
   <table class="bottom-controls">
     <tr class="bottom-controls">
@@ -154,7 +129,6 @@
     </tr>
   </table>
 </def>
-
 
 <def tag="core">
   <table class="core">
@@ -187,17 +161,6 @@
       <td class="core-trash"     >
         <erase           if="&true" /><else>trash          </else>
       </td>
-    </tr>
-  </table>
-</def>
-
-<def tag="old-core">
-  <table class="core">
-    <tr class="core-main-row"   >
-      <td class="core-main-row"    ><core-main     if="&true" /><else>core main</else></td>
-    </tr>
-    <tr class="core-controls" >
-      <td class="core-controls"><core-controls  if="&true" /><else>core controls</else></td>
     </tr>
   </table>
 </def>
