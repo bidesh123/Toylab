@@ -121,9 +121,9 @@
 <def tag="add-item">
   <if test="&this">
     <% tooltip = this.items.count > 0 ?
-        "Add another item to this list #{this.items.count}" :
-        "Add a list below #{this.reference_name}"
-    %>
+           "Add another item under #{this.reference_name}, below the following #{this.items.count}" :
+           "Add a list or table that details #{this.reference_name}"
+  %>
     <form class="add-item"  with="&Card.new(:list_id  => this.id)"             >
       <!-- <submit       label="&label" /> -->
       <submit label="v" title ="&tooltip" class="toy-nav add-item tooltip">

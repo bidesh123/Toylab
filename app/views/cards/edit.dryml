@@ -18,23 +18,6 @@
   </table>
 </def>
 
-<def tag="add-item">
-  <if test="&this">
-    <% tooltip =
-         this.items.count > 0 ?
-           "Add another item under #{this.reference_name}, below the following #{this.items.count}" :
-           "Add a list or table that details #{this.reference_name}"
-    %>
-    <form with       ="&Card.new(:list_id  => this.id)"             >
-      <!-- <submit       label="&label" /> -->
-      <submit label="+" title ="&tooltip" class="toy-nav add-item tooltip">
-      </submit>
-      <after-submit uri  ="#{request.request_uri}"                    />
-    </form                                                          >
-  </if>
-</def>
-
-
 <def tag="add-aspect">
   <if test="&this">
     <% tooltip = "Describe " +
