@@ -219,3 +219,4 @@
 
 
 
+<p><%= link_to "Flat View", url_for(:action => "show") %></p>

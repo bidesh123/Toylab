@@ -443,3 +443,5 @@
   </content-body:>
 </show-page>
 -->
+
+<p><%= link_to "Hierarchical View", url_for(:action => "edit") %></p>
