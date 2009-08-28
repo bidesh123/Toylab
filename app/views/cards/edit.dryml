@@ -1,29 +1,7 @@
 <toy-edit />
 
 <def tag="erase">
-  <if test="&this">
-<%  redirection = nil # this.id == scope.deep[:origin] ? (this.whole_id || this.list_id) : this.id
-    tooltip             = "Permanently erase #{this.reference_name}"
-    number_of_aspects   = this.aspects.length
-    number_of_items     = this.items.length
-    if number_of_aspects > 0
-      if number_of_items > 0
-        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
-      else
-        tooltip += " and its #{number_of_aspects} items"
-      end
-    else # 0 aspects
-      if number_of_items > 0
-        tooltip += " and its #{number_of_items  } items"
-      end
-    end
-%>
-    <form method="post" with="&this" class="erase card">
-      <input type="hidden" value="delete" name="_method"/>
-      <submit image="/images/icons/delete.png" title ="&tooltip" class="toy-nav erase tooltip"></submit>
-      <after-submit uri  ="/cards/#{redirection}/edit" />
-    </form>
-  </if>
+  <trash/>
 </def>
 
 <def tag="card" for="Card">
@@ -42,7 +20,6 @@
 
 <def tag="add-item">
   <if test="&this">
-    <set  redirection=                      "&this.id"     />
     <% tooltip =
          this.items.count > 0 ?
            "Add another item under #{this.reference_name}, below the following #{this.items.count}" :
@@ -52,7 +29,7 @@
       <!-- <submit       label="&label" /> -->
       <submit label="+" title ="&tooltip" class="toy-nav add-item tooltip">
       </submit>
-      <after-submit uri  ="/cards/#{redirection}/edit"                    />
+      <after-submit uri  ="#{request.request_uri}"                    />
     </form                                                          >
   </if>
 </def>
@@ -60,7 +37,6 @@
 
 <def tag="add-aspect">
   <if test="&this">
-    <set  redirection=                      "&@card.id"     />
     <% tooltip = "Describe " +
         (this.aspects.count > 0 ? "another " : "an ") +
         "aspect of " +
@@ -69,7 +45,7 @@
     <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
       <!-- <submit       label="&label" /> -->
       <submit label="+" title ="&tooltip" class ="toy-nav add-aspect" />
-      <after-submit uri  ="/cards/#{redirection}/edit" />
+      <after-submit uri  ="#{request.request_uri}" />
     </form                                                          >
   </if>
 </def>
