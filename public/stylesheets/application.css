@@ -489,7 +489,7 @@ input {
 
 .card input.delete-button {
   background-color: #f9c; color:#333;
-  border:none;margin:0px;padding:0px;height:12px;
+  border:none;margin:0px;padding:0px;
 }
 
 input.delete-button:hover {
@@ -507,7 +507,7 @@ input.add-aspect {
 }
 
 input.add-item {
-    padding-left:1px;padding-right:3px;border:0px solid red;height:13px;
+    padding-left:1px;padding-right:3px;border:0px solid red;
 }
 
 input.erase {
@@ -516,6 +516,27 @@ input.erase {
   font-family: "Arial Black", sans-serif;
   padding:0px;
   margin:0px;
+}
+
+input.button, a.zoom-in {
+    line-height: 11px !important;
+    font-size: 11px !important;
+    padding: 0;
+    margin: 0;
+}
+
+a.zoom-in {
+    position: relative;
+    top: -4px;
+}
+
+td.go {
+    position: relative;
+}
+
+td.bottom-controls {
+     padding: 0;
+    margin: 0;
 }
 
 h input, th input {
