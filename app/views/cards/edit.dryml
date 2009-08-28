@@ -180,7 +180,7 @@
         </else>
       </td>
     </tr>
-    <tr class="core-controls" >
+    <tr class="core-controls" style="display:none">
       <td class="bottom-controls">
         <bottom-controls if="&true" /><else>bottom controls</else>
       </td>
