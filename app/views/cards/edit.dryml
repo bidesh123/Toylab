@@ -167,7 +167,7 @@
           <editor:kind class="tiny-gray" blank-message="....." />
         </else>
       </th>
-      <td class="core-add-aspect" rowspan="3"><add-aspect                        /></td>
+      <td class="core-add-aspect" rowspan="3" style="display:none"><add-aspect                        /></td>
     </tr>
     <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
     <tr class="body">
