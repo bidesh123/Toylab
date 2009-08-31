@@ -7,6 +7,8 @@ class Card < ActiveRecord::Base
     body        :text
     kind        :string
     category    :string
+    #theme       enum(
+    #  'white', 'pink', 'orange', 'yellow', 'green', 'blue', 'purple', 'grey')
     whole_id    :integer
     list_id     :integer
     timestamps
@@ -60,7 +62,7 @@ class Card < ActiveRecord::Base
     true if Float(name) rescue false
   end
 
-  def look_wider                 wide_context, deep, max_depth, aspect_depth
+  def look_wider                 wide_context, deep, max_aspect_depth, aspect_depth
     sub            = Card.find id
     names          = deep[:columns][:names]
     cells          = deep[:columns][:cells]
@@ -132,40 +134,40 @@ class Card < ActiveRecord::Base
     deep[         :debug_log] += "<br/>and the cells become"
     deep[         :debug_log] += "<br/><table ><tr><td class='debug'>#{peek}" +
                                  "</td></tr></table>"
-    unless (aspect_depth += 1) >= max_depth
+    unless (aspect_depth += 1) >= max_aspect_depth
       aspects.each do |aspect|
-        deep = aspect.look_wider wider_context, deep, max_depth, aspect_depth
+        deep = aspect.look_wider wider_context, deep, max_aspect_depth, aspect_depth
       end
     end
     aspect_depth -= 1
     deep
   end
 
-  def look_deeper               wide_context, deep, max_depth, item_depth
+  def look_deeper               wide_context, deep, max_item_depth = 2, max_aspect_depth = 9, item_depth = 0
     indent = "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     deep[         :debug_log] += "<br /><br/>#{indent[0, item_depth*2]}==================================================================="
     deep[         :debug_log] += "<br />after #{ deep[:row] } rows"
     deep[         :debug_log] += "<br /><br/> Looking deeper into #{reference_name}"
     deep[         :debug_log] += "<br />It has #{items.length} subitems"
     unless item_depth == 0
-      deep = look_wider         wide_context, deep, max_depth, item_depth
+      deep = look_wider         wide_context, deep, max_aspect_depth, 0
       deep[:row] += 1
     end
-    unless (item_depth += 1) >= max_depth
-      deep[       :debug_log] += "<br />item_depth is #{item_depth} out of #{max_depth}"
+    unless (item_depth += 1) >= max_item_depth
+      deep[       :debug_log] += "<br />item_depth is #{item_depth} out of #{max_item_depth}"
       items.each do |item|
-        deep = item.look_deeper wide_context, deep, max_depth, item_depth
+        deep = item.look_deeper wide_context, deep, max_item_depth, max_aspect_depth, item_depth
       end
     end
     item_depth -= 1
     deep
   end
 
-  def look_deep max_depth = 9
+  def look_deep max_item_depth = 2, max_aspect_depth = 9
     look_deeper \
       ""                                    ,  #no context
       {                                        #deep
-        :root                    => id    ,
+        :root                    => id   ,
         :row                     => 0    ,
         :columns                 => {
             :names => HtmlTable.new   ,
@@ -173,7 +175,8 @@ class Card < ActiveRecord::Base
         }                                ,
         :debug_log               => ''
       }                                     ,
-      max_depth                             ,  #optional
+      max_item_depth                        ,  #optional
+      max_aspect_depth                      ,  #optional
       0                                        #item_depth
   end
 

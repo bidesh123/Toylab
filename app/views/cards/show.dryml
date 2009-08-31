@@ -3,6 +3,29 @@
 
 <!-- ====================== tag definitions ================================ -->
 
+<def tag="toy-show">
+  <set-scoped deep="&@card.look_deep" >
+    <!-- why not edit-page ?? -->
+    <show-page>
+      <content-header:>
+        <context if="&whole || list"/>
+        <!-- % whole_off = "&false" %       -->
+        <!-- <toy-header if="&whole_off"/>  -->
+      </content-header:>
+
+      <content-body:  >
+        <%         whole_off = "&false" %>
+        <if test="&whole_off ==  true">
+          <card    whole-off="&whole_off" />
+        </if><else>
+          <card                           />
+        </else>
+      </content-body: >
+      <aside:><google /></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
 <def tag="aspect-kind-cell">
   <if test="&attributes[:first]">
     <th class="aspect-kind-cell first"><editor:kind blank-message="..." /></th>
@@ -159,29 +182,6 @@
   <table>
     <aspects-rows merge-attrs />
   </table>
-</def>
-
-<def tag="toy-show">
-  <set-scoped deep="&@card.look_deep" >
-    <!-- why not edit-page ?? -->
-    <show-page>
-      <content-header:>
-        <context if="&whole || list"/>
-        <!-- % whole_off = "&false" %       -->
-        <!-- <toy-header if="&whole_off"/>  -->
-      </content-header:>
-
-      <content-body:  >
-        <%         whole_off = "&false" %>
-        <if test="&whole_off ==  true">
-          <card    whole-off="&whole_off" />
-        </if><else>
-          <card                           />
-        </else>
-      </content-body: >
-      <aside:><google /></aside:>
-    </show-page>
-  </set-scoped>
 </def>
 
 <def tag="delete-button" attrs="label, update, in-place, image, confirm, fade, subsite">

@@ -57,7 +57,7 @@ h1, div {
 }
 
 page-header {
-  background-color: purple;
+  background-color: teal;
 }
 
 .page-header h1 {
@@ -99,7 +99,7 @@ a:hover   {              color: #96c; }
 a:active  {              color: #666; }
 
 a.go, a.zoom-in {
-  background-color:#9cf;color: #666;padding:0;padding-left:1px;padding-right:3px;
+  background-color:transparent;color: #666;padding:0;padding-left:1px;padding-right:3px;
   font-family: "Arial Black", sans-serif;
   font-size: 9px;
   margin:0px;
@@ -138,13 +138,13 @@ span.navLink a:active  { color: #f0f; }
 }
 
 .add-dependent:hover {
-  background-color: purple;
+  background-color: red;
 }
 
 /**** Styling for inline elements ****/
 
 h {
-  background-color: purple; color:#11f;
+  background-color: green; color:#11f;
 }
 
 h1 {
@@ -299,7 +299,7 @@ td {
 }
 
 td.add-aspect {
-  background-color: purple;
+  background-color: transparent;
 }
 
 td.add-item {
@@ -320,7 +320,7 @@ td.body-cell {
 
 td.bottom-controls {
   height:16px;
-  background-color:#9cf;
+  background-color:transparen;
 }
 
 td .card-body {
@@ -329,7 +329,6 @@ td .card-body {
 
 .core-main-row td{
   background-color: fuchsia;border:0px solid blue;padding-right:3px;
-
 }
 
 td.core {
@@ -339,7 +338,7 @@ td.core {
 
 
 td.core-controls{
-  background-color: #9cf;
+  background-color: yellow;
   border:0px solid orange;padding:0px;margin:0px;width:auto;text-align:center;
 }
 
@@ -359,7 +358,7 @@ td.core-add-item a.add-item{
 
 td.core-trash{
     background-color: #9cf;
-    color:purple;
+    color:red;
 }
 
 .card td.core-trash {
@@ -463,7 +462,7 @@ form.card {
 }
 
 form.add-aspect {
-  background-color:purple;margin:0px;padding:0px;border:0px solid red;
+  background-color:#9cf;margin:0px;padding:0px;border:0px solid red;
 }
 
 form.core-add-item {
@@ -471,7 +470,7 @@ form.core-add-item {
 }
 
 form.core-trash {
-  background-color:fuchsia;margin:00px;padding:00px;border:0px solid yellow;
+  background-color:red;margin:00px;padding:00px;border:0px solid yellow;
 }
 
 form.erase {
@@ -542,7 +541,7 @@ textarea {
 }
 
 .input {
-  background-color: purple; color:#11f;
+  background-color: red; color:#11f;
 }
 
 th .editor {
@@ -645,7 +644,7 @@ div.progressBar div.background {
 }
 
 .aspect-name-cell .first {
-  text-align: left; background-color: fuchsia;
+  text-align: left; background-color: blue;
         border-top:    8px solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;

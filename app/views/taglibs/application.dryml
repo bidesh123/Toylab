@@ -80,14 +80,14 @@
       request.request_uri
     end
   %>
-  <delete-button with="&this" after-submit="&redirect_uri" image="/images/icons/delete.png" title="#{tooltip}" />
+  <delete-button with="&this" after-submit="&redirect_uri" image="/images/icons/bin.png" title="#{tooltip}" />
 </def>
 
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
     <% tooltip = "Zoom in on #{this.reference_name}" %>
-  <a class="zoom-in" title="&tooltip"><%= image_tag "icons/zoom_in.png" %></a>
+  <a class="zoom-in" title="&tooltip"><%= image_tag "icons/zoom.png" %></a>
 </def>
 
 <def tag="empty-cell">
@@ -107,7 +107,7 @@
 <def tag="add-aspect">
   <if test="&this">
     <% tooltip =
-      (this.aspects.count > 0 ? " Add another aspect of" : "Add aspects of ") +
+      (this.aspects.count > 0 ? " Add another aspect of " : "Add aspects of ") +
       this.reference_name
     %>
     <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
