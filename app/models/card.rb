@@ -3,14 +3,15 @@ class Card < ActiveRecord::Base
   hobo_model # Don't put anything above this
 
   fields do
-    name        :string
-    body        :text
-    kind        :string
-    category    :string
+    name         :string
+    body         :text
+    kind         :string
+    category     :string
     #theme       enum(
     #  'white', 'pink', 'orange', 'yellow', 'green', 'blue', 'purple', 'grey')
-    whole_id    :integer
-    list_id     :integer
+    whole_id     :integer
+    list_id      :integer
+    look_like_id :integer
     timestamps
   end
 
@@ -21,8 +22,6 @@ class Card < ActiveRecord::Base
   has_many   :items  , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
 
   acts_as_list         :column => :number, :scope => :list
-
-  attr_accessor :look_like_id
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
 
