@@ -80,7 +80,7 @@
       request.request_uri
     end
   %>
-  <delete-button with="&this" after-submit="&redirect_uri" image="/images/icons/bin.png" title="#{tooltip}" />
+  <delete-button with="&this" after-submit="&redirect_uri" image="icons/bin.png" title="#{tooltip}" />
 </def>
 
 <def tag="nil-view">&nbsp;</def>
