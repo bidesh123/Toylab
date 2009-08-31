@@ -206,7 +206,7 @@ class Card < ActiveRecord::Base
 
   def reference_name
     if name.nil? || name.length == 0      
-      (kind.nil? || kind.length == 0 ? "card ##{id}" : "unspecified " + kind)
+      (kind.nil? || kind.length == 0 ? "card ##{id}" : "Unspecified " + kind)
     else
       last_char  = name.to_s[-1]
       first_char = name.to_s[ 0]

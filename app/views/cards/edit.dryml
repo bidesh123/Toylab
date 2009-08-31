@@ -98,7 +98,7 @@
 
 <def tag="reveal-aspect-or-item">
   <%= link_to_function(
-    image_tag("icons/door_open.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
     "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 
@@ -112,7 +112,6 @@
     </td>
   </tr>
 </def>
-
 
 
 <def tag="core">
