@@ -7,13 +7,38 @@ function installAutocomplete(el, url, parentName) {
 };
 
 Event.observe(window, "load", function() {
-    $$("tr.core-controls", "td.core-add-aspect").each(function(el) {
-        var table = el.up("table");
-        if (table) {
-            Event.observe(table, "mouseover", function() { new Effect.Appear(el); });
-            Event.observe(table, "mouseout",  function() { new Effect.Fade(el); });
+  $$("table.core").each(function(table) {
+    var coreControls = table.down(".core-controls");
+    var aspectControls = table.down(".core-add-aspect");
+
+    (function() {
+      // Initial state
+      var state = 'hidden';
+
+      function transitionToShown() {
+        if (state === 'showing') state = 'shown';
+      }
+
+      function transitionToHidden() {
+        if (state === 'hiding') state = 'hidden';
+      }
+
+      Event.observe(table, "mouseover", function() {
+        if (state === 'hidden') {
+          new Effect.Appear(coreControls,   {afterFinish: transitionToShown});
+          new Effect.Appear(aspectControls, {afterFinish: transitionToShown});
+          state = 'showing';
         }
-    });
+      });
+      Event.observe(table, "mouseout",  function() {
+        if (state === 'shown') {
+          new Effect.Fade(coreControls,   {afterFinish: transitionToHidden});
+          new Effect.Fade(aspectControls, {afterFinish: transitionToHidden});
+          state = 'hiding';
+        }
+      });
+    })();
+  });
 
     $$(".editor.in-place-edit.card-kind").each(function(el) {
         Event.observe(el, "click", function() {
