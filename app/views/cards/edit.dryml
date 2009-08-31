@@ -39,7 +39,7 @@
       <core if="&true"/>
       <else>ABC</else>
     </td>
-    <td class="aspects-table">
+    <td class="aspects-table" id="<%= dom_id(this, "aspects") %>">
       <aspects-table />
     </td>
   </tr>
@@ -88,7 +88,16 @@
 </def>
 
 <def tag="core-right-controls-td">
-  <td class="core-add-aspect" rowspan="3" style="display:none"><add-aspect /></td>
+  <td class="core-add-aspect" rowspan="3" style="display:none">
+    <reveal-aspect/>
+    <add-aspect />
+  </td>
+</def>
+
+<def tag="reveal-aspect">
+  <%= link_to_function(
+    image_tag("icons/door_open.png", :size => "16x16", :alt => "Reveal aspects of #{this.reference_name}"),
+    "Effect.toggle('#{dom_id(this, :aspects)}')") %>
 </def>
 
 
