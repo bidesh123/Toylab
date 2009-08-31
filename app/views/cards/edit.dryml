@@ -59,7 +59,8 @@
 <def tag="list-row">
   <tr class="list-row" if="&this.items">
     <td class="list-row>" colspan="2">
-      <table class="list-rows" if="&this.items">
+      <set table-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="list-rows" id="&table_id" if="&this.items">
         <repeat with="&this.items">
           <item-row />
         </repeat>
@@ -83,23 +84,23 @@
     <tr class="bottom-controls">
       <td class="core-add-item"><add-item   if="&true" /><else>add item</else  ></td>
       <td class="go"   ><show-card-inline if="&true"/><else>go</else     ></td>
+      <td class="reveal"><reveal-aspect-or-item which="items"/></td>
     </tr>
   </table>
 </def>
 
 <def tag="core-right-controls-td">
   <td class="core-add-aspect" rowspan="3" style="display:none">
-    <reveal-aspect/>
+    <reveal-aspect-or-item which="aspects"/>
     <add-aspect />
   </td>
 </def>
 
-<def tag="reveal-aspect">
+<def tag="reveal-aspect-or-item">
   <%= link_to_function(
-    image_tag("icons/door_open.png", :size => "16x16", :alt => "Reveal aspects of #{this.reference_name}"),
-    "Effect.toggle('#{dom_id(this, :aspects)}')") %>
+    image_tag("icons/door_open.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
-
 
 <def tag="core-bottom-controls-tr">
   <tr class="core-controls" style="display:none">
