@@ -23,4 +23,17 @@ Event.observe(window, "load", function() {
             });
         }
     });
+
+    $$(".editor.in-place-edit.card-kind").each(function(el) {
+        Event.observe(el, "click", function() {
+            function installAutocomplete() {
+                var inplaceForm = $(el.id + "-inplaceeditor");
+                console.log(inplaceForm);
+                var inplaceField = inplaceForm.select("input");
+                console.log(inplaceField);
+            };
+
+            installAutocomplete.delay(0.1);
+        });
+    });
 });
