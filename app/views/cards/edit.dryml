@@ -124,11 +124,14 @@
         <else>
           <editor:kind class="tiny-gray" blank-message="....." />
         </else>
-        <div id="<%= dom_id(this, "auto_completer") %>" style="display:none" class="auto_complete"></div>
       </th>
       <core-right-controls-td />
     </tr>
-    <tr class="name"><td class="name-cell"><editor:name blank-message="....."/></td></tr>
+    <tr class="name">
+      <td class="name-cell">
+        <editor:name blank-message="....."/>
+      </td>
+    </tr>
     <tr class="body">
       <td class="body-cell">
         <if test="&this.body ">
@@ -162,3 +165,4 @@
 
 
 <p><%= link_to "Flat View", url_for(:action => "show") %></p>
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

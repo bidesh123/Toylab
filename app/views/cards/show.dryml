@@ -411,3 +411,4 @@
 -->
 
 <p><%= link_to "Hierarchical View", url_for(:action => "edit") %></p>
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

@@ -14,8 +14,8 @@ class CardsController < ApplicationController
     render :action => :auto
   end
 
-  def auto_body
-    @cards = Card.all(:conditions => ["LOWER(body) LIKE ?", "%#{params[:q].to_s.downcase}%"]).map(&:reference_name).uniq.sort
+  def auto_name
+    @cards = Card.all(:conditions => ["LOWER(name) LIKE ?", "%#{params[:q].to_s.downcase}%"]).map(&:reference_name).uniq.sort
     render :action => :auto
   end
 end
