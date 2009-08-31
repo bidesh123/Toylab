@@ -198,7 +198,7 @@
     <cells merge-attrs />
   </div>
   <div param="controls">
-    <trash />
+    <trash redir="true"/>
   </div>
   <div param="debug-toy" if="&false">
     <%= scope.deep[:debug_log] %>

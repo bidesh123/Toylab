@@ -1,7 +1,7 @@
 <toy-edit />
 
 <def tag="erase">
-  <trash/>
+  <trash redir="false"/>
 </def>
 
 <def tag="card" for="Card">
@@ -134,7 +134,8 @@
 </def>
 
 <def tag="aspect-cell">
-  <td class="aspect-cell">
+  <% @model_id = "aspect-cell model::card:#{this.id}" %>
+ <td class="<%= @model_id %>">
     <recursive-card aspect if="&true"/>
   </td>
 </def>

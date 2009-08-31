@@ -51,7 +51,7 @@
   </li>
 </def>
 
-<def tag="trash">
+<def tag="trash" attrs="redir">
   <%
     tooltip             = "Permanently erase #{this.reference_name}"
     number_of_aspects   = this.aspects.length
@@ -79,6 +79,8 @@
     else
       request.request_uri
     end
+
+  redirect_uri = nil unless attributes[:redir]
   %>
   <delete-button with="&this" after-submit="&redirect_uri" image="icons/bin.png" title="#{tooltip}" />
 </def>
