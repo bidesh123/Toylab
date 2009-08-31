@@ -124,6 +124,7 @@
         <else>
           <editor:kind class="tiny-gray" blank-message="....." />
         </else>
+        <div id="<%= dom_id(this, "auto_completer") %>" style="display:none" class="auto_complete"></div>
       </th>
       <core-right-controls-td />
     </tr>

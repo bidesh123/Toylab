@@ -5,6 +5,9 @@ ActionController::Routing::Routes.draw do |map|
 
   Hobo.add_routes(map)
 
+  map.auto_card_kind '/cards/auto/kind', :controller => "cards", :action => "auto_kind"
+  map.auto_card_body '/cards/auto/body', :controller => "cards", :action => "auto_body"
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

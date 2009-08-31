@@ -9,5 +9,14 @@ class CardsController < ApplicationController
     hobo_index Card.top_level
   end
 
+  def auto_kind
+    @cards = Card.all(:conditions => ["LOWER(kind) LIKE ?", "#{params[:q].to_s.downcase}%"]).map(&:kind).uniq.sort
+    render :action => :auto
+  end
+
+  def auto_body
+    @cards = Card.all(:conditions => ["LOWER(body) LIKE ?", "%#{params[:q].to_s.downcase}%"]).map(&:reference_name).uniq.sort
+    render :action => :auto
+  end
 end
 

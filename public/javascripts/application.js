@@ -28,9 +28,10 @@ Event.observe(window, "load", function() {
         Event.observe(el, "click", function() {
             function installAutocomplete() {
                 var inplaceForm = $(el.id + "-inplaceeditor");
-                console.log(inplaceForm);
-                var inplaceField = inplaceForm.select("input");
-                console.log(inplaceField);
+                var inplaceFields = inplaceForm.select("input");
+                var inplaceField = inplaceFields[0];
+                var update = inplaceForm.up("th").down(".auto_complete");
+                new Ajax.Autocompleter(inplaceField, update, '/cards/auto/kind', {method:'get', paramName: 'q'});
             };
 
             installAutocomplete.delay(0.1);
