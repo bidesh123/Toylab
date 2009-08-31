@@ -32,8 +32,10 @@ class Card < ActiveRecord::Base
 
     # TODO: Find the aspects we need to build, and use them to recursively generate the aspects
     roots = Card.find(look_like_id).items.map(&:aspects)
-    roots.map(&:kind).compact.uniq.each do |name|
-      self.aspects.build(:kind => name)
+    roots.each do |o|
+      o.map(&:kind).compact.uniq.each do |name|
+        self.aspects.build(:kind => name)
+      end
     end
   end
 
