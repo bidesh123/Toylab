@@ -16,25 +16,49 @@ Event.observe(window, "load", function() {
       var state = 'hidden';
 
       function transitionToShown() {
+        // console.log('finishedShown -- state: %o, element: %o', state, table);
         if (state === 'showing') state = 'shown';
       }
 
       function transitionToHidden() {
+        // console.log('finishedHidden -- state: %o, element: %o', state, table);
         if (state === 'hiding') state = 'hidden';
       }
 
+      function transitionToHiding() {
+        new Effect.Fade(coreControls,   {afterFinish: transitionToHidden});
+        new Effect.Fade(aspectControls, {afterFinish: transitionToHidden});
+        state = 'hiding';
+      }
+
+      function transitionToShowing() {
+        new Effect.Appear(coreControls,   {afterFinish: transitionToShown});
+        new Effect.Appear(aspectControls, {afterFinish: transitionToShown});
+        state = 'showing';
+      }
+
       Event.observe(table, "mouseover", function() {
-        if (state === 'hidden') {
-          new Effect.Appear(coreControls,   {afterFinish: transitionToShown});
-          new Effect.Appear(aspectControls, {afterFinish: transitionToShown});
-          state = 'showing';
+        // console.log('over -- state: %o, element: %o', state, table);
+        if (state === 'shown') {
+          // NOP ;
+        } else if (state === 'showing') {
+          // NOP ;
+        } else if (state === 'hiding') {
+          transitionToShowing();
+        } else if (state === 'hidden') {
+          transitionToShowing();
         }
       });
       Event.observe(table, "mouseout",  function() {
+        // console.log('out -- state: %o, element: %o', state, table);
         if (state === 'shown') {
-          new Effect.Fade(coreControls,   {afterFinish: transitionToHidden});
-          new Effect.Fade(aspectControls, {afterFinish: transitionToHidden});
-          state = 'hiding';
+          transitionToHiding();
+        } else if (state === 'showing') {
+          transitionToHiding();
+        } else if (state === 'hiding') {
+          // NOP ;
+        } else if (state === 'hidden') {
+          // NOP ;
         }
       });
     })();
