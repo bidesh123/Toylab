@@ -26,8 +26,9 @@ Event.observe(window, "load", function() {
       }
 
       function transitionToHiding() {
-        new Effect.Fade(coreControls,   {afterFinish: transitionToHidden});
-        new Effect.Fade(aspectControls, {afterFinish: transitionToHidden});
+        //new Effect.Fade(coreControls,   {afterFinish: transitionToHidden});
+        //new Effect.Fade(aspectControls, {afterFinish: transitionToHidden});
+        transitionToHidden;
         state = 'hiding';
       }
 

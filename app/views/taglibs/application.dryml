@@ -7,6 +7,53 @@
 <set-theme name="clean"/>
 
 
+<def tag="erase">
+  agadjou
+  <trash no-redirect="ggggg" />
+</def>
+
+<def tag="trash" attrs="no-redirect" >
+  ogadjon
+  <%
+    tooltip             = "Permanently erase #{this.reference_name}"
+    number_of_aspects   = this.aspects.length
+    number_of_items     = this.items.length
+    if number_of_aspects > 0
+      if number_of_items > 0
+        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+      else
+        tooltip += " and its #{number_of_aspects} items"
+      end
+    else # 0 aspects
+      if number_of_items > 0
+        tooltip += " and its #{number_of_items  } items"
+      end
+    end
+
+    redirect_uri = if @card.id == this.id then
+      if target = this.whole || this.list then
+        url_for(:action => params[:action], :id => target)
+      else
+        cards_url
+      end
+    else
+      request.request_uri
+    end
+
+    logger.debug "===#{no_redirect}---"
+    #no_redirect = nil
+    logger.debug "---#{no_redirect}=== supposed to be nil"
+    logger.debug "[[[#{attributes[:no_redirect]}]]]"
+    logger.debug this.inspect
+    if attributes[:no_redirect] == "ggggg" then
+      redirect_uri = nil
+      attributes[:no_redirect] = nil
+    end
+  %>
+  <%= "===#{no_redirect}---" %>
+  <delete-button with="&this" after-submit="&redirect_uri" image="icons/bin_closed.png" title="#{tooltip}" />
+</def>
+
 <def tag="google">
   <script type="text/javascript"><!--
     google_ad_client = "pub-2559479460830705";
@@ -51,40 +98,6 @@
   </li>
 </def>
 
-<def tag="trash" attrs="redir">
-  <%
-    tooltip             = "Permanently erase #{this.reference_name}"
-    number_of_aspects   = this.aspects.length
-    number_of_items     = this.items.length
-    if number_of_aspects > 0
-      if number_of_items > 0
-        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
-      else
-        tooltip += " and its #{number_of_aspects} items"
-      end
-    else # 0 aspects
-      if number_of_items > 0
-        tooltip += " and its #{number_of_items  } items"
-      end
-    end
-
-    logger.debug @card.inspect
-    logger.debug this.inspect
-    redirect_uri = if @card.id == this.id then
-      if target = this.whole || this.list then
-        url_for(:action => params[:action], :id => target)
-      else
-        cards_url
-      end
-    else
-      request.request_uri
-    end
-
-  redirect_uri = nil unless attributes[:redir]
-  %>
-  <delete-button with="&this" after-submit="&redirect_uri" image="icons/bin_closed.png" title="#{tooltip}" />
-</def>
-
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
@@ -109,30 +122,29 @@
 <def tag="add-aspect">
   <if test="&this">
     <% tooltip =
-      (this.aspects.count > 0 ? " Add another aspect of " : "Add aspects of ") +
+      (this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
       this.reference_name
     %>
-    <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
+    <form class="add-aspect" with="&Card.new(:whole_id => this.id)"      >
       <!-- <submit       label="&label" /> -->
       <submit label="+" title ="&tooltip" class ="toy-nav add-aspect" />
-      <after-submit uri  ="#{request.request_uri}" />
-    </form                                                          >
+      <after-submit uri  ="#{request.request_uri}"                    />
+    </form                                                               >
   </if>
 </def>
 
 <def tag="add-item">
   <if test="&this">
     <% tooltip = this.items.count > 0 ?
-           "Add another item under #{this.reference_name}, below the following #{this.items.count}" :
-           "Add a list or table that details #{this.reference_name}"
-  %>
-    <form class="add-item"  with="&Card.new(:list_id  => this.id)"             >
+           "Add another item below #{this.reference_name}, below the following #{this.items.count}" :
+           "Below, start a list or table which details #{this.reference_name}"
+    %>
+    <form class="add-item"  with="&Card.new(:list_id  => this.id)"            >
       <%= hidden_field :card, :look_like_id, :value => @card.id %>
       <!-- <submit       label="&label" /> -->
-      <submit label="v" title ="&tooltip" class="toy-nav add-item tooltip">
-      </submit>
-      <after-submit uri  ="#{request.request_uri}"                    />
-    </form                                                          >
+      <submit label="v" title ="&tooltip" class="toy-nav add-item tooltip" />
+      <after-submit uri  ="#{request.request_uri}"                         />
+    </form                                                                    >
   </if>
 </def>
 

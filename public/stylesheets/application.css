@@ -320,7 +320,13 @@ td.body-cell {
 
 td.bottom-controls {
   height:16px;
-  background-color:transparen;
+  background-color:#9cf;
+  padding: 0;
+  margin: 0;
+}
+
+td.go {
+  position: relative;
 }
 
 td .card-body {
@@ -519,15 +525,6 @@ input.button, a.zoom-in {
     line-height: 11px !important;
     font-size: 11px !important;
     padding: 0;
-    margin: 0;
-}
-
-td.go {
-    position: relative;
-}
-
-td.bottom-controls {
-     padding: 0;
     margin: 0;
 }
 

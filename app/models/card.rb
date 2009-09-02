@@ -31,11 +31,23 @@ class Card < ActiveRecord::Base
     return if look_like_id.blank?
 
     # TODO: Find the aspects we need to build, and use them to recursively generate the aspects
-    roots = Card.find(look_like_id).items.map(&:aspects)
-    roots.each do |o|
-      o.map(&:kind).compact.uniq.each do |name|
-        self.aspects.build(:kind => name)
-      end
+    item_to_reproduce = Card.find(look_like_id).items(:order => "updated_at DESC")[0]
+    self.kind = item_to_reproduce.kind
+    aspects_to_reproduce = item_to_reproduce.aspects
+    aspects_to_reproduce.each do |a|
+      a.generate_aspects_recursively model_id
+    end
+  end
+
+  def generate_aspects_recursively
+    return if look_like_id.blank?
+
+    # TODO: Find the aspects we need to build, and use them to recursively generate the aspects
+    item_to_reproduce = Card.find(look_like_id).items(:order => "updated_at DESC")[0]
+    self.kind = item_to_reproduce.kind
+    aspects_to_reproduce = item_to_reproduce.aspects
+    aspects_to_reproduce.each do |a|
+      self.aspects.build(:kind => a.kind) if a.kind
     end
   end
 

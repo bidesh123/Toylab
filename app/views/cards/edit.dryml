@@ -1,7 +1,13 @@
 <toy-edit />
 
-<def tag="erase">
-  <trash redir="false"/>
+<def tag="toy-edit">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header:><context if="&this.whole || this.list"/></content-header:>
+      <content-body:  ><card first                           /></content-body:  >
+      <aside:         ><google                               /></aside:         >
+    </edit-page>
+  </set-scoped>
 </def>
 
 <def tag="card" for="Card">
@@ -16,21 +22,6 @@
     <self-and-aspects-row />
     <list-row />
   </table>
-</def>
-
-<def tag="add-aspect">
-  <if test="&this">
-    <% tooltip = "Describe " +
-        (this.aspects.count > 0 ? "another " : "an ") +
-        "aspect of " +
-        this.reference_name
-    %>
-    <form class="add-aspect" with="&Card.new(:whole_id => this.id)"             >
-      <!-- <submit       label="&label" /> -->
-      <submit label="+" title ="&tooltip" class ="toy-nav add-aspect" />
-      <after-submit uri  ="#{request.request_uri}" />
-    </form                                                          >
-  </if>
 </def>
 
 <def tag="self-and-aspects-row">
@@ -69,16 +60,6 @@
   </tr>
 </def>
 
-<def tag="toy-edit">
-  <set-scoped deep="&@card.edit_deep" >
-    <edit-page>
-      <content-header:><context if="&this.whole || this.list"/></content-header:>
-      <content-body:  ><card first                           /></content-body:  >
-      <aside:><google /></aside:>
-    </edit-page>
-  </set-scoped>
-</def>
-
 <def tag="bottom-controls">
   <table class="bottom-controls">
     <tr class="bottom-controls">
@@ -107,9 +88,9 @@
     <td class="bottom-controls">
       <bottom-controls if="&true" /><else>bottom controls</else>
     </td>
-    <td class="core-trash"     >
-      <erase           if="&true" /><else>trash          </else>
-    </td>
+    <td class="core-trash" >
+      <trash           if="&true" /><else>trash          </else>
+    </td                   >
   </tr>
 </def>
 
