@@ -8,63 +8,84 @@ function installAutocomplete(el, url, parentName) {
 
 var hideShowEngine = {
   'mouseover': {
-    'hidden':     function(table, coreControls, aspectControls) {
-      return 'hidden';
+    'hidden':     function(context) {
+      (function() { context.transition("showTimeout"); }).delay(1.0, context);
+      return 'waitToShow';
     },
-    'waitToShow': function(table, coreControls, aspectControls) {
-      return 'hidden';
+    'waitToShow': function(context) {
+      return 'waitToShow';
     },
-    'showing':    function(table, coreControls, aspectControls) {
-      return 'hidden';
+    'waitToHide': function(context) {
+      return 'shown';
     },
-    'shown':      function(table, coreControls, aspectControls) {
-      return 'hidden';
-    },
-    'waitToHide': function(table, coreControls, aspectControls) {
-      return 'hidden';
-    },
-    'hiding':     function(table, coreControls, aspectControls) {
-      return 'hidden';
+    'hiding':     function(context) {
+      (function() { context.transition("showTimeout"); }).delay(1.0, context);
+      return 'waitToShow';
     }
   },
   'mouseout':  {
-    'hidden':     function(table, coreControls, aspectControls) {
+    'waitToShow': function(context) {
       return 'hidden';
     },
-    'waitToShow': function(table, coreControls, aspectControls) {
+    'showing':    function(context) {
+      (function() { context.transition("hideTimeout"); }).delay(10.0, context);
+      return 'waitToHide';
+    },
+    'shown':      function(context) {
+      (function() { context.transition("hideTimeout"); }).delay(10.0, context);
+      return 'waitToHide';
+    },
+  },
+  'showTimeout': {
+    'waitToShow': function(context) {
+      new Effect.Appear(context.aspectControls);
+      new Effect.Appear(context.coreControls,   {afterFinish: function() { context.transition("showingDone"); }});
+      return 'showing';
+    },
+    'waitToHide': function(context) {
+      return 'waitToHide';
+    },
+  },
+  'hideTimeout': {
+    'waitToHide': function(context) {
+      new Effect.Fade(context.aspectControls);
+      new Effect.Fade(context.coreControls, {afterFinish: function() { context.transition("hidingDone"); }});
+      return 'hiding';
+    },
+  },
+  'showingDone': {
+    'showing':    function(context) {
+      return 'shown';
+    },
+  },
+  'hidingDone': {
+    'hiding':     function(context) {
       return 'hidden';
     },
-    'showing':    function(table, coreControls, aspectControls) {
-      return 'hidden';
-    },
-    'shown':      function(table, coreControls, aspectControls) {
-      return 'hidden';
-    },
-    'waitToHide': function(table, coreControls, aspectControls) {
-      return 'hidden';
-    },
-    'hiding':     function(table, coreControls, aspectControls) {
-      return 'hidden';
-    }
   },
 };
 
 Event.observe(window, "load", function() {
   $$("table.core").each(function(table) {
-    (function() {
-      // Initial state
-      var state          = 'hidden';
+    var context = {
+      state          : 'hidden',
+      coreControls   : table.down(".core-controls"),
+      aspectControls : table.down(".core-add-aspect"),
 
-      var coreControls   = table.down(".core-controls");
-      var aspectControls = table.down(".core-add-aspect");
+      transition     : function(eventName) {
+        fn = hideShowEngine[eventName][this.state];
 
-      Event.observe(table, "mouseover", function() {
-        state = hideShowEngine["mouseover"][state](table, coreControls, aspectControls);
-      });
-      Event.observe(table, "mouseout",  function() {
-        state = hideShowEngine["mouseout"][state](table, coreControls, aspectControls);
-      });
-    })();
+        // Only call the transition function if there is one, else we keep the same state
+        if (fn) this.state = fn(this);
+      }
+    };
+
+    Event.observe(table, "mouseover", function() {
+      context.transition("mouseover");
+    });
+    Event.observe(table, "mouseout",  function() {
+      context.transition("mouseout");
+    });
   });
 
     $$(".editor.in-place-edit.card-kind").each(function(el) {
