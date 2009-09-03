@@ -3,7 +3,10 @@
 <def tag="toy-edit">
   <set-scoped deep="&@card.edit_deep" >
     <edit-page>
-      <content-header:><context if="&this.whole || this.list"/></content-header:>
+      <content-header:>
+        <views />
+        <context if="&this.whole || this.list"/>
+      </content-header:>
       <content-body:  ><card first                           /></content-body:  >
       <aside:         ><google                               /></aside:         >
     </edit-page>
@@ -143,7 +146,4 @@
   </tr>
 </def>
 
-
-
-<p><%= link_to "Flat View", url_for(:action => "show") %></p>
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

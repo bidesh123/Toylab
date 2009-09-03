@@ -8,7 +8,8 @@
     <!-- why not edit-page ?? -->
     <show-page>
       <content-header:>
-        <context if="&whole || list"/>
+        <views />
+        <context if="&this.whole || this.list"/>
         <!-- % whole_off = "&false" %       -->
         <!-- <toy-header if="&whole_off"/>  -->
       </content-header:>
@@ -410,5 +411,4 @@
 </show-page>
 -->
 
-<p><%= link_to "Hierarchical View", url_for(:action => "edit") %></p>
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

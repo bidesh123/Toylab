@@ -13,7 +13,6 @@
 </def>
 
 <def tag="trash" attrs="no-redirect" >
-  ogadjon
   <%
     tooltip             = "Permanently erase #{this.reference_name}"
     number_of_aspects   = this.aspects.length
@@ -40,18 +39,17 @@
       request.request_uri
     end
 
-    logger.debug "===#{no_redirect}---"
+    #logger.debug "===#{no_redirect}---"
     #no_redirect = nil
-    logger.debug "---#{no_redirect}=== supposed to be nil"
-    logger.debug "[[[#{attributes[:no_redirect]}]]]"
-    logger.debug this.inspect
+    #logger.debug "---#{no_redirect}=== supposed to be nil"
+    #logger.debug "[[[#{attributes[:no_redirect]}]]]"
+    #logger.debug this.inspect
     if attributes[:no_redirect] == "ggggg" then
       redirect_uri = nil
       attributes[:no_redirect] = nil
     end
   %>
-  <%= "===#{no_redirect}---" %>
-  <delete-button with="&this" after-submit="&redirect_uri" image="icons/bin_closed.png" title="#{tooltip}" />
+  <delete-button with="&this" after-submit="&redirect_uri" label="ERASE" image="icons/bin_closed.png" title="#{tooltip}" />
 </def>
 
 <def tag="google">
@@ -83,7 +81,7 @@
 
 <def tag="context">
   <div if="&this.whole || this.list" class="context">
-    <ul style="list-style-type:none; background:white">Zoom out to <out whole-off /></ul>
+    <ul>Zoom out to <out whole-off /></ul>
   </div>
 </def>
 
@@ -154,4 +152,26 @@
   </td>
 </def>
 
+<def tag="views">
+  <div class="views">
+    <ul>View &nbsp;
+    <tree-view />&nbsp;
+    <report-view /> &nbsp;
+    <list-view />
+    <li class="view-link"> how do I disable one of these?</li>
+    </ul>
+  </div>
+</def>
+
+<def tag="tree-view" attrs="off">
+  <li class="view-link"><%= link_to("as a tree"  , url_for(:action => "edit"), :disabled => false  )  %></li>
+</def>
+
+<def tag="report-view">
+  <li class="view-link"><%= link_to("as a report", url_for(:action => "show"), :disabled => false  )  %></li>
+</def>
+
+<def tag="list-view">
+  <li class="view-link"><%= link_to("as a list ", url_for(:action => "list"), :disabled => false  )  %></li>
+</def>
 
