@@ -132,6 +132,7 @@ Event.observe(window, "load", function() {
     var cssselector = "card_" + id;
     $(cssselector).up("table.inner").select("span.editor").each(function(editor) {
       console.log("Firing click on %o", editor);
+      editor.setStyle({border: '4px solid black'});
       editor.fire("click");
     });
   }
