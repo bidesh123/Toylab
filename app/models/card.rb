@@ -11,11 +11,11 @@ class Card < ActiveRecord::Base
       :pink, :orange, :yellow, :green, :blue, :purple, :grey)
     whole_id     :integer
     list_id      :integer
-    look_like_id :integer
     timestamps
   end
 
   belongs_to :owner, :class_name => "User", :creator => true
+  belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
 
   belongs_to :whole  , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
   has_many   :aspects, :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
