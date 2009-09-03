@@ -21,43 +21,45 @@ var fadeDelay = 1.0;
 var hideShowEngine = {
   'mouseover': {
     'hidden':     function(context) {
-      (function() { context.transition("showTimeout"); }).delay(showDelay, context);
+      context.delay(showDelay, function() { context.transition("showTimeout") });
       return 'waitToShow';
     },
     'waitToShow': function(context) {
       return 'waitToShow';
     },
     'waitToHide': function(context) {
+      context.cancelDelay();
       return 'shown';
     },
     'hiding':     function(context) {
-      (function() { context.transition("showTimeout"); }).delay(showDelay, context);
+      context.delay(showDelay, function() { context.transition("showTimeout") });
       return 'waitToShow';
     }
   },
+
   'mouseout':  {
     'waitToShow': function(context) {
+      context.cancelDelay();
       return 'hidden';
     },
     'showing':    function(context) {
-      (function() { context.transition("hideTimeout"); }).delay(hideDelay, context);
+      context.delay(hideDelay, function() { context.transition("hideTimeout") });
       return 'waitToHide';
     },
     'shown':      function(context) {
-      (function() { context.transition("hideTimeout"); }).delay(hideDelay, context);
+      context.delay(hideDelay, function() { context.transition("hideTimeout") });
       return 'waitToHide';
     },
   },
+
   'showTimeout': {
     'waitToShow': function(context) {
       new Effect.Appear(context.aspectControls, {duration: appearDelay});
       new Effect.Appear(context.coreControls,   {duration: appearDelay, afterFinish: function() { context.transition("showingDone"); }});
       return 'showing';
     },
-    'waitToHide': function(context) {
-      return 'waitToHide';
-    },
   },
+
   'hideTimeout': {
     'waitToHide': function(context) {
       new Effect.Fade(context.aspectControls, {duration: fadeDelay});
@@ -65,11 +67,13 @@ var hideShowEngine = {
       return 'hiding';
     },
   },
+
   'showingDone': {
     'showing':    function(context) {
       return 'shown';
     },
   },
+
   'hidingDone': {
     'hiding':     function(context) {
       return 'hidden';
@@ -84,7 +88,18 @@ Event.observe(window, "load", function() {
       coreControls   : table.down(".core-controls"),
       aspectControls : table.down(".core-add-aspect"),
 
-      transition     : function(eventName) {
+      // Executes a function after a timeout
+      delay: function(delay, fn) {
+        this.cancellableFunction = fn.delay(delay, this);
+      },
+
+      // Cancels a timeout that's been initiated, but only if there is one
+      cancelDelay: function() {
+        if (this.cancellableFunction) window.clearTimeout(this.cancellableFunction)
+        this.cancellableFunction = null;
+      },
+
+      transition: function(eventName) {
         fn = hideShowEngine[eventName][this.state];
 
         // Only call the transition function if there is one, else we keep the same state
