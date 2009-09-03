@@ -15,6 +15,9 @@ class Card < ActiveRecord::Base
     timestamps
   end
 
+  belongs_to :owner, :class_name => "User"
+  after_user_new { |r| r.owner = acting_user }
+
   belongs_to :whole  , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
   has_many   :aspects, :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
 
@@ -252,19 +255,23 @@ class Card < ActiveRecord::Base
  # --- Permissions --- #
 
   def create_permitted?
-    true || acting_user.administrator?
+    acting_user.administrator? || owner_is?(acting_user)
   end
 
   def update_permitted?
-    true || acting_user.administrator?
+    acting_user.administrator? || owner_is?(acting_user)
   end
 
   def destroy_permitted?
-    true || acting_user.administrator?
+    acting_user.administrator? || owner_is?(acting_user)
   end
 
   def view_permitted?(field)
-    true
+    case field
+    when nil
+      acting_user.administrator? || owner_is?(acting_user)
+    else
+      true
+    end
   end
-
 end
