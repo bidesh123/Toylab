@@ -125,4 +125,16 @@ Event.observe(window, "load", function() {
             installAutocomplete.delay(0.1, el, '/cards/auto/name', '.name-cell');
         });
     });
+
+  var anchor = document.location.hash;
+  if (anchor) {
+    var id = anchor.split("-").last();
+    var cssselector = "card_" + id;
+    var el = $(cssselector);
+    $$("table.inner").each(function(table) {
+      if (el.descendantOf(table)) {
+        table.style.border = "4px solid black";
+      }
+    });
+  }
 });
