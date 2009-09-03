@@ -6,61 +6,63 @@ function installAutocomplete(el, url, parentName) {
   new Ajax.Autocompleter(inplaceField, update, url, {method:'get', paramName: 'q'});
 };
 
+var hideShowEngine = {
+  'mouseover': {
+    'hidden':     function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'waitToShow': function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'showing':    function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'shown':      function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'waitToHide': function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'hiding':     function(table, coreControls, aspectControls) {
+      return 'hidden';
+    }
+  },
+  'mouseout':  {
+    'hidden':     function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'waitToShow': function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'showing':    function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'shown':      function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'waitToHide': function(table, coreControls, aspectControls) {
+      return 'hidden';
+    },
+    'hiding':     function(table, coreControls, aspectControls) {
+      return 'hidden';
+    }
+  },
+};
+
 Event.observe(window, "load", function() {
   $$("table.core").each(function(table) {
-    var coreControls = table.down(".core-controls");
-    var aspectControls = table.down(".core-add-aspect");
-
     (function() {
       // Initial state
-      var state = 'hidden';
+      var state          = 'hidden';
 
-      function transitionToShown() {
-        // console.log('finishedShown -- state: %o, element: %o', state, table);
-        if (state === 'showing') state = 'shown';
-      }
-
-      function transitionToHidden() {
-        // console.log('finishedHidden -- state: %o, element: %o', state, table);
-        if (state === 'hiding') state = 'hidden';
-      }
-
-      function transitionToHiding() {
-        //new Effect.Fade(coreControls,   {afterFinish: transitionToHidden});
-        //new Effect.Fade(aspectControls, {afterFinish: transitionToHidden});
-        transitionToHidden;
-        state = 'hiding';
-      }
-
-      function transitionToShowing() {
-        new Effect.Appear(coreControls,   {afterFinish: transitionToShown});
-        new Effect.Appear(aspectControls, {afterFinish: transitionToShown});
-        state = 'showing';
-      }
+      var coreControls   = table.down(".core-controls");
+      var aspectControls = table.down(".core-add-aspect");
 
       Event.observe(table, "mouseover", function() {
-        // console.log('over -- state: %o, element: %o', state, table);
-        if (state === 'shown') {
-          // NOP ;
-        } else if (state === 'showing') {
-          // NOP ;
-        } else if (state === 'hiding') {
-          transitionToShowing();
-        } else if (state === 'hidden') {
-          transitionToShowing();
-        }
+        state = hideShowEngine["mouseover"][state](table, coreControls, aspectControls);
       });
       Event.observe(table, "mouseout",  function() {
-        // console.log('out -- state: %o, element: %o', state, table);
-        if (state === 'shown') {
-          transitionToHiding();
-        } else if (state === 'showing') {
-          transitionToHiding();
-        } else if (state === 'hiding') {
-          // NOP ;
-        } else if (state === 'hidden') {
-          // NOP ;
-        }
+        state = hideShowEngine["mouseout"][state](table, coreControls, aspectControls);
       });
     })();
   });
