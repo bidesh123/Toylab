@@ -130,11 +130,9 @@ Event.observe(window, "load", function() {
   if (anchor) {
     var id = anchor.split("-").last();
     var cssselector = "card_" + id;
-    var el = $(cssselector);
-    $$("table.inner").each(function(table) {
-      if (el.descendantOf(table)) {
-        table.style.border = "4px solid black";
-      }
+    $(cssselector).up("table.inner").select("span.editor").each(function(editor) {
+      console.log("Firing click on %o", editor);
+      editor.fire("click");
     });
   }
 });
