@@ -174,3 +174,91 @@
   <li class="view-link"><%= link_to("as a list"  , url_for(:action => "list"), :disabled => false  )  %></li>
 </def>
 
+
+<def tag="bottom-controls">
+  <table class="bottom-controls">
+    <tr class="bottom-controls">
+      <td class="core-add-item"><add-item /></td>
+      <td class="go"   ><show-card-inline /></td>
+      <td class="theme"><editor:theme     /></td>
+      <td class="reveal"><reveal-aspect-or-item which="items"/></td>
+    </tr>
+  </table>
+</def>
+
+<def tag="core-bottom-controls-tr">
+  <tr class="core-controls" style="display:none">
+    <td class="bottom-controls">
+      <bottom-controls />
+    </td>
+    <td class="core-trash" >
+      <trash />
+    </td                   >
+  </tr>
+</def>
+
+<def tag="reveal-aspect-or-item">
+  <%= link_to_function(
+    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
+</def>
+
+<def tag="list-row">
+  <tr class="list-row" if="&this.items">
+    <td class="list-row>" colspan="2">
+      <set table-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="list-rows" id="&table_id" if="&this.items">
+        <repeat with="&this.items">
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+  </tr>
+</def>
+
+<def tag="recursive-card">
+  <table class="card inner">
+    <self-and-aspects-row />
+    <list-row />
+  </table>
+</def>
+
+<def tag="card" for="Card">
+  <table class="card first-card">
+    <self-and-aspects-row />
+    <list-row />
+  </table>
+</def>
+
+<def tag="item-row">
+  <tr class="item-row">
+    <td class="item-cell">
+      <recursive-card item if="&true"/>
+    </td>
+  </tr>
+</def>
+
+<def tag="core">
+  <table class="core">
+    <core-main-row />
+    <tr class="name">
+      <%  name_style="name-cell #{this.theme_class}" %>
+      <td class="#{name_style}">
+        <editor:name blank-message="....."/>
+      </td>
+    </tr>
+    <tr class="body">
+      <%  body_style="body-cell #{this.theme_class}" %>
+      <td class="#{body_style}">
+        <if test="&this.body ">
+          <editor:body                   blank-message="....." />
+        </if>
+        <else>
+          <editor:body class="tiny-gray" blank-message="....." />
+        </else>
+      </td>
+    </tr>
+    <core-bottom-controls-tr />
+  </table>
+</def>
+

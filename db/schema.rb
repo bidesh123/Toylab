@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(:version => 20090903175712) do
     t.integer  "list_id"
     t.string   "based_on"
     t.integer  "look_like_id"
-    t.integer  "owner_id"
     t.string   "theme"
+    t.integer  "owner_id"
   end
 
   create_table "users", :force => true do |t|

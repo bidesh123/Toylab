@@ -7,16 +7,16 @@ function installAutocomplete(el, url, parentName) {
 };
 
 // Number of seconds before we trigger the appear animation
-var showDelay = 1.0;
+var showDelay = 0.5;
 
 // Duration of the appear animation
 var appearDelay = 0.5;
 
 // Number of seconds before we trigger the fade animation
-var hideDelay = 10.0;
+var hideDelay = 3.0;
 
 // Duration of the fade animation
-var fadeDelay = 1.0;
+var fadeDelay = 2.0;
 
 var hideShowEngine = {
   'mouseover': {
@@ -51,7 +51,7 @@ var hideShowEngine = {
 
   'showTimeout': {
     'waitToShow': function(context) {
-      new Effect.Appear(context.aspectControls, {duration: appearDelay});
+      if(context.aspectControls) {new Effect.Appear(context.aspectControls, {duration: appearDelay})};
       new Effect.Appear(context.coreControls,   {duration: appearDelay, afterFinish: function() { context.transition("showingDone"); }});
       return 'showing';
     },
@@ -59,7 +59,7 @@ var hideShowEngine = {
 
   'hideTimeout': {
     'waitToHide': function(context) {
-      new Effect.Fade(context.aspectControls, {duration: fadeDelay});
+      if(context.aspectControls) {new Effect.Fade(context.aspectControls, {duration: fadeDelay})};
       new Effect.Fade(context.coreControls,   {duration: fadeDelay, afterFinish: function() { context.transition("hidingDone"); }});
       return 'hiding';
     },
