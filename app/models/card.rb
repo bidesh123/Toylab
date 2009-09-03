@@ -266,11 +266,6 @@ class Card < ActiveRecord::Base
   end
 
   def view_permitted?(field)
-    case field
-    when nil
-      acting_user.administrator? || owner_is?(acting_user)
-    else
-      true
-    end
+    true
   end
 end
