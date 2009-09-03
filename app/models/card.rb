@@ -279,7 +279,22 @@ class Card < ActiveRecord::Base
   end
 
   def update_permitted?
-    owner_or_admin?
+    return true if owner_or_admin?
+    return false unless acting_user.signed_up?
+
+    only_changed?(:name, :body, :theme)
+  end
+
+  def edit_permitted?(attribute)
+    return true if owner_or_admin?
+    return false unless acting_user.signed_up?
+
+    case attribute.to_s
+    when nil, /name/i, /body/i, /theme/i
+      true
+    else
+      false
+    end
   end
 
   def destroy_permitted?
