@@ -1,0 +1,149 @@
+<toy-list />
+
+<def tag="toy-list">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header:>
+        <views />
+        <context if="&this.whole || this.list"/>
+      </content-header:>
+      <content-body:  ><card first                           /></content-body:  >
+      <aside:         ><google                               /></aside:         >
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="card" for="Card">
+  <table class="card first-card">
+    <self-and-aspects-row />
+    <list-row />
+  </table>
+</def>
+
+<def tag="recursive-card">
+  <table class="card inner">
+    <self-and-aspects-row />
+    <list-row />
+  </table>
+</def>
+
+<def tag="self-and-aspects-row">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+      <core if="&true"/>
+      <else>ABC</else>
+    </td>
+    <!-- <td class="aspects-table" id="< %= dom_id(this, "aspects") %>">
+      <aspects-table />
+    </td> -->
+  </tr>
+</def>
+
+<def tag="aspects-table">
+  <table class="aspects-table" if="&this.aspects">
+    <tr class="aspects-row">
+      <repeat with="&this.aspects" if="&this.aspects">
+        <!-- <aspect-cell /> &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&-->
+      </repeat>
+      <spacer-cell />
+    </tr>
+  </table>
+</def>
+
+<def tag="list-row">
+  <tr class="list-row" if="&this.items">
+    <td class="list-row>" colspan="2">
+      <set table-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="list-rows" id="&table_id" if="&this.items">
+        <repeat with="&this.items">
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+  </tr>
+</def>
+
+<def tag="bottom-controls">
+  <table class="bottom-controls">
+    <tr class="bottom-controls">
+      <td class="core-add-item"><add-item   if="&true" /><else>add item</else  ></td>
+      <td class="go"   ><show-card-inline if="&true"/><else>go</else     ></td>
+      <td class="reveal"><reveal-aspect-or-item which="items"/></td>
+    </tr>
+  </table>
+</def>
+
+<def tag="core-right-controls-td">
+  <td class="core-add-aspect" rowspan="3" style="display:none">
+    <reveal-aspect-or-item which="aspects"/>
+    <add-aspect />
+  </td>
+</def>
+
+<def tag="reveal-aspect-or-item">
+  <%= link_to_function(
+    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
+</def>
+
+<def tag="core-bottom-controls-tr">
+  <tr class="core-controls" style="display:none">
+    <td class="bottom-controls">
+      <bottom-controls if="&true" /><else>bottom controls</else>
+    </td>
+    <td class="core-trash" >
+      <trash           if="&true" /><else>trash          </else>
+    </td                   >
+  </tr>
+</def>
+
+
+<def tag="core">
+  <table class="core">
+    <tr class="core-main-row"   >
+      <th class="kind-cell"                  >
+        <if test="&this.kind ">
+          <editor:kind                   blank-message="....." />
+        </if>
+        <else>
+          <editor:kind class="tiny-gray" blank-message="....." />
+        </else>
+      </th>
+      <!--<core-right-controls-td /> -->
+    </tr>
+    <tr class="name">
+      <td class="name-cell">
+        <editor:name blank-message="....."/>
+      </td>
+    </tr>
+    <tr class="body">
+      <td class="body-cell">
+        <if test="&this.body ">
+          <editor:body                   blank-message="....." />
+        </if>
+        <else>
+          <editor:body class="tiny-gray" blank-message="....." />
+        </else>
+      </td>
+    </tr>
+    <core-bottom-controls-tr />
+  </table>
+</def>
+
+<def tag="aspect-cell">
+  <% @model_id = "aspect-cell model::card:#{this.id}" %>
+ <td class="<%= @model_id %>">
+    <recursive-card aspect if="&true"/>
+  </td>
+</def>
+
+
+<def tag="item-row">
+  <tr class="item-row">
+    <td class="item-cell">
+      <recursive-card item if="&true"/>
+    </td>
+  </tr>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

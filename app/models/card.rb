@@ -31,17 +31,17 @@ class Card < ActiveRecord::Base
     return if look_like_id.blank?
     return unless source_card  = Card.find(look_like_id)
     return unless source_items = source_card.items(:order => "updated_at DESC")
+    
     source_item = source_items[0]
-    generate_aspects_recursively source_item
+    generate_aspects_recursively(source_item) if source_item
   end
 
   def generate_aspects_recursively source_item
     dest_item = self
-    dest_item.kind = source_item.kind
-
-    source_aspects = source_item.aspects
-    source_aspects.each do |source_aspect|
-      self.aspects.build(:kind => source_aspect.kind) if a.kind
+    dest_item.kind = source_item.kind if source_item.kind
+    source_item.aspects.each do |source_aspect|
+      dest_aspect = self.aspects.build(:kind => source_aspect.kind)
+      dest_aspect.generate_aspects_recursively source_aspect
     end
   end
 
