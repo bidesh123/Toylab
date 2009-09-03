@@ -297,14 +297,19 @@ table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card t
 }
 
 
-table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      td.body-cell {
-  font-size: 12px; padding:0px;
+table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card td.body-cell {
+  font-size: 18px; padding:4px;
   line-height: 100%;
 }
 
 table.first-card th.kind-cell .tiny-gray, table.first-card td.body-cell .tiny-gray {
   font-size: 6px; padding:0px;
   line-height: 6px;
+}
+
+table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      td.body-cell {
+  font-size: 12px; padding:0px;
+  line-height: 100%;
 }
 
 th.empty-title-cell {
@@ -763,3 +768,29 @@ div.auto_complete ul strong.highlight {
   margin:0;
   padding:0;
 }
+
+.kind-cell.theme-pink {
+    color:#fc9;
+}
+
+.kind-cell.theme-orange {
+    color:#f9c;
+}
+
+.kind-cell.theme-yellow {
+    color:#ff9;
+}
+
+.kind-cell.theme-green {
+    color:#cfc;
+}
+
+th.kind-cell.theme-purple .editor {
+    color:#c9f;
+}
+
+.kind-cell.theme-grey {
+    color:inherit;
+}
+
+

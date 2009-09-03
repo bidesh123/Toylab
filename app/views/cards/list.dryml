@@ -13,15 +13,8 @@
   </set-scoped>
 </def>
 
-<def tag="card" for="Card">
-  <table class="card first-card list">
-    <self-and-aspects-row />
-    <list-row />
-  </table>
-</def>
-
 <def tag="recursive-card">
-  <table class="card inner">
+  <table class="card inner list">
     <self-and-aspects-row />
     <list-row />
   </table>
@@ -29,7 +22,10 @@
 
 <def tag="self-and-aspects-row">
   <tr class="self-and-aspects-row">
-    <td class="core"><core /></td>
+    <td class="core">
+      <core if="&true"/>
+      <else>ABC</else>
+    </td>
     <!-- <td class="aspects-table" id="< %= dom_id(this, "aspects") %>">
       <aspects-table />
     </td> -->
@@ -86,53 +82,21 @@
 <def tag="core-bottom-controls-tr">
   <tr class="core-controls" style="display:none">
     <td class="bottom-controls">
-      <bottom-controls if="&true" /><else>bottom controls</else>
+      <bottom-controls /><els
     </td>
     <td class="core-trash" >
-      <trash           if="&true" /><else>trash          </else>
+      <trash />
     </td                   >
   </tr>
 </def>
 
 
-<def tag="core">
-  <table class="core">
-      <!--
-    <tr class="core-main-row"   >
-      <th class="kind-cell"                  >
-        <if test="&this.kind ">
-          <editor:kind                   blank-message="....." />
-        </if>
-        <else>
-          <editor:kind class="tiny-gray" blank-message="....." />
-        </else>
-      </th>
-      <core-right-controls-td />
-    </tr>
-      -->
-    <tr class="name">
-      <td class="name-cell">
-        <editor:name blank-message="....."/>
-      </td>
-    </tr>
-    <tr class="body">
-      <td class="body-cell">
-        <if test="&this.body ">
-          <editor:body                   blank-message="....." />
-        </if>
-        <else>
-          <editor:body class="tiny-gray" blank-message="....." />
-        </else>
-      </td>
-    </tr>
-    <core-bottom-controls-tr />
-  </table>
-</def>
+<def tag="core-main-row"></def>
 
 <def tag="aspect-cell">
   <% @model_id = "aspect-cell model::card:#{this.id}" %>
  <td class="<%= @model_id %>">
-    <recursive-card aspect if="&true"/>
+    <recursive-card aspect"/>
   </td>
 </def>
 
@@ -140,7 +104,7 @@
 <def tag="item-row">
   <tr class="item-row">
     <td class="item-cell">
-      <recursive-card item if="&true"/>
+      <recursive-card item"/>
     </td>
   </tr>
 </def>

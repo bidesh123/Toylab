@@ -8,22 +8,22 @@ class Card < ActiveRecord::Base
     kind         :string
     based_on     :string
     theme        enum_string(
-      :pink, :orange, :yellow, :green, :blue, :purple, :grey)
+      :theme, :pink, :orange, :yellow, :green, :purple, :grey)
     whole_id     :integer
     list_id      :integer
     timestamps
   end
 
-  belongs_to :owner, :class_name => "User", :creator => true
+  belongs_to :owner     , :class_name => "User", :creator => true
   belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
 
-  belongs_to :whole  , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
-  has_many   :aspects, :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
+  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
 
-  belongs_to :list   , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
-  has_many   :items  , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
+  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
 
-  acts_as_list         :column => :number, :scope => :list
+  acts_as_list         :column => :number   , :scope => :list
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
 
@@ -49,7 +49,11 @@ class Card < ActiveRecord::Base
     end
   end
 
- # --- Toy --- #
+ def theme_class
+   %w(theme grey).include?((theme || "").downcase) ? nil : "theme-#{theme}"
+ end
+
+ ## --- Toy --- #
 
   class HtmlTable < Array
     def rectangular! # changes are not destructive or cumulative
