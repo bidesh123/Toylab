@@ -254,7 +254,10 @@ class Card < ActiveRecord::Base
  # --- Permissions --- #
 
   def create_permitted?
-    owner_or_admin?
+    return true if owner_or_admin?
+    return false unless acting_user.signed_up?
+
+    false
   end
 
   def update_permitted?
