@@ -15,8 +15,7 @@ class Card < ActiveRecord::Base
     timestamps
   end
 
-  belongs_to :owner, :class_name => "User"
-  after_user_new { |r| r.owner = acting_user }
+  belongs_to :owner, :class_name => "User", :creator => true
 
   belongs_to :whole  , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
   has_many   :aspects, :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy

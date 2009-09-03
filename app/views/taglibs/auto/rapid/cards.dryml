@@ -6,6 +6,7 @@
       <h4 param="heading"><a><name/></a></h4>
     </header:>
     <body: param>
+      <a:owner param="creator-link"/>
       <count:items param/>
     </body:>
   </card>
