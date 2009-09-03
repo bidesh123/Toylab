@@ -24,9 +24,6 @@ var hideShowEngine = {
       context.delay(showDelay, function() { context.transition("showTimeout") });
       return 'waitToShow';
     },
-    'waitToShow': function(context) {
-      return 'waitToShow';
-    },
     'waitToHide': function(context) {
       context.cancelDelay();
       return 'shown';
