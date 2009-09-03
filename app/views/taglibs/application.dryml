@@ -120,31 +120,33 @@
 
 <def tag="add-aspect">
   <if test="&this">
-    <% tooltip =
-      (this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
-      this.reference_name
-    %>
-    <form class="add-aspect" with="&Card.new(:whole_id => this.id)"      >
-      <!-- <submit       label="&label" /> -->
-      <submit label="+" title ="&tooltip" class ="toy-nav add-aspect" />
-      <after-submit uri  ="#{request.request_uri}"                    />
-    </form                                                               >
+		<if test="&can_call?(:create_aspect)">
+			<% tooltip =
+					(this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
+					this.reference_name
+			%>
+			<form class="add-aspect" with="&Card.new(:whole_id => this.id)">
+				<submit label="+" title ="&tooltip" class ="toy-nav add-aspect"/>
+				<after-submit uri="#{request.request_uri}"/>
+			</form>
+		</if>
   </if>
 </def>
 
 <def tag="add-item">
-  <if test="&this">
-    <% tooltip = this.items.count > 0 ?
-           "Add another item below #{this.reference_name}, below the following #{this.items.count}" :
-           "Below, start a list or table which details #{this.reference_name}"
-    %>
-    <form class="add-item"  with="&Card.new(:list_id  => this.id)"            >
-      <%= hidden_field :card, :look_like_id, :value => @card.id %>
-      <!-- <submit       label="&label" /> -->
-      <submit label="v" title ="&tooltip" class="toy-nav add-item tooltip" />
-      <after-submit uri  ="#{request.request_uri}"                         />
-    </form                                                                    >
-  </if>
+	<if test="&this">
+		<if test="&can_call?(:create_item)">
+			<% tooltip = this.items.count > 0 ?
+					"Add another item below #{this.reference_name}, below the following #{this.items.count}" :
+					"Below, start a list or table which details #{this.reference_name}"
+			%>
+			<form class="add-item" with="&Card.new(:list_id => this.id)">
+				<%= hidden_field :card, :look_like_id, :value => @card.id %>
+				<submit label="v" title="&tooltip" class="toy-nav add-item tooltip"/>
+				<after-submit uri="#{request.request_uri}"/>
+			</form>
+		</if>
+	</if>
 </def>
 
 <def tag="spacer-cell">
