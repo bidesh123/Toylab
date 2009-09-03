@@ -99,7 +99,7 @@
 
 
 <def tag="core">
-  <table class="core">
+  <table id="#{dom_id(this)}" class="core">
     <tr class="core-main-row"   >
       <th class="kind-cell"                  >
         <if test="&this.kind ">
