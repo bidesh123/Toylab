@@ -254,18 +254,22 @@ class Card < ActiveRecord::Base
  # --- Permissions --- #
 
   def create_permitted?
-    acting_user.administrator? || owner_is?(acting_user)
+    owner_or_admin?
   end
 
   def update_permitted?
-    acting_user.administrator? || owner_is?(acting_user)
+    owner_or_admin?
   end
 
   def destroy_permitted?
-    acting_user.administrator? || owner_is?(acting_user)
+    owner_or_admin?
   end
 
   def view_permitted?(field)
     true
+  end
+
+  def owner_or_admin?
+    owner_is?(acting_user) || acting_user.administrator?
   end
 end
