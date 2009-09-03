@@ -27,7 +27,7 @@ class Card < ActiveRecord::Base
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
 
-  before_create :generate_looks_like
+  after_create :generate_looks_like
 
   def generate_looks_like
     return if look_like_id.blank?
@@ -35,14 +35,16 @@ class Card < ActiveRecord::Base
     return unless source_items = source_card.items(:order => "updated_at DESC")
     
     source_item = source_items[0]
-    generate_aspects_recursively(source_item) if source_item
+    create_child_aspects do
+      generate_aspects_recursively(source_item)
+    end if source_item
   end
 
   def generate_aspects_recursively source_item
     dest_item = self
     dest_item.kind = source_item.kind if source_item.kind
     source_item.aspects.each do |source_aspect|
-      dest_aspect = self.aspects.build(:kind => source_aspect.kind)
+      dest_aspect = self.aspects.create!(:kind => source_aspect.kind)
       dest_aspect.generate_aspects_recursively source_aspect
     end
   end
@@ -253,11 +255,23 @@ class Card < ActiveRecord::Base
 
  # --- Permissions --- #
 
+ def creating_child_aspects?
+   Thread.current["creating_child_aspects"]
+ end
+
+ def create_child_aspects
+   raise "Must pass block to yield to" unless block_given?
+   Thread.current["creating_child_aspects"] = true
+   yield
+ ensure
+   Thread.current["creating_child_aspects"] = false
+ end
+
   def create_permitted?
     return true if owner_or_admin?
     return false unless acting_user.signed_up?
 
-    false
+    whole_id.nil? || creating_child_aspects?
   end
 
   def update_permitted?
