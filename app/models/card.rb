@@ -271,7 +271,11 @@ class Card < ActiveRecord::Base
     return true if owner_or_admin?
     return false unless acting_user.signed_up?
 
-    whole_id.nil? || creating_child_aspects?
+    if whole_id then
+      Card.find(whole_id).owner_is?(acting_user)
+    else
+      whole_id.nil? || creating_child_aspects?
+    end
   end
 
   def update_permitted?
