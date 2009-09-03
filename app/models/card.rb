@@ -6,9 +6,9 @@ class Card < ActiveRecord::Base
     name         :string
     body         :text
     kind         :string
-    category     :string
-    #theme       enum(
-    #  'white', 'pink', 'orange', 'yellow', 'green', 'blue', 'purple', 'grey')
+    based_on     :string
+    theme        enum_string(
+      :pink, :orange, :yellow, :green, :blue, :purple, :grey)
     whole_id     :integer
     list_id      :integer
     look_like_id :integer

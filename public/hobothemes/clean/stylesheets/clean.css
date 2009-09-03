@@ -169,8 +169,8 @@ form .actions input { margin: 0; }
 }
 
 .account-nav {
-    float:right;
-    margin: -42px 5px 0 0;
+        float:right;
+        margin: 0 5px 0 0;
 	font-size: 11px;
 }
 .account-nav li {

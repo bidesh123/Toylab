@@ -48,7 +48,7 @@ h, th, h input, th input {
   background-color: aqua;
   text-align: left;
   padding: 0px;
-  font-size: 10px;
+  font-size: 8px;
 }
 
 h1, div {
@@ -73,8 +73,8 @@ page-header {
 
 
 .kind-cell .tiny-gray, .body-cell .tiny-gray {
-  line-height: 4px;
-  font-size: 4px;
+  line-height: 6px;
+  font-size: 6px;
   color: #999;
 }
 
@@ -292,19 +292,19 @@ th {
 }
 
 table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card td.body-cell {
-  font-size: xx-large; padding:4px;
+  font-size: 24px; padding:4px;
   line-height: 100%;
 }
 
 
 table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      td.body-cell {
-  font-size: smaller; padding:0px;
+  font-size: 12px; padding:0px;
   line-height: 100%;
 }
 
 table.first-card th.kind-cell .tiny-gray, table.first-card td.body-cell .tiny-gray {
-  font-size: 4px; padding:0px;
-  line-height: 4px;
+  font-size: 6px; padding:0px;
+  line-height: 6px;
 }
 
 th.empty-title-cell {
@@ -338,6 +338,11 @@ td.aspects-table {
 
 td.body-cell {
   background-color:#eee;
+  font-size:14px;
+}
+
+card.inner td.body-cell {
+  font-size:12px;
 }
 
 td.bottom-controls {
@@ -434,7 +439,14 @@ table.inner td{
 
 
 td.item-cell {
-  background-color:transparent;border-left:16px solid #ccc;padding-left:10px; padding-top:10px;
+  background-color:transparent;
+  border-left:16px solid #ccc;
+  padding-left:10px;
+  padding-top:10px;
+}
+
+table.list td.item-cell {
+  padding-top:0;
 }
 
 td.list-cell {
@@ -537,7 +549,7 @@ input.add-item {
 }
 
 input.erase {
-  font-size:8px;
+  font-size: 8px;
   font-family: "Arial Black", sans-serif;
   padding:0px;
   margin:0px;

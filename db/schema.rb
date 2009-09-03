@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090831165040) do
+ActiveRecord::Schema.define(:version => 20090903175712) do
 
   create_table "cards", :force => true do |t|
     t.string   "kind"
@@ -20,8 +20,9 @@ ActiveRecord::Schema.define(:version => 20090831165040) do
     t.text     "body"
     t.integer  "number"
     t.integer  "list_id"
-    t.string   "category"
+    t.string   "based_on"
     t.integer  "look_like_id"
+    t.string   "theme"
   end
 
   create_table "users", :force => true do |t|

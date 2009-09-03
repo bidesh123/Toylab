@@ -4,10 +4,7 @@ class CardsController < ApplicationController
 
   auto_actions :all
   auto_actions_for :aspects, :create
-
-  def list
-    @Card = Card.find id
-  end
+  show_action :list
 
   def index
     hobo_index Card.top_level
