@@ -6,10 +6,22 @@ function installAutocomplete(el, url, parentName) {
   new Ajax.Autocompleter(inplaceField, update, url, {method:'get', paramName: 'q'});
 };
 
+// Number of seconds before we trigger the appear animation
+var showDelay = 1.0;
+
+// Duration of the appear animation
+var appearDelay = 0.5;
+
+// Number of seconds before we trigger the fade animation
+var hideDelay = 10.0;
+
+// Duration of the fade animation
+var fadeDelay = 1.0;
+
 var hideShowEngine = {
   'mouseover': {
     'hidden':     function(context) {
-      (function() { context.transition("showTimeout"); }).delay(1.0, context);
+      (function() { context.transition("showTimeout"); }).delay(showDelay, context);
       return 'waitToShow';
     },
     'waitToShow': function(context) {
@@ -19,7 +31,7 @@ var hideShowEngine = {
       return 'shown';
     },
     'hiding':     function(context) {
-      (function() { context.transition("showTimeout"); }).delay(1.0, context);
+      (function() { context.transition("showTimeout"); }).delay(showDelay, context);
       return 'waitToShow';
     }
   },
@@ -28,18 +40,18 @@ var hideShowEngine = {
       return 'hidden';
     },
     'showing':    function(context) {
-      (function() { context.transition("hideTimeout"); }).delay(10.0, context);
+      (function() { context.transition("hideTimeout"); }).delay(hideDelay, context);
       return 'waitToHide';
     },
     'shown':      function(context) {
-      (function() { context.transition("hideTimeout"); }).delay(10.0, context);
+      (function() { context.transition("hideTimeout"); }).delay(hideDelay, context);
       return 'waitToHide';
     },
   },
   'showTimeout': {
     'waitToShow': function(context) {
-      new Effect.Appear(context.aspectControls);
-      new Effect.Appear(context.coreControls,   {afterFinish: function() { context.transition("showingDone"); }});
+      new Effect.Appear(context.aspectControls, {duration: appearDelay});
+      new Effect.Appear(context.coreControls,   {duration: appearDelay, afterFinish: function() { context.transition("showingDone"); }});
       return 'showing';
     },
     'waitToHide': function(context) {
@@ -48,8 +60,8 @@ var hideShowEngine = {
   },
   'hideTimeout': {
     'waitToHide': function(context) {
-      new Effect.Fade(context.aspectControls);
-      new Effect.Fade(context.coreControls, {afterFinish: function() { context.transition("hidingDone"); }});
+      new Effect.Fade(context.aspectControls, {duration: fadeDelay});
+      new Effect.Fade(context.coreControls,   {duration: fadeDelay, afterFinish: function() { context.transition("hidingDone"); }});
       return 'hiding';
     },
   },
