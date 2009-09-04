@@ -8,10 +8,7 @@ class Card < ActiveRecord::Base
     kind         :string
     based_on     :string
     script       :text
-    theme        enum_string(
-      :theme, :pink, :orange, :yellow, :green, :purple)
-    whole_id     :integer
-    list_id      :integer
+    theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple)
     timestamps
   end
 
@@ -24,7 +21,8 @@ class Card < ActiveRecord::Base
   belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
   has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
 
-  acts_as_list         :column => :number   , :scope => :list
+  acts_as_list         :column => :aspect_number, :scope => :whole
+  acts_as_list         :column => :item_number  , :scope => :list
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
 
