@@ -18,7 +18,7 @@
     <td class="core">
       <core />
     </td>
-    <td class="aspects-table" id="<%= dom_id(this, "aspects") %>">
+    <td class="aspects-table" if="&this.aspects" id="&dom_id(this, 'aspects')">
       <aspects-table />
     </td>
   </tr>
@@ -58,8 +58,8 @@
 </def>
 
 <def tag="aspect-cell">
-  <% @model_id = "aspect-cell model::card:#{this.id}" %>
- <td class="<%= @model_id %>">
+  <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
+  <td class="#{klass}">
     <recursive-card aspect />
   </td>
 </def>

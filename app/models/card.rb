@@ -50,7 +50,7 @@ class Card < ActiveRecord::Base
   end
 
  def theme_class
-   %w(theme grey).include?((theme || "").downcase) ? nil : "theme-#{theme}"
+   (theme || "").downcase == "theme" ? nil : "theme-#{theme}"
  end
 
  ## --- Toy --- #

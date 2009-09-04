@@ -371,7 +371,7 @@ td .card-body {
 
 td.core {
   vertical-align:top;
-  border-right:8px solid white;
+  border-right:8px solid transparent;
 }
 
 
@@ -448,6 +448,10 @@ td.item-cell {
   border-left:16px solid #ccc;
   padding-left:10px;
   padding-top:10px;
+}
+
+td.item-cell.pink {
+  background-color:red;
 }
 
 table.list td.item-cell {
@@ -769,28 +773,39 @@ div.auto_complete ul strong.highlight {
   padding:0;
 }
 
-.kind-cell.theme-pink {
-    color:#fc9;
+/*
+.kind-cell.theme-pink   {color:#f9c;}
+.kind-cell.theme-orange {color:#fc9;}
+.kind-cell.theme-yellow {color:#ff9;}
+.kind-cell.theme-green  {color:#cfc;}
+.kind-cell.theme-purple {color:#c9f;}
+*/
+
+th.kind-cell.theme-pink .editor  {color:#ffcce6;}
+th.kind-cell.theme-orange {color:#fda;}
+th.kind-cell.theme-yellow {color:#ff9;}
+th.kind-cell.theme-green  {color:#cfc;}
+th.kind-cell.theme-purple {color:#c9f;}
+
+
+td.item-cell.theme-pink  , td.aspect-cell.theme-pink   {background-color:#ffcce6;}
+td.item-cell.theme-orange, td.aspect-cell.theme-orange {background-color:#fda;}
+td.item-cell.theme-yellow, td.aspect-cell.theme-yellow {background-color:#ff9;}
+td.item-cell.theme-green , td.aspect-cell.theme-green  {background-color:#cfc;}
+td.item-cell.theme-purple, td.aspect-cell.theme-purple {background-color:#c9f;}
+
+td.item-cell.theme-pink   table, td.aspect-cell.theme-pink   table {background-color:#ffcce6;}
+td.item-cell.theme-orange table, td.aspect-cell.theme-orange table {background-color:#fda;}
+td.item-cell.theme-yellow table, td.aspect-cell.theme-yellow table{background-color:#ff9;}
+td.item-cell.theme-green  table, td.aspect-cell.theme-green  table{background-color:#cfc;}
+td.item-cell.theme-purple table, td.aspect-cell.theme-purple table{background-color:#c9f;}
+
+td.item-cell.theme-pink   table, td.aspect-cell.theme-pink   td.core {background-color:#ffcce6;}
+td.item-cell.theme-orange table, td.aspect-cell.theme-orange td.core {background-color:#fda;}
+td.item-cell.theme-yellow table, td.aspect-cell.theme-yellow td.core{background-color:#ff9;}
+td.item-cell.theme-green  table, td.aspect-cell.theme-green  td.core{background-color:#cfc;}
+td.item-cell.theme-purple table, td.aspect-cell.theme-purple td.core{background-color:#c9f;}
+
+input.delete-button {
+    background-color:#f9c;
 }
-
-.kind-cell.theme-orange {
-    color:#f9c;
-}
-
-.kind-cell.theme-yellow {
-    color:#ff9;
-}
-
-.kind-cell.theme-green {
-    color:#cfc;
-}
-
-th.kind-cell.theme-purple .editor {
-    color:#c9f;
-}
-
-.kind-cell.theme-grey {
-    color:inherit;
-}
-
-

@@ -7,10 +7,20 @@
 <set-theme name="clean"/>
 
 
-<def tag="erase">
-  agadjou
-  <trash no-redirect="ggggg" />
-</def>
+
+ <def tag="yahoo-editor-javascripts">
+   <!-- Skin CSS file -->
+   <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.7.0/build/assets/skins/sam/skin.css"/>
+   <!-- Utility Dependencies -->
+   <script type="text/javascript" src="http://yui.yahooapis.com/2.7.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+   <script type="text/javascript" src="http://yui.yahooapis.com/2.7.0/build/element/element-min.js"></script>
+   <!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
+   <script src="http://yui.yahooapis.com/2.7.0/build/container/container_core-min.js"></script>
+   <script src="http://yui.yahooapis.com/2.7.0/build/menu/menu-min.js"></script>
+   <script src="http://yui.yahooapis.com/2.7.0/build/button/button-min.js"></script> 
+   <!-- Source file for Rich Text Editor-->
+   <script src="http://yui.yahooapis.com/2.7.0/build/editor/editor-min.js"></script>
+ </def>
 
 <def tag="trash" attrs="no-redirect" >
   <%
@@ -125,7 +135,7 @@
 				this.reference_name
 		%>
 		<form class="add-aspect" with="&Card.new(:whole_id => this.id)">
-			<submit label="+" title ="&tooltip" class ="toy-nav add-aspect"/>
+			<submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
 			<after-submit uri="#{request.request_uri}"/>
 		</form>
   </if>
@@ -139,7 +149,7 @@
 		%>
 		<form class="add-item" with="&Card.new(:list_id => this.id)">
 			<%= hidden_field :card, :look_like_id, :value => @card.id %>
-			<submit label="v" title="&tooltip" class="toy-nav add-item tooltip"/>
+			<submit label="Add a row" title="&tooltip" class="toy-nav add-item tooltip"/>
 			<after-submit uri="#{request.request_uri}"/>
 		</form>
 	</if>
@@ -199,7 +209,7 @@
 
 <def tag="reveal-aspect-or-item">
   <%= link_to_function(
-    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    image_tag("icons/eye.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
     "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 
@@ -232,7 +242,8 @@
 
 <def tag="item-row">
   <tr class="item-row">
-    <td class="item-cell">
+    <%  klass="item-cell #{this.theme_class}" %>
+    <td class="#{klass}">
       <recursive-card item if="&true"/>
     </td>
   </tr>
