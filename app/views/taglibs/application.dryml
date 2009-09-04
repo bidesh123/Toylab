@@ -250,7 +250,7 @@
 </def>
 
 <def tag="core">
-	<table id="#{dom_id(this)}" class="core">
+  <table id="#{dom_id(this)}" class="core">
     <core-main-row />
     <tr class="name">
       <%  name_style="name-cell #{this.theme_class}" %>
@@ -266,6 +266,16 @@
         </if>
         <else>
           <editor:body class="tiny-gray" blank-message="....." />
+        </else>
+      </td>
+    </tr>
+    <tr class="script">
+      <td class="script-cell">
+        <if test="&this.body ">
+          <editor:script                   blank-message="....." />
+        </if>
+        <else>
+          <editor:script class="tiny-gray" blank-message="....." />
         </else>
       </td>
     </tr>

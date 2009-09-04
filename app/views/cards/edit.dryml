@@ -36,7 +36,7 @@
 </def>
 
 <def tag="core-right-controls-td">
-  <td class="core-add-aspect" rowspan="3" style="display:none">
+  <td class="core-add-aspect" rowspan="4" style="display:none">
     <reveal-aspect-or-item which="aspects"/>
     <add-aspect />
   </td>
@@ -47,7 +47,7 @@
       <%  kind_style="kind-cell #{this.theme_class}" %>
       <th class="#{kind_style}"                  >
         <if test="&this.kind ">
-          <editor:kind                   blank-message="....." /><input type="file">
+          <editor:kind                   blank-message="....." /><input type="file"/>
         </if>
         <else>
           <editor:kind class="tiny-gray" blank-message="....." />
