@@ -230,7 +230,7 @@
   <show-card-inline />
   <if test="&this">
     <if test="&editable_now?(this)">
-      <input:name/>
+      <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>
     </if>
     <else>
       <editor:name/>
