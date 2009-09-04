@@ -45,11 +45,15 @@ class Card < ActiveRecord::Base
   protected :find_deep_aspects_helper
 
   def generate_looks_like
+    logger.debug "aaaaaaaaaaaaaaaaaa"#self.inspect# + " --- " + source.kind.inspect
     return if look_like_id.blank?
+    logger.debug "bbbbbbbbbbbbbbbbbbbb"#self.inspect# + " --- " + source.kind.inspect
     return unless source_card  = Card.find(look_like_id)
+    logger.debug "ccccccccccccccc"#self.inspect# + " --- " + source.kind.inspect
     return unless source_items = source_card.items(:order => "updated_at DESC")
     
     source_item = source_items[0]
+    logger.debug "dddddddddddddd"#self.inspect# + " --- " + source.kind.inspect
     create_child_aspects do
       generate_aspects_recursively(source_item)
     end if source_item
@@ -58,11 +62,20 @@ class Card < ActiveRecord::Base
   def generate_aspects_recursively source_item
     dest_item = self
     dest_item.kind = source_item.kind if source_item.kind
+    logger.debug "eeeeeeeeeeeeee#{self.inspect}"
     source_item.aspects.each do |source_aspect|
       dest_aspect = self.aspects.create!(:kind => source_aspect.kind)
       dest_aspect.generate_aspects_recursively source_aspect
     end
   end
+
+ def create_child_aspects
+   raise "Must pass block to yield to" unless block_given?
+   Thread.current["creating_child_aspects"] = true
+   yield
+ ensure
+   Thread.current["creating_child_aspects"] = false
+ end
 
  def theme_class
    (theme || "").downcase == "theme" ? nil : "theme-#{theme}"
@@ -276,14 +289,6 @@ class Card < ActiveRecord::Base
 
  def creating_child_aspects?
    Thread.current["creating_child_aspects"]
- end
-
- def create_child_aspects
-   raise "Must pass block to yield to" unless block_given?
-   Thread.current["creating_child_aspects"] = true
-   yield
- ensure
-   Thread.current["creating_child_aspects"] = false
  end
 
   def create_permitted?
