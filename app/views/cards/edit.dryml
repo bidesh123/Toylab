@@ -50,12 +50,17 @@
   </div>
 </def>
 
+<def tag="card-id" >
+  <span if="&current_user.administrator?"><%= this.id  %>/<%= this.number  %></span>
+</def>
+
 <def tag="core-right-controls-td">
   <td class="core-add-aspect" rowspan="4" style="display:none">
     <drag-handle/>
     <reveal-aspect-or-item which="aspects"/>
     <script-editor-toggle/>
     <add-aspect />
+    <card-id />
   </td>
 </def>
 
