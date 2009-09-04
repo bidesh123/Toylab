@@ -41,8 +41,13 @@
   </div>
 </def>
 
+<def tag="drag-handle">
+  <span id="&dom_id(this, :drag_handle)">Drag</span>
+</def>
+
 <def tag="core-right-controls-td">
-  <td class="core-add-aspect" rowspan="4" style="display:none">
+  <td class="drop-target drop-target-aspect core-add-aspect" rowspan="4" style="display:none">
+    <drag-handle/>
     <reveal-aspect-or-item which="aspects"/>
     <script-editor-toggle/>
     <add-aspect />

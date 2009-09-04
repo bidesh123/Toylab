@@ -183,7 +183,7 @@
 </def>
 
 <def tag="core-bottom-controls-tr">
-  <tr class="core-controls" style="display:none">
+  <tr class="drop-target drop-target-item core-controls" style="display:none">
     <td class="bottom-controls">
       <bottom-controls />
     </td>
