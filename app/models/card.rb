@@ -7,6 +7,7 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     based_on     :string
+    script       :text
     theme        enum_string(
       :theme, :pink, :orange, :yellow, :green, :purple)
     whole_id     :integer
