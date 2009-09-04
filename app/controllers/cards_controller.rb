@@ -6,6 +6,8 @@ class CardsController < ApplicationController
   auto_actions_for :aspects, :create
   show_action :list
 
+  before_filter :load_editable_card, :only => %w(show edit)
+
   def index
     hobo_index Card.top_level
   end
@@ -15,9 +17,9 @@ class CardsController < ApplicationController
       if valid? then
         unless @card.looks_like.owner_is?(current_user)
           uri = if params[:after_submit].include?("?") then
-                  params[:after_submit] << "&edit-id=#{@card.id}"
+                  params[:after_submit] << "&edit_id=#{@card.id}"
                 else
-                  params[:after_submit] << "?edit-id=#{@card.id}"
+                  params[:after_submit] << "?edit_id=#{@card.id}"
                 end
           redirect_to uri
         end
@@ -34,5 +36,12 @@ class CardsController < ApplicationController
     @cards = Card.all(:conditions => ["LOWER(name) LIKE ?", "%#{params[:q].to_s.downcase}%"]).map(&:reference_name).uniq.sort
     render :action => :auto
   end
-end
 
+  protected
+  def load_editable_card
+    return if params[:edit_id].blank?
+
+    @editable_card     = Card.find(params[:edit_id])
+    @editable_children = Array(@editable_card) + @editable_card.find_deep_aspects
+  end
+end
