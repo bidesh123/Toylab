@@ -14,7 +14,12 @@ class CardsController < ApplicationController
     hobo_create do
       if valid? then
         unless @card.looks_like.owner_is?(current_user)
-          redirect_to params[:after_submit] << "\#edit-now-#{@card.id}"
+          uri = if params[:after_submit].include?("?") then
+                  params[:after_submit] << "&edit-id=#{@card.id}"
+                else
+                  params[:after_submit] << "?edit-id=#{@card.id}"
+                end
+          redirect_to uri
         end
       end
     end
