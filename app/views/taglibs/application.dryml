@@ -256,7 +256,7 @@
       </td>
     </tr>
     <tr class="script">
-			<td class="script-cell-container">
+			<td class="script-cell">
 				<div id="<%= dom_id(this, :script_cell) %>" style="display:none">
 					<if test="&this.body ">
 						<editor:script                   blank-message="....." />

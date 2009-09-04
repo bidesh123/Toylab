@@ -810,6 +810,6 @@ input.delete-button {
     background-color:#f9c;
 }
 
-td.script-cell {
+td.script-cell div {
     background-color:#f36;
 }
