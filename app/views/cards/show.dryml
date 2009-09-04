@@ -229,7 +229,7 @@
 <def tag="cell">
   <show-card-inline />
   <if test="&this">
-    <if test="&editable_now?(this)">
+    <if test="&@editable_card">
       <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>
     </if>
     <else>
