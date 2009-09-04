@@ -30,9 +30,11 @@ class Card < ActiveRecord::Base
   after_create :generate_looks_like
 
   def move_to!(target)
-    update_attributes(:list => nil,         :whole => target.whole, :number => 0) if target.whole
-    update_attributes(:list => target.list, :whole => nil,          :number => 0) if target.list
-    insert_at(target.number - 1)
+    remove_from_list
+    update_attributes( :list => nil,         :whole => target.whole) if target.whole
+    update_attributes( :list => target.list, :whole => nil)          if target.list
+    logger.debug {"==> Inserting at #{target.number}"}
+    insert_at(target.number)
   end
 
   def find_deep_aspects
