@@ -47,7 +47,7 @@
       <%  kind_style="kind-cell #{this.theme_class}" %>
       <th class="#{kind_style}"                  >
         <if test="&this.kind ">
-          <editor:kind                   blank-message="....." /><input type="file"/>
+          <editor:kind                   blank-message="....." />
         </if>
         <else>
           <editor:kind class="tiny-gray" blank-message="....." />
