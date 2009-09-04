@@ -133,7 +133,7 @@ Event.observe(window, "load", function() {
           method: 'put',
           parameters: {'card[name]': field.value, 'authenticity_token': $$("input[name=authenticity_token]").first().value},
           onSuccess: function() {
-            console.log("saved");
+            // TODO: hide spinner
           }
         });
       });
