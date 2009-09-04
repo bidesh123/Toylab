@@ -125,15 +125,4 @@ Event.observe(window, "load", function() {
             installAutocomplete.delay(0.1, el, '/cards/auto/name', '.name-cell');
         });
     });
-
-  var anchor = document.location.hash;
-  if (anchor) {
-    var id = anchor.split("-").last();
-    var cssselector = "card_" + id;
-    $(cssselector).up("table.inner").select("span.editor").each(function(editor) {
-      console.log("Firing click on %o", editor);
-      editor.setStyle({border: '4px solid black'});
-      editor.fire("click");
-    });
-  }
 });
