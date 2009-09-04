@@ -181,7 +181,7 @@
       <td class="core-add-item"><add-item /></td>
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
-      <td class="reveal"><reveal-aspect-or-item which="items"/></td>
+      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
     </tr>
   </table>
 </def>
@@ -239,7 +239,7 @@
 </def>
 
 <def tag="core">
-  <table class="core">
+	<table id="#{dom_id(this)}" class="core">
     <core-main-row />
     <tr class="name">
       <%  name_style="name-cell #{this.theme_class}" %>

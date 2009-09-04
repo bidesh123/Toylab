@@ -16,17 +16,14 @@
 <def tag="recursive-card">
   <table class="card inner list">
     <self-and-aspects-row />
-    <list-row />
+    <list-row             />
   </table>
 </def>
 
 <def tag="self-and-aspects-row">
   <tr class="self-and-aspects-row">
-    <td class="core">
-      <core />
-    </td>
-    <!-- <td class="aspects-table" id="< %= dom_id(this, "aspects") %>">
-      <aspects-table /> </td> -->
+    <td class="core"><core /></td>
+    <td                     ></td>
   </tr>
 </def>
 
@@ -45,7 +42,7 @@
 
 <def tag="reveal-aspect-or-item">
   <%= link_to_function(
-    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal the items below #{this.reference_name}"),
     "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 
@@ -66,7 +63,7 @@
 <def tag="aspect-cell">
   <% @model_id = "aspect-cell model::card:#{this.id}" %>
  <td class="<%= @model_id %>">
-    <recursive-card aspect"/>
+    <recursive-card which="aspect"/>
   </td>
 </def>
 
@@ -74,7 +71,7 @@
 <def tag="item-row">
   <tr class="item-row">
     <td class="item-cell">
-      <recursive-card item"/>
+      <recursive-card which="item"/>
     </td>
   </tr>
 </def>

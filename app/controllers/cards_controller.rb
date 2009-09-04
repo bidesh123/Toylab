@@ -10,6 +10,16 @@ class CardsController < ApplicationController
     hobo_index Card.top_level
   end
 
+  def create
+    hobo_create do
+      if valid? then
+        unless @card.looks_like.owner_is?(current_user)
+          redirect_to params[:after_submit] << "\#edit-now-#{@card.id}"
+        end
+      end
+    end
+  end
+
   def auto_kind
     @cards = Card.all(:conditions => ["LOWER(kind) LIKE ?", "#{params[:q].to_s.downcase}%"]).map(&:kind).uniq.sort
     render :action => :auto

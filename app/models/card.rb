@@ -8,20 +8,20 @@ class Card < ActiveRecord::Base
     kind         :string
     based_on     :string
     theme        enum_string(
-      :theme, :pink, :orange, :yellow, :green, :purple, :grey)
+      :theme, :pink, :orange, :yellow, :green, :purple)
     whole_id     :integer
     list_id      :integer
-    look_like_id :integer
     timestamps
   end
 
-  belongs_to :owner  , :class_name => "User", :creator => true
+  belongs_to :owner     , :class_name => "User", :creator => true
+  belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
 
-  belongs_to :whole  , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
-  has_many   :aspects, :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
+  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
 
-  belongs_to :list   , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
-  has_many   :items  , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
+  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
 
   acts_as_list         :column => :number   , :scope => :list
 
@@ -275,11 +275,18 @@ class Card < ActiveRecord::Base
     return true if owner_or_admin?
     return false unless acting_user.signed_up?
 
-    whole_id.nil? || creating_child_aspects?
+    if whole_id then
+      Card.find(whole_id).owner_is?(acting_user)
+    else
+      whole_id.nil? || creating_child_aspects?
+    end
   end
 
   def update_permitted?
-    owner_or_admin?
+    return true if owner_or_admin?
+    return false unless acting_user.signed_up?
+
+    only_changed?(:name, :body, :theme)
   end
 
   def destroy_permitted?
