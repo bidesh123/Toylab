@@ -817,3 +817,7 @@ td.script-cell {
 .drag_handle {
   cursor: move;
 }
+
+.drop-hover {
+  border: 4px solid red;
+}

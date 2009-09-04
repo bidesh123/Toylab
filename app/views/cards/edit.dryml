@@ -18,7 +18,7 @@
     <td class="core">
       <core />
     </td>
-    <td class="aspects-table" if="&this.aspects" id="&dom_id(this, 'aspects')">
+    <td class="aspects-table" if="&this.aspects" id="<%= dom_id(this, 'aspects') %>">
       <aspects-table />
     </td>
   </tr>
@@ -48,7 +48,7 @@
 </def>
 
 <def tag="core-right-controls-td">
-  <td class="drop-target drop-target-aspect core-add-aspect" rowspan="4" style="display:none">
+  <td class="core-add-aspect" rowspan="4" style="display:none">
     <drag-handle/>
     <reveal-aspect-or-item which="aspects"/>
     <script-editor-toggle/>

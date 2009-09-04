@@ -183,7 +183,7 @@
 </def>
 
 <def tag="core-bottom-controls-tr">
-  <tr class="drop-target drop-target-item core-controls" style="display:none">
+  <tr class="core-controls" style="display:none">
     <td class="bottom-controls">
       <bottom-controls />
     </td>
@@ -213,14 +213,14 @@
 </def>
 
 <def tag="recursive-card">
-  <table class="card inner">
+  <table class="card inner drop-target">
     <self-and-aspects-row />
     <list-row />
   </table>
 </def>
 
 <def tag="card" for="Card">
-  <table class="card first-card">
+  <table class="card first-card drop-target">
     <self-and-aspects-row />
     <list-row />
   </table>

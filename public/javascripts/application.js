@@ -141,6 +141,27 @@ Event.observe(window, "load", function() {
 
     $$(".drag_handle").each(function(handle) {
       var el = handle.up("table.card");
-      new Draggable(el, {revert: true, handle: handle});
+      new Draggable(el, {revert: true, handle: handle, scroll: window});
+    });
+
+    $$(".drop-target").each(function(target) {
+      Droppables.add(target, {
+        hoverclass: 'drop-hover',
+        onDrop: function(card, target, event) {
+          var targetId = target.down("table.core").id;
+          var cardId = card.down("table.core").id;
+          new Ajax.Request("/reorders", {
+            method: 'post',
+            parameters: {
+              'card_id': cardId.split("_").last(),
+              'target_id': targetId.split("_").last(),
+              'authenticity_token': $$("input[name=authenticity_token]").first().value
+            },
+            onSuccess: function() {
+              window.location.reload();
+            }
+          });
+        }
+      });
     });
 });

@@ -30,6 +30,18 @@ class Card < ActiveRecord::Base
 
   after_create :generate_looks_like
 
+  def move_to!(target)
+    if target.whole then
+      update_attribute(:list, nil)
+      update_attribute(:whole, target.whole)
+    elsif target.list then
+      update_attribute(:list, target.list)
+      update_attribute(:whole, nil)
+    else
+      raise ArgumentError, "Could not determine where to put #{self.reference_name.inspect} (#{self.id}) on #{target.reference_name.inspect} (#{target.id}): it has no whole or list?!?"
+    end
+  end
+
   def find_deep_aspects
     returning([]) do |accumulator|
       find_deep_aspects_helper(accumulator)
