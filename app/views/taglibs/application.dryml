@@ -74,7 +74,6 @@
       class="i" >i</span><span
       class="c" >c</span><span
       class="e" >e</span></span></span>
-  <rails-authenticity-token/>
 </def>
 
 <def tag="context">

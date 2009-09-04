@@ -7,7 +7,10 @@
         <views />
         <context if="&this.whole || this.list"/>
       </content-header:>
-      <content-body:  ><card first                           /></content-body:  >
+      <content-body:  >
+        <rails-authenticity-token/>
+        <card first                           />
+      </content-body:  >
       <aside:         ><google                               /></aside:         >
     </edit-page>
   </set-scoped>

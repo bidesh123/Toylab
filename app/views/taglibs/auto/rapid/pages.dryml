@@ -87,7 +87,7 @@
             <section param="collection-section">
               <h3 param="collection-heading">Items</h3>
               
-              <collection:items param/>
+              <sortable-collection:items param="collection"/>
             </section>
           </section>
         </section>

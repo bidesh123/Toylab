@@ -15,6 +15,7 @@
       </content-header:>
 
       <content-body:  >
+        <rails-authenticity-token/>
         <%         whole_off = "&false" %>
         <if test="&whole_off ==  true">
           <card    whole-off="&whole_off" />
