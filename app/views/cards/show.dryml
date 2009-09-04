@@ -227,12 +227,17 @@
 </def>
 
 <def tag="cell">
-      <show-card-inline />
-      <if test="&this">
-        <editor:name/>
-      </if><else>
-        &nbsp; <!-- to do: create button for first level aspects -->
-      </else>
+  <show-card-inline />
+  <if test="&this">
+    <if test="&editable_now?(this)">
+      <input:name/>
+    </if>
+    <else>
+      <editor:name/>
+    </else>
+    </if><else>
+    &nbsp; <!-- to do: create button for first level aspects -->
+  </else>
 </def>
 
 <def tag="content-rows">
