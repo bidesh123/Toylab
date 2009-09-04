@@ -813,3 +813,7 @@ input.delete-button {
 td.script-cell {
     background-color:#f36;
 }
+
+.drag_handle {
+  cursor: move;
+}

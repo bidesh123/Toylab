@@ -42,7 +42,9 @@
 </def>
 
 <def tag="drag-handle">
-  <span id="&dom_id(this, :drag_handle)">Drag</span>
+  <div>
+    <span class="drag_handle" id="<%= dom_id(this, :drag_handle) %>">Drag</span>
+  </div>
 </def>
 
 <def tag="core-right-controls-td">
