@@ -74,6 +74,7 @@
       class="i" >i</span><span
       class="c" >c</span><span
       class="e" >e</span></span></span>
+  <rails-authenticity-token/>
 </def>
 
 <def tag="context">
@@ -241,6 +242,7 @@
     <tr class="name">
       <%  name_style="name-cell #{this.theme_class}" %>
       <td class="#{name_style}">
+        <span><%= this.number %></span>
         <editor:name blank-message="....."/>
       </td>
     </tr>
@@ -271,3 +273,6 @@
   </table>
 </def>
 
+<def tag="rails-authenticity-token">
+  <span style="display:none" id="rails.authtoken"><%= form_authenticity_token %></span>
+</def>

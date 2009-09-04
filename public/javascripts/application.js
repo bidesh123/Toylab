@@ -131,7 +131,7 @@ Event.observe(window, "load", function() {
         var id = field.id.split("_").last();
         new Ajax.Request("/cards/" + id, {
           method: 'put',
-          parameters: {'card[name]': field.value, 'authenticity_token': $$("input[name=authenticity_token]").first().value},
+          parameters: {'card[name]': field.value, 'authenticity_token': $("rails.authtoken").innerHTML},
           onSuccess: function() {
             // TODO: hide spinner
           }
@@ -155,7 +155,7 @@ Event.observe(window, "load", function() {
             parameters: {
               'card_id': cardId.split("_").last(),
               'target_id': targetId.split("_").last(),
-              'authenticity_token': $$("input[name=authenticity_token]").first().value
+              'authenticity_token': $("rails.authtoken").innerHTML
             },
             onSuccess: function() {
               window.location.reload();
