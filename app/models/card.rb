@@ -52,16 +52,13 @@ class Card < ActiveRecord::Base
   protected :find_deep_aspects_helper
 
   def generate_looks_like
-    logger.debug "aaaaaaaaaaaaaaaaaa"#self.inspect# + " --- " + source.kind.inspect
     return if look_like_id.blank?
-    logger.debug "bbbbbbbbbbbbbbbbbbbb"#self.inspect# + " --- " + source.kind.inspect
     return unless source_card  = Card.find(look_like_id)
-    logger.debug "ccccccccccccccc"#self.inspect# + " --- " + source.kind.inspect
     return unless source_items = source_card.items(:order => "updated_at DESC")
     
     source_item = source_items[0]
-    logger.debug "dddddddddddddd"#self.inspect# + " --- " + source.kind.inspect
     create_child_aspects do
+      update_attribute :kind, source_item.kind
       generate_aspects_recursively(source_item)
     end if source_item
   end
