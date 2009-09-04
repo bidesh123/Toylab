@@ -9,6 +9,7 @@ class Card < ActiveRecord::Base
     based_on     :string
     script       :text
     theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple)
+    context_id   :integer
     timestamps
   end
 
@@ -16,28 +17,22 @@ class Card < ActiveRecord::Base
   belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
 
   belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
-  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy, :order => "aspect_number"
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy, :order => "number"
 
   belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
-  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy, :order => "item_number"
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy, :order => "number"
 
-  acts_as_list         :column => :aspect_number, :scope => :whole
-  acts_as_list         :column => :item_number  , :scope => :list
+  acts_as_list :column => :number, :scope => :context
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
 
+  before_save {|c| c.context_id = c.whole_id || c.list_id}
   after_create :generate_looks_like
 
   def move_to!(target)
-    if target.whole then
-      update_attribute(:list, nil)
-      update_attribute(:whole, target.whole)
-    elsif target.list then
-      update_attribute(:list, target.list)
-      update_attribute(:whole, nil)
-    else
-      raise ArgumentError, "Could not determine where to put #{self.reference_name.inspect} (#{self.id}) on #{target.reference_name.inspect} (#{target.id}): it has no whole or list?!?"
-    end
+    update_attributes(:list => nil,         :whole => target.whole, :number => 0) if target.whole
+    update_attributes(:list => target.list, :whole => nil,          :number => 0) if target.list
+    insert_at(target.number - 1)
   end
 
   def find_deep_aspects
