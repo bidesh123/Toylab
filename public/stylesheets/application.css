@@ -809,3 +809,7 @@ td.item-cell.theme-purple table, td.aspect-cell.theme-purple td.core{background-
 input.delete-button {
     background-color:#f9c;
 }
+
+td.script-cell {
+    background-color:#f36;
+}
