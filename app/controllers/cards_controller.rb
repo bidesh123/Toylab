@@ -15,7 +15,7 @@ class CardsController < ApplicationController
   def create
     hobo_create do
       if valid? then
-        unless @card.looks_like.owner_is?(current_user)
+        unless @card.looks_like && @card.looks_like.owner_is?(current_user)
           uri = params[:after_submit]
           uri.gsub!(/(?:\?|&)?edit_id=\d+/, "")
           if uri.include?("?") then
