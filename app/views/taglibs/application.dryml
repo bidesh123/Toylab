@@ -256,13 +256,15 @@
       </td>
     </tr>
     <tr class="script">
-      <td class="script-cell">
-        <if test="&this.body ">
-          <editor:script                   blank-message="....." />
-        </if>
-        <else>
-          <editor:script class="tiny-gray" blank-message="....." />
-        </else>
+			<td class="script-cell-container">
+				<div id="<%= dom_id(this, :script_cell) %>" style="display:none">
+					<if test="&this.body ">
+						<editor:script                   blank-message="....." />
+					</if>
+					<else>
+						<editor:script class="tiny-gray" blank-message="....." />
+					</else>
+				</div>
       </td>
     </tr>
     <core-bottom-controls-tr />

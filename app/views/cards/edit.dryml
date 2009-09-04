@@ -35,9 +35,16 @@
   </table>
 </def>
 
+<def tag="script-editor-toggle">
+  <div>
+    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
+  </div>
+</def>
+
 <def tag="core-right-controls-td">
   <td class="core-add-aspect" rowspan="4" style="display:none">
     <reveal-aspect-or-item which="aspects"/>
+    <script-editor-toggle/>
     <add-aspect />
   </td>
 </def>
