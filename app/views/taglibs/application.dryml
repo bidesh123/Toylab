@@ -241,7 +241,6 @@
     <tr class="name">
       <%  name_style="name-cell #{this.theme_class}" %>
       <td class="#{name_style}">
-        <span><%= this.number %></span>
         <editor:name blank-message="....."/>
       </td>
     </tr>
