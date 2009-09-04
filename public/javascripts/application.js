@@ -125,4 +125,17 @@ Event.observe(window, "load", function() {
             installAutocomplete.delay(0.1, el, '/cards/auto/name', '.name-cell');
         });
     });
+
+    $$("input.editable_now", "textarea.editable_now", "select.editable_now").each(function(field) {
+      Event.observe(field, "blur", function() {
+        var id = field.id.split("_").last();
+        new Ajax.Request("/cards/" + id, {
+          method: 'put',
+          parameters: {'card[name]': field.value, 'authenticity_token': $$("input[name=authenticity_token]").first().value},
+          onSuccess: function() {
+            console.log("saved");
+          }
+        });
+      });
+    });
 });
