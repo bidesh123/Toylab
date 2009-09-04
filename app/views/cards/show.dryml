@@ -28,27 +28,27 @@
 </def>
 
 <def tag="aspect-kind-cell">
-  <if test="&attributes[:first]">
-    <th class="aspect-kind-cell first"><editor:kind blank-message="..." /></th>
-  </if><else>
-    <th class="aspect-kind-cell"      ><editor:kind blank-message="..." /></th>
-  </else>
+	<% css_class  = "aspect-kind-cell"
+	   css_class += " first" if attributes[:first] %>
+	<th class="<%= css_class %>">
+		<editor:kind blank-message="..." />
+	</th>
 </def>
 
 <def tag="aspect-name-cell">
-  <if test="&attributes[:first]">
-    <td class="aspect-name-cell first"><editor:name blank-message="..." /></td>
-  </if><else>
-    <td class="aspect-name-cell"      ><editor:name blank-message="..." /></td>
-  </else>
+	<% css_class  = "aspect-name-cell"
+	   css_class += " first" if attributes[:first] %>
+	<td class="<%= css_class %>">
+		<editor:name blank-message="..." />
+	</td>
 </def>
 
 <def tag="aspect-body-cell">
-  <if test="&attributes[:first]">
-    <td class="aspect-body-cell first"><editor:body blank-message="..." /></td>
-  </if><else>
-    <td class="aspect-body-cell"      ><editor:body blank-message="..." /></td>
-  </else>
+	<% css_class  = "aspect-body-cell"
+	   css_class += " first" if attributes[:first] %>
+	<td class="<%= css_class %>">
+		<editor:body blank-message="..." />
+	</td>
 </def>
 
 <def tag="aspect-kind-cells">
