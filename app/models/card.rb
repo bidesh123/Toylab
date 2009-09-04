@@ -30,6 +30,20 @@ class Card < ActiveRecord::Base
 
   after_create :generate_looks_like
 
+  def find_deep_aspects
+    returning([]) do |accumulator|
+      find_deep_aspects_helper(accumulator)
+    end.flatten
+  end
+
+  def find_deep_aspects_helper(accumulator)
+    accumulator.push(aspects)
+    aspects.each do |aspect|
+      aspect.find_deep_aspects_helper(accumulator)
+    end
+  end
+  protected :find_deep_aspects_helper
+
   def generate_looks_like
     return if look_like_id.blank?
     return unless source_card  = Card.find(look_like_id)

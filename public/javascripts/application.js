@@ -126,14 +126,16 @@ Event.observe(window, "load", function() {
         });
     });
 
-  var anchor = document.location.hash;
-  if (anchor) {
-    var id = anchor.split("-").last();
-    var cssselector = "card_" + id;
-    $(cssselector).up("table.inner").select("span.editor").each(function(editor) {
-      console.log("Firing click on %o", editor);
-      editor.setStyle({border: '4px solid black'});
-      editor.fire("click");
+    $$("input.editable_now", "textarea.editable_now", "select.editable_now").each(function(field) {
+      Event.observe(field, "blur", function() {
+        var id = field.id.split("_").last();
+        new Ajax.Request("/cards/" + id, {
+          method: 'put',
+          parameters: {'card[name]': field.value, 'authenticity_token': $$("input[name=authenticity_token]").first().value},
+          onSuccess: function() {
+            console.log("saved");
+          }
+        });
+      });
     });
-  }
 });
