@@ -16,10 +16,10 @@ class Card < ActiveRecord::Base
   belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
 
   belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
-  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy, :order => "aspect_number"
 
   belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
-  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy, :order => "item_number"
 
   acts_as_list         :column => :aspect_number, :scope => :whole
   acts_as_list         :column => :item_number  , :scope => :list
