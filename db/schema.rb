@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(:version => 20090904155222) do
     t.integer  "list_id"
     t.string   "based_on"
     t.integer  "look_like_id"
-    t.string   "theme"
     t.integer  "owner_id"
+    t.string   "theme"
     t.text     "script"
   end
 
