@@ -79,4 +79,9 @@
   </tr>
 </def>
 
+<def tag="list-view">
+  <li class="not-enabled view-link"><%= link_to("as a list"  , url_for(:action => "list"), :disabled => false  )  %></li>
+</def>
+
+
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

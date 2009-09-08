@@ -82,7 +82,8 @@ class Card < ActiveRecord::Base
  end
 
  def theme_class
-   (theme || "").downcase == "theme" ? nil : "theme-#{theme}"
+   theme.blank? ? "" : "theme-#{theme.downcase}"
+   #(theme || "") == "theme" ? nil : "theme-#{theme}"
  end
 
  ## --- Toy --- #
