@@ -5,12 +5,14 @@
   <content:>
     <header class="content-header">
       <section class="welcome-message">
-        <h1 style="color:#999">François' own little Toy Office</h1>
-        <div><h3>Welcome to François' Toy Office</h3></div>
+        <h1 style="color:#999">Welcome to Toy Office</h1>
+        <div><h3>Feel free to browse, many items are open to the public.</h3></div>
         <div>
-          Feel free to browse, many items are open to the public.
-          Log in or Sign Up for more privileges.
-        </div>
+          <ul>
+            <li>Click Cards to start.</li>
+            <li>Sign Up for more privileges.</li>
+            <li>Or just log in if you are already signed up.</li>
+          </ul></div>
       </section>
     </header>
 
