@@ -3,31 +3,6 @@
 
 <!-- ====================== tag definitions ================================ -->
 
-<def tag="toy-show">
-  <set-scoped deep="&@card.look_deep" >
-    <!-- why not edit-page ?? -->
-    <show-page>
-      <content-header:>
-        <views />
-        <context if="&this.whole || this.list"/>
-        <!-- % whole_off = "&false" %       -->
-        <!-- <toy-header if="&whole_off"/>  -->
-      </content-header:>
-
-      <content-body:  >
-        <rails-authenticity-token/>
-        <%         whole_off = "&false" %>
-        <if test="&whole_off ==  true">
-          <card    whole-off="&whole_off" />
-        </if><else>
-          <card                           />
-        </else>
-      </content-body: >
-      <aside:><google /></aside:>
-    </show-page>
-  </set-scoped>
-</def>
-
 <def tag="aspect-kind-cell">
 	<% css_class  = "aspect-kind-cell"
 	   css_class += " first" if attributes[:first] %>
@@ -227,58 +202,6 @@
   </else>
 </def>
 
-<def tag="cell">
-  <show-card-inline />
-  <if test="&this">
-    <if test="&@editable_card">
-      <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>
-    </if>
-    <else>
-      <editor:name/>
-    </else>
-    </if><else>
-    &nbsp; <!-- to do: create button for first level aspects -->
-  </else>
-</def>
-
-<def tag="content-rows">
-  <tr repeat="&scope.deep[:columns][:cells].transpose">
-    <set   counter="&0" />
-    <repeat>
-      <if     test="&this.nil? || this.length == 0"             ><empty-cell/></if>
-      <else>
-        <if   test="&this.length == 1" with="&this[0]">
-          <if test="&this.numeric?"><td class="numeric cell"    ><cell /></td></if>
-          <else                    ><td class="cell"            ><cell /></td></else>
-        </if>
-        <else>
-          <td class="multiple-cell"><table>
-            <tr class="sub-cell" repeat="&this">
-              <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
-              <else                    ><td class="cell"        ><cell /></td></else>
-            </tr>
-          </table></td>
-        </else>
-      </else>
-    </repeat>
-  </tr>
-</def>
-
-<def tag="title-rows">
-  <tr repeat="&this.column_name_rows scope.deep">
-    <th repeat><%=  this %></th>
-  </tr>
-</def>
-
-<def tag="cells">
-  <table>
-    <title-rows />
-    <content-rows />
-  </table>
-  <add-item-row />
-</def>
-
-
 <def tag="whole">
   <tiny><view:name /> is the </tiny><editor:kind blank-message="kind" /><tiny> of </tiny><a:whole param="parent-link" />
 </def>
@@ -331,10 +254,6 @@
   <td>item cell 2 &nbsp; </td>
 </def>
 
-
-<def tag="add-item-row">
-  <add-item />
-</def>
 
 <def tag="add-aspect-cell">
   <td class="add-aspect"><add-aspect /></td>

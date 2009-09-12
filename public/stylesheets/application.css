@@ -44,7 +44,7 @@ body {
 
 
 h, th, h input, th input {
-  font-family: arial-black, verdana, arial, helvetica, sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   background-color: aqua;
   text-align: left;
   padding: 0px;
@@ -54,6 +54,24 @@ h, th, h input, th input {
 h1, div {
   margin-top: 0px;
   padding: 0px;
+}
+
+h1.title {
+  font-family:"Arial Black",Gadget,sans-serif;
+  margin:0;
+  margin-top: 24px;
+  padding: 0px;
+  font-size: 48px;
+  color: #666;
+}
+
+ul.sub-title {
+  font-family:"Arial Black",Gadget,sans-serif;
+  font-size: 16px;
+  color: #666;
+}
+ul.sub-title li {
+  font-size: 12px;
 }
 
 page-header {
@@ -100,7 +118,7 @@ a:active  {              color: #666; }
 
 a.go, a.zoom-in {
   background-color:transparent;color: #666;padding:0;padding-left:1px;padding-right:3px;
-  font-family: "Arial Black", sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   font-size: 9px;
   margin:0px;
 }
@@ -119,7 +137,7 @@ a.go:hover, a.zoom-in:hover {
 
 span.navLink {
                          color: #666;
-  font-family: "Arial Black", sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   font-size: 9px;
 }
 
@@ -133,7 +151,7 @@ span.navLink a:hover   { color: #0f0; }
 span.navLink a:active  { color: #f0f; }
 
 .toy-nav {
-  font-family: Arial, sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   font-size: 9px;
 }
 
@@ -191,7 +209,7 @@ div.context li a, div.views li a {
 
 li.not-enabled a {
   background-color:red;
-  color:#666;
+  border: 2px solid #666;  color:#666;
 }
 
 div.context li.not-enabled a {
@@ -305,7 +323,8 @@ th, td {
 }
 
 th {
-  background-color: #666; color:white; font-family:"Arial Black",Gadget,sans-serif;
+  background-color: #666; color:white;
+  font-family:"Arial Black",Gadget,sans-serif;
 }
 
 table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card td.body-cell {
@@ -432,7 +451,7 @@ td.core-trash form div{
 
 td.core-trash form div input{
   border:0px solid purple;padding:0px;margin:00px;
-  font-family:"Arial Black", sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   color:#666;
     }
 
@@ -562,7 +581,7 @@ input.delete-button:hover {
 
 input.add-aspect, input.add-item {
   background-color:#9cf;margin:0px;padding:0px;
-  font-family: "Arial Black", sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   font-size: 11px;
 }
 
@@ -576,7 +595,7 @@ input.add-item {
 
 input.erase {
   font-size: 8px;
-  font-family: "Arial Black", sans-serif;
+  font-family:"Arial Black",Gadget,sans-serif;
   padding:0px;
   margin:0px;
 }
@@ -654,8 +673,8 @@ tr.core-main-row.main-row th .editor {
 
 .logo {
   background-color: purple;
-  font-family: "Arial Black";
-  font-size: 24pt;
+  font-family:"Arial Black",Gadget,sans-serif;
+  font-size: 32px;
   font-weight: 100;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -850,4 +869,10 @@ td.script-cell div {
 
 li.disabled a {
   background-color:#eee;
+}
+
+div.table-header span.editor{
+  font-size: 36px;
+  color: #666;
+  font-family:"Arial Black",Gadget,sans-serif;
 }

@@ -5,6 +5,7 @@ class CardsController < ApplicationController
   auto_actions :all
   auto_actions_for :aspects, :create
   show_action :list
+  show_action :table
 
   before_filter :load_editable_card, :only => %w(show edit)
 
@@ -15,7 +16,9 @@ class CardsController < ApplicationController
   def create
     hobo_create do
       if valid? then
-        unless @card.looks_like && @card.looks_like.owner_is?(current_user)
+        if @card.looks_like && @card.looks_like.owner_is?(current_user)
+          logger.debug "88888888888888888888"
+        else
           uri = params[:after_submit]
           uri.gsub!(/(?:\?|&)?edit_id=\d+/, "")
           if uri.include?("?") then

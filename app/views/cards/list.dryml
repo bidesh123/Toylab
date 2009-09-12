@@ -80,7 +80,7 @@
 </def>
 
 <def tag="list-view">
-  <li class="not-enabled view-link"><%= link_to("as a list"  , url_for(:action => "list"), :disabled => false  )  %></li>
+  <li class="not-enabled view-link"><%= link_to("list"  , url_for(:action => "list", :disabled => true), :disabled => true  )  %></li>
 </def>
 
 

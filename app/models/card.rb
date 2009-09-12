@@ -29,6 +29,33 @@ class Card < ActiveRecord::Base
   before_save {|c| c.context_id = c.whole_id || c.list_id}
   after_create :generate_looks_like
 
+  def generate_looks_like
+    #logger.debug "111111111111LOOK LIKE id: #{self.look_like_id}, is it blank?"
+    return if look_like_id.blank?
+    logger.debug  "999999999" + look_like_id.class.to_s
+    #logger.debug "2222222222222LOOK LIKE id is not blank. Can we find the source card?"
+    return unless source_card  = Card.find(look_like_id)
+    #logger.debug "333333333333LOOK LIKE source_card: #{source_card.reference_name}. Are there any items?"
+    return unless source_items = source_card.items(:order => "updated_at DESC")
+    #logger.debug "44444444444444LOOK LIKE source_items: #{source_items.count}"
+    source_item = source_items[0]
+    #logger.debug "55555555555LOOK LIKE source_item: #{source_item.reference_name}"
+    create_child_aspects do
+      update_attribute :kind, source_item.kind
+      generate_aspects_recursively(source_item)
+    end if source_item
+  end
+
+  def generate_aspects_recursively source_item
+    dest_item = self
+    dest_item.kind = source_item.kind if source_item.kind
+    logger.debug "eeeeeeeeeeeeee#{self.inspect}"
+    source_item.aspects.each do |source_aspect|
+      dest_aspect = self.aspects.create!(:kind => source_aspect.kind)
+      dest_aspect.generate_aspects_recursively source_aspect
+    end
+  end
+
   def move_to!(target)
     remove_from_list
     update_attributes( :list => nil,         :whole => target.whole) if target.whole
@@ -50,28 +77,6 @@ class Card < ActiveRecord::Base
     end
   end
   protected :find_deep_aspects_helper
-
-  def generate_looks_like
-    return if look_like_id.blank?
-    return unless source_card  = Card.find(look_like_id)
-    return unless source_items = source_card.items(:order => "updated_at DESC")
-    
-    source_item = source_items[0]
-    create_child_aspects do
-      update_attribute :kind, source_item.kind
-      generate_aspects_recursively(source_item)
-    end if source_item
-  end
-
-  def generate_aspects_recursively source_item
-    dest_item = self
-    dest_item.kind = source_item.kind if source_item.kind
-    logger.debug "eeeeeeeeeeeeee#{self.inspect}"
-    source_item.aspects.each do |source_aspect|
-      dest_aspect = self.aspects.create!(:kind => source_aspect.kind)
-      dest_aspect.generate_aspects_recursively source_aspect
-    end
-  end
 
  def create_child_aspects
    raise "Must pass block to yield to" unless block_given?
@@ -211,7 +216,9 @@ class Card < ActiveRecord::Base
     deep
   end
 
-  def look_deep max_item_depth = 2, max_aspect_depth = 9
+  def look_deep max_item_depth = 9, max_aspect_depth = 2
+    
+    
     look_deeper \
       ""                                    ,  #no context
       {                                        #deep
@@ -276,7 +283,7 @@ class Card < ActiveRecord::Base
     r = [ {:depth => depth, :item => self} ]
     return r if depth >= max_depth
     aspects.each do |aspect|
-      r.concat aspect.deeper_aspects depth + 1
+      r.concat aspect.deeper_aspects(depth + 1)
     end
     r
   end

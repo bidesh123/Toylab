@@ -150,23 +150,28 @@
 <def tag="views">
   <div class="views">
     <ul>View &nbsp;
-    <tree-view />&nbsp;
-    <report-view /> &nbsp;
     <list-view />
+    <table-view /> &nbsp;
+    <report-view /> &nbsp;
+    <tree-view />&nbsp;
     </ul>
   </div>
 </def>
 
 <def tag="tree-view" attrs="off">
-  <li class="view-link"><%= link_to("as a tree"  , url_for(:action => "edit"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("advanced"  , url_for(:action => "edit"), :disabled => false  )  %></li>
 </def>
 
 <def tag="report-view">
-  <li class="view-link"><%= link_to("as a report", url_for(:action => "show"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("report", url_for(:action => "show"), :disabled => false  )  %></li>
+</def>
+
+<def tag="table-view">
+  <li class="view-link"><%= link_to("table", url_for(:action => "table"), :disabled => false  )  %></li>
 </def>
 
 <def tag="list-view">
-  <li class="view-link"><%= link_to("as a list"  , url_for(:action => "list"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("list"  , url_for(:action => "list"), :disabled => false  )  %></li>
 </def>
 
 
@@ -273,3 +278,90 @@
 <def tag="rails-authenticity-token">
   <span style="display:none" id="rails.authtoken"><%= form_authenticity_token %></span>
 </def>
+
+<def tag="cells">
+  <table>
+    <title-rows />
+    <content-rows />
+  </table>
+  <add-item-row />
+</def>
+
+<def tag="toy-show">
+  <set-scoped deep="&@card.look_deep" >
+    <!-- why not edit-page ?? -->
+    <show-page>
+      <content-header:>
+        <views />
+        <context if="&this.whole || this.list"/>
+        <!-- % whole_off = "&false" %       -->
+        <!-- <toy-header if="&whole_off"/>  -->
+      </content-header:>
+
+      <content-body:  >
+        <rails-authenticity-token/>
+        <%         whole_off = "&false" %>
+        <if test="&whole_off ==  true">
+          <card    whole-off="&whole_off" />
+        </if><else>
+          <card                           />
+        </else>
+      </content-body: >
+      <aside:><google /></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
+<def tag="add-item-row">
+  <add-item />
+</def>
+
+<def tag="title-rows">
+<% rows = this.column_name_rows scope.deep
+   if rows[0][0] && rows.length > 0
+     rows[1][0] = rows[0][0]
+     rows.delete_at 0
+   end
+%>
+  <tr repeat="&rows">
+    <th repeat><%=  this %></th>
+  </tr>
+</def>
+
+<def tag="content-rows">
+  <tr repeat="&scope.deep[:columns][:cells].transpose">
+    <set   counter="&0" />
+    <repeat>
+      <if     test="&this.nil? || this.length == 0"             ><empty-cell/></if>
+      <else>
+        <if   test="&this.length == 1" with="&this[0]">
+          <if test="&this.numeric?"><td class="numeric cell"    ><cell /></td></if>
+          <else                    ><td class="cell"            ><cell /></td></else>
+        </if>
+        <else>
+          <td class="multiple-cell"><table>
+            <tr class="sub-cell" repeat="&this">
+              <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
+              <else                    ><td class="cell"        ><cell /></td></else>
+            </tr>
+          </table></td>
+        </else>
+      </else>
+    </repeat>
+  </tr>
+</def>
+
+<def tag="cell">
+  <show-card-inline if="&false"/>
+  <if test="&this">
+    <if test="&@editable_card">
+      <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>
+    </if>
+    <else>
+      <editor:name blank-message="..." />
+    </else>
+    </if><else>
+    &nbsp; <!-- to do: create button for first level aspects -->
+  </else>
+</def>
+
