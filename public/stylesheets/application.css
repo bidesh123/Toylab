@@ -871,8 +871,18 @@ li.disabled a {
   background-color:#eee;
 }
 
+li.view-link {
+  padding:0;
+}
+
 div.table-header span.editor{
-  font-size: 36px;
   color: #666;
   font-family:"Arial Black",Gadget,sans-serif;
 }
+
+div.table-header span.editor.card-name{
+  font-size: 36px;
+  color: #666;
+  text-align:right;
+}
+

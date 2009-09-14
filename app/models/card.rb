@@ -196,7 +196,7 @@ class Card < ActiveRecord::Base
     deep
   end
 
-  def look_deeper               wide_context, deep, max_item_depth = 2, max_aspect_depth = 9, item_depth = 0
+  def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect_depth = 9, item_depth = 0
     indent = "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
     deep[         :debug_log] += "<br /><br/>#{indent[0, item_depth*2]}==================================================================="
     deep[         :debug_log] += "<br />after #{ deep[:row] } rows"
@@ -216,7 +216,7 @@ class Card < ActiveRecord::Base
     deep
   end
 
-  def look_deep max_item_depth = 9, max_aspect_depth = 2
+  def look_deep max_item_depth = 9, max_aspect_depth = 9
     
     
     look_deeper \

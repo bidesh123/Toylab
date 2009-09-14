@@ -8,6 +8,30 @@
 
 
 
+<def tag="toy-show" attrs="shallow">
+   <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
+   <show-page>
+      <content-header:>
+        <views />
+        <context if="&this.whole || this.list"/>
+        <!-- % whole_off = "&false" %       -->
+        <!-- <toy-header if="&whole_off"/>  -->
+      </content-header:>
+
+      <content-body:  >
+        <rails-authenticity-token/>
+        <%         whole_off = "&false" %>
+        <if test="&whole_off ==  true">
+          <card    whole-off="&whole_off" />
+        </if><else>
+          <card                           />
+        </else>
+      </content-body: >
+      <aside:><google /></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
 <def tag="trash" attrs="no-redirect" >
   <%
     tooltip             = "Permanently erase #{this.reference_name}"
@@ -149,7 +173,7 @@
 
 <def tag="views">
   <div class="views">
-    <ul>View &nbsp;
+    <ul>View as &nbsp;
     <list-view />
     <table-view /> &nbsp;
     <report-view /> &nbsp;
@@ -159,19 +183,19 @@
 </def>
 
 <def tag="tree-view" attrs="off">
-  <li class="view-link"><%= link_to("advanced"  , url_for(:action => "edit"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("advanced", url_for(:action => "edit" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="report-view">
-  <li class="view-link"><%= link_to("report", url_for(:action => "show"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("report"  , url_for(:action => "show" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="table-view">
-  <li class="view-link"><%= link_to("table", url_for(:action => "table"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("table"   , url_for(:action => "table"), :disabled => false  )  %></li>
 </def>
 
 <def tag="list-view">
-  <li class="view-link"><%= link_to("list"  , url_for(:action => "list"), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("list"    , url_for(:action => "list" ), :disabled => false  )  %></li>
 </def>
 
 
@@ -287,38 +311,13 @@
   <add-item-row />
 </def>
 
-<def tag="toy-show">
-  <set-scoped deep="&@card.look_deep" >
-    <!-- why not edit-page ?? -->
-    <show-page>
-      <content-header:>
-        <views />
-        <context if="&this.whole || this.list"/>
-        <!-- % whole_off = "&false" %       -->
-        <!-- <toy-header if="&whole_off"/>  -->
-      </content-header:>
-
-      <content-body:  >
-        <rails-authenticity-token/>
-        <%         whole_off = "&false" %>
-        <if test="&whole_off ==  true">
-          <card    whole-off="&whole_off" />
-        </if><else>
-          <card                           />
-        </else>
-      </content-body: >
-      <aside:><google /></aside:>
-    </show-page>
-  </set-scoped>
-</def>
-
 <def tag="add-item-row">
   <add-item />
 </def>
 
 <def tag="title-rows">
 <% rows = this.column_name_rows scope.deep
-   if rows[0][0] && rows.length > 0
+   if rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
      rows.delete_at 0
    end

@@ -1,31 +1,14 @@
-    Why does max_aspect_depth not work ?????
-<toy-show />
-    Why does max_aspect_depth not work ?????
-    Why does max_aspect_depth not work ?????
-
+<toy-table />
 
 <!-- ====================== tag definitions ================================ -->
 
 <def tag="toy-table">
-  <set-scoped deep="&@card.look_deep" >
-    <!-- why not edit-page ?? -->
-    <show-page>
-      <content-header:>
-        <views />
-        <context if="&this.whole || this.list"/>
-      </content-header:>
-
-      <content-body:  >
-        <rails-authenticity-token />
-        <card />
-      </content-body: >
-      <aside:><google /></aside:>
-    </show-page>
-  </set-scoped>
+  <toy-show shallow />
 </def>
 
 <def tag="card" for="Card">
  <div param="table-header">
+    <editor:kind />
     <editor:name />
   </div>
   <div param="cells">
