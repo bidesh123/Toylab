@@ -5,8 +5,8 @@ class Card < ActiveRecord::Base
   fields do
     name         :string
     body         :text
-    kind         :string
-    based_on     :string
+    kind         :string #class
+    based_on     :string #superclass
     script       :text
     theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple)
     context_id   :integer
@@ -14,7 +14,11 @@ class Card < ActiveRecord::Base
   end
 
   belongs_to :owner     , :class_name => "User", :creator => true
+
   belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
+
+  belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id, :accessible => true
+  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id, :accessible => true, :dependent => :destroy, :order => "number"
 
   belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
   has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy, :order => "number"
@@ -27,19 +31,24 @@ class Card < ActiveRecord::Base
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
 
   before_save {|c| c.context_id = c.whole_id || c.list_id}
-  after_create :generate_looks_like
+  after_create :generate_instances
+
+  def generate_instances
+    return if look_like_id.blank?
+    return unless source_card  = Card.find(look_like_id)
+    return unless source_items = source_card.items(:order => "updated_at DESC")
+    source_item = source_items[0]
+    create_child_aspects do
+      update_attribute :kind, source_item.kind
+      generate_aspects_recursively(source_item)
+    end if source_item
+  end
 
   def generate_looks_like
-    #logger.debug "111111111111LOOK LIKE id: #{self.look_like_id}, is it blank?"
     return if look_like_id.blank?
-    logger.debug  "999999999" + look_like_id.class.to_s
-    #logger.debug "2222222222222LOOK LIKE id is not blank. Can we find the source card?"
     return unless source_card  = Card.find(look_like_id)
-    #logger.debug "333333333333LOOK LIKE source_card: #{source_card.reference_name}. Are there any items?"
     return unless source_items = source_card.items(:order => "updated_at DESC")
-    #logger.debug "44444444444444LOOK LIKE source_items: #{source_items.count}"
     source_item = source_items[0]
-    #logger.debug "55555555555LOOK LIKE source_item: #{source_item.reference_name}"
     create_child_aspects do
       update_attribute :kind, source_item.kind
       generate_aspects_recursively(source_item)

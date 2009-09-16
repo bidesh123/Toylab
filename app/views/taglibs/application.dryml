@@ -7,6 +7,10 @@
 <set-theme name="clean"/>
 
 
+<def tag="kind-editor">
+  <if test="&this.kind "><editor:kind                   blank-message="....." /></if>
+  <else                 ><editor:kind class="tiny-gray" blank-message="....." /></else>
+</def>
 
 <def tag="toy-show" attrs="shallow">
    <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
@@ -140,29 +144,29 @@
 
 <def tag="add-aspect">
   <if test="&this">
-		<% tooltip =
-				(this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
-				this.reference_name
-		%>
-		<form class="add-aspect" with="&Card.new(:whole_id => this.id)">
-			<submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
-			<after-submit uri="#{request.request_uri}"/>
-		</form>
+    <% tooltip =
+         (this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
+         this.reference_name
+    %>
+    <form class="add-aspect" with="&Card.new(:whole_id => this.id)">
+      <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
   </if>
 </def>
 
 <def tag="add-item">
-	<if test="&this">
-		<% tooltip = this.items.count > 0 ?
-				"Add another item below #{this.reference_name}, below the following #{this.items.count}" :
-				"Below, start a list or table which details #{this.reference_name}"
-		%>
-          <form class="add-item" with="&Card.new(:list_id => this.id)">
-			<%= hidden_field :card, :look_like_id, :value => @card.id %>
-			<submit label="Add a row" title="&tooltip" class="toy-nav add-item tooltip"/>
-			<after-submit uri="#{request.request_uri}"/>
-		</form>
-	</if>
+  <if test="&this">
+    <% tooltip = this.items.count > 0 ?
+        "Add another item below #{this.reference_name}, below the following #{this.items.count}" :
+        "Below, start a list or table which details #{this.reference_name}"
+    %>
+    <form class="add-item" with="&Card.new(:list_id => this.id)">
+      <%= hidden_field :card, :look_like_id, :value => @card.id %>
+      <submit label="Add a row" title="&tooltip" class="toy-nav add-item tooltip"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
 </def>
 
 <def tag="spacer-cell">
@@ -308,7 +312,6 @@
     <title-rows />
     <content-rows />
   </table>
-  <add-item-row />
 </def>
 
 <def tag="add-item-row">
@@ -323,12 +326,14 @@
    end
 %>
   <tr repeat="&rows">
+    <empty-title />
     <th repeat><%=  this %></th>
   </tr>
 </def>
 
 <def tag="content-rows">
   <tr repeat="&scope.deep[:columns][:cells].transpose">
+    <td ><show-card-inline with="&this[0][0]"/></td>
     <set   counter="&0" />
     <repeat>
       <if     test="&this.nil? || this.length == 0"             ><empty-cell/></if>
@@ -362,5 +367,9 @@
     </if><else>
     &nbsp; <!-- to do: create button for first level aspects -->
   </else>
+</def>
+
+<def tag="empty-title">
+  <th class="empty-title-cell">&nbsp;</th>
 </def>
 

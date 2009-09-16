@@ -68,12 +68,7 @@
     <tr class="core-main-row"   >
       <%  kind_style="kind-cell #{this.theme_class}" %>
       <th class="#{kind_style}"                  >
-        <if test="&this.kind ">
-          <editor:kind                   blank-message="....." />
-        </if>
-        <else>
-          <editor:kind class="tiny-gray" blank-message="....." />
-        </else>
+        <kind-editor />
       </th>
       <core-right-controls-td />
     </tr>

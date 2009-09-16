@@ -175,7 +175,8 @@
     <cells merge-attrs />
   </div>
   <div param="controls">
-    <trash redir="true"/>
+   <add-item-row />
+   <trash redir="true"/>
   </div>
   <div param="debug-toy" if="&false">
     <%= scope.deep[:debug_log] %>
@@ -259,10 +260,6 @@
   <td class="add-aspect"><add-aspect /></td>
 </def>
 
-
-<def tag="empty-title">
-  <th class="empty-title-cell">&nbsp;</th>
-</def>
 
 <def tag="development-stuff">
   <div style="padding: 150px 0px 0px"><h3>For Development Only</h3></div>

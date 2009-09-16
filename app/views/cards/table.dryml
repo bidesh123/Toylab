@@ -6,22 +6,39 @@
   <toy-show shallow />
 </def>
 
+<def tag="add-column">
+  <if test="&this">
+    <% tooltip =
+         (this.columns.count > 0 ? " Add another aspect of " : "Add a table below ") +
+         this.reference_name
+    %>
+    <form class="add-column" with="&Card.new(:table_id => this.id)">
+      <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
 <def tag="card" for="Card">
- <div param="table-header">
-    <editor:kind />
-    <editor:name />
+  <div param="table-header">
+    <p class="kind-editor"><kind-editor /></p>
+    <p                    ><editor:name /></p>
   </div>
   <div param="cells">
     <cells merge-attrs />
   </div>
   <div param="controls">
-    <trash redir="true"/>
+    <table class="controls" ><tr class="controls" >
+      <td                      ><add-item           /></td>
+      <td                      ><add-column         /></td>
+      <td class="delete-button"><trash redir="true" /></td>
+    </tr></table>
   </div>
 </def>
 
 <def tag="aspects-rows">
-   <aspects-names-row   merge-attrs  />
-   <bottoms-borders-row merge-attrs  />
+   <aspects-names-row   merge-attrs />
+   <bottoms-borders-row merge-attrs />
 </def>
 
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

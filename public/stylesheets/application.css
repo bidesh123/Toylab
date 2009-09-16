@@ -91,9 +91,9 @@ page-header {
 
 
 .kind-cell .tiny-gray, .body-cell .tiny-gray {
-  line-height: 6px;
-  font-size: 6px;
-  color: #999;
+  line-height: 16px;
+  font-size: 16px;
+  color: green;
 }
 
 /**** Styling for navigation ****/
@@ -349,7 +349,7 @@ table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      t
 }
 
 th.empty-title-cell {
-  background-color: white; color:#036; padding-bottom : 1px;
+  background-color: #666; color:#036; padding-bottom : 1px;
 }
 
 th.header-pair-name {
@@ -560,6 +560,14 @@ form.core-trash {
 
 form.erase {
     padding:0px;margin:0px;
+}
+
+td.delete-button form.button-to{
+    margin-bottom:0;
+}
+
+tr.controls td {
+   padding-right:8px;
 }
 
 input, textarea, .input {
@@ -775,6 +783,15 @@ ul.account-nav {
      display:inline-block;
 }
 
+ul.controls {
+     display:inline-block;
+     list-style-type:none;
+}
+
+ul.controls, ul.control li {
+     display:inline;
+}
+
 ul.cards {
     list-style-type: none;
     margin:0; padding:0;
@@ -884,5 +901,27 @@ div.table-header span.editor.card-name{
   font-size: 36px;
   color: #666;
   text-align:right;
+}
+
+div.table-header span.editor.tiny-gray,
+div.table-header span.editor.tiny-gray input  {
+  line-height: 6px;
+  font-size: 6px;
+  color: #999;
+}
+
+div.table-header p  {
+  margin: 0;
+  border: 0;
+}
+
+div.table-header p.kind-editor  {
+  background-color: #eee;
+}
+
+div.table-header span.editor.kind  {
+  margin: 0;
+  border: 0;
+  background-color: #000;
 }
 
