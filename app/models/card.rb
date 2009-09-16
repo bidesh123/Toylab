@@ -5,30 +5,38 @@ class Card < ActiveRecord::Base
   fields do
     name         :string
     body         :text
-    kind         :string #class
-    based_on     :string #superclass
+    kind         :string #inheritance
     script       :text
     theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple)
     context_id   :integer
     timestamps
   end
 
+  #0
   belongs_to :owner     , :class_name => "User", :creator => true
 
-  belongs_to :looks_like, :class_name => "Card", :foreign_key => "look_like_id"
+  #1
+  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id     , :accessible => true
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id     , :accessible => true, :dependent => :destroy, :order => "number"
 
-  belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id, :accessible => true
-  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id, :accessible => true, :dependent => :destroy, :order => "number"
+  #2
+  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id    , :accessible => true
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id    , :accessible => true, :dependent => :destroy, :order => "number"
 
-  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true
-  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id, :accessible => true, :dependent => :destroy, :order => "number"
+  #3
+  belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id    , :accessible => true
+  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id    , :accessible => true, :dependent => :destroy, :order => "number"
 
-  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id , :accessible => true
-  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id , :accessible => true, :dependent => :destroy, :order => "number"
+  #1 - #3 are mutually exclusive
+
+  #4
+  belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id , :accessible => true
+  has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id , :accessible => true, :dependent => :destroy, :order => "number"
 
   acts_as_list :column => :number, :scope => :context
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
+  named_scope :similar_instances, :conditions => ['kind IS ?', kind]
 
   before_save {|c| c.context_id = c.whole_id || c.list_id}
   after_create :generate_instances
