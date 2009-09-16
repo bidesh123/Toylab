@@ -31,12 +31,12 @@ class Card < ActiveRecord::Base
 
   #4
   belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id , :accessible => true
-  has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id , :accessible => true, :dependent => :destroy, :order => "number"
+  has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id , :accessible => true, :dependent => :destroy
 
   acts_as_list :column => :number, :scope => :context
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
-  #named_scope :similar_instances, :conditions => ['kind IS ?', kind]
+  named_scope :similar_instances, :conditions => ['kind IS ?', kind]
 
   before_save {|c| c.context_id = c.whole_id || c.list_id}
   after_create :generate_instances
