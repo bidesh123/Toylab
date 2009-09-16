@@ -5,7 +5,7 @@ class Card < ActiveRecord::Base
   fields do
     name         :string
     body         :text
-    kind         :string #inheritance
+    kind         :string
     script       :text
     theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple)
     context_id   :integer
@@ -36,7 +36,7 @@ class Card < ActiveRecord::Base
   acts_as_list :column => :number, :scope => :context
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
-  named_scope :similar_instances, :conditions => ['kind IS ?', kind]
+  #named_scope :similar_instances, :conditions => ['kind IS ?', kind]
 
   before_save {|c| c.context_id = c.whole_id || c.list_id}
   after_create :generate_instances
