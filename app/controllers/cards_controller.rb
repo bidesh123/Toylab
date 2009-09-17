@@ -16,7 +16,7 @@ class CardsController < ApplicationController
   def create
     hobo_create do
       if valid? then
-        if @card.looks_like && @card.looks_like.owner_is?(current_user)
+        if @card.based_on && @card.based_on.owner_is?(current_user)
           logger.debug "88888888888888888888"
         else
           uri = params[:after_submit]

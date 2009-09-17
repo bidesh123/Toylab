@@ -42,8 +42,8 @@ class Card < ActiveRecord::Base
   after_create :generate_instances
 
   def generate_instances
-    return if look_like_id.blank?
-    return unless source_card  = Card.find(look_like_id)
+    return if based_on_id.blank?
+    return unless source_card  = Card.find(based_on_id)
     return unless source_items = source_card.items(:order => "updated_at DESC")
     source_item = source_items[0]
     create_child_aspects do
@@ -53,8 +53,8 @@ class Card < ActiveRecord::Base
   end
 
   def generate_looks_like
-    return if look_like_id.blank?
-    return unless source_card  = Card.find(look_like_id)
+    return if based_on_id.blank?
+    return unless source_card  = Card.find(based_on_id)
     return unless source_items = source_card.items(:order => "updated_at DESC")
     source_item = source_items[0]
     create_child_aspects do

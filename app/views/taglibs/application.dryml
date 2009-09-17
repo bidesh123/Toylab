@@ -162,7 +162,7 @@
         "Below, start a list or table which details #{this.reference_name}"
     %>
     <form class="add-item" with="&Card.new(:list_id => this.id)">
-      <%= hidden_field :card, :look_like_id, :value => @card.id %>
+      <%= hidden_field :card, :based_on_id, :value => @card.id %>
       <submit label="Add a row" title="&tooltip" class="toy-nav add-item tooltip"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
