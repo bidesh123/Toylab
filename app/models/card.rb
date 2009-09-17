@@ -16,27 +16,25 @@ class Card < ActiveRecord::Base
   belongs_to :owner     , :class_name => "User", :creator => true
 
   #1
-  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id     , :accessible => true
-  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id     , :accessible => true, :dependent => :destroy, :order => "number"
+  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true, :dependent => :destroy, :order => "number"
 
   #2
-  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id    , :accessible => true
-  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id    , :accessible => true, :dependent => :destroy, :order => "number"
+  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true, :dependent => :destroy, :order => "number"
 
   #3
-  belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id    , :accessible => true
-  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id    , :accessible => true, :dependent => :destroy, :order => "number"
-
-  #1 - #3 are mutually exclusive
+  belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true
+  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true, :dependent => :destroy, :order => "number"
 
   #4
-  belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id , :accessible => true
-  has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id , :accessible => true, :dependent => :destroy
+  belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
+  has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
 
   acts_as_list :column => :number, :scope => :context
 
   named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
-  named_scope :similar_instances, :conditions => ['kind IS ?', kind]
+  named_scope :similar_instances, lambda {{:conditions => ['kind IS ?', kind]}}
 
   before_save {|c| c.context_id = c.whole_id || c.list_id}
   after_create :generate_instances
@@ -52,7 +50,7 @@ class Card < ActiveRecord::Base
     end if source_item
   end
 
-  def generate_looks_like
+  def generate_instance
     return if based_on_id.blank?
     return unless source_card  = Card.find(based_on_id)
     return unless source_items = source_card.items(:order => "updated_at DESC")
