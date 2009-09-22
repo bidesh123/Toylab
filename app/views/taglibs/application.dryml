@@ -7,6 +7,27 @@
 <set-theme name="clean"/>
 
 
+<def tag="add-column">
+  <if test="&this">
+    <%
+      tooltip =
+        if    (m = this.columns.length) >  0
+          "Add another standard column"
+        elsif (n = this.items.length)   >  1
+          "Add a standard column to these #{n} items"
+        elsif  n                        == 1
+          "Add a standard column to " + this.reference_name
+        else
+          "Add a table below "        + this.reference_name
+        end
+    %>
+    <form class="add-column" with="&Card.new(:table_id => this.id)">
+      <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
 <def tag="title-rows">
 <% table = this
    rows = table.column_name_rows scope.deep
@@ -16,7 +37,7 @@
    end
 %>
   <tr repeat="&rows">
-    <empty-title />
+    <empty-cell />
     <th repeat><%=  this %></th>
     <td><add-column with="&table" /></td>
   </tr>
@@ -32,7 +53,7 @@
    <show-page>
       <content-header:>
         <views />
-        <context if="&this.whole || this.list"/>
+        <context />
         <!-- % whole_off = "&false" %       -->
         <!-- <toy-header if="&whole_off"/>  -->
       </content-header:>
@@ -120,7 +141,7 @@
 </def>
 
 <def tag="context">
-  <div if="&this.whole || this.list" class="context">
+  <div if="&this.whole || this.list || this.table" class="context">
     <ul>Zoom out to <out whole-off /></ul>
   </div>
 </def>
@@ -130,7 +151,9 @@
     <out         with="&this.whole" />
   </if><else><if test="&this.list"   >
     <out         with="&this.list"  />
-  </if></else>
+  </if><else><if test="&this.table"  >
+    <out         with="&this.table" />
+  </if></else></else>
   <li unless="&attributes[:whole_off]" style="display:inline;background:white">
     <a><%= this.reference_name %></a>
   </li>
@@ -335,28 +358,31 @@
 
 <def tag="content-rows">
   <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
-<% #logger.debug "\nClass:\n#{this.class.to_s           }" %>
-<% #logger.debug "\nCount:\n#{this.length.to_s          }" %>
-<% #logger.debug "\nYaml :\n#{this.to_j              }" %>
     <set the-item-itself="&this[0]" />
-<% #logger.debug "\nclass:\n#{the_item_itself.class.to_s}" %>
     <unless                 test="&the_item_itself.nil?"           >
       <td><show-card-inline with="&the_item_itself[0]"/></td>
       <set counter="&0" />
       <repeat>
-        <if     test="&this.nil? || this.length == 0"             ><empty-cell/></if>
+        <if test="&(counter += 1) == 1">
+          <if              test="&this.nil? || this.length == 0"             ><empty-cell/>
+          </if><else>
+            <th class="numeric cell"><%= this[0].number %></th>
+          </else>
+        </if>
         <else>
-          <if   test="&this.length == 1" with="&this[0]">
-            <if test="&this.numeric?"    ><td class="numeric cell"><cell /></td></if>
-            <else                        ><td class="cell"        ><cell /></td></else>
-          </if>
-          <else>
-            <td class="multiple-cell"    ><table>
-              <tr class="sub-cell" repeat="&this">
-                <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
-                <else                    ><td class="cell"        ><cell /></td></else>
-              </tr>
-            </table></td>
+          <if              test="&this.nil? || this.length == 0"             ><empty-cell/>
+          </if><else><if   test="&this.length == 1" with="&this[0]">
+              <if test="&this.numeric?"    ><td class="numeric cell"><cell /></td></if>
+              <else                        ><td class="cell"        ><cell /></td></else>
+            </if>
+            <else>
+              <td class="multiple-cell"    ><table>
+                <tr class="sub-cell" repeat="&this">
+                  <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
+                  <else                    ><td class="cell"        ><cell /></td></else>
+                </tr>
+              </table></td>
+            </else>
           </else>
         </else>
       </repeat>
@@ -366,7 +392,6 @@
 </def>
 
 <def tag="cell">
-  <show-card-inline if="&false"/>
   <if test="&this">
     <if test="&@editable_card">
       <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>

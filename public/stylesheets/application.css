@@ -579,16 +579,16 @@ input {
 }
 
 .card input.delete-button {
-  color:#333;
-  border:none;margin:0px;padding:0px;
+  color:#666;
+  border:none;margin:0px;padding:1px;
 }
 
 input.delete-button:hover {
   color:white;
 }
 
-input.add-aspect, input.add-item {
-  background-color:#9cf;margin:0px;padding:0px;
+input.add-aspect, input.button.add-item, input.delete-button {
+  background-color:#9cf;margin:0px;padding:1px;
   font-family:"Arial Black",Gadget,sans-serif;
   font-size: 11px;
 }
@@ -897,10 +897,11 @@ div.table-header span.editor{
   font-family:"Arial Black",Gadget,sans-serif;
 }
 
-div.table-header span.editor.card-name{
+div.table-header span.editor.card-name,
+div.table-header span.editor.card-name input,
+div.table-header{
   font-size: 36px;
   color: #666;
-  text-align:right;
 }
 
 div.table-header span.editor.tiny-gray,
@@ -908,6 +909,12 @@ div.table-header span.editor.tiny-gray input  {
   line-height: 6px;
   font-size: 6px;
   color: #999;
+}
+
+div.table-header span.editor.tiny-gray.table-title,
+div.table-header span.editor.tiny-gray.table-title input{
+  font-size: 36px;
+  color: #666;
 }
 
 div.table-header p  {
@@ -925,3 +932,7 @@ div.table-header span.editor.kind  {
   background-color: #000;
 }
 
+th.numeric {
+  padding-right:3px;
+  padding-left:2px;
+}

@@ -5,7 +5,7 @@
     <edit-page>
       <content-header:>
         <views />
-        <context if="&this.whole || this.list"/>
+        <context />
       </content-header:>
       <content-body:  >
         <rails-authenticity-token/>
