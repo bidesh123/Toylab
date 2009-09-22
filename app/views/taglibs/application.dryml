@@ -8,8 +8,9 @@
 
 
 <def tag="title-rows">
-<% rows = this.column_name_rows scope.deep
-   if false && rows.length > 1 && rows[0][0]
+<% table = this
+   rows = table.column_name_rows scope.deep
+   if rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
      rows.delete_at 0
    end
@@ -17,6 +18,7 @@
   <tr repeat="&rows">
     <empty-title />
     <th repeat><%=  this %></th>
+    <td><add-column with="&table" /></td>
   </tr>
 </def>
 
@@ -87,7 +89,7 @@
     end
   %>
   <!-- <delete-button with="&this" after-submit="&redirect_uri" label="ERASE" image="icons/bin_closed.png" title="#{tooltip}" /> -->
-  <delete-button with="&this" after-submit="&redirect_uri" label="ERASE" title="#{tooltip}" />
+  <delete-button class="nav-button" with="&this" after-submit="&redirect_uri" label="Erase!" title="#{tooltip}" />
 </def>
 
 <def tag="google">
@@ -162,7 +164,7 @@
          this.reference_name
     %>
     <form class="add-aspect" with="&Card.new(:whole_id => this.id)">
-      <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
+      <submit label="Add an aspect" title ="&tooltip" class ="toy-nav add-aspect"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
   </if>
@@ -358,6 +360,7 @@
           </else>
         </else>
       </repeat>
+      <empty-cell/>
     </unless>
   </tr>
 </def>

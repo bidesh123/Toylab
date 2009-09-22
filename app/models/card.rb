@@ -42,6 +42,11 @@ class Card < ActiveRecord::Base
   before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :generate_instances
 
+  #caching
+  #def self.find
+  #  super
+  #end
+
   def column_name_rows deep
     columns = deep[:columns][:names]
     column_names = columns.map do |a|
@@ -51,15 +56,14 @@ class Card < ActiveRecord::Base
     column_names.each do |el|
       el[number_of_name_rows - 1] ||= nil
     end
-    column = -1
-    name_rows = []
+    column    = -1
+    name_rows  = [        ]
     column_names.each do |name_column|
       column += 1
-      #name_rows[column]=[]
-      row = -1
+      row              = -1
       name_column.each do |name_cell|
-        name_rows[row += 1]       ||= []
-        name_rows[row     ][column] = name_cell
+        name_rows[row += 1] ||= [      ]
+        name_rows[row     ]     [column] = name_cell
     logger.debug "row"
     logger.debug row.to_yaml
     logger.debug "name_rows"

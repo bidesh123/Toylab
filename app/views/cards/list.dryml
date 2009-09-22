@@ -60,7 +60,6 @@
   </tr>
 </def>
 
-
 <def tag="core-main-row"></def>
 
 <def tag="aspect-cell">
@@ -69,7 +68,6 @@
     <recursive-card which="aspect"/>
   </td>
 </def>
-
 
 <def tag="item-row">
   <tr class="item-row">
@@ -82,6 +80,5 @@
 <def tag="list-view">
   <li class="not-enabled view-link"><%= link_to("list"  , url_for(:action => "list", :disabled => true), :disabled => true  )  %></li>
 </def>
-
 
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

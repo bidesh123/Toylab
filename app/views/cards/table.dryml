@@ -8,9 +8,19 @@
 
 <def tag="add-column">
   <if test="&this">
-    <% tooltip =
-         (this.columns.count > 0 ? " Add another aspect of " : "Add a table below ") +
-         this.reference_name
+    <%
+      tooltip =
+        if n = this.columns.count > 1
+          "Add a standard column"
+        elsif this.columns.count > 0
+          "Add another column to the table below"
+        elsif n = this.items.count > 1
+          "Add a standard column to these #{n} items"
+        elsif this.items.count == 1
+          "Add a standard column to " + this.reference_name
+        else
+          "Add a table below " + this.reference_name
+        end
     %>
     <form class="add-column" with="&Card.new(:table_id => this.id)">
       <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
@@ -30,7 +40,6 @@
   <div param="controls">
     <table class="controls" ><tr class="controls" >
       <td                      ><add-item           /></td>
-      <td                      ><add-column         /></td>
       <td class="delete-button"><trash redir="true" /></td>
     </tr></table>
   </div>
