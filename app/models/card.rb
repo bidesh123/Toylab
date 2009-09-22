@@ -33,11 +33,41 @@ class Card < ActiveRecord::Base
 
   acts_as_list :column => :number, :scope => :context
 
-  named_scope :top_level, :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
-  named_scope :similar_instances, lambda {{:conditions => ['kind IS ?', kind]}}
+  named_scope :top_level        ,
+     :conditions  => ['list_id IS ? AND whole_id IS ?', nil, nil]
+  named_scope :similar_instances, lambda {
+    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, current_user.id]}
+  }
 
-  before_save {|c| c.context_id = c.whole_id || c.list_id}
+  before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :generate_instances
+
+  def column_name_rows deep
+    columns = deep[:columns][:names]
+    column_names = columns.map do |a|
+      a.split(" - ")
+    end
+   number_of_name_rows = column_names.map { |c| c.length }.max
+    column_names.each do |el|
+      el[number_of_name_rows - 1] ||= nil
+    end
+    column = -1
+    name_rows = []
+    column_names.each do |name_column|
+      column += 1
+      #name_rows[column]=[]
+      row = -1
+      name_column.each do |name_cell|
+        name_rows[row += 1]       ||= []
+        name_rows[row     ][column] = name_cell
+    logger.debug "row"
+    logger.debug row.to_yaml
+    logger.debug "name_rows"
+    logger.debug name_rows.to_yaml
+      end
+    end
+    name_rows
+  end
 
   def generate_instances
     return if based_on_id.blank?
@@ -250,29 +280,6 @@ class Card < ActiveRecord::Base
       0                                        #item_depth
   end
 
-  def column_name_rows deep
-    columns = deep[:columns][:names]
-    column_names = columns.map do |a|
-      a.split(" - ")
-    end
-    number_of_name_rows = column_names.map { |c| c.length }.max
-    column_names.each do |el|
-      el[number_of_name_rows] ||= nil
-    end
-    column = -1
-    name_rows = []
-    column_names.each do |name_column|
-      column += 1
-      name_rows[column]=[]
-      row = -1
-      name_column.each do |name_cell|
-        name_rows[row += 1]       ||= []
-        name_rows[row     ][column] = name_cell
-      end
-    end
-    name_rows
-  end
-
   def reference_name
     if name.nil? || name.length == 0      
       (kind.nil? || kind.length == 0 ? "card ##{id}" : "Unspecified " + kind)
@@ -307,7 +314,7 @@ class Card < ActiveRecord::Base
     r = [{:depth => depth, :item => self}]
     unless depth >= max_depth
       items.each do |item|
-        r.concat item.deeper_items   depth + 1
+        r.concat item.deeper_items(  depth + 1)
       end
     end
   end

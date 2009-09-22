@@ -4,27 +4,27 @@
 <!-- ====================== tag definitions ================================ -->
 
 <def tag="aspect-kind-cell">
-	<% css_class  = "aspect-kind-cell"
-	   css_class += " first" if attributes[:first] %>
-	<th class="<%= css_class %>">
-		<editor:kind blank-message="..." />
-	</th>
+  <% css_class  = "aspect-kind-cell"
+     css_class += " first" if attributes[:first] %>
+  <th class="<%= css_class %>">
+    <editor:kind blank-message="..." />
+  </th>
 </def>
 
 <def tag="aspect-name-cell">
-	<% css_class  = "aspect-name-cell"
-	   css_class += " first" if attributes[:first] %>
-	<td class="<%= css_class %>">
-		<editor:name blank-message="..." />
-	</td>
+  <% css_class  = "aspect-name-cell"
+     css_class += " first" if attributes[:first] %>
+  <td class="<%= css_class %>">
+    <editor:name blank-message="..." />
+  </td>
 </def>
 
 <def tag="aspect-body-cell">
-	<% css_class  = "aspect-body-cell"
-	   css_class += " first" if attributes[:first] %>
-	<td class="<%= css_class %>">
-		<editor:body blank-message="..." />
-	</td>
+  <% css_class  = "aspect-body-cell"
+     css_class += " first" if attributes[:first] %>
+  <td class="<%= css_class %>">
+    <editor:body blank-message="..." />
+  </td>
 </def>
 
 <def tag="aspect-kind-cells">
@@ -269,7 +269,7 @@
   <div>
     Item of : <a field="list" /><belongs-to-editor field="list"/>
   </div>
-  <div if="&1==0" >
+  <div if="&false" >
     Aspects :
     <ul>
       <li repeat="&this.aspects"><view/></li>

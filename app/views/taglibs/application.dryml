@@ -7,6 +7,19 @@
 <set-theme name="clean"/>
 
 
+<def tag="title-rows">
+<% rows = this.column_name_rows scope.deep
+   if false && rows.length > 1 && rows[0][0]
+     rows[1][0] = rows[0][0]
+     rows.delete_at 0
+   end
+%>
+  <tr repeat="&rows">
+    <empty-title />
+    <th repeat><%=  this %></th>
+  </tr>
+</def>
+
 <def tag="kind-editor">
   <if test="&this.kind "><editor:kind                   blank-message="....." /></if>
   <else                 ><editor:kind class="tiny-gray" blank-message="....." /></else>
@@ -124,7 +137,7 @@
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
-    <% tooltip = "Zoom in on #{this.reference_name}" %>
+  <% tooltip = "Zoom in on #{this.reference_name}" %>
   <a class="zoom-in" title="&tooltip"><%= image_tag "icons/zoom.png" %></a>
 </def>
 
@@ -318,40 +331,34 @@
   <add-item />
 </def>
 
-<def tag="title-rows">
-<% rows = this.column_name_rows scope.deep
-   if rows.length > 1 && rows[0][0]
-     rows[1][0] = rows[0][0]
-     rows.delete_at 0
-   end
-%>
-  <tr repeat="&rows">
-    <empty-title />
-    <th repeat><%=  this %></th>
-  </tr>
-</def>
-
 <def tag="content-rows">
-  <tr repeat="&scope.deep[:columns][:cells].transpose">
-    <td ><show-card-inline with="&this[0][0]"/></td>
-    <set   counter="&0" />
-    <repeat>
-      <if     test="&this.nil? || this.length == 0"             ><empty-cell/></if>
-      <else>
-        <if   test="&this.length == 1" with="&this[0]">
-          <if test="&this.numeric?"><td class="numeric cell"    ><cell /></td></if>
-          <else                    ><td class="cell"            ><cell /></td></else>
-        </if>
+  <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
+<% #logger.debug "\nClass:\n#{this.class.to_s           }" %>
+<% #logger.debug "\nCount:\n#{this.length.to_s          }" %>
+<% #logger.debug "\nYaml :\n#{this.to_j              }" %>
+    <set the-item-itself="&this[0]" />
+<% #logger.debug "\nclass:\n#{the_item_itself.class.to_s}" %>
+    <unless                 test="&the_item_itself.nil?"           >
+      <td><show-card-inline with="&the_item_itself[0]"/></td>
+      <set counter="&0" />
+      <repeat>
+        <if     test="&this.nil? || this.length == 0"             ><empty-cell/></if>
         <else>
-          <td class="multiple-cell"><table>
-            <tr class="sub-cell" repeat="&this">
-              <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
-              <else                    ><td class="cell"        ><cell /></td></else>
-            </tr>
-          </table></td>
+          <if   test="&this.length == 1" with="&this[0]">
+            <if test="&this.numeric?"    ><td class="numeric cell"><cell /></td></if>
+            <else                        ><td class="cell"        ><cell /></td></else>
+          </if>
+          <else>
+            <td class="multiple-cell"    ><table>
+              <tr class="sub-cell" repeat="&this">
+                <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
+                <else                    ><td class="cell"        ><cell /></td></else>
+              </tr>
+            </table></td>
+          </else>
         </else>
-      </else>
-    </repeat>
+      </repeat>
+    </unless>
   </tr>
 </def>
 
