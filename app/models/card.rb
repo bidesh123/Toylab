@@ -39,15 +39,15 @@ class Card < ActiveRecord::Base
     {:conditions => ['kind    IS ? AND owner_id IS ?', kind, current_user.id]}
   }
 
-  before_save do |c| c.context_id = c.whole_id || c.list_id end
-  after_create :generate_instances
+  before_save do |c| c.context_id = c.whole_id || c.list_id || c.table_id end
+  after_create :generate_dependents
 
   #caching
   #def self.find
   #  super
   #end
 
-  def generate_instances
+  def generate_dependents
     return if based_on_id.blank?
     return unless source_card  = Card.find(based_on_id)
     return unless source_items = source_card.items(:order => "updated_at DESC")
