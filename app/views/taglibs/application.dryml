@@ -364,10 +364,15 @@
       <set counter="&0" />
       <repeat>
         <if test="&(counter += 1) == 1">
-          <if              test="&this.nil? || this.length == 0"             ><empty-cell/>
+          <if              test="&this.nil? || this.length == 0"             >
+            <empty-cell/>
+          </if><else><if test="&this[0].name.nil? || this[0].name.length == 0">
+              <th class="cell numeric"><%= this[0].number %></th>
+          </if><else><if test="&this[0].numeric?">
+            <th class="cell numeric"><cell with="&this[0]" /></th>
           </if><else>
-            <th class="numeric cell"><%= this[0].number %></th>
-          </else>
+            <th   class="cell"      ><cell with="&this[0]"/></th>
+          </else></else></else>
         </if>
         <else>
           <if              test="&this.nil? || this.length == 0"             ><empty-cell/>

@@ -47,6 +47,17 @@ class Card < ActiveRecord::Base
   #  super
   #end
 
+  def generate_instances
+    return if based_on_id.blank?
+    return unless source_card  = Card.find(based_on_id)
+    return unless source_items = source_card.items(:order => "updated_at DESC")
+    source_item = source_items[0]
+    create_child_aspects do
+      update_attribute :kind, source_item.kind
+      generate_aspects_recursively(source_item)
+    end if source_item
+  end
+
   def column_name_rows deep
     columns = deep[:columns][:names]
     column_names = columns.map do |a|
@@ -71,17 +82,6 @@ class Card < ActiveRecord::Base
       end
     end
     name_rows
-  end
-
-  def generate_instances
-    return if based_on_id.blank?
-    return unless source_card  = Card.find(based_on_id)
-    return unless source_items = source_card.items(:order => "updated_at DESC")
-    source_item = source_items[0]
-    create_child_aspects do
-      update_attribute :kind, source_item.kind
-      generate_aspects_recursively(source_item)
-    end if source_item
   end
 
   def generate_instance

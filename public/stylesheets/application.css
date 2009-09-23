@@ -935,4 +935,5 @@ div.table-header span.editor.kind  {
 th.numeric {
   padding-right:3px;
   padding-left:2px;
+  text-align:right;
 }
