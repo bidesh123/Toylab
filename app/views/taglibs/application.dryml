@@ -39,7 +39,7 @@
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-      <if test="& this =~ /^\d+=>$/ && the_column = Card.find(Integer(this.delete '=>'))">
+      <if test="& this =~ /^\d+=>$/ && (the_column = Card.find(Integer(this.delete '=>')))">
         <editor:kind with="&the_column" />
       </if><else>
         <%= this %>
@@ -363,6 +363,8 @@
 </def>
 
 <def tag="content-rows">
+  <% #logger.debug "rows --------------------------" %>
+  <% #logger.debug scope.deep[:columns][:cells].transpose.to_yaml %>
   <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >
@@ -404,7 +406,7 @@
 
 <def tag="cell">
   <if test="&this">
-    <if test="&@editable_card">
+    <if test="&false || @editable_card">
       <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>
     </if>
     <else>

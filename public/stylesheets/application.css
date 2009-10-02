@@ -38,6 +38,13 @@ div {
   background-color:transparent; color: black; padding:0px;
 }
 
+div.tool {
+  font-family:"Arial Black",Gadget,sans-serif;
+  color:#666;
+  font-size:11px;
+}
+
+
 body {
   background-color:transparent; padding:20px;
 }
@@ -49,6 +56,7 @@ h, th, h input, th input {
   text-align: left;
   padding: 0px;
   font-size: 8px;
+  color:#666;
 }
 
 h1, div {

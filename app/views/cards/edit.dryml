@@ -39,19 +39,20 @@
 </def>
 
 <def tag="script-editor-toggle">
-  <div>
+  <div class="tool">
     <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
   </div>
 </def>
 
 <def tag="drag-handle">
-  <div>
+  <div class="tool">
     <span class="drag_handle" id="<%= dom_id(this, :drag_handle) %>">Drag</span>
   </div>
 </def>
 
 <def tag="card-id" >
-  <span if="&current_user.administrator?"><%= this.id  %>/<editor:number /></span>
+  <div class="tool" if="&current_user.administrator?">#<%= this.id  %></div>
+  <div class="tool" if="&current_user.administrator?"><editor:number  /></div>
 </def>
 
 <def tag="core-right-controls-td">
