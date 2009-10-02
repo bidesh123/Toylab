@@ -35,12 +35,12 @@ class Card < ActiveRecord::Base
 # sortable                         :scope => [:list_id, whole_id, table_id]
 
   named_scope :top_level        ,
-     :conditions => ['list_id IS ? AND whole_id IS ?', nil, nil]
+     :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil]
 #  named_scope :similar_instances, lambda {
 #    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, current_user.id]}
 #  }
 
-  before_save do |c| c.context_id = c.whole_id || c.list_id || c.table_id end
+  before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
@@ -154,19 +154,24 @@ class Card < ActiveRecord::Base
   end
 
   def inherit_from_base
-    return unless example = base
-    true
+    return false unless example = base
    #inherit_by_example example
+    true
   end
 
   def inherit_from_kind
-    return unless this_kind = kind && example =
+    return false unless this_kind = kind && example =
       Item.find_by_kind(this_kind, :order => "updated_at DESC", :limit => 1)
-    true
    #inherit_by_example example
+    true
+  end
+
+  def already_inherited prototype
+    self.aspects.m
   end
 
   def inherit_by_example example
+    return false if already_inherited(example)
     create_dependents do
       generate_aspects_recursively example
     end
@@ -392,9 +397,9 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
  # --- Permissions --- #
 
- def creating_child_aspects?
-   Thread.current["creating_child_aspects"]
- end
+  def creating_child_aspects?
+    Thread.current["creating_child_aspects"]
+  end
 
   def create_permitted?
     return true if owner_or_admin?

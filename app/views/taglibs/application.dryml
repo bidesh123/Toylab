@@ -39,7 +39,7 @@
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-      <if test="& this =~ /^\d+=>$/ && (the_column = Card.find(Integer(this.delete '=>')))">
+      <if test="&(this =~ /^\d+=>$/) && (the_column = Card.find(Integer(this.delete '=>')))">
         <editor:kind with="&the_column" />
       </if><else>
         <%= this %>
