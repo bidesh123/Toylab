@@ -12,7 +12,7 @@
     <section class="content-body">
       <home-nav />
       <pitch />
-<%    c = Card.new.save %>
+<%    c = Card.new(:name => current_user.name).save %>
       <form with="&c">
         <submit label="Create a new web application" />
 <%      redirect = url_for(:controller => :cards, :action => :show, :id => c.id) %>
@@ -36,40 +36,65 @@
 </def>
 
 <def tag="pitch">
-  <ul param="sub-title">Build and manage your World like a game with Toy Office - using Building Blocks.
-    <li>On your desktop are the Building Blocks that make up your World.</li>
+  <ul param="sub-title">
+    Build and manage your World like a game - using Building Blocks.
     <li>Building Blocks are like the cells in your body.</li>
-    <li>They are separate, yet work together to make your whole body function.</li>
+    <li>They are separate parts, yet work together to make your whole body function.</li>
+    <li>Best of all they are all the same, so anyone quickly masters them.</li>
   </ul>
+  
+<ul param="sub-title">Why use toy office? To get your information
+  <li>On your own website</li>
+  <li>Safe from prying eyes, viruses and computer crashes</li>
+  <li>Available to you on any computer</li>
+  <li>Easily organized into lists, tables, reports, forms</li>
+  <li>Open to the contributions of others</li>
+  <li>Or for your eyes only</li>
+</ul>
+
+
   <ul param="sub-title">Let's say that today your life is focused on the following areas
-    <li>Job search</li>
+    <li><i>Job search</i></li>
     <li>Billy's school project</li>
     <li>2010 family holiday</li>
     <li>Job search</li>
     <li>Billy's school project</li>
     <li>Buying a house in the city</li>
     <li>Volunteering at the hospital</li>
-    <li>Mom's 80th Birthday</li>
+    <li><i>Mom's 80th Birthday</i></li>
     <li>New customers follow-up</li>
     <li>Job search</li>
     <li>Researching Crohn's disease for Pierre</li>
     <li>Getting fit</li>
   </ul>
 
-  
-Simply connect the areas in to lists, tables, columns, rows, forms, web pages : that is the Toy Office breakthrough !
-Put simply, while you
 
+  <p>
+    Here is where Toy Office comes in.
+    With Toy Office, you can construct and then manage the different areas of
+    your life as you would an office built with an erector set. Add a building
+    block for my job search, another for Mom's 80th Birthday, etc.
+  </p>
 
-Here is where Toy Office comes in.
-With Toy Office, you can construct and then manage the different areas of your life as you would a mansion built with an erector set.
-So, how do you put the BBs together ? Let's begin. 
-<ul param="sub-title">Why use toy office? To get your information
-  <li>On your own website</li>
-  <li>Safe from prying eyes, viruses and computer crashes</li>
-  <li>Available on any computer</li>
-  <li>Easily organized into lists, tables, reports, forms</li>
-  <li>Open to the contributions of others</li>
-  <li>Or for your eyes only</li>
-</ul>
+  <p>
+    So, how do you build something meaningful, whether it's as simple as a
+    recipe or as complex as ? Simply connect the blocks together, into lists,
+    tables, columns, rows, forms, web pages. What used to take a geek a week is
+    now easy for anyone in seconds. That is the Toy Office breakthrough!
+  </p>
+
+  <p>
+    Start by clicking the All button for an list of all publicly available
+    offices. If you are signed in you can even make your own toy office on the
+    web, in a single click on Add my own toy office.
+    to or a brand new Toy Office. It will appear as card #something. Click on
+    it, change its name and choose the list view. It's the easiest. The list
+    view lets you add items. You can add items to anything, even other items.
+    You can get 80% of the benefit with just the list view and it only takes
+    minutes to learn. You get a instant web site, a place to share info and
+    pick up comments, a common ground to work together on stuff, a place to
+    post your resumé for higher visibility. And your own office in the toy
+    office cloud building. With your own web address like toyoffice.net/suite/9003 (coming soon).
+  </p>
+
 </def>

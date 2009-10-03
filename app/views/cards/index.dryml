@@ -4,7 +4,7 @@
 
     <content: param>
       <header param="content-header">
-        <h1 param="title">All Toy Offices</h1>
+        <h1 param="title">Publicly viewable offices</h1>
       </header>
 
       <section param="content-body">

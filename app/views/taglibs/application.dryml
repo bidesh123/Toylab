@@ -7,6 +7,13 @@
 <set-theme name="clean"/>
 
 
+<def tag="main-nav">
+  <navigation class="main-nav" merge-attrs param="default">
+    <nav-item href="#{base_url}/">Home</nav-item>
+    <nav-item with="&Card">All</nav-item>
+  </navigation>
+</def>
+
 <def tag="add-column">
   <if test="&this">
     <%
