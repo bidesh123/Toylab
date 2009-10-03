@@ -34,6 +34,10 @@ body, p, ol, ul, input, textarea, .input {
   padding:0px;
 }
 
+body {
+  background-color:transparent; padding:20px;
+}
+
 div {
   background-color:transparent; color: black; padding:0px;
 }
@@ -45,10 +49,9 @@ div.tool {
 }
 
 
-body {
-  background-color:transparent; padding:20px;
+page-header {
+  background-color: teal;
 }
-
 
 h, th, h input, th input {
   font-family:"Arial Black",Gadget,sans-serif;
@@ -69,21 +72,91 @@ h1.title {
   margin:0;
   margin-top: 24px;
   padding: 0px;
-  font-size: 48px;
+  font-size: 32px;
   color: #666;
+  background-color:#ccc;
 }
 
 ul.sub-title {
   font-family:"Arial Black",Gadget,sans-serif;
   font-size: 16px;
-  color: #666;
-}
-ul.sub-title li {
-  font-size: 11px;
+  background-color: #666;
+  color: white;
 }
 
-page-header {
-  background-color: teal;
+ul.sub-title li {
+  font-size: 11px; background-color:white; color:#666;
+}
+
+.front-page .welcome-message{
+    padding: 24px 0 0 0;
+    border:0;
+}
+
+.page-header .navigation{
+    padding: 24px 0 0 0;
+}
+
+ul.account-nav {
+     display:inline-block;
+}
+
+ul.pink      { color:#f9c;}
+ul.orange    { color:#fc9;}
+ul.yellow    { color:#ff9;}
+ul.green     { color:#9fc;}
+ul.blue      { color:#9cf;}
+ul.purple    { color:#c9f;}
+    
+ul.controls {
+     display:inline-block;
+     list-style-type:none;
+}
+
+ul.controls, ul.control li {
+     display:inline;
+}
+
+ul.cards {
+    list-style-type: none;
+    margin:0; padding:0;
+    margin-top: 1em;
+}
+
+ul.cards h4 {
+    margin:0;padding:0;
+}
+
+div.context ul, div.views li {
+  display:inline ;
+}
+
+div.context li, div.views li {
+  font-family:"Arial Black",Gadget,sans-serif;
+  text-align: left;
+  padding: 0px;
+  font-size: 12px;
+  list-style-type:none;
+  background-color:#9cf;
+  color:#666;
+}
+
+div.context li a, div.views li a {
+  padding: 0px 20px ;
+  font-weight:normal;
+  list-style-type:none;
+  background-color:#9cf;
+  color:#666;
+}
+
+li.not-enabled a {
+  background-color:red;
+  border: 2px solid #666;  color:#666;
+}
+
+div.context li.not-enabled a {
+  background-color:red;
+  color:#666;
 }
 
 .page-header h1 {
@@ -191,38 +264,6 @@ div.card-body {
 
 div.content-body {
   margin-top:12px;
-}
-
-div.context ul, div.views li {
-  display:inline ;
-}
-
-div.context li, div.views li {
-  font-family:"Arial Black",Gadget,sans-serif;
-  text-align: left;
-  padding: 0px;
-  font-size: 12px;
-  list-style-type:none;
-  background-color:#9cf;
-  color:#666;
-}
-
-div.context li a, div.views li a {
-  padding: 0px 20px ;
-  font-weight:normal;
-  list-style-type:none;
-  background-color:#9cf;
-  color:#666;
-}
-
-li.not-enabled a {
-  background-color:red;
-  border: 2px solid #666;  color:#666;
-}
-
-div.context li.not-enabled a {
-  background-color:red;
-  color:#666;
 }
 
 p {
@@ -785,29 +826,6 @@ div.page-header {
 select.dev-user-changer {
     display:inline-block;
     margin:0px;padding:0px;background-color:transparent;
-}
-
-ul.account-nav {
-     display:inline-block;
-}
-
-ul.controls {
-     display:inline-block;
-     list-style-type:none;
-}
-
-ul.controls, ul.control li {
-     display:inline;
-}
-
-ul.cards {
-    list-style-type: none;
-    margin:0; padding:0;
-    margin-top: 1em;
-}
-
-ul.cards h4 {
-    margin:0;padding:0;
 }
 
 .new-link form.new input.submit-button {
