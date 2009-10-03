@@ -122,8 +122,10 @@
       attributes[:no_redirect] = nil
     end
   %>
-  <!-- <delete-button with="&this" after-submit="&redirect_uri" label="ERASE" image="icons/bin_closed.png" title="#{tooltip}" /> -->
-  <delete-button class="nav-button" with="&this" after-submit="&redirect_uri" label="Erase!" title="#{tooltip}" />
+  <!-- <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
+  <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button"                               />
 </def>
 
 <def tag="google">
@@ -369,13 +371,17 @@
   <add-item />
 </def>
 
+<def tag="left-tool-cell">
+  <td><show-card-inline /></td>
+</def>
+
 <def tag="content-rows">
   <% #logger.debug "rows --------------------------" %>
   <% #logger.debug scope.deep[:columns][:cells].transpose.to_yaml %>
   <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >
-      <td><show-card-inline with="&the_item_itself[0]"/></td>
+      <left-tool-cell with="&the_item_itself[0]"/>
       <set counter="&0" />
       <repeat>
         <if test="&(counter += 1) == 1">

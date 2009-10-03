@@ -2,6 +2,49 @@
 
 <!-- ====================== tag definitions ================================ -->
 
+<def tag="left-tool-cell">
+
+  <%
+    tooltip             = "Permanently erase #{this.reference_name}"
+    number_of_aspects   = this.aspects.length
+    number_of_items     = this.items.length
+    if number_of_aspects > 0
+      if number_of_items > 0
+        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+      else
+        tooltip += " and its #{number_of_aspects} items"
+      end
+    else # 0 aspects
+      if number_of_items > 0
+        tooltip += " and its #{number_of_items  } items"
+      end
+    end
+
+    redirect_uri = if @card.id == this.id then
+      if target = this.whole || this.list then
+        url_for(:action => params[:action], :id => target)
+      else
+        cards_url
+      end
+    else
+      request.request_uri
+    end
+
+    #logger.debug "===#{no_redirect}---"
+    #no_redirect = nil
+    #logger.debug "---#{no_redirect}=== supposed to be nil"
+    #logger.debug "[[[#{attributes[:no_redirect]}]]]"
+    #logger.debug this.inspect
+    if attributes[:no_redirect] == "ggggg" then
+      redirect_uri = nil
+      attributes[:no_redirect] = nil
+    end
+  %>
+  <td class="delete-button">
+    <delete-button class="nav-button" after-submit="&cards_url" label="x" title="#{tooltip}" />
+  </td>
+</def>
+
 <def tag="toy-table">
   <toy-show shallow />
 </def>
@@ -15,9 +58,9 @@
     <cells merge-attrs />
   </div>
   <div param="controls">
-    <table class="controls" ><tr class="controls" >
-      <td                      ><add-item           /></td>
-      <td class="delete-button"><trash redir="true" /></td>
+    <table class="controls" ><tr class="controls">
+      <td                      ><add-item            /></td>
+      <td class="delete-button"><trash redir="true"  /></td>
     </tr></table>
   </div>
 </def>
