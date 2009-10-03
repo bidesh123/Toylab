@@ -240,7 +240,7 @@
 </def>
 
 <def tag="tree-view" attrs="off">
-  <li class="view-link"><%= link_to("advanced", url_for(:action => "edit" ), :disabled => false  )  %></li>
+  <li class="view-link"><%= link_to("tree", url_for(:action => "edit" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="report-view">

@@ -70,4 +70,8 @@
    <bottoms-borders-row merge-attrs />
 </def>
 
+<def tag="table-view">
+  <li class="not-enabled view-link"><%= link_to("table"  , url_for(:action => "table", :disabled => true), :disabled => true  )  %></li>
+</def>
+
 <div id="auto_completer" style="display:none" class="auto_complete"></div>
