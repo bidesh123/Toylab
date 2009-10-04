@@ -148,9 +148,11 @@ div.context li a, div.views li a {
   background-color:#9cf;
   color:#666;
 }
+div.views li.advanced a {
+    color:#c30;
+}
 
-li.not-enabled a {
-  background-color:red;
+div.views li.not-enabled a {
   border: 2px solid #666;  color:#666;
 }
 
@@ -963,3 +965,4 @@ th.numeric {
   padding-left:2px;
   text-align:right;
 }
+

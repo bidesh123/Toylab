@@ -334,7 +334,7 @@
 -->
 
 <def tag="report-view">
-  <li class="not-enabled view-link"><%= link_to("report"  , url_for(:action => "show", :disabled => true), :disabled => true  )  %></li>
+  <li class="not-enabled view-link advanced"><%= link_to("report"  , url_for(:action => "show", :disabled => true), :disabled => true  )  %></li>
 </def>
 
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

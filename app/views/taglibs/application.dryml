@@ -213,10 +213,15 @@
     <% tooltip = this.items.count > 0 ?
         "Add another item below #{this.reference_name}, below the following #{this.items.count}" :
         "Below, start a list or table which details #{this.reference_name}"
+       label   = "Add a row"
+       uri     = "#{request.request_uri}"
     %>
     <form class="add-item" with="&Card.new(:list_id => this.id)">
-      <% # = hidden_field :card, :based_on_id, :value => @card.id %>
-      <submit label="Add a row" title="&tooltip" class="toy-nav add-item tooltip"/>
+      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+    <form class="add-row" with="&Card.new(:list_id => this.list_id)">
+      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
   </if>
@@ -231,8 +236,8 @@
 <def tag="views">
   <div class="views">
     <ul>View as &nbsp;
-    <list-view />
     <table-view /> &nbsp;
+    <list-view />
     <report-view /> &nbsp;
     <tree-view />&nbsp;
     </ul>
@@ -240,11 +245,11 @@
 </def>
 
 <def tag="tree-view" attrs="off">
-  <li class="view-link"><%= link_to("tree", url_for(:action => "edit" ), :disabled => false  )  %></li>
+  <li class="view-link advanced"><%= link_to("tree", url_for(:action => "edit" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="report-view">
-  <li class="view-link"><%= link_to("report"  , url_for(:action => "show" ), :disabled => false  )  %></li>
+  <li class="view-link advanced"><%= link_to("report"  , url_for(:action => "show" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="table-view">
