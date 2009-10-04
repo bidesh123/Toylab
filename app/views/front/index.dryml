@@ -14,8 +14,8 @@
       <pitch />
 <%    c = Card.new(:name => current_user.name) %>
       <form with="&c">
-        <submit label="Create a new web application" />
-<%      redirect = url_for(:controller => :cards, :action => :show, :id => c.id) %>
+        <submit label="Create a new office suite" />
+<%      redirect = url_for(:controller => :cards, :action => :list, :id => c.id) %>
         <after-submit uri="&redirect" />
       </form>
       </section>
@@ -62,14 +62,11 @@
     <li><i>Job search</i></li>
     <li>Billy's school project</li>
     <li>2010 family holiday</li>
-    <li>Job search</li>
-    <li>Billy's school project</li>
     <li>Buying a house in the city</li>
     <li>Volunteering at the hospital</li>
     <li><i>Mom's 80th Birthday</i></li>
     <li>New customers follow-up</li>
-    <li>Job search</li>
-    <li>Researching Crohn's disease for Pierre</li>
+    <li>Researching Crohn's disease for Mitch</li>
     <li>Getting fit</li>
   </ul>
 </def>
