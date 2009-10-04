@@ -149,16 +149,15 @@ div.context li a, div.views li a {
   color:#666;
 }
 div.views li.advanced a {
-    color:#c30;
+    color:#c63;
 }
 
 div.views li.not-enabled a {
   border: 2px solid #666;  color:#666;
 }
 
-div.context li.not-enabled a {
-  background-color:red;
-  color:#666;
+div.views li.not-enabled.advanced a {
+  border: 2px solid #666;  color:#c63;
 }
 
 .page-header h1 {

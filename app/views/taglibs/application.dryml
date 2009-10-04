@@ -47,7 +47,7 @@
     <empty-cell />
     <th repeat>
       <if test="&(this =~ /^\d+=>$/) && (the_column = Card.find(Integer(this.delete '=>')))">
-        <editor:kind with="&the_column" />
+        <editor:kind with="&the_column" blank-message="Untitled"/>
       </if><else>
         <%= this %>
       </else>
@@ -208,22 +208,37 @@
   </if>
 </def>
 
-<def tag="add-item">
-  <if test="&this">
-    <% tooltip = this.items.count > 0 ?
-        "Add another item below #{this.reference_name}, below the following #{this.items.count}" :
-        "Below, start a list or table which details #{this.reference_name}"
+<def tag="add-row">
+  <if test="&this && this.list">
+    <% tooltip = "Add a row below this one"
        label   = "Add a row"
        uri     = "#{request.request_uri}"
+    %>
+    <form class="add-row" with="&Card.new(:list_id => this.list_id)">
+      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
+<def tag="add-item">
+  <if test="&this">
+    <% number_of_items = this.items.count
+       if number_of_items > 0
+         tooltip = "Add another row within #{this.reference_name}, below the following #{this.items.count}"
+         label   = "Add inner row"
+       else
+         tooltip = "Add a list or table within #{this.reference_name}"
+         label   = "Add inner list/table"
+       end
+      
+      uri     = "#{request.request_uri}"
     %>
     <form class="add-item" with="&Card.new(:list_id => this.id)">
       <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
-    <form class="add-row" with="&Card.new(:list_id => this.list_id)">
-      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
-      <after-submit uri="#{request.request_uri}"/>
-    </form>
+    <add-row />
   </if>
 </def>
 
@@ -261,6 +276,12 @@
 </def>
 
 
+<def tag="body-toggle">
+  <div class="tool">
+    <%= cid = dom_id(this, :body_cell); link_to_function("Toggle Body", "$(#{cid.to_json}).toggle()") %>
+  </div>
+</def>
+
 <def tag="bottom-controls">
   <table class="bottom-controls">
     <tr class="bottom-controls">
@@ -268,6 +289,7 @@
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
       <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
+      <td class="core-body-toggle"><body-toggle/></td>
     </tr>
   </table>
 </def>
@@ -336,7 +358,7 @@
     </tr>
     <tr class="body">
       <%  body_style="body-cell #{this.theme_class}" %>
-      <td class="#{body_style}">
+      <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:none">
         <if test="&this.body ">
           <editor:body                   blank-message="....." />
         </if>
