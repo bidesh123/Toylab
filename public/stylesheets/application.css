@@ -28,10 +28,14 @@
 /**** Generic Toy Office styling  ****/
 
 
+body {
+ font-size:12px;
+}
+
 body, p, ol, ul, input, textarea, .input {
   font-family: serif;
   background-color: transparent; color: black;
-  padding:0px;
+  padding:0;
   margin:1px;
 }
 
@@ -40,7 +44,7 @@ body {
 }
 
 div {
-  background-color:transparent; color: black; padding:0px;
+  background-color:transparent; color: black; padding:0;
 }
 
 div.tool {
@@ -58,21 +62,21 @@ h, th, h input, th input {
   font-family:"Arial Black",Gadget,sans-serif;
   background-color: aqua;
   text-align: left;
-  padding: 0px;
+  padding: 0;
   font-size: 8px;
   color:#666;
 }
 
 h1, div {
-  margin-top: 0px;
-  padding: 0px;
+  margin-top: 0;
+  padding: 0;
 }
 
 h1.title {
   font-family:"Arial Black",Gadget,sans-serif;
   margin:0;
   margin-top: 24px;
-  padding: 0px;
+  padding: 0;
   font-size: 32px;
   color: #666;
   background-color:#ccc;
@@ -121,7 +125,7 @@ ul.controls, ul.control li {
 ul.cards {
     list-style-type: none;
     margin:0; padding:0;
-    margin-top: 1em;
+    margin-top: 12px;
 }
 
 ul.cards h4 {
@@ -135,7 +139,7 @@ div.context ul, div.views li {
 div.context li, div.views li {
   font-family:"Arial Black",Gadget,sans-serif;
   text-align: left;
-  padding: 0px;
+  padding: 0;
   font-size: 12px;
   list-style-type:none;
   background-color:#9cf;
@@ -143,7 +147,7 @@ div.context li, div.views li {
 }
 
 div.context li a, div.views li a {
-  padding: 0px 20px ;
+  padding: 0 20px ;
   font-weight:normal;
   list-style-type:none;
   background-color:#9cf;
@@ -157,12 +161,17 @@ div.views li.not-enabled a {
   border: 2px solid #666;  color:#666;
 }
 
-div.views li.not-enabled.advanced a {
+.page-header div.search {
+  float: none;
+  padding: 0 30px 8px 15px;
+ }
+
+ div.views li.not-enabled.advanced a {
   border: 2px solid #666;  color:#c63;
 }
 
 .page-header h1 {
-	margin: 0; padding: 0 0px 10px;
+	margin: 0; padding: 0 0 10px;
 }
 .numeric, .aspect-numeric-body-cell, .sort-of-numeric {
   text-align: right;
@@ -203,7 +212,7 @@ a.go, a.zoom-in {
   background-color:transparent;color: #666;padding:0;padding-left:1px;padding-right:3px;
   font-family:"Arial Black",Gadget,sans-serif;
   font-size: 9px;
-  margin:0px;
+  margin:0;
 }
 
 a.go:hover, a.zoom-in:hover {
@@ -249,10 +258,10 @@ h {
 }
 
 h1 {
-  padding: 0px;
+  padding: 0;
 }
 
-img { border : 0px; }
+img { border : 0; }
 
 /**** Styling for block elements  ****/
 
@@ -281,16 +290,16 @@ pre {
 
 table {
   background-color: transparent;
-  border-spacing:0px;
+  border-spacing:0;
 }
 
 table.aspects-table {
-    background-color:transparent; border:0px solid black;margin:auto;padding:0;
+    background-color:transparent; border:0 solid black;margin:auto;padding:0;
 }
 
 table.bottom:controls {
   font-size:9px;
-  border-spacing:0px;
+  border-spacing:0;
 }
 
 table.card {
@@ -298,22 +307,22 @@ table.card {
 }
 
 table.core{
-  border:       0px solid #999;
-  border-right: 0px solid #999;
-  border-bottom:0px solid #999;
-  margin:       0px;
-  border-spacing:     0px;
+  border:       0 solid #999;
+  border-right: 0 solid #999;
+  border-bottom:0 solid #999;
+  margin:       0;
+  border-spacing:     0;
   height:0;
 
 }
 
 table.core-controls{
-  border:       0px solid #999;
-  border-right: 0px solid #999;
-  border-bottom:0px solid #999;
-  margin:       0px;
+  border:       0 solid #999;
+  border-right: 0 solid #999;
+  border-bottom:0 solid #999;
+  margin:       0;
   background-color:orange;
-  border-spacing:     0px;
+  border-spacing:     0;
 
 }
 
@@ -333,7 +342,7 @@ table.header {
   width:100%; margin-top:45px;
 }
 
-tr { background-color:transparent; margin:0px; padding:0px;
+tr { background-color:transparent; margin:0; padding:0;
 }
 
 tr.aspects-row {
@@ -360,7 +369,7 @@ tr.core-main-row{
 }
 
 tr.core-controls {
-    margin:0px;padding:0px;height:16px;
+    margin:0;padding:0;height:16px;
 }
 
 table.core th {
@@ -390,12 +399,12 @@ table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card t
 }
 
 table.first-card th.kind-cell .tiny-gray, table.first-card td.body-cell .tiny-gray {
-  font-size: 6px; padding:0px;
+  font-size: 6px; padding:0;
   line-height: 6px;
 }
 
 table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      td.body-cell {
-  font-size: 12px; padding:0px;
+  font-size: 12px; padding:0;
   line-height: 100%;
 }
 
@@ -449,11 +458,11 @@ td.go {
 }
 
 td .card-body {
-  background-color:#eee;border:0px;
+  background-color:#eee;border:0;
 }
 
 .core-main-row td{
-  background-color: transparent;border:0px solid blue;padding-right:3px;
+  background-color: transparent;border:0 solid blue;padding-right:3px;
 }
 
 td.core {
@@ -464,7 +473,7 @@ td.core {
 
 td.core-controls{
   background-color: yellow;
-  border:0px solid orange;padding:0px;margin:0px;width:auto;text-align:center;
+  border:0 solid orange;padding:0;margin:0;width:auto;text-align:center;
 }
 
 td.core-add-aspect {
@@ -472,12 +481,12 @@ td.core-add-aspect {
 }
 
 td.core-add-item{
-  background-color: yellow;border:0px solid yellow;padding:0px;margin:0px;
+  background-color: yellow;border:0 solid yellow;padding:0;margin:0;
 
 }
 
 td.core-add-item a.add-item{
-  background-color: green;border:0px solid yellow;padding:0px;margin:0px;text-align:center;
+  background-color: green;border:0 solid yellow;padding:0;margin:0;text-align:center;
 
 }
 
@@ -487,37 +496,37 @@ td.core-trash{
 }
 
 .card td.core-trash {
-  border:0px solid yellow;padding:0px;margin:0px
+  border:0 solid yellow;padding:0;margin:0
 }
 
 td.core-trash form{
-  border:0px solid red;padding:0px;margin:0px;
+  border:0 solid red;padding:0;margin:0;
 
 }
 
 td.core-trash form div{
-  border:0px solid purple;padding:0px;margin:0px;
+  border:0 solid purple;padding:0;margin:0;
 
 }
 
 td.core-trash form div input{
-  border:0px solid purple;padding:0px;margin:00px;
+  border:0 solid purple;padding:0;margin:0;
   font-family:"Arial Black",Gadget,sans-serif;
   color:#666;
     }
 
 
 .card td.core-add-aspect {
-  background-color: #9cf;border:0px solid #630; vertical-align:middle;
+  background-color: #9cf;border:0 solid #630; vertical-align:middle;
 }
 
 .card td.core-add-item {
-  background-color: #9cf;border:0px solid #630;
+  background-color: #9cf;border:0 solid #630;
 }
 
 
 td.go {
-  background-color: #9cf;vertical-align:bottom;padding:0px;  height:1px; width:20px; text-align:center;
+  background-color: #9cf;vertical-align:bottom;padding:0;  height:1px; width:20px; text-align:center;
 
 }
 
@@ -579,13 +588,13 @@ tr.self-and-aspects-row {
 
 
 .card  {
-  border:0px solid green;
+  border:0 solid green;
 }
 
 /**** Styling for input elements  ****/
 form {
-    padding-top:0px;
-    padding:0px;
+    padding-top:0;
+    padding:0;
 }
 
 form.button_to
@@ -594,23 +603,23 @@ submit {
 }
 
 form.card {
-  margin:0px;
+  margin:0;
 }
 
 form.add-aspect {
-  background-color:#9cf;margin:0px;padding:0px;border:0px solid red;
+  background-color:#9cf;margin:0;padding:0;border:0 solid red;
 }
 
 form.core-add-item {
-  background-color:fuchsia;margin:00px;padding:00px;border:0px solid green;
+  background-color:fuchsia;margin:0;padding:0;border:0 solid green;
 }
 
 form.core-trash {
-  background-color:red;margin:00px;padding:00px;border:0px solid yellow;
+  background-color:red;margin:0;padding:0;border:0 solid yellow;
 }
 
 form.erase {
-    padding:0px;margin:0px;
+    padding:0;margin:0;
 }
 
 td.delete-button form.button-to{
@@ -631,7 +640,7 @@ input {
 
 .card input.delete-button {
   color:#666;
-  border:none;margin:0px;padding:1px;
+  border:none;margin:0;padding:1px;
 }
 
 input.delete-button:hover {
@@ -639,24 +648,24 @@ input.delete-button:hover {
 }
 
 input.add-aspect, input.button.add-item, input.delete-button {
-  background-color:#9cf;margin:0px;padding:1px;
+  background-color:#9cf;margin:0;padding:1px;
   font-family:"Arial Black",Gadget,sans-serif;
   font-size: 11px;
 }
 
 input.add-aspect {
-    padding-bottom:5px;padding-top:3px;border:0px solid red;
+    padding-bottom:5px;padding-top:3px;border:0 solid red;
 }
 
 input.add-item {
-    padding-left:1px;padding-right:3px;border:0px solid red;
+    padding-left:1px;padding-right:3px;border:0 solid red;
 }
 
 input.erase {
   font-size: 8px;
   font-family:"Arial Black",Gadget,sans-serif;
-  padding:0px;
-  margin:0px;
+  padding:0;
+  margin:0;
 }
 
 input.button, a.zoom-in {
@@ -671,7 +680,7 @@ h input, th input {
 }
 
 textarea {
-  background-color:#eee;border:0px;
+  background-color:#eee;border:0;
   color:#222;
 }
 
@@ -735,8 +744,8 @@ tr.core-main-row.main-row th .editor {
   font-family:"Arial Black",Gadget,sans-serif;
   font-size: 32px;
   font-weight: 100;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .logo .toy {
@@ -781,10 +790,10 @@ div.progressBar div.background {
 
 .aspect-name-cell {
   text-align: left; background-color: white;
-        border-top:    0px solid #eee;
+        border-top:    0 solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;
-        border-bottom: 0px solid #eee;
+        border-bottom: 0 solid #eee;
 }
 
 .aspect-name-cell .first {
@@ -792,12 +801,12 @@ div.progressBar div.background {
         border-top:    8px solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;
-        border-bottom: 0px solid #eee;
+        border-bottom: 0 solid #eee;
 }
 
 .aspect-body-cell {
   text-align: left; background-color : #eee;
-        border-top:    0px solid #eee;
+        border-top:    0 solid #eee;
         border-left:   1px solid #eee;
         border-right:  3px solid #eee;
         border-bottom: 3px solid #eee;
@@ -810,7 +819,7 @@ td.debug {
   padding-right: 8px;
 }
 
-.show-page .content-header {border-bottom: 0px dotted #888;}
+.show-page .content-header {border-bottom: 0 dotted #888;}
 a.card-link {text-decoration: none;}
 .page-header .navigation a:hover {
     background-color: teal;
@@ -819,15 +828,14 @@ a.card-link {text-decoration: none;}
 input[type="submit"]:hover{color:white;}
 
 
-.section.with-flash { padding-top: 0px; }
-.content-header, .content-body, .content-footer {margin: 0px; padding: 0px;}
+.section.with-flash { padding-top: 0; }
+.content-header, .content-body, .content-footer {margin: 0; padding: 0;}
 
 div.page-header {
-    border-top: 0px solid yellow; background-color:transparent; margin: 0px; padding: 0px;
+    border-top: 0 solid yellow; background-color:transparent; margin: 0; padding: 0;
 }
 select.dev-user-changer {
-    display:inline-block;
-    margin:0px;padding:0px;background-color:transparent;
+    margin:0;padding:0;background-color:transparent;
 }
 
 .new-link form.new input.submit-button {
@@ -965,4 +973,3 @@ th.numeric {
   padding-left:2px;
   text-align:right;
 }
-

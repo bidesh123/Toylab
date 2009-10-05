@@ -1,11 +1,70 @@
 <include src="rapid" plugin="hobo"/>
-
 <include src="taglibs/auto/rapid/cards"/>
 <include src="taglibs/auto/rapid/pages"/>
 <include src="taglibs/auto/rapid/forms"/>
-
 <set-theme name="clean"/>
 
+<def tag="account-nav">
+  <dev-user-changer/>
+  <do with="&current_user">
+    <ul class="navigation account-nav" param>
+      <if test="&logged_in?">
+        <li class='nav-item' param="logged-in-as"            ><a to="&current_user">Logged in as <name/></a></li>
+        <li class='nav-item' param="account"                 ><a action="account"  >Your account        </a  ></li>
+        <li class='nav-item' param="log-out"                 ><a href="&logout_url">Log                 </a></li>
+      </if>
+      <else>
+        <li class='nav-item' param="log-in"                  ><a href="&login_url" >Log in              </a></li>
+        <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up             </a></li>
+      </else>
+    </ul>
+  </do>
+</def>
+
+<def tag="page" attrs="title, full-title">
+  <% full_title ||= "#{title} : #{app_name}" %>
+  <html merge-attrs>
+    <head param>
+      <title param><%= strip_tags full_title %></title>
+      <do param="stylesheets">
+        <stylesheet name="reset, hobo-rapid"/>
+        <theme-stylesheet/>
+        <stylesheet name="application" param="app-stylesheet"/>
+      </do>
+
+      <do param="scripts">
+        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid"/>
+        <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
+        <do param="custom-scripts"/>
+        <javascript param="application-javascript" name="application"/>
+      </do>
+    </head>
+
+    <body param>
+      <set-scoped flash-rendered="&false">
+        <ajax-progress param/>
+        <header class="page-header" param>
+          <table class="header"><tr>
+            <td>
+              
+              <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
+            </td>
+            <td class="search">
+              <ul>
+                <li><account-nav if="&login_url(Hobo::User.default_user_model)" param/></li>
+                <li><live-search param if="&defined_route? :site_search"/>             </li>
+              </ul>
+            </td>
+          </tr></table>
+          <main-nav current="&title" param/>
+        </header>
+        <section with-flash-messages param="content"/>
+        <footer class="page-footer" param/>
+        <page-scripts param/>
+      </set-scoped>
+    </body>
+  </html>
+</def>
 
 <def tag="main-nav">
   <navigation class="main-nav" merge-attrs param="default">
@@ -356,8 +415,9 @@
       </td>
     </tr>
     <tr class="body">
-      <%  body_style="body-cell #{this.theme_class}" %>
-      <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:none">
+      <%  body_style = "body-cell #{this.theme_class}"
+          display_style = this.body ? "inherit" : "none"  %>
+      <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
         <if test="&this.body ">
           <editor:body                   blank-message="....." />
         </if>

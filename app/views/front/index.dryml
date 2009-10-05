@@ -23,6 +23,15 @@
   
 </page>
 
+<def tag="pitch">
+  <div class="pitch">
+    <why-toy-office />
+    <toy-office-metaphor />
+    <toy-office-uses />
+    <toy-office-how-to />
+  </div>
+</def>
+
 <def tag="home-nav">
   <div with="&current_user">
     <ul class="sub-title pink" param>Get started
@@ -89,8 +98,7 @@
   <ul param="sub-title" class="purple">Toy Office 101
     <li>
       Start by clicking the All button for an list of any publicly available
-      offices. If you are signed in you can even make your own toy office on the
-      web: just click on Add my own toy office. It will appear as card #something. Click on
+      offices.  It will appear as card #something. Click on
       it, change its name and choose the list view. It's the easiest. The list
       view lets you add items. You can add items to anything, even other items.
       You can get 80% of the benefit with just the list view and it only takes
@@ -100,13 +108,4 @@
       office cloud building. With your own web address like toyoffice.net/suite/9003 (coming soon).
     </li>
   </ul>
-</def>
-
-<def tag="pitch">
-  <div class="pitch">
-    <why-toy-office />
-    <toy-office-metaphor />
-    <toy-office-uses />
-    <toy-office-how-to />
-  </div>
 </def>
