@@ -26,16 +26,16 @@
 <def tag="pitch">
   <div class="pitch">
     <why-toy-office />
-    <toy-office-metaphor />
-    <toy-office-uses />
-    <toy-office-how-to />
+    <toy-office-metaphor if="&false"/>
+    <toy-office-uses     if="&false"/>
+    <toy-office-how-to   if="&false"/>
   </div>
 </def>
 
 <def tag="home-nav">
   <div with="&current_user">
     <ul class="sub-title pink" param>Get started
-        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click All to start, or just click <a href="/cards">here</a></li>
+        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">All</a> to start</li>
       <unless test="&logged_in?">
         <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up</a> for more privileges</li>
         <li class='nav-item' param="log-in">Or just <a href="&login_url">Log in</a> if you're already signed up</li>
@@ -46,7 +46,7 @@
 
 <def tag="why-toy-office">
   <ul param="sub-title" class="orange">
-    Why use toy office? To get your information
+    Why use toy office? To get your information:
     <li>On your own website</li>
     <li>Safe from prying eyes, viruses and computer crashes</li>
     <li>Available to you on any computer</li>

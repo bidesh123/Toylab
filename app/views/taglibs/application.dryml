@@ -2,23 +2,30 @@
 <include src="taglibs/auto/rapid/cards"/>
 <include src="taglibs/auto/rapid/pages"/>
 <include src="taglibs/auto/rapid/forms"/>
-<set-theme name="clean"/>
+<!-- <set-theme name="clean"/> -->
 
 <def tag="account-nav">
-  <dev-user-changer/>
   <do with="&current_user">
     <ul class="navigation account-nav" param>
       <if test="&logged_in?">
         <li class='nav-item' param="logged-in-as"            ><a to="&current_user">Logged in as <name/></a></li>
         <li class='nav-item' param="account"                 ><a action="account"  >Your account        </a  ></li>
-        <li class='nav-item' param="log-out"                 ><a href="&logout_url">Log                 </a></li>
+        <li class='nav-item' param="log-out"                 ><a href="&logout_url">Log out             </a></li>
       </if>
       <else>
         <li class='nav-item' param="log-in"                  ><a href="&login_url" >Log in              </a></li>
         <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up             </a></li>
       </else>
+        <li class="dev-user-changer" if="&RAILS_ENV == 'development'"><dev-user-changer/></li>
     </ul>
   </do>
+</def>
+
+<def tag="main-nav">
+  <navigation class="main-nav" merge-attrs param="default">
+    <nav-item href="#{base_url}/">Home</nav-item>
+    <nav-item with="&Card">All</nav-item>
+  </navigation>
 </def>
 
 <def tag="page" attrs="title, full-title">
@@ -44,9 +51,17 @@
       <set-scoped flash-rendered="&false">
         <ajax-progress param/>
         <header class="page-header" param>
+          <div class="top-line">
+            <main-nav current="&title" param/>
+            <account-nav if="&login_url(Hobo::User.default_user_model)" param/>
+          </div>
+          <div>
+            <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
+            <live-search param if="&defined_route? :site_search"/>
+          </div>
+<!--
           <table class="header"><tr>
             <td>
-              
               <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
             </td>
             <td class="search">
@@ -57,6 +72,8 @@
             </td>
           </tr></table>
           <main-nav current="&title" param/>
+
+-->
         </header>
         <section with-flash-messages param="content"/>
         <footer class="page-footer" param/>
@@ -64,13 +81,6 @@
       </set-scoped>
     </body>
   </html>
-</def>
-
-<def tag="main-nav">
-  <navigation class="main-nav" merge-attrs param="default">
-    <nav-item href="#{base_url}/">Home</nav-item>
-    <nav-item with="&Card">All</nav-item>
-  </navigation>
 </def>
 
 <def tag="add-column">
@@ -215,7 +225,7 @@
 
 <def tag="context">
   <div if="&this.whole || this.list || this.table" class="context">
-    <ul>Zoom out to <out whole-off /></ul>
+    <ul>Go out to <out whole-off /></ul>
   </div>
 </def>
 
@@ -227,7 +237,8 @@
   </if><else><if test="&this.table"  >
     <out         with="&this.table" />
   </if></else></else>
-  <li unless="&attributes[:whole_off]" style="display:inline;background:white">
+  <!-- <li                 unless="&attributes[:whole_off]" style="display:inline;background:white">
+    --><li class="out-tag" unless="&attributes[:whole_off]" >
     <a><%= this.reference_name %></a>
   </li>
 </def>
@@ -235,8 +246,8 @@
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
-  <% tooltip = "Zoom in on #{this.reference_name}" %>
-  <a class="zoom-in" title="&tooltip"><%= image_tag "icons/zoom.png" %></a>
+  <% tooltip = "Go see only #{this.reference_name}" %>
+  <a class="zoom-in" title="&tooltip"><%= "go" || image_tag("icons/zoom.png") %></a>
 </def>
 
 <def tag="empty-cell">

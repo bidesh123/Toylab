@@ -1,5 +1,6 @@
 .hidden {display: none;}
 
+/*
 .in-place-textfield-bhv, .in-place-textarea-bhv, .in-place-html-textarea-bhv {
 	border: 1px dotted #666;
 	padding: 0 3px; padding-right: 20px;
@@ -17,9 +18,13 @@ table.new-record textarea, table.new-record input {
 	display: inline;	
 }
 
+
+
+*/
 /**** Admin ****/
 
-.admin-banner {
+
+/*.admin-banner {
 	background: #9d0018; border-top: 2px solid #7a0013;	border-bottom: 2px solid #7a0013;
 	padding: 2px 0;
 	margin: 10px 0;
@@ -34,17 +39,22 @@ table.new-record textarea, table.new-record input {
 	float: right;
 }
 
+
+*/
 /********* everything below here came from hobo_rapid.css, needs looking at ********/
 
 /**** Default styling for Rapid ***/
 
+/*
 #ajax-progress {
-	float: right; margin: 20px;
+	float: right; margin: 2em;
 	position: fixed; display: none; z-index: 10;
 }
 
+*/
 /* Scriptaculous Autocompleter ---*/
 
+/*
 div.completions-popup {
     position:absolute;
     width:250px;
@@ -80,7 +90,9 @@ div.completions-popup ul li {
 }
 .field-list textarea, .field-list input[type=text], .field-list input[type=password] { width: 99%; margin: 0; }
 
+
 /*input[type=text].wide { width: 100%; }*/
+/*
 textarea { height: 170px; }
 textarea.wide { width: 100%; }
 textarea.tall { height: 350px; }
@@ -91,5 +103,6 @@ select.dev-user-changer { opacity: 0.3; position: absolute; top: -22px; left: 0;
 select.dev-user-changer:hover { opacity: 1; }
 
 .part-wrapper {
-    display: inline;  /* don't mess up layout when wrapping something */
+    display: inline;   */ /* don't mess up layout when wrapping something */ /*
 }
+*/

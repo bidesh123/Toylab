@@ -1,56 +1,103 @@
-.not-used-but-nice-bright-red  {background-color:#e10;}
-.not-used-violet  {background-color:#708;}
-.bright-1  {background-color:#e10;}
-.bright-2  {background-color:#b40;}
-.bright-3  {background-color:#870;}
-.bright-4  {background-color:#5a0;}
-.bright-5  {background-color:#2d0;}
-.bright-6  {background-color:#0e1;}
-.bright-7  {background-color:#0b4;}
-.bright-8  {background-color:#087;}
-.bright-9  {background-color:#05a;}
-.bright-10 {background-color:#02d;}
-.bright-11 {background-color:#10e;}
-.bright-12 {background-color:#40b;}
-.bright-13 {background-color:#708;}
-.bright-14 {background-color:#a05;}
-.bright-15 {background-color:#d02;}
+/**** Styling for navigation ****/
 
+a {
+  text-decoration:none;
+  color: #69f;
+}
 
-.appname{height:300px}
-.o         {                       color:#f9c;} /*#f9c*/
-.ff        {                       color:#fc9;} /*#fc9*/
-.fi        {                       color:#ff9;} /*#ff9*/
-.i         {                       color:#cfc;} /*#cfc*/
-.c         {                       color:#9cf;} /*#9cf*/
-.e         {                       color:#c9f;} /*#c9f*/
+select.dev-user-changer {
+    opacity:1; border:1px solid black;margin: 0;padding: 0;
+}
+
+/**** Styling for Toy Office Logo ****/
+
+.hidden {display:none;}
+.logo .toy {
+  background: transparent; color:#999;
+}
+.logo span{margin-left:inherit;}
+/* standard darker */
+.logo .o    {        color: #e69;} /*   #f9c    #e69  */
+.logo .ff   {        color: #d96;} /*   #fc9    #d96  */
+.logo .fi   {        color: #ec0;} /*   #ff9    #ec0  */
+.logo .i    {        color: #8d7;} /*   #cfc    #7d8  */
+.logo .c    {        color: #69f;} /*   #9cf    #69f  */
+.logo .e    {        color: #96f;} /*   #c9f    #96f  */
 
 /**** Generic Toy Office styling  ****/
 
-
 body {
- font-size:12px;
+   margin:.67em;
+}
+
+ul{
+    list-style:none;
+}
+
+ul.main-nav {
+    display: inline-block;
+}
+ul.account-nav, div.search {
+    float:right;
+}
+
+
+ul.main-nav {
+    text-align:left;
+}
+li.nav-item, ul.main-nav li, li.dev-user-changer, div.search {
+    margin-right:1em;
+    display:inline;
+}
+
+.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, .subtitle {
+    font-family: "Arial Black", Gadget, serif; color:#ccc;
+}
+
+a {
+  text-decoration:none;
+  color: #69f;
+}
+
+span.card-kind, div.card-body { padding-right:0em;}
+
+
+#ajax-progress {
+  background: white url(../images/spinner.gif) no-repeat 1em .8em;
+  color: #333;
+}
+#search-spinner {
+    opacity:0.6;padding:2px;
+}
+
+div.top-line {
+    padding-bottom:.5em;
+}
+
+/*
+body {
+ font-size: 1em;
 }
 
 body, p, ol, ul, input, textarea, .input {
   font-family: serif;
   background-color: transparent; color: black;
-  padding:0;
-  margin:1px;
+  padding: 0;
+  margin: 1px;
 }
 
 body {
-  background-color:transparent; padding:20px;
+  background-color:transparent; padding: 2em;
 }
 
 div {
-  background-color:transparent; color: black; padding:0;
+  background-color:transparent; color: black; padding: 0;
 }
 
 div.tool {
   font-family:"Arial Black",Gadget,sans-serif;
   color:#666;
-  font-size:11px;
+  font-size: 1.1em;
 }
 
 
@@ -63,7 +110,7 @@ h, th, h input, th input {
   background-color: aqua;
   text-align: left;
   padding: 0;
-  font-size: 8px;
+  font-size: .8em;
   color:#666;
 }
 
@@ -74,45 +121,56 @@ h1, div {
 
 h1.title {
   font-family:"Arial Black",Gadget,sans-serif;
-  margin:0;
-  margin-top: 24px;
+  margin: 0;
+  margin-top: 2.4em;
   padding: 0;
-  font-size: 32px;
-  color: #666;
+  font-size: 3.2em;
+  color:#666;
   background-color:#ccc;
 }
 
 ul.sub-title {
   font-family:"Arial Black",Gadget,sans-serif;
-  font-size: 16px;
-  background-color: #666;
+  font-size: 1.6em;
+  background-color: white;
   color: white;
+  padding-top:3px;
 }
 
 ul.sub-title li {
-  font-size: 11px; background-color:white; color:#666;
+  font-size: .7em; background-color:white; color:#666;padding:0;
+}
+
+ul.account-nav {
+    float:right;
 }
 
 .front-page .welcome-message{
-    padding: 12px 0 0 0;
-    border:0;
+    padding: 1.2em 0 0 0;
+    border: 0;
 }
 
 .page-header .navigation{
-    padding: 24px 0 0 0;
+    padding: 2.4em 0 0 0;
 }
 
 ul.account-nav {
      display:inline-block;
 }
 
-ul.pink      { color:#f9c;}
-ul.orange    { color:#fc9;}
-ul.yellow    { color:#ff9;}
-ul.green     { color:#9fc;}
-ul.blue      { color:#9cf;}
-ul.purple    { color:#c9f;}
-    
+ul.pink      { color:#e69;font-size:3em}
+ul.orange    { color:#d96;font-size:3em;}
+ul.yellow    { color:#ec0;font-size:3em;}
+ul.green     { color:#7d8;font-size:3em;}
+ul.blue      { color:#69f;font-size:3em;}
+ul.purple    { color:#96f;font-size:3em;}
+
+
+
+
+
+
+
 ul.controls {
      display:inline-block;
      list-style-type:none;
@@ -124,12 +182,12 @@ ul.controls, ul.control li {
 
 ul.cards {
     list-style-type: none;
-    margin:0; padding:0;
-    margin-top: 12px;
+    margin: 0; padding: 0;
+    margin-top: 1.2em;
 }
 
 ul.cards h4 {
-    margin:0;padding:0;
+    margin: 0;padding: 0;
 }
 
 div.context ul, div.views li {
@@ -140,14 +198,14 @@ div.context li, div.views li {
   font-family:"Arial Black",Gadget,sans-serif;
   text-align: left;
   padding: 0;
-  font-size: 12px;
+  font-size: 1.2em;
   list-style-type:none;
   background-color:#9cf;
   color:#666;
 }
 
 div.context li a, div.views li a {
-  padding: 0 20px ;
+  padding: 0 2em ;
   font-weight:normal;
   list-style-type:none;
   background-color:#9cf;
@@ -158,20 +216,20 @@ div.views li.advanced a {
 }
 
 div.views li.not-enabled a {
-  border: 2px solid #666;  color:#666;
+  border: .2em solid #666;  color:#666;
 }
 
 .page-header div.search {
   float: none;
-  padding: 0 30px 8px 15px;
+  padding: 0 3em .8em 1.5em;
  }
 
  div.views li.not-enabled.advanced a {
-  border: 2px solid #666;  color:#c63;
+  border: .2em solid #666;  color:#c63;
 }
 
 .page-header h1 {
-	margin: 0; padding: 0 0 10px;
+	margin: 0; padding: 0 0 1em;
 }
 .numeric, .aspect-numeric-body-cell, .sort-of-numeric {
   text-align: right;
@@ -183,13 +241,18 @@ div.views li.not-enabled a {
 
 
 .kind-cell .tiny-gray, .body-cell .tiny-gray {
-  line-height: 16px;
-  font-size: 16px;
+  line-height: 1.6em;
+  font-size: 1.6em;
   color: green;
 }
 
+*/
+
+
+
 /**** Styling for navigation ****/
 
+/*
 .navigation, .search, .editor {
 }
 
@@ -209,13 +272,15 @@ a:hover   {              color: #96c; }
 a:active  {              color: #666; }
 
 a.go, a.zoom-in {
-  background-color:transparent;color: #666;padding:0;padding-left:1px;padding-right:3px;
+  background-color:transparent;color: #666;padding: 0;padding-left: 1px;padding-right:3px;
   font-family:"Arial Black",Gadget,sans-serif;
-  font-size: 9px;
-  margin:0;
+  font-size: .9em;
+  margin: 0;
+  color:#f0f7ff;
 }
 
 a.go:hover, a.zoom-in:hover {
+  background-color: #9cf;
   color: white;
 }
 
@@ -230,7 +295,7 @@ a.go:hover, a.zoom-in:hover {
 span.navLink {
                          color: #666;
   font-family:"Arial Black",Gadget,sans-serif;
-  font-size: 9px;
+  font-size: .9em;
 }
 
 span.navLink a {
@@ -244,15 +309,17 @@ span.navLink a:active  { color: #f0f; }
 
 .toy-nav {
   font-family:"Arial Black",Gadget,sans-serif;
-  font-size: 9px;
+  font-size: .9em;
 }
 
 .add-dependent:hover {
   background-color: red;
 }
 
+*/
 /**** Styling for inline elements ****/
 
+/*
 h {
   background-color: blue; color:#11f;
 }
@@ -263,18 +330,20 @@ h1 {
 
 img { border : 0; }
 
+*/
+
 /**** Styling for block elements  ****/
 
-div {
-  /*background-color: #1ff;*/
+/*div {
+  */ /*background-color: #1ff;*/ /*
 }
 
 div.card-body {
-  font-size: 12px;
+  font-size: 1.2em;
 }
 
 div.content-body {
-  margin-top:12px;
+  margin-top: 1.2em;
 }
 
 p {
@@ -282,24 +351,27 @@ p {
 
 pre {
   background-color: purple;
-  padding: 10px;
-  font-size: 11px;
+  padding: 1em;
+  font-size: 1.1em;
 }
+
+*/
 
 /**** Styling for table elements  ****/
 
+/*
 table {
   background-color: transparent;
-  border-spacing:0;
+  border-spacing: 0;
 }
 
 table.aspects-table {
-    background-color:transparent; border:0 solid black;margin:auto;padding:0;
+    background-color:transparent; border: 0 solid black;margin:auto;padding: 0;
 }
 
 table.bottom:controls {
-  font-size:9px;
-  border-spacing:0;
+  font-size: .9em;
+  border-spacing: 0;
 }
 
 table.card {
@@ -309,17 +381,17 @@ table.card {
 table.core{
   border:       0 solid #999;
   border-right: 0 solid #999;
-  border-bottom:0 solid #999;
+  border-bottom: 0 solid #999;
   margin:       0;
   border-spacing:     0;
-  height:0;
+  height: 0;
 
 }
 
 table.core-controls{
   border:       0 solid #999;
   border-right: 0 solid #999;
-  border-bottom:0 solid #999;
+  border-bottom: 0 solid #999;
   margin:       0;
   background-color:orange;
   border-spacing:     0;
@@ -331,18 +403,18 @@ td.aspect-cell {
 }
 
 table.list-rows {
-    background-color:transparent;width:100%;
+    background-color:transparent;width: 100%;
 }
 
 table.pair-head {
-  width:100%;
+  width: 100%;
 }
 
 table.header {
-  width:100%; margin-top:45px;
+  width: 100%; margin-top: 4.5em;
 }
 
-tr { background-color:transparent; margin:0; padding:0;
+tr { background-color:transparent; margin: 0; padding: 0;
 }
 
 tr.aspects-row {
@@ -358,7 +430,7 @@ tr.self-item-row {
 }
 
 tr.list-row {
-  background-color:transparent; border:20px solid aqua;
+  background-color:transparent; border: 2em solid aqua;
 }
 
 tr.item-row {
@@ -369,7 +441,7 @@ tr.core-main-row{
 }
 
 tr.core-controls {
-    margin:0;padding:0;height:16px;
+    margin: 0;padding: 0;height: 1.6em;
 }
 
 table.core th {
@@ -388,23 +460,23 @@ th {
 }
 
 table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card td.body-cell {
-  font-size: 24px; padding:4px;
+  font-size: 2.4em; padding: .4em;
   line-height: 100%;
 }
 
 
 table.first-card th.kind-cell, table.first-card td.name-cell, table.first-card td.body-cell {
-  font-size: 18px; padding:4px;
+  font-size: 1.8em; padding: .4em;
   line-height: 100%;
 }
 
 table.first-card th.kind-cell .tiny-gray, table.first-card td.body-cell .tiny-gray {
-  font-size: 6px; padding:0;
-  line-height: 6px;
+  font-size: .6em; padding: 0;
+  line-height: .6em;
 }
 
 table.inner      th.kind-cell, table.inner      td.name-cell, table.inner      td.body-cell {
-  font-size: 12px; padding:0;
+  font-size: 1.2em; padding: 0;
   line-height: 100%;
 }
 
@@ -413,7 +485,7 @@ th.empty-title-cell {
 }
 
 th.header-pair-name {
-  width:62%;
+  width: 62%;
   color:#333;
 }
 
@@ -426,11 +498,11 @@ td.add-aspect {
 }
 
 td.add-item {
-  width:30px;
+  width: 3em;
 }
 
 td.aspect-cell {
-  background-color:transparent;border-top:14px solid #ccc;padding-top: 9px;
+  background-color:transparent;border-top: 1.4em solid #ccc;padding-top: .9em;
 }
 
 td.aspects-table {
@@ -439,15 +511,15 @@ td.aspects-table {
 
 td.body-cell {
   background-color:#eee;
-  font-size:14px;
+  font-size: 1.4em;
 }
 
 card.inner td.body-cell {
-  font-size:12px;
+  font-size: 1.2em;
 }
 
 td.bottom-controls {
-  height:16px;
+  height: 1.6em;
   background-color:#9cf;
   padding: 0;
   margin: 0;
@@ -458,35 +530,35 @@ td.go {
 }
 
 td .card-body {
-  background-color:#eee;border:0;
+  background-color:#eee;border: 0;
 }
 
 .core-main-row td{
-  background-color: transparent;border:0 solid blue;padding-right:3px;
+  background-color: transparent;border: 0 solid blue;padding-right:3px;
 }
 
 td.core {
   vertical-align:top;
-  border-right:8px solid transparent;
+  border-right: .8em solid transparent;
 }
 
 
 td.core-controls{
   background-color: yellow;
-  border:0 solid orange;padding:0;margin:0;width:auto;text-align:center;
+  border: 0 solid orange;padding: 0;margin: 0;width:auto;text-align:center;
 }
 
 td.core-add-aspect {
-  background-color:teal;border:5px solid green;width:auto;padding:1px;
+  background-color:teal;border: .5em solid green;width:auto;padding: 1px;
 }
 
 td.core-add-item{
-  background-color: yellow;border:0 solid yellow;padding:0;margin:0;
+  background-color: yellow;border: 0 solid yellow;padding: 0;margin: 0;
 
 }
 
 td.core-add-item a.add-item{
-  background-color: green;border:0 solid yellow;padding:0;margin:0;text-align:center;
+  background-color: green;border: 0 solid yellow;padding: 0;margin: 0;text-align:center;
 
 }
 
@@ -496,37 +568,37 @@ td.core-trash{
 }
 
 .card td.core-trash {
-  border:0 solid yellow;padding:0;margin:0
+  border: 0 solid yellow;padding: 0;margin: 0
 }
 
 td.core-trash form{
-  border:0 solid red;padding:0;margin:0;
+  border: 0 solid red;padding: 0;margin: 0;
 
 }
 
 td.core-trash form div{
-  border:0 solid purple;padding:0;margin:0;
+  border: 0 solid purple;padding: 0;margin: 0;
 
 }
 
 td.core-trash form div input{
-  border:0 solid purple;padding:0;margin:0;
+  border: 0 solid purple;padding: 0;margin: 0;
   font-family:"Arial Black",Gadget,sans-serif;
   color:#666;
     }
 
 
 .card td.core-add-aspect {
-  background-color: #9cf;border:0 solid #630; vertical-align:middle;
+  background-color: #9cf;border: 0 solid #630; vertical-align:middle;
 }
 
 .card td.core-add-item {
-  background-color: #9cf;border:0 solid #630;
+  background-color: #9cf;border: 0 solid #630;
 }
 
 
 td.go {
-  background-color: #9cf;vertical-align:bottom;padding:0;  height:1px; width:20px; text-align:center;
+  background-color: #9cf;vertical-align:bottom;padding: 0;  height: 1px; width: 2em; text-align:center;
 
 }
 
@@ -541,9 +613,9 @@ table.inner td{
 
 td.item-cell {
   background-color:transparent;
-  border-left:16px solid #ccc;
-  padding-left:10px;
-  padding-top:10px;
+  border-left: 1.6em solid #ccc;
+  padding-left: 1em;
+  padding-top: 1em;
 }
 
 td.item-cell.pink {
@@ -551,7 +623,7 @@ td.item-cell.pink {
 }
 
 table.list td.item-cell {
-  padding-top:0;
+  padding-top: 0;
 }
 
 td.list-cell {
@@ -573,12 +645,12 @@ td.transparent {
 
 td.right-border-cell,
 td.bottom-right-border-cell {
-  border-right: 8px solid white;
+  border-right: .8em solid white;
 }
 
 td.bottom-border-cell,
 td.bottom-right-border-cell {
-  border-bottom: 8px solid white;
+  border-bottom: .8em solid white;
 }
 
 
@@ -588,13 +660,17 @@ tr.self-and-aspects-row {
 
 
 .card  {
-  border:0 solid green;
+  border: 0 solid green;
 }
 
+*/
+
 /**** Styling for input elements  ****/
+/*
+
 form {
-    padding-top:0;
-    padding:0;
+    padding-top: 0;
+    padding: 0;
 }
 
 form.button_to
@@ -603,31 +679,31 @@ submit {
 }
 
 form.card {
-  margin:0;
+  margin: 0;
 }
 
 form.add-aspect {
-  background-color:#9cf;margin:0;padding:0;border:0 solid red;
+  background-color:#9cf;margin: 0;padding: 0;border: 0 solid red;
 }
 
 form.core-add-item {
-  background-color:fuchsia;margin:0;padding:0;border:0 solid green;
+  background-color:fuchsia;margin: 0;padding: 0;border: 0 solid green;
 }
 
 form.core-trash {
-  background-color:red;margin:0;padding:0;border:0 solid yellow;
+  background-color:red;margin: 0;padding: 0;border: 0 solid yellow;
 }
 
 form.erase {
-    padding:0;margin:0;
+    padding: 0;margin: 0;
 }
 
 td.delete-button form.button-to{
-    margin-bottom:0;
+    margin-bottom: 0;
 }
 
 tr.controls td {
-   padding-right:8px;
+   padding-right: .8em;
 }
 
 input, textarea, .input {
@@ -635,12 +711,12 @@ input, textarea, .input {
 }
 
 input {
-  background-color: transparent; color:black;border:2px solid white;
+  background-color: transparent; color:black;border: .2em solid white;
 }
 
 .card input.delete-button {
   color:#666;
-  border:none;margin:0;padding:1px;
+  border:none;margin: 0;padding: 1px;
 }
 
 input.delete-button:hover {
@@ -648,29 +724,29 @@ input.delete-button:hover {
 }
 
 input.add-aspect, input.button.add-item, input.delete-button {
-  background-color:#9cf;margin:0;padding:1px;
+  background-color:#9cf;margin: 0;padding: 1px;
   font-family:"Arial Black",Gadget,sans-serif;
-  font-size: 11px;
+  font-size: 1.1em;
 }
 
 input.add-aspect {
-    padding-bottom:5px;padding-top:3px;border:0 solid red;
+    padding-bottom: .5em;padding-top:3px;border: 0 solid red;
 }
 
 input.add-item {
-    padding-left:1px;padding-right:3px;border:0 solid red;
+    padding-left: 1px;padding-right: 3px;border: 0 solid red;
 }
 
 input.erase {
-  font-size: 8px;
+  font-size: .8em;
   font-family:"Arial Black",Gadget,sans-serif;
-  padding:0;
-  margin:0;
+  padding: 0;
+  margin: 0;
 }
 
 input.button, a.zoom-in {
-    line-height: 11px !important;
-    font-size: 11px !important;
+    line-height: 1.1em !important;
+    font-size: 1.1em !important;
     padding: 0;
     margin: 0;
 }
@@ -680,7 +756,7 @@ h input, th input {
 }
 
 textarea {
-  background-color:#eee;border:0;
+  background-color:#eee;border: 0;
   color:#222;
 }
 
@@ -701,27 +777,30 @@ tr.core-main-row.main-row th .editor {
   color:blue;
 }
 
+*/
+
 /**** Styling for validation  ****/
 
+/*
 .fieldWithErrors {
-  padding: 2px;
+  padding: .2em;
   background-color: purple;
   display: table;
 }
 #errorExplanation {
-  width: 400px;
-  border: 2px solid red;
-  padding: 7px;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  width: 40em;
+  border: .2em solid red;
+  padding: .7em;
+  padding-bottom: 1.2em;
+  margin-bottom: 2em;
   background-color: #f0f0f0;
 }
 #errorExplanation h2 {
   text-align: left;
   font-weight: bold;
-  padding: 5px 5px 5px 15px;
-  font-size: 12px;
-  margin: -7px;
+  padding: .5em .5em .5em 1.5em;
+  font-size: 1.2em;
+  margin: -.7em;
   background-color: #c00;
   color: white;
 }
@@ -729,41 +808,26 @@ tr.core-main-row.main-row th .editor {
 #errorExplanation p {
   color: #333;
   margin-bottom: 0;
-  padding: 5px;
+  padding: .5em;
 }
 
 #errorExplanation ul li {
-  font-size: 12px;
+  font-size: 1.2em;
   list-style: square;
 }
 
-/**** Styling for Toy Office Logo ****/
-
-.logo {
-  background-color: purple;
-  font-family:"Arial Black",Gadget,sans-serif;
-  font-size: 32px;
-  font-weight: 100;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.logo .toy {
-  background-color:#ccc; color: #666  ;
-}
-
-.logo .office {
-  background-color: #666; color: purple ;
-  }
+*/
 
 /**** Styling for UI  ****/
 
+/*
+
 div.uploadStatus {
-  margin: 5px;
+  margin: .5em;
 }
 
 div.progressBar {
-  margin: 5px;
+  margin: .5em;
 }
 
 div.progressBar div.border {
@@ -774,14 +838,17 @@ div.progressBar div.border {
 
 div.progressBar div.background {
   background-color: #0f0;
-  height: 18px;
+  height: 1.8em;
   width: 0%;
 }
 
+*/
+
 /**** Styling for toy content  ****/
 
+/*
 .cell, .aspect-name-cell, .aspect-body-cell {
-  padding-right: 8px;
+  padding-right: .8em;
 }
 
 .aspect-kind-cell {
@@ -792,15 +859,15 @@ div.progressBar div.background {
   text-align: left; background-color: white;
         border-top:    0 solid #eee;
         border-left:   1px solid #eee;
-        border-right:  3px solid #eee;
+        border-right: 3px solid #eee;
         border-bottom: 0 solid #eee;
 }
 
 .aspect-name-cell .first {
   text-align: left; background-color: blue;
-        border-top:    8px solid #eee;
+        border-top:    .8em solid #eee;
         border-left:   1px solid #eee;
-        border-right:  3px solid #eee;
+        border-right: 3px solid #eee;
         border-bottom: 0 solid #eee;
 }
 
@@ -808,15 +875,19 @@ div.progressBar div.background {
   text-align: left; background-color : #eee;
         border-top:    0 solid #eee;
         border-left:   1px solid #eee;
-        border-right:  3px solid #eee;
+        border-right: 3px solid #eee;
         border-bottom: 3px solid #eee;
 }
 
+*/
+
 /**** Other styling ****/
 
+/*
+
 td.debug {
-  padding      : 4px;
-  padding-right: 8px;
+  padding      : .4em;
+  padding-right: .8em;
 }
 
 .show-page .content-header {border-bottom: 0 dotted #888;}
@@ -834,13 +905,9 @@ input[type="submit"]:hover{color:white;}
 div.page-header {
     border-top: 0 solid yellow; background-color:transparent; margin: 0; padding: 0;
 }
-select.dev-user-changer {
-    margin:0;padding:0;background-color:transparent;
-}
-
 .new-link form.new input.submit-button {
-    border:0;
-    padding: 2px;
+    border: 0;
+    padding: .2em;
 }
 
 div.card-body {
@@ -848,29 +915,29 @@ div.card-body {
 }
 
 div.auto_complete {
-  width: 350px;
+  width: 35em;
   background: #fff;
 }
 div.auto_complete ul {
-  border:1px solid #888;
-  margin:0;
-  padding:0;
-  width:100%;
+  border: 1px solid #888;
+  margin: 0;
+  padding: 0;
+  width: 100%;
   list-style-type:none;
 }
 div.auto_complete ul li {
-  margin:0;
-  padding:3px;
+  margin: 0;
+  padding: 3px;
 }
 div.auto_complete ul li.selected {
   background-color: #ffb;
 }
 div.auto_complete ul strong.highlight {
   color: #800;
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 }
-
+*/
 /*
 .kind-cell.theme-pink   {color:#f9c;}
 .kind-cell.theme-orange {color:#fc9;}
@@ -886,6 +953,7 @@ th.kind-cell.theme-purple {color:#c9f;}
 */
 
 
+/*
 td.item-cell.theme-pink  , td.aspect-cell.theme-pink   {background-color:#ffcce6;}
 td.item-cell.theme-orange, td.aspect-cell.theme-orange {background-color:#fda;}
 td.item-cell.theme-yellow, td.aspect-cell.theme-yellow {background-color:#ff9;}
@@ -917,7 +985,7 @@ td.script-cell div {
 }
 
 .drop-hover {
-  border: 4px solid red;
+  border: .4em solid red;
 }
 
 li.disabled a {
@@ -925,7 +993,7 @@ li.disabled a {
 }
 
 li.view-link {
-  padding:0;
+  padding: 0;
 }
 
 div.table-header span.editor{
@@ -936,20 +1004,20 @@ div.table-header span.editor{
 div.table-header span.editor.card-name,
 div.table-header span.editor.card-name input,
 div.table-header{
-  font-size: 36px;
+  font-size: 3.6em;
   color: #666;
 }
 
 div.table-header span.editor.tiny-gray,
 div.table-header span.editor.tiny-gray input  {
-  line-height: 6px;
-  font-size: 6px;
+  line-height: .6em;
+  font-size: .6em;
   color: #999;
 }
 
 div.table-header span.editor.tiny-gray.table-title,
 div.table-header span.editor.tiny-gray.table-title input{
-  font-size: 36px;
+  font-size: 3.6em;
   color: #666;
 }
 
@@ -969,7 +1037,14 @@ div.table-header span.editor.kind  {
 }
 
 th.numeric {
-  padding-right:3px;
-  padding-left:2px;
+  padding-right: 3px;
+  padding-left: .2em;
   text-align:right;
 }
+
+.page-header div.search label {
+	padding-right: 1em;
+	font: bold .9em Arial, sans-serif; text-transform: uppercase; letter-spacing: .1em;
+}
+*/
+

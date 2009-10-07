@@ -1,7 +1,6 @@
 /******** Reset default browser CSS styles. *********/
 /* Based on Blueprint */
 
-/*
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite,
@@ -10,7 +9,7 @@ small, strike, sub, sup, tt, var,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
+	margin: 0 0 0 0;
 	padding: 0;
 	border: 0;
 	outline: 0;
@@ -18,7 +17,6 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	font-style: inherit;
 	font-family: inherit;
 }
-
 code {
 	margin: 0;
 	padding: 0;
@@ -45,20 +43,18 @@ strong {
 	font-style: inherit;
 	font-family: inherit;
 }
-*/
 /* Remember to define focus styles! */
 :focus {
 	outline: 0;
+        font-style:italic;
 }
-/*
 body {
 	line-height: 1;
 	color: black;
 	background: white;
 }
-*/
 /* Tables still need 'cellspacing="0"' in the markup. */
-/*table {
+table {
 	border-collapse: separate;
 	border-spacing: 0;
 }
@@ -67,7 +63,6 @@ caption, th, td {
 	font-weight: normal;
 }
 
-*/
 /* Remove possible quote marks (") from <q>, <blockquote>. */
 blockquote:before, blockquote:after,
 q:before, q:after {

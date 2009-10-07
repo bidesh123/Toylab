@@ -52,7 +52,7 @@
 <def tag="card" for="Card">
   <div param="table-header">
     <p if="&false" class="kind-editor" ><kind-editor /></p>
-    <p class="table-title"><editor:name blank-message="name your table" /></p>
+    <p class="table-title"><editor:kind blank-message="&nbsp;" /><editor:name blank-message="name your table" /></p>
   </div>
   <div param="cells">
     <cells merge-attrs />

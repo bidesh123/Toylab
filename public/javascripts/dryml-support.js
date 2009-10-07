@@ -71,9 +71,9 @@ var Dryml = {
         Dryml.removeMenu()
 
         var style = $style({id: "dryml-menu-style"},
-                           "#dryml-src-menu         { position: fixed; margin: 10px; padding: 10px; background: black; color: white; border: 1px solid white; }\n",
+                           "#dryml-src-menu         { position: fixed; margin: 1em; padding: 1em; background: black; color: white; border: 1px solid white; }\n",
                            "#dryml-src-menu a       { color: white; text-decoration: none; border: none; }\n",
-                           "#dryml-src-menu td      { padding: 2px 7px; }\n",
+                           "#dryml-src-menu td      { padding: 2px .7em; }\n",
                            "#dryml-src-menu a:hover { background: black; color: white; text-decoration: none; border: none; }\n")
         $$("head")[0].appendChild(style)
 
@@ -82,14 +82,14 @@ var Dryml = {
         var closer = $a({href:"#"}, "[close]")
         closer.onclick = Dryml.removeMenu
         Dryml.menu = $div({id:    "dryml-src-menu",
-                           style: "position: fixed; margin: 10px; padding: 10px; background: black; color: white; border: 1px solid white;"
+                           style: "position: fixed; margin: 1em; padding: 1em; background: black; color: white; border: 1px solid white;"
                           },
                           closer,
                           $table(items))
 
         document.body.appendChild(Dryml.menu)
-        Dryml.menu.style.top  = "20px"//Dryml.event.clientY + "px"
-        Dryml.menu.style.left = "20px"//Dryml.event.clientX + "px"
+        Dryml.menu.style.top  = "2em"//Dryml.event.clientY + "px"
+        Dryml.menu.style.left = "2em"//Dryml.event.clientX + "px"
     },
 
     editSourceFile: function(path, line) {

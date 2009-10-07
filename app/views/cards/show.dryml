@@ -262,7 +262,7 @@
 
 
 <def tag="development-stuff">
-  <div style="padding: 150px 0px 0px"><h3>For Development Only</h3></div>
+  <div style="padding: 1em 0 0"><h3>For Development Only</h3></div>
   <div>
     Aspect of : <a field="whole" /><belongs-to-editor field="whole"/>
   </div>

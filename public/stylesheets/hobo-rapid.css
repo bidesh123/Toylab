@@ -1,5 +1,6 @@
 /**** Default styling for Rapid ****/
 
+/*
 #ajax_progress {
     color: gray;
     float: right;
@@ -14,7 +15,10 @@
 #ajax_progress div {
     margin: 10px;
     padding: 3px;
+*/
+
 /*    padding-top: -15px;*/
+/*
 }
 
 #ajax_progress img {
@@ -24,6 +28,8 @@
 
 
 /* Scriptaculous Autocompleter ---*/
+
+/*
 
 div.completions_popup {
     position:absolute;
@@ -57,16 +63,22 @@ div.completions_popup ul li {
 .field_list input[type=text] { width: 100%; }
 .field_list input, .field_list textarea { margin: -2px 0 0 0; }
 .field_list textarea { width: 100%; margin: 0; }
+*/
+
 /*
 td span.in_place_textfield_bhv, td span.in_place_textarea_bhv, td span.in_place_html_textarea_bhv {
     display: block; border: 1px solid #ddd;
     padding: 4px; background: #fafafa;
 }
 */
+/*
 table.login-table, table.login-table td {border: none;}
 .login_table td.field_label { vertical-align: middle; }
+*/
+
 /*table.login-table input {font-size: 16px; color: black;}*/
 
+/*
 input[type=text].wide { width: 100%; }
 textarea { height: 200px; }
 textarea.wide { width: 100%; }
@@ -74,7 +86,10 @@ textarea.tall { height: 350px; }
 
 .field_list input.percentage {width: 25px; display: inline; margin-right: 5px; padding: 1px 3px;}
 
+ */
+
 /* rails error message */
+/*
 .error_messages {
 	font-family: "Lucida Grande", arial, sans-serif;
 	background: #9d0018;
@@ -91,3 +106,5 @@ textarea.tall { height: 350px; }
 .error_messages li {
 	margin-left: 20px;
 }
+*/
+
