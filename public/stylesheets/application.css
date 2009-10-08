@@ -104,7 +104,7 @@ body.show-page a.zoom-in {
   color:white;
 }
 
-th, td { padding-right:.67em;}
+th, td { padding-right:.67em; padding-bottom:.0833em;padding-top:.0833em;}
 
 span.card-kind, div.card-body { padding-right:0em;}
 
