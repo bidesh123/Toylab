@@ -57,7 +57,7 @@
           </div>
           <div>
             <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
-            <live-search param if="&defined_route? :site_search"/>
+            <!-- <live-search param if="&defined_route? :site_search"/>-->
           </div>
 <!--
           <table class="header"><tr>
@@ -71,7 +71,6 @@
               </ul>
             </td>
           </tr></table>
-          <main-nav current="&title" param/>
 
 -->
         </header>
@@ -111,6 +110,7 @@
      rows[1][0] = rows[0][0]
      rows.delete_at 0
    end
+   first_time = true
 %>
   <tr repeat="&rows">
     <empty-cell />
@@ -121,13 +121,14 @@
         <%= this %>
       </else>
     </th>
-    <td><add-column with="&table" /></td>
+    <td><add-column if="&first_time" with="&table" /></td>
+    <% first_time = false  %>
   </tr>
 </def>
 
 <def tag="kind-editor">
-  <if test="&this.kind "><editor:kind                   blank-message="....." /></if>
-  <else                 ><editor:kind class="tiny-gray" blank-message="....." /></else>
+  <if test="&this.kind "><editor:kind                   blank-message="." /></if>
+  <else                 ><editor:kind class="tiny-gray" blank-message="." /></else>
 </def>
 
 <def tag="toy-show" attrs="shallow">
@@ -225,7 +226,7 @@
 
 <def tag="context">
   <div if="&this.whole || this.list || this.table" class="context">
-    <ul>Go out to <out whole-off /></ul>
+    <ul>Context <out whole-off /></ul>
   </div>
 </def>
 
@@ -319,11 +320,11 @@
 
 <def tag="views">
   <div class="views">
-    <ul>View as &nbsp;
-    <table-view /> &nbsp;
-    <list-view />
-    <report-view /> &nbsp;
-    <tree-view />&nbsp;
+    <ul>View as
+      <table-view />
+      <list-view />
+      <report-view />
+      <tree-view />
     </ul>
   </div>
 </def>
@@ -429,11 +430,11 @@
       <%  body_style = "body-cell #{this.theme_class}"
           display_style = this.body ? "inherit" : "none"  %>
       <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
-        <if test="&this.body ">
-          <editor:body                   blank-message="....." />
+        <if test="&true || this.body ">
+          <editor:body                   blank-message="A" />
         </if>
         <else>
-          <editor:body class="tiny-gray" blank-message="....." />
+          <editor:body class="tiny-gray" blank-message="A" />
         </else>
       </td>
     </tr>

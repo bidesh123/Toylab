@@ -1,15 +1,34 @@
 /**** Styling for navigation ****/
 
+.tiny-gray {
+  font-size: 50%; color:#ccc;
+}
+
+.first-card {
+  font-size:4em;
+}
+
+.inner {
+    font-size:61.8%;
+}
+
+
 a {
   text-decoration:none;
   color: #69f;
 }
 
+div {
+}
+
+
 select.dev-user-changer {
-    opacity:1; border:1px solid black;margin: 0;padding: 0;
+    opacity: 1; border:1px solid black;margin: 0;padding: 0;
 }
 
 /**** Styling for Toy Office Logo ****/
+
+.app-name{margin-bottom:.67em;}
 
 .hidden {display:none;}
 .logo .toy {
@@ -26,6 +45,14 @@ select.dev-user-changer {
 
 /**** Generic Toy Office styling  ****/
 
+li.not-enabled a {
+  border: .2em solid #999;  color:#999;
+}
+
+body, ul.sub-title li {
+   font-family: sans-serif;
+}
+
 body {
    margin:.67em;
 }
@@ -34,30 +61,46 @@ ul{
     list-style:none;
 }
 
-ul.main-nav {
+ul.main-nav, div.context.ul {
     display: inline-block;
 }
 ul.account-nav, div.search {
     float:right;
 }
 
-
 ul.main-nav {
-    text-align:left;
 }
-li.nav-item, ul.main-nav li, li.dev-user-changer, div.search {
-    margin-right:1em;
+
+li.nav-item, ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.context li {
     display:inline;
 }
 
-.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, .subtitle {
+li.nav-item, ul.main-nav li, li.dev-user-changer, div.search {
+    margin-right: 1em;
+}
+
+div.views li, div.context li {
+    margin-left: 1em;
+}
+
+.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-title {
     font-family: "Arial Black", Gadget, serif; color:#ccc;
 }
 
-a {
+.account-nav a, th {
+    font-size:1em;
+}
+
+a, body.show-page a.zoom-in:hover {
   text-decoration:none;
   color: #69f;
 }
+
+body.show-page a.zoom-in {
+  color:white;
+}
+
+th, td { padding-right:.67em;}
 
 span.card-kind, div.card-body { padding-right:0em;}
 
@@ -70,9 +113,21 @@ span.card-kind, div.card-body { padding-right:0em;}
     opacity:0.6;padding:2px;
 }
 
-div.top-line {
-    padding-bottom:.5em;
+div.top-line, h1, h1.title {
+    margin-bottom:.67em;
 }
+
+tr.self-and-aspects-row {
+  font-size: .83em;
+  background-color:white;
+}
+
+.body
+
+ul.sub-title {
+  padding-top:3px;
+}
+
 
 /*
 body {
