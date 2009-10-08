@@ -71,7 +71,7 @@ ul.account-nav, div.search {
 ul.main-nav {
 }
 
-li.nav-item, ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.context li {
+ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.context li, ul.account-nav li {
     display:inline;
 }
 
@@ -84,7 +84,11 @@ div.views li, div.context li {
 }
 
 .hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-title {
-    font-family: "Arial Black", Gadget, serif; color:#ccc;
+    font-family: "Arial Black", Gadget, serif;
+}
+
+h1, h2, h3, h4, h5, h6, ul.sub-title {
+    color:#999;
 }
 
 .account-nav a, th {
@@ -125,7 +129,12 @@ tr.self-and-aspects-row {
 .body
 
 ul.sub-title {
-  padding-top:3px;
+  border-top:3.33em solid red; display:block;
+}
+
+ul.sub-title li{
+  display:block;
+  text-indent:.67em
 }
 
 

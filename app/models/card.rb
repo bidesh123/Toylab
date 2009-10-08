@@ -35,7 +35,7 @@ class Card < ActiveRecord::Base
 # sortable                         :scope => [:list_id, whole_id, table_id]
 
   named_scope :top_level        ,
-     :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil]
+     :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil], :order => "created_at DESC"
 #  named_scope :similar_instances, lambda {
 #    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, current_user.id]}
 #  }

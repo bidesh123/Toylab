@@ -423,7 +423,7 @@
     <tr class="name">
       <%  name_style="name-cell #{this.theme_class}" %>
       <td class="#{name_style}">
-        <editor:name blank-message="....."/>
+        <editor:name blank-message="&this.reference"/>
       </td>
     </tr>
     <tr class="body">

@@ -13,7 +13,7 @@
       <home-nav />
       <pitch />
 <%    c = Card.new(:name => current_user.name) %>
-      <form with="&c">
+      <form with="&c" if="&false" class="witch">
         <submit label="Create a new office suite" />
 <%      redirect = url_for(:controller => :cards, :action => :list, :id => c.id) %>
         <after-submit uri="&redirect" />
