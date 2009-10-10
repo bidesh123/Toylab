@@ -3,7 +3,7 @@
     <body: class="index-page card" param/>
     <content: param>
       <header param="content-header">
-        <h1 param="title">Public toy offices</h1>
+        <h1 param="title">Latest toy office suites</h1>
       </header>
       <section param="content-body">
         <span param="new-link"><a action="new" to="&model"/></span>  <!-- modified fg -->
@@ -19,7 +19,12 @@
   <count:>You have <count /> web apps</count:>
     <top-page-nav:>where is my page nav?</top-page-nav:>
   <new-link:>
-    <%  nam = (current = current_user.name) ? "A suite for #{current}" : "untitled office" %>
+    <% nam = if current = current_user.name
+         "#Untitled {current}"
+       else
+         "Untitled"
+       end + " office suite"
+    %>
     <form with="&Card.new(:name => nam)">
       <submit label="Create a new office suite" />
       <after-submit uri="/cards" />

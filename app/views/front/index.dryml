@@ -3,12 +3,6 @@
   <body: class="front-page"/>
 
   <content:>
-    <header class="content-header">
-      <section class="welcome-message">
-        <h1 class="title">Welcome to Toy Office</h1>
-      </section>
-    </header>
-
     <section class="content-body">
       <home-nav />
       <pitch />
@@ -25,7 +19,7 @@
 
 <def tag="pitch">
   <div class="pitch">
-    <why-toy-office />
+    <div class="sub-pitch"><why-toy-office /></div>
     <toy-office-metaphor if="&false"/>
     <toy-office-uses     if="&false"/>
     <toy-office-how-to   if="&false"/>
@@ -33,8 +27,8 @@
 </def>
 
 <def tag="home-nav">
-  <div with="&current_user">
-    <ul class="sub-title pink" param>Get started
+  <div with="&current_user" class="sub-pitch">
+    <ul class="sub-pitch pink" param>Get started
         <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">All</a> to start</li>
       <unless test="&logged_in?">
         <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up</a> for more privileges</li>
@@ -45,19 +39,19 @@
 </def>
 
 <def tag="why-toy-office">
-  <ul param="sub-title" class="orange">
-    Why use toy office? To get your information:
-    <li>On your own website</li>
-    <li>Safe from prying eyes, viruses and computer crashes</li>
-    <li>Available to you on any computer</li>
-    <li>Easily organized into lists, tables, reports, forms</li>
-    <li>Open to the contributions of others</li>
-    <li>Or for your eyes only</li>
+  <ul param="sub-pitch" class="orange">
+    Get your information:
+    <li class="pink">On your own website</li>
+    <li class="orange">Safe and backed up automatically</li>
+    <li class="yellow">Available to you from any PC, iPhone, etc.</li>
+    <li class="green">Easily organized into lists, tables, reports, forms</li>
+    <li class="blue">Open to the contributions of others</li>
+    <li class="purple">Or for your eyes only</li>
   </ul>
 </def>
 
 <def tag="toy-office-metaphor">
-  <ul param="sub-title" class="yellow">
+  <ul param="sub-pitch" class="yellow">
     Build and manage your World like a game - using Building Blocks.
     <li>Building Blocks are like the cells in your body.</li>
     <li>They are separate parts, yet work together to make your whole body function.</li>
@@ -66,7 +60,7 @@
 </def>
 
 <def tag="toy-office-uses">
-  <ul param="sub-title" class="green">
+  <ul param="sub-pitch" class="green">
     Let's say that today your life is focused on the following areas
     <li><i>Job search</i></li>
     <li>Billy's school project</li>
@@ -81,31 +75,33 @@
 </def>
 
 <def tag="toy-office-how-to">
-  <ul param="sub-title" class="blue">
+  <ul param="sub-pitch" class="blue">
     Here is where Toy Office comes in.
     <li>   
-      In your toy office, you can construct and then manage the different areas of
-      your life as you would an office built with an erector set. Add a building
-      block for my job search, another for Mom's 80th Birthday, etc.
+      In your toy office suite, you can construct and then manage the different
+      areas of your life as you would an office built with an erector set. Add a
+      building block for my job search, another for Mom's 80th Birthday, etc.
     </li>
     <li>
       So, how do you build something meaningful, whether it's as simple as a
-      recipe or as complex as ? Simply connect the blocks together, into lists,
-      tables, columns, rows, forms, web pages. What would to take a geek a week
-      is now easy for anyone in seconds. That is the Toy Office breakthrough!
+      recipe or as complex as an order form, with a date and rows and columns?
+      Simply connect the blocks together into lists, tables, columns, rows,
+      forms, web pages. What would to take a geek a week is now easy for anyone
+      in seconds. That is the Toy Office breakthrough!
     </li>
   </ul>
-  <ul param="sub-title" class="purple">Toy Office 101
+  <ul param="sub-pitch" class="purple">Toy Office 101
     <li>
       Start by clicking the All button for an list of any publicly available
-      offices.  It will appear as card #something. Click on
-      it, change its name and choose the list view. It's the easiest. The list
-      view lets you add items. You can add items to anything, even other items.
+      toy office suites.  Watch it appear at the top of the list as Untitled,
+      with your name. Click on it, change its name and choose the list view.
+      It's the easiest. The list view lets you add a list to your office suite.
       You can get 80% of the benefit with just the list view and it only takes
       minutes to learn. You get a instant web site, a place to share info and
       pick up comments, a common ground to work together on stuff, a place to
       post your resumé for higher visibility. And your own office in the toy
-      office cloud building. With your own web address like toyoffice.net/suite/9003 (coming soon).
+      office cloud building. With your own web address like
+      toyoffice.net/suite/9003 (coming soon).
     </li>
   </ul>
 </def>
