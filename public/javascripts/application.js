@@ -83,7 +83,7 @@ Event.observe(window, "load", function() {
     var context = {
       state          : 'hidden',
       coreControls   : table.down(".core-controls"),
-      aspectControls : table.down(".core-add-aspect"),
+      aspectControls : table.down(".right-controls"),
 
       // Executes a function after a timeout
       delay: function(delay, fn) {

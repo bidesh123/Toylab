@@ -13,7 +13,7 @@
 
 <def tag="aspect-name-cell">
   <% css_class  = "aspect-name-cell"
-     css_class += " first" if attributes[:first] %>
+     css_class += " inner" if !attributes[:first] %>
   <td class="<%= css_class %>">
     <editor:name blank-message="..." />
   </td>

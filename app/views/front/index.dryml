@@ -6,13 +6,7 @@
     <section class="content-body">
       <home-nav />
       <pitch />
-<%    c = Card.new(:name => current_user.name) %>
-      <form with="&c" if="&false" class="witch">
-        <submit label="Create a new office suite" />
-<%      redirect = url_for(:controller => :cards, :action => :list, :id => c.id) %>
-        <after-submit uri="&redirect" />
-      </form>
-      </section>
+    </section>
   </content:>
   
 </page>
@@ -29,7 +23,7 @@
 <def tag="home-nav">
   <div with="&current_user" class="sub-pitch">
     <ul class="sub-pitch pink" param>Get started
-        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">All</a> to start</li>
+        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">Suites</a> to start</li>
       <unless test="&logged_in?">
         <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up</a> for more privileges</li>
         <li class='nav-item' param="log-in">Or just <a href="&login_url">Log in</a> if you're already signed up</li>

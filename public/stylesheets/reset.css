@@ -46,7 +46,10 @@ strong {
 /* Remember to define focus styles! */
 :focus {
 	outline: 0;
-        font-style:italic;
+        background:#ff9;
+        font-size:inherit;
+        font-weight:inherit;
+        color:inherit;
 }
 body {
 	line-height: 1;

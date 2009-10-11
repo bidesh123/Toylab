@@ -1,5 +1,5 @@
 <def tag="index-page" for="Card">
-  <page merge title="All">
+  <page merge title="Suites">
     <body: class="index-page card" param/>
     <content: param>
       <header param="content-header">
@@ -16,11 +16,11 @@
 </def>
 
 <index-page>
-  <count:>You have <count /> web apps</count:>
+  <count:></count:>
     <top-page-nav:>where is my page nav?</top-page-nav:>
   <new-link:>
     <% nam = if current = current_user.name
-         "#Untitled {current}"
+         "Untitled #{current}"
        else
          "Untitled"
        end + " office suite"

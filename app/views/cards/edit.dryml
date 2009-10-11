@@ -7,9 +7,9 @@
         <views />
         <context />
       </content-header:>
-      <content-body:  >
-        <rails-authenticity-token/>
-        <card first                           />
+      <content-body:>
+        <rails-authenticity-token />
+        <card first />
       </content-body:  >
       <aside:          >
         <google />
@@ -60,7 +60,7 @@
 </def>
 
 <def tag="core-right-controls-td">
-  <td class="core-add-aspect" rowspan="4" style="display:none">
+  <td class="right-controls" rowspan="4" style="display:none">
     <drag-handle/>
     <reveal-aspect-or-item which="aspects"/>
     <script-editor-toggle/>

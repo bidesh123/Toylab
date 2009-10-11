@@ -1,27 +1,82 @@
-div.sub-pitch {
-    margin-top:1em;
+td.aspect-name-cell {
+    font-size:4em;
+}
+
+
+td.inner.aspect-name-cell {
+    font-size:1em;
+}
+
+
+td.aspect-body-cell {
+    font-family:serif;
+    font-size:.62em;
+}
+
+
+
+td.right-controls, tr.core-controls{
+  font-size:16px;
+}
+
+th.kind-cell{
+  font-size:.38em;
+}
+
+.inner td.name-cell{
+  font-size:.62em;
+}
+
+.inner td.body-cell{
+  font-size:.38em;
+}
+
+div.content-body, ul.sub-pitch, ul.cards, ul.view-nav, h1, div.context ul {
+    margin-top:.62em;
+}
+
+/*
+
+th, td { padding-bottom:.0008em;padding-top:.0008em;}
+
+*/
+ul.sub-pitch li {
+    text-indent:1.62em;font-size:.62em;
+}
+th, td { padding-right:.15em}
+
+td.body-cell {
+  color:#333;font-family:serif;
+}
+
+td.aspects-table {
+    padding-left:.15em;
 }
 
 body, ul.sub-pitch li {
     font-family: sans-serif;
 }
 
-.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch {
+.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch,
+.hilite input, th input, h1 input, div.table-header, td.name-cell{
     font-family: sans-serif;
     font-weight:900;
 }
 
-h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.logo {
+td.kind-cell
+
+table.card.inner tr.self-and-aspects-row td table.core tr.name td.name-cell{
+    background:red;
+    font-weight:100;
+}
+
+th {
+    color:#999;
+}
+
+h1, h2, h3, h4, h5, h6, ul.sub-pitch, .logo {
     color:#666;font-size:1.62em;
-}
-
-
-ul {
-    margin:1em 0 1em 0;
-}
-
-ul.sub-pitch li {
-    text-indent:1.62em; margin-top:.0833em;font-size:.62em;
+    letter-spacing: -0.025em;
 }
 
 li.pink      { color:#e69;}
@@ -38,13 +93,12 @@ li.purple    { color:#96f;}
 }
 
 .first-card {
-  font-size:4em;
+  font-size:8em;
 }
 
 .inner {
     font-size:61.8%;
 }
-
 
 a {
   text-decoration:none;
@@ -54,31 +108,45 @@ a {
 div {
 }
 
-select.dev-user-changer {
-    opacity: 1; border:1px solid black;margin: 0;padding: 0;
-}
-
 /**** Styling for Toy Office Logo ****/
-
-.app-name{margin-bottom:.67em;}
 
 .hidden {display:none;}
 .logo .toy {
-  background: transparent; color:#666;
+     background: transparent; color:#666;
+ }
+.logo .oy{
+    letter-spacing: -0.1em;
 }
-.logo span{margin-left:inherit;}
+
+.logo .y {
+    letter-spacing: -.125em;
+}
+.office span{
+    letter-spacing: -0.050em;
+}
+
+.logo .c{
+    letter-spacing: -0.025em;
+}
 /* standard darker */
-.logo .o    {        color: #e69;} /*   #f9c    #e69  */
-.logo .ff   {        color: #d96;} /*   #fc9    #d96  */
-.logo .fi   {        color: #ec0;} /*   #ff9    #ec0  */
-.logo .i    {        color: #7d8;} /*   #cfc    #7d8  */
-.logo .c    {        color: #69f;} /*   #9cf    #69f  */
-.logo .e    {        color: #96f;} /*   #c9f    #96f  */
+.logo .o    {                 color: #e69;} /*   #f9c    #e69  */
+.logo .ff   {                 color: #e96;} /*   #fc9    #e96  */
+.logo .fi   {                 color: #ec0;} /*   #ff9    #ec0  */
+.logo .i    {                 color: #7d8;} /*   #cfc    #7d8  */
+.logo .c    {                 color: #69f;} /*   #9cf    #69f  */
+.logo .e    {                 color: #96f;} /*   #c9f    #96f  */
 
 /**** Generic Toy Office styling  ****/
 
-li.not-enabled a {
-  border: .2em solid #999;  color:#999;
+li.current a, li.not-enabled a {
+  color:#999;
+}
+
+li.current a, li.not-enabled a {
+  border: .2em solid #999; padding-right:.1em;padding-left:.1em;
+}
+
+li.current, li.not-enabled {
 }
 
 body {
@@ -96,10 +164,6 @@ ul.account-nav, div.search {
     float:right;
 }
 
-ul.main-nav {
-    margin:0;
-}
-
 ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.context li, ul.account-nav li {
     display:inline;
 }
@@ -112,20 +176,13 @@ div.views li, div.context li {
     margin-left: 1em;
 }
 
-.account-nav a, th {
-    font-size:1em;
-}
-
-a, body.show-page a.zoom-in:hover {
-  text-decoration:none;
-  color: #69f;
-}
-
 body.show-page a.zoom-in {
   color:white;
 }
 
-th, td { padding-right:.67em; padding-bottom:.0833em;padding-top:.0833em;}
+body.show-page a.zoom-in:hover {
+  color: #69f;
+}
 
 span.card-kind, div.card-body { padding-right:0em;}
 
@@ -134,20 +191,18 @@ span.card-kind, div.card-body { padding-right:0em;}
   background: white url(../images/spinner.gif) no-repeat 1em .8em;
   color: #333;
 }
-#search-spinner {
-    opacity:0.6;padding:2px;
-}
-
-div.top-line, h1, h1.title {
-    margin-bottom:.67em;
-}
-
 tr.self-and-aspects-row {
   font-size: .83em;
   background-color:white;
 }
 
-.body {}
+select.dev-user-changer {
+    opacity: 1; margin: 0;padding: 0;
+}
+
+#search-spinner {
+    opacity:0.6;padding:2px;
+}
 
 /*
 body {
@@ -623,7 +678,7 @@ td.core-controls{
   border: 0 solid orange;padding: 0;margin: 0;width:auto;text-align:center;
 }
 
-td.core-add-aspect {
+td.right-controls {
   background-color:teal;border: .5em solid green;width:auto;padding: 1px;
 }
 
@@ -663,7 +718,7 @@ td.core-trash form div input{
     }
 
 
-.card td.core-add-aspect {
+.card td.right-controls {
   background-color: #9cf;border: 0 solid #630; vertical-align:middle;
 }
 

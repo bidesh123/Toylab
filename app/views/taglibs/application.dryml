@@ -4,6 +4,14 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="main-nav">
+  <navigation class="main-nav" merge-attrs param="default">
+    <nav-item href="#{base_url}/">Home</nav-item>
+    <nav-item with="&Card">Suites</nav-item>
+    <nav-item with="&Card" if="&'workaround'">&nbsp;</nav-item>
+  </navigation>
+</def>
+
 <def tag="account-nav">
   <do with="&current_user">
     <ul class="navigation account-nav" param>
@@ -19,13 +27,6 @@
         <li class="dev-user-changer" if="&RAILS_ENV == 'development'"><dev-user-changer/></li>
     </ul>
   </do>
-</def>
-
-<def tag="main-nav">
-  <navigation class="main-nav" merge-attrs param="default">
-    <nav-item href="#{base_url}/">Home</nav-item>
-    <nav-item with="&Card">Suites</nav-item>
-  </navigation>
 </def>
 
 <def tag="page" attrs="title, full-title">
@@ -213,15 +214,18 @@
 </def>
 
 <def tag="app-name">
-  <span class="logo"><b><span
-    class="toy"   >toy</span></b><span
-    class="office"><span
-      class="o" >o</span><span
-      class="ff">f</span><span
-      class="fi">f</span><span
-      class="i" >i</span><span
-      class="c" >c</span><span
-      class="e" >e</span></span></span>
+    <span class="logo"><span
+        class="toy"   ><span
+            class="t" >t</span><span
+            class="oy">o</span><span
+            class="y">y</span></span><span
+        class="office"><span
+            class="o" >o</span><span
+            class="ff">f</span><span
+            class="fi">f</span><span
+            class="i" >i</span><span
+            class="c" >c</span><span
+            class="e" >e</span></span></span>
 </def>
 
 <def tag="context">
@@ -320,8 +324,8 @@
 
 <def tag="views">
   <div class="views">
-    <ul>View as
-      <table-view />
+    <ul class="view-nav">View as
+      <table-view if="&false" />
       <list-view />
       <report-view />
       <tree-view />
