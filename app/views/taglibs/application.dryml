@@ -435,10 +435,10 @@
           display_style = this.body ? "inherit" : "none"  %>
       <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
         <if test="&true || this.body ">
-          <editor:body                   blank-message="A" />
+          <editor:body                   blank-message="text" />
         </if>
         <else>
-          <editor:body class="tiny-gray" blank-message="A" />
+          <editor:body class="tiny-gray" blank-message="text" />
         </else>
       </td>
     </tr>

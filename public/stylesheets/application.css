@@ -1,38 +1,35 @@
-td.aspect-name-cell {
-    font-size:4em;
+/* common */
+/*
+
+.first-card { font-size:3.75em;}
+th.kind-cell, td.body-cell div.card-body{font-size:37.5%;}
+.inner {font-size:62.5%;}
+tr.self-and-aspects-row {font-size: 62.5%;}
+.tiny-gray {font-size: 62.5%; color:#ccc;}
+.logo {font-size:100%;}
+th.kind-cell, td.body-cell{font-size:37.5%;}
+td.right-controls, tr.core-controls{font-size:12pt;}
+h1, h2, h3, h4, h5, h6, ul.sub-pitch, .logo {font-size:162%;}
+td.aspect-body-cell {font-size:162%;}
+td.aspect-name-cell {font-size:431%;}
+
+*/
+
+/*td.inner.aspect-name-cell { font-size:100%;}*/
+/*.inner td.name-cell{font-size:62.5%;}*/
+
+/*Home*/
+.sub-pitch li {font-size:62.5%;}
+
+a {
+  text-decoration:none;
+  color: #69f;
 }
-
-
-td.inner.aspect-name-cell {
-    font-size:1em;
-}
-
-
 td.aspect-body-cell {
     font-family:serif;
-    font-size:.62em;
 }
-
-
-
-td.right-controls, tr.core-controls{
-  font-size:16px;
-}
-
-th.kind-cell{
-  font-size:.38em;
-}
-
-.inner td.name-cell{
-  font-size:.62em;
-}
-
-.inner td.body-cell{
-  font-size:.38em;
-}
-
-div.content-body, ul.sub-pitch, ul.cards, ul.view-nav, h1, div.context ul {
-    margin-top:.62em;
+div.content-body, ul.sub-pitch, ul.cards, ul.view-nav, h1, div.context ul, td.body-cell div.card-body, td.core {
+    padding-top:.62em;
 }
 
 /*
@@ -41,7 +38,7 @@ th, td { padding-bottom:.0008em;padding-top:.0008em;}
 
 */
 ul.sub-pitch li {
-    text-indent:1.62em;font-size:.62em;
+    text-indent:1em;
 }
 th, td { padding-right:.15em}
 
@@ -52,7 +49,7 @@ td.body-cell {
 td.aspects-table {
     padding-left:.15em;
 }
-
+ 
 body, ul.sub-pitch li {
     font-family: sans-serif;
 }
@@ -75,7 +72,7 @@ th {
 }
 
 h1, h2, h3, h4, h5, h6, ul.sub-pitch, .logo {
-    color:#666;font-size:1.62em;
+    color:#666;
     letter-spacing: -0.025em;
 }
 
@@ -88,47 +85,26 @@ li.purple    { color:#96f;}
 
 /**** Styling for navigation ****/
 
-.tiny-gray {
-  font-size: 50%; color:#ccc;
-}
-
-.first-card {
-  font-size:8em;
-}
-
-.inner {
-    font-size:61.8%;
-}
-
-a {
-  text-decoration:none;
-  color: #69f;
-}
-
 div {
 }
 
+.hidden {display:none;}
+
 /**** Styling for Toy Office Logo ****/
 
-.hidden {display:none;}
+.logo .t {letter-spacing: -0.09em;}
+.logo .oy{letter-spacing: -0.12em;}
+.logo .y {letter-spacing: -0.18em;}
+.logo .o {letter-spacing: -0.09em;}
+.logo .ff{letter-spacing: -0.12em;}
+.logo .fi{letter-spacing: -0.09em;}
+.logo .i {letter-spacing: -0.09em;}
+.logo .c {letter-spacing: -0.09em;}
+.logo .e {                        }
+/* standard darker */
 .logo .toy {
      background: transparent; color:#666;
  }
-.logo .oy{
-    letter-spacing: -0.1em;
-}
-
-.logo .y {
-    letter-spacing: -.125em;
-}
-.office span{
-    letter-spacing: -0.050em;
-}
-
-.logo .c{
-    letter-spacing: -0.025em;
-}
-/* standard darker */
 .logo .o    {                 color: #e69;} /*   #f9c    #e69  */
 .logo .ff   {                 color: #e96;} /*   #fc9    #e96  */
 .logo .fi   {                 color: #ec0;} /*   #ff9    #ec0  */
@@ -143,14 +119,14 @@ li.current a, li.not-enabled a {
 }
 
 li.current a, li.not-enabled a {
-  border: .2em solid #999; padding-right:.1em;padding-left:.1em;
+  border: .24em solid #999; padding-right:.12em;padding-left:.12em;
 }
 
 li.current, li.not-enabled {
 }
 
 body {
-   margin:.67em;
+   margin:.62em;
 }
 
 ul{
@@ -188,13 +164,13 @@ span.card-kind, div.card-body { padding-right:0em;}
 
 
 #ajax-progress {
-  background: white url(../images/spinner.gif) no-repeat 1em .8em;
+  background: white url(../images/spinner.gif) no-repeat 1em .9em;
   color: #333;
 }
-tr.self-and-aspects-row {
-  font-size: .83em;
+
+/*tr.self-and-aspects-row {
   background-color:white;
-}
+}*/
 
 select.dev-user-changer {
     opacity: 1; margin: 0;padding: 0;
