@@ -1,28 +1,48 @@
 /* common */
-.logo {font-size:162%;}
-/* home */
+html {font-size:1.00em;}
+h1 {font-size:262%;}
+th.kind-cell{font-size:38.2%;}
+/* Home */
 ul.sub-pitch    {font-size:262% ;}
-ul.sub-pitch li {font-size:62.5%;}
+ul.sub-pitch li {font-size:62%;}
 /* Suites */
 h4 {font-size: 162%;}
-/*
-.first-card { font-size:3.75em;}
-th.kind-cell, td.body-cell div.card-body{font-size:37.5%;}
-.inner {font-size:62.5%;}
+/* list & tree */
+td.body-cell {font-size:61.8%;}
+div.card-body{font-size:61.8%;}
+td.body-cell {font-size:61.8%;}
+table.card { font-size:262%;}
+td.right-controls, tr.core-controls{font-size:12pt;}
+/*report*/
+td.aspect-name-cell {font-size:262%;}
+/*login */
+h2 {font-size:200%;}
+/*user*/
+
+.aspect-kind-cell {font-size:100%;}
+
+
+    body.user h2 {
+    margin-bottom:.62em;
+}
+/*.inner {font-size:62.5%;}
 tr.self-and-aspects-row {font-size: 62.5%;}
 .tiny-gray {font-size: 62.5%; color:#ccc;}
-.logo {font-size:100%;}
-th.kind-cell, td.body-cell{font-size:37.5%;}
-td.right-controls, tr.core-controls{font-size:12pt;}
 h1 {font-size:162%;}
 td.aspect-body-cell {font-size:162%;}
-td.aspect-name-cell {font-size:431%;}
 */
 
 /* td.inner.aspect-name-cell { font-size:100%;} */
 /* .inner td.name-cell{font-size:62.5%;}        */
 
-/*Home*/
+
+
+
+
+
+
+
+div.aspects {margin-top:.62em;}
 
 a {
   text-decoration:none;
@@ -31,8 +51,11 @@ a {
 td.aspect-body-cell {
     font-family:serif;
 }
-div.content-body, ul.sub-pitch, ul.cards, ul.view-nav, h1, div.context ul, td.body-cell div.card-body, td.core {
-    padding-top:.62em;
+ul.sub-pitch, ul.cards, ul.view-nav, div.context ul,
+h1, h2,
+td.body-cell div.card-body, td.core,
+table.field-list, div.actions {
+    padding-top:.464em;
 }
 
 /*
@@ -58,15 +81,13 @@ body, ul.sub-pitch li {
 }
 
 .hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch,
-.hilite input, th input, h1 input, div.table-header, td.name-cell{
+.hilite input, th input, h1 input, div.table-header, td.name-cell, td.aspect-name-cell{
     font-family: sans-serif;
     font-weight:900;
 }
 
-td.kind-cell
 
 table.card.inner tr.self-and-aspects-row td table.core tr.name td.name-cell{
-    background:red;
     font-weight:100;
 }
 

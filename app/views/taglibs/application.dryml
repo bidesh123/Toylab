@@ -4,10 +4,26 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="show-page" for="User">
+  <page merge title="User">
+    <body: class="show-page user" param/>
+    <content: param>
+       <header param="content-header">
+         <h2 param="heading"><name/></h2>
+         <record-flags fields="administrator" param/>
+         <a action="edit" if="&can_edit?" param="edit-link">Edit User</a>
+       </header>
+       <section param="content-body">
+          <field-list fields="email_address" param/>
+       </section>
+    </content:>
+  </page>
+</def>
+
 <def tag="main-nav">
   <navigation class="main-nav" merge-attrs param="default">
-    <nav-item href="#{base_url}/">Home</nav-item>
-    <nav-item with="&Card">Suites</nav-item>
+    <nav-item href="#{base_url}/">home</nav-item>
+    <nav-item with="&Card">suites</nav-item>
     <nav-item with="&Card" if="&'workaround'">&nbsp;</nav-item>
   </navigation>
 </def>
@@ -16,13 +32,13 @@
   <do with="&current_user">
     <ul class="navigation account-nav" param>
       <if test="&logged_in?">
-        <li class='nav-item' param="logged-in-as"            ><a to="&current_user">Logged in as <name/></a></li>
-        <li class='nav-item' param="account"                 ><a action="account"  >Your account        </a  ></li>
-        <li class='nav-item' param="log-out"                 ><a href="&logout_url">Log out             </a></li>
+        <li class='nav-item' param="logged-in-as"            ><a to="&current_user">logged in as <name/></a></li>
+        <li class='nav-item' param="account"                 ><a action="account"  >your account        </a  ></li>
+        <li class='nav-item' param="log-out"                 ><a href="&logout_url">log out             </a></li>
       </if>
       <else>
-        <li class='nav-item' param="log-in"                  ><a href="&login_url" >Log in              </a></li>
-        <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up             </a></li>
+        <li class='nav-item' param="log-in"                  ><a href="&login_url" >log in              </a></li>
+        <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">sign up             </a></li>
       </else>
         <li class="dev-user-changer" if="&RAILS_ENV == 'development'"><dev-user-changer/></li>
     </ul>

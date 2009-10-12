@@ -26,7 +26,7 @@
        end + " office suite"
     %>
     <form with="&Card.new(:name => nam)">
-      <submit label="Create a new office suite" />
+      <submit label="Create your own office suite" />
       <after-submit uri="/cards" />
     </form>
   </new-link:>
