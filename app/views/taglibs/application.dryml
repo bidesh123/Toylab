@@ -49,7 +49,7 @@
   <% full_title ||= "#{title} : #{app_name}" %>
   <html merge-attrs>
     <head param>
-      <title param><%= strip_tags full_title %></title>
+      <title param><%= this.name %></title>
       <do param="stylesheets">
         <stylesheet name="reset, hobo-rapid"/>
         <theme-stylesheet/>
