@@ -1,6 +1,9 @@
 /* common */
+.logo {font-size:162%;}
+/* home */
+ul.sub-pitch    {font-size:262% ;}
+ul.sub-pitch li {font-size:62.5%;}
 /*
-
 .first-card { font-size:3.75em;}
 th.kind-cell, td.body-cell div.card-body{font-size:37.5%;}
 .inner {font-size:62.5%;}
@@ -9,17 +12,15 @@ tr.self-and-aspects-row {font-size: 62.5%;}
 .logo {font-size:100%;}
 th.kind-cell, td.body-cell{font-size:37.5%;}
 td.right-controls, tr.core-controls{font-size:12pt;}
-h1, h2, h3, h4, h5, h6, ul.sub-pitch, .logo {font-size:162%;}
+h1 {font-size:162%;}
 td.aspect-body-cell {font-size:162%;}
 td.aspect-name-cell {font-size:431%;}
-
 */
 
-/*td.inner.aspect-name-cell { font-size:100%;}*/
-/*.inner td.name-cell{font-size:62.5%;}*/
+/* td.inner.aspect-name-cell { font-size:100%;} */
+/* .inner td.name-cell{font-size:62.5%;}        */
 
 /*Home*/
-.sub-pitch li {font-size:62.5%;}
 
 a {
   text-decoration:none;
