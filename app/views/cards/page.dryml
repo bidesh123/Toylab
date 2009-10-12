@@ -1,0 +1,84 @@
+<toy-page />
+
+<def tag="toy-page">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:  >
+        <rails-authenticity-token/>
+        <card first                           />
+      </content-body:  >
+      <aside:         ><google                               /></aside:         >
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="recursive-card">
+  <table class="card inner page">
+    <self-and-aspects-row />
+    <page-row             />
+  </table>
+</def>
+
+<def tag="self-and-aspects-row">
+  <tr class="self-and-aspects-row">
+    <td class="core"><core /></td>
+    <td                     ></td>
+  </tr>
+</def>
+
+<def tag="page-row">
+  <tr class="page-row" if="&this.items">
+    <td class="page-row>" colspan="2">
+      <set table-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="page-rows" id="&table_id" if="&this.items">
+        <repeat with="&this.items">
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+  </tr>
+</def>
+
+<def tag="reveal-aspect-or-item">
+  <%= link_to_function(
+    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal the items below #{this.reference_name}"),
+    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
+</def>
+
+<def tag="core-bottom-controls-tr">
+  <tr class="core-controls" style="display:none">
+    <td class="bottom-controls">
+      <bottom-controls />
+    </td>
+    <td class="core-trash" >
+      <trash />
+    </td                   >
+  </tr>
+</def>
+
+<def tag="core-main-row"></def>
+
+<def tag="aspect-cell">
+  <% @model_id = "aspect-cell model::card:#{this.id}" %>
+ <td class="<%= @model_id %>">
+    <recursive-card which="aspect"/>
+  </td>
+</def>
+
+<def tag="item-row">
+  <tr class="item-row">
+    <td class="item-cell">
+      <recursive-card which="item"/>
+    </td>
+  </tr>
+</def>
+
+<def tag="page-view">
+  <li class="not-enabled view-link"><%= link_to("page"  , url_for(:action => "page", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

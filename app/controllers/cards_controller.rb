@@ -5,6 +5,8 @@ class CardsController < ApplicationController
   auto_actions :all
   auto_actions_for :aspects, :create
   show_action :list
+  show_action :slide
+  show_action :page
   show_action :table
 
   before_filter :load_editable_card, :only => %w(show edit)

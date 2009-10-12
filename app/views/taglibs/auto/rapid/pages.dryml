@@ -71,7 +71,7 @@
       <section-group>
         <section param="main-content">
           <header param="content-header">
-            <a:based_on param="parent-link">&laquo; <name/></a:based_on>
+            <a:table param="parent-link">&laquo; <name/></a:table>
             <h2 param="heading"><name/></h2>
 
             <record-flags fields="" param/>
@@ -83,7 +83,7 @@
     
           <section param="content-body" with-flash-messages>
             <view:body param="description"/>
-            <field-list fields="kind, script, theme, number, list, table, whole" param/>
+            <field-list fields="kind, script, theme, number, based_on, list, whole" param/>
             <section param="collection-section">
               <h3 param="collection-heading">Items</h3>
               

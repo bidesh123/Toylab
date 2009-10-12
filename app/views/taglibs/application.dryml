@@ -342,11 +342,21 @@
   <div class="views">
     <ul class="view-nav">View as
       <table-view if="&false" />
+      <page-view />
+      <slide-view />
       <list-view />
       <report-view />
       <tree-view />
     </ul>
   </div>
+</def>
+
+<def tag="page-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("page", url_for(:action => "page" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="slide-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("slide", url_for(:action => "slide" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="tree-view" attrs="off">
