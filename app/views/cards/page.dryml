@@ -1,7 +1,37 @@
 <toy-page />
 
+<def tag="show-page">
+  <page merge title="Card">
+    <body: class="show-page card" param/>
+    <content: param>
+      <section-group>
+        <section param="main-content">
+          <header param="content-header">
+            <h2 param="heading"><name/></h2>
+            <record-flags fields="" param/>
+            <a:owner param="creator-link"/>
+            <a action="edit" if="&can_edit?" param="edit-link">Edit Card</a>
+          </header>
+          <section param="content-body" with-flash-messages>
+            <view:body param="description"/>
+            <field-list fields="kind, script, theme, number, based_on, list, whole" param/>
+            <section param="collection-section">
+              <h3 param="collection-heading">Items</h3>
+              <collection:items></collection:items>
+            </section>
+          </section>
+        </section>
+        <aside param>
+            <collection:items/>
+        </aside>
+      </section-group>
+    </content:>
+  </page>
+</def>
+
+
 <def tag="toy-page">
-    <show-pager>
+    <show-page>
       <content-header:>
         <views />
         <context />
@@ -13,119 +43,21 @@
        </content-body:  >
       <aside:         >
         <section param="items-collection-section" if="&this.items.count>0">
-          <collection:items/>
+          <%= this.reference_name %>
+          <collection:items><card:>adsasasddadad</card:></collection:items>
         </section>
         <google                               />
       </aside:         >
-    </show-pager>
+    </show-page>
 </def>
-
-<def tag="show-pager">
-  <page merge title="Card">
-    <body: class="show-page card" param/>
-    <content: param>
-      <section-group>
-        <section param="main-content">
-          <header param="content-header">
-            <a:context param="parent-link" if="&context_id">&laquo; <editor:name with="&context"/></a:context>
-            <h2 param="heading"><name/></h2>
-
-            <record-flags fields="" param/>
-
-            <a:owner param="creator-link"/>
-
-            <a action="edit" if="&can_edit?" param="edit-link">Edit Card</a>
-          </header>
-
-          <section param="content-body" with-flash-messages>
-            <view:body param="description"/>
-            <field-list fields="kind, script, theme, number, based_on, list, whole" param/>
-            <section param="collection-section">
-              <h3 param="collection-heading">Items</h3>
-
-              <sortable-collection:items param="collection"/>
-            </section>
-          </section>
-        </section>
-
-      </section-group>
-        <aside param>
-          <section param="aspects-collection-section">
-            <h3 param="aspects-collection">Aspects</h3>
-            <collection:aspects/>
-          </section>
-        </aside>
-    </content:>
-  </page>
-</def>
-
-
------=====------
-
-
-
-
 
 <def tag="recursive-card">
-  <table class="card inner page">
-    <self-and-aspects-row />
-    <page-row             />
-  </table>
 </def>
 
 <def tag="self-and-aspects-row">
-  <tr class="self-and-aspects-row">
-    <td class="core"><core /></td>
-    <td                     ></td>
-  </tr>
 </def>
 
-<def tag="page-row">
-  <tr class="page-row" if="&this.items">
-    <td class="page-row>" colspan="2">
-      <set table-id="&dom_id(this, &quot;items&quot;)" />
-      <table class="page-rows" id="&table_id" if="&this.items">
-        <repeat with="&this.items">
-          <item-row />
-        </repeat>
-      </table>
-    </td>
-  </tr>
-</def>
 
-<def tag="reveal-aspect-or-item">
-  <%= link_to_function(
-    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal the items below #{this.reference_name}"),
-    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
-</def>
-
-<def tag="core-bottom-controls-tr">
-  <tr class="core-controls" style="display:none">
-    <td class="bottom-controls">
-      <bottom-controls />
-    </td>
-    <td class="core-trash" >
-      <trash />
-    </td                   >
-  </tr>
-</def>
-
-<def tag="core-main-row"></def>
-
-<def tag="aspect-cell">
-  <% @model_id = "aspect-cell model::card:#{this.id}" %>
- <td class="<%= @model_id %>">
-    <recursive-card which="aspect"/>
-  </td>
-</def>
-
-<def tag="item-row">
-  <tr class="item-row">
-    <td class="item-cell">
-      <recursive-card which="item"/>
-    </td>
-  </tr>
-</def>
 
 <def tag="page-view">
   <li class="not-enabled view-link"><%= link_to("page"  , url_for(:action => "page", :disabled => true), :disabled => true  )  %></li>
