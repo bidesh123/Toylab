@@ -313,7 +313,7 @@
 <def tag="add-row">
   <if test="&this && this.list">
     <% tooltip = "Add a row below this one"
-       label   = "Add a row"
+       label   = "Add row"
        uri     = "#{request.request_uri}"
     %>
     <form class="add-row" with="&Card.new(:list_id => this.list_id)">
@@ -323,17 +323,17 @@
   </if>
 </def>
 
-<def tag="add-item">
+<def tag="add-item-to-list">
   <if test="&this">
     <% number_of_items = this.items.count
        if number_of_items > 0
-         tooltip = "Add another row within #{this.reference_name}, below the following #{this.items.count}"
+         tooltip = "Add another item within list #{this.reference_name}, below the following #{this.items.count}"
          label   = "Add inner row"
        else
-         tooltip = "Add a list or table within #{this.reference_name}"
-         label   = "Add inner list/table"
+         tooltip = "Add a list below #{this.reference_name}"
+         label   = "Add inner list"
        end
-      
+       
       uri     = "#{request.request_uri}"
     %>
     <form class="add-item" with="&Card.new(:list_id => this.id)">
@@ -342,6 +342,36 @@
     </form>
     <add-row />
   </if>
+</def>
+
+<def tag="add-item-to-table">
+  <if test="&this">
+    <% number_of_items = this.items.count
+       if number_of_items > 0
+         tooltip = "Add another row within table #{this.reference_name}, below the following #{this.items.count}"
+         label   = "Add inner row"
+       else
+         tooltip = "Add a list or table below #{this.reference_name}"
+         label   = "Add inner table"
+       end
+
+      uri     = "#{request.request_uri}"
+    %>
+    <form class="add-item" with="&Card.new(:list_id => this.id)">
+      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+    <add-row />
+  </if>
+</def>
+
+<def tag="add-item">
+  <if test="&' page show '.include? controller.action_name">
+    <add-item-to-table />
+  </if>
+  <else>
+    <add-item-to-list />
+  </else>
 </def>
 
 <def tag="spacer-cell">
