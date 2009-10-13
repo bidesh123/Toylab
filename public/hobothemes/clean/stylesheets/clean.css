@@ -26,8 +26,7 @@
 .section-group       {display: table; width: 100%;}
 .section-group-inner {display: table-row;}
 .section-group-inner > * {display: table-cell; vertical-align: top;}
-.aside {width: 30%;} */ /* works with % too */
-/*
+.aside {width: 30%;} */ /* works with % too */ /*
 .aside { padding: 2em;}
 */
 /* ------ */

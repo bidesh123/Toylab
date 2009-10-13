@@ -19,7 +19,6 @@ class CardsController < ApplicationController
     hobo_create do
       if valid? then
         if @card.list && @card.list.owner_is?(current_user)
-          #logger.debug "88888888888888888888"
         else
           uri = params[:after_submit]
           uri.gsub!(/(?:\?|&)?edit_id=\d+/, "")

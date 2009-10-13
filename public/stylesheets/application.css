@@ -1,12 +1,28 @@
+.drag_handle {
+  cursor: move;
+}
+
+.drop-hover {
+  border: .4em solid red;
+}
+
+td.body-cell {
+  color:#333;
+}
+
+td.aspect-body-cell, div.card-body, td.body-cell{
+    font-family:serif;
+}
+
 /* common */
-html {font-size:1.00em;}
-h1 {font-size:262%;}
+html {font-size:1.0em;}
+.aside {width: 30%;} /* works with % too */
+
 th.kind-cell{font-size:38.2%;}
 /* Home */
-ul.sub-pitch    {font-size:262% ;}
+ul.sub-pitch    {font-size:162% ;}
 ul.sub-pitch li {font-size:62%;}
 /* Suites */
-h4 {font-size: 162%;}
 /* list & tree */
 td.body-cell {font-size:61.8%;}
 div.card-body{font-size:61.8%;}
@@ -21,9 +37,19 @@ h2 {font-size:200%;}
 
 .aspect-kind-cell {font-size:100%;}
 
-
-    body.user h2 {
-    margin-bottom:.62em;
+body.user h2 { margin-bottom:.62em;}
+:focus {
+	moz-outline-radius:2.62em;
+	outline:none;
+        background:#fff;
+        font-size:inherit;
+        font-weight:inherit;
+        color:inherit;
+        outline-offset:0px;
+        border:0;margin:0;
+}
+textarea, textarea:focus {
+        font-family:serif;font-size:61.8%;
 }
 /*
 tr.self-and-aspects-row {font-size: 62.5%;}
@@ -48,9 +74,6 @@ a {
   text-decoration:none;
   color: #69f;
 }
-td.aspect-body-cell {
-    font-family:serif;
-}
 ul.sub-pitch, ul.cards, ul.view-nav, div.context ul,
 h1, h2,
 td.body-cell div.card-body, td.core,
@@ -67,10 +90,6 @@ ul.sub-pitch li {
     text-indent:1em;
 }
 th, td { padding-right:.15em}
-
-td.body-cell {
-  color:#333;font-family:serif;
-}
 
 td.aspects-table {
     padding-left:.15em;
@@ -1108,14 +1127,6 @@ input.delete-button {
 
 td.script-cell div {
     background-color:#f36;
-}
-
-.drag_handle {
-  cursor: move;
-}
-
-.drop-hover {
-  border: .4em solid red;
 }
 
 li.disabled a {

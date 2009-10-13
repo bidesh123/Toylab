@@ -49,7 +49,19 @@
   <% full_title ||= "#{title} : #{app_name}" %>
   <html merge-attrs>
     <head param>
-      <title param><%= this.name %></title>
+      <title param><%=
+        if this.nil?
+          "Home"
+        elsif this.is_a? Card
+          this.reference_name
+        elsif this.is_a? User
+          this.name
+        elsif this.is_a? Array
+          "Suites"
+        else
+          "toy office"
+        end
+ %>   </title>
       <do param="stylesheets">
         <stylesheet name="reset, hobo-rapid"/>
         <theme-stylesheet/>
@@ -65,7 +77,7 @@
     </head>
 
     <body param>
-      <set-scoped flash-rendered="&false">
+    <set-scoped flash-rendered="&false">
         <ajax-progress param/>
         <header class="page-header" param>
           <div class="top-line">

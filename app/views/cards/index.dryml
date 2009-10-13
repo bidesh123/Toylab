@@ -16,16 +16,14 @@
 </def>
 
 <index-page>
-  <count:></count:>
-    <top-page-nav:>where is my page nav?</top-page-nav:>
   <new-link:>
-    <% nam = if current = current_user.name
+    <% user_name = if current = current_user.name
          "Untitled #{current}"
        else
          "Untitled"
        end + " office suite"
     %>
-    <form with="&Card.new(:name => nam)">
+    <form with="&Card.new(:name => user_name)">
       <submit label="Create your own office suite" />
       <after-submit uri="/cards" />
     </form>

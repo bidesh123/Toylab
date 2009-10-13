@@ -23,7 +23,7 @@
 <def tag="home-nav">
   <div with="&current_user" class="sub-pitch">
     <ul class="sub-pitch pink" param>Get started
-        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">Suites</a> to start</li>
+        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">suites</a> to start</li>
       <unless test="&logged_in?">
         <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up</a> for more privileges</li>
         <li class='nav-item' param="log-in">Or just <a href="&login_url">Log in</a> if you're already signed up</li>

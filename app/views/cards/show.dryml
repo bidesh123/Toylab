@@ -5,7 +5,7 @@
 
 <def tag="aspect-kind-cell">
   <% css_class  = "aspect-kind-cell"
-     css_class += " first" if attributes[:first] %>
+     css_class += " inner" if !attributes[:first] %>
   <th class="<%= css_class %>">
     <editor:kind blank-message="..." />
   </th>
@@ -21,7 +21,7 @@
 
 <def tag="aspect-body-cell">
   <% css_class  = "aspect-body-cell"
-     css_class += " first" if attributes[:first] %>
+     css_class += " inner" if !attributes[:first] %>
   <td class="<%= css_class %>">
     <editor:body blank-message="..." />
   </td>

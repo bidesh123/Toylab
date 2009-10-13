@@ -139,7 +139,7 @@ if a given email is associated with an account or not. -->
 <!-- Basic account page that provides the ability for the user to change their email address and password. -->
 <def tag="account-page">
 
-  <page title="#{name} - Account" merge>
+  <page title="#{this.name} account" merge>
 
     <body: class="user-account-page #{type_name}" param/>
 

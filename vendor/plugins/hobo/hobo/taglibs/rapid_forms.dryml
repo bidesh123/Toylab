@@ -312,6 +312,7 @@ edit collections a `Category` model in your application:
 
 <!-- A `<textarea>` input -->
 <def tag="input" for="text" attrs="name">
+  <%=  attributes.to_yaml.split.join "<br>" %>
   <%= text_area_tag(name, this, attributes) %>
 </def>
 

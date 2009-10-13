@@ -543,8 +543,9 @@ Ajax.InPlaceEditor = Class.create({
       if (0 < size) fld.size = size;
     } else {
       fld = document.createElement('textarea');
-      fld.rows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
-      fld.cols = this.options.cols || 40;
+      normalRows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
+      fld.rows = (2 == normalRows ? (38) : normalRows);
+      fld.cols = this.options.cols || 62;
     }
     fld.name = this.options.paramName;
     fld.value = text; // No HTML breaks conversion anymore
@@ -873,7 +874,7 @@ Ajax.InPlaceEditor.prototype.initialize.dealWithDeprecatedOptions = function(opt
 Object.extend(Ajax.InPlaceEditor, {
   DefaultOptions: {
     ajaxOptions: { },
-    autoRows: 3,                                // Use when multi-line w/ rows == 1
+    autoRows: 20,                                // Use when multi-line w/ rows == 1
     cancelControl: 'link',                      // 'link'|'button'|false
     cancelText: 'cancel',
     clickToEditText: 'Click to enter or change text',
