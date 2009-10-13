@@ -176,7 +176,7 @@
         <if test="&whole_off ==  true">
           <card    whole-off="&whole_off" />
         </if><else>
-          <card                           />
+          <card    first                       />
         </else>
       </content-body: >
       <aside:><google /></aside:>
@@ -284,7 +284,7 @@
 </def>
 
 <def tag="empty-cell">
-  <td unless="&attributes[:first]" class="grey-empty-cell"><span param="default">&nbsp;</span></td>
+  <td unless="&!attributes[:inner]" class="grey-empty-cell"><span param="default">&nbsp;</span></td>
 </def>
 <def tag="right-border-cell">
 </def>
