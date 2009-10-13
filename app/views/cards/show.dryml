@@ -139,7 +139,7 @@
   <% @depth ||= 0 %>
   <unless                  test=  "&attributes['bodies_off']">
      <tr class="aspects-bodies-row">
-      <aspect-body-cells   first unless="&attributes['whole_off']" />
+      <aspect-body-cells   unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
         <aspects-bodies-cells merge-attrs />
       </repeat>

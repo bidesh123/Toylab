@@ -1,4 +1,7 @@
 
+body.show-page input.add-aspect {margin-left:1.67em;}
+
+body.show-page .inner {font-size:100%;}
 td.aspect-cell{vertical-align:top;}
 div.slide {font-size:262%; text-align:center;}
 div.slide ol{list-style-type:lower-alpha;font-size:38%;}
