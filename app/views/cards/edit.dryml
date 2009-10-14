@@ -9,7 +9,7 @@
       </content-header:>
       <content-body:>
         <rails-authenticity-token />
-        <card />
+        <card first />
       </content-body:  >
       <aside:          >
         <google />

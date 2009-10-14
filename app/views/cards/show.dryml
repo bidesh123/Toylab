@@ -141,7 +141,7 @@
      <tr class="aspects-bodies-row">
       <aspect-body-cells   first unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-bodies-cells inner merge-attrs />
+        <aspects-bodies-cells merge-attrs />
       </repeat>
       <spacer-cell />
     </tr>
