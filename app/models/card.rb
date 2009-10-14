@@ -7,7 +7,10 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple)
+    view         enum_string(:view , :page  , :list, :table, :slide,
+                             :none , :custom, :tree, :report, :chart )
+    theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple,
+                             :none                                   )
     context_id   :integer
     timestamps
   end

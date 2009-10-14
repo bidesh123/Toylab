@@ -1,36 +1,5 @@
 <toy-edit />
 
-<def tag="toy-edit">
-  <set-scoped deep="&@card.edit_deep" >
-    <edit-page>
-      <content-header:>
-        <views />
-        <context />
-      </content-header:>
-      <content-body:>
-        <rails-authenticity-token />
-        <card first />
-      </content-body:  >
-      <aside:          >
-        <google />
-      </aside:         >
-    </edit-page>
-  </set-scoped>
-</def>
-
-<def tag="self-and-aspects-row">
-  <tr class="self-and-aspects-row">
-    <td class="core">
-      <%logger.debug :this
-        logger.debug this.to_yaml %>
-        <core />
-    </td>
-    <td class="aspects-table" if="&this.aspects" id="<%= dom_id(this, 'aspects') %>">
-      <aspects-table />
-    </td>
-  </tr>
-</def>
-
 <def tag="aspects-table">
   <table class="aspects-table" if="&this.aspects">
     <tr class="aspects-row">

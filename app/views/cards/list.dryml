@@ -1,33 +1,10 @@
 <toy-list />
 
-<def tag="toy-list">
-  <set-scoped deep="&@card.edit_deep" >
-    <edit-page>
-      <content-header:>
-        <views />
-        <context />
-      </content-header:>
-      <content-body:  >
-        <rails-authenticity-token/>
-        <card first                           />
-      </content-body:  >
-      <aside:         ><google                               /></aside:         >
-    </edit-page>
-  </set-scoped>
-</def>
-
 <def tag="recursive-card">
   <table class="card inner list">
     <self-and-aspects-row />
     <list-row             />
   </table>
-</def>
-
-<def tag="self-and-aspects-row">
-  <tr class="self-and-aspects-row">
-    <td class="core"><core /></td>
-    <td                     ></td>
-  </tr>
 </def>
 
 <def tag="list-row">

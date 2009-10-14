@@ -1,6 +1,6 @@
 <toy-table />
 
-<!-- ====================== tag definitions ================================ -->
+<!-- 2===================== tag definitions ================================ -->
 
 <def tag="left-tool-cell">
 
@@ -43,10 +43,6 @@
   <td class="delete-button">
     <delete-button class="nav-button" after-submit="&cards_url" label="x" title="#{tooltip}" />
   </td>
-</def>
-
-<def tag="toy-table">
-  <toy-show shallow />
 </def>
 
 <def tag="card" for="Card">

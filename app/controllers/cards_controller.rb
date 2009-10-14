@@ -6,10 +6,16 @@ class CardsController < ApplicationController
   auto_actions_for :aspects, :create
   show_action :list
   show_action :slide
+  show_action :report
+  show_action :tree
   show_action :page
   show_action :table
 
   before_filter :load_editable_card, :only => %w(show edit)
+
+  def show
+    hobo_show
+  end
 
   def index
     hobo_index Card.top_level

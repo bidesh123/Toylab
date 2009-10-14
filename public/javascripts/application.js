@@ -1,3 +1,23 @@
+function adjustRows (textarea) {
+    if (document.all) {
+        while (textarea.scrollHeight > textarea.clientHeight)
+            textarea.rows++;
+            textarea.scrollTop = 0;
+        }
+    else if (textarea.rows) {
+        var lineBreaks = countLineBreaks(textarea.value);
+        var rows = parseInt(textarea.rows);
+        var wrap = textarea.getAttribute('wrap');
+        if (lineBreaks > rows)
+            textarea.rows = ++rows;
+        else if (wrap.toLowerCase() == 'soft' || wrap.toLowerCase() == 'hard') {
+            while (textarea.rows * textarea.cols <= textarea.value.length) {
+                textarea.rows = ++rows;
+            }
+        }
+    }
+}
+
 function installAutocomplete(el, url, parentName) {
   var inplaceForm = $(el.id + "-inplaceeditor");
   var inplaceFields = inplaceForm.select("input");

@@ -544,7 +544,7 @@ Ajax.InPlaceEditor = Class.create({
     } else {
       fld = document.createElement('textarea');
       normalRows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
-      fld.rows = (2 == normalRows ? 24 : normalRows);
+      fld.rows = (2 == normalRows ? 16 : normalRows);
       fld.cols = this.options.cols || 80;
     }
     fld.name = this.options.paramName;

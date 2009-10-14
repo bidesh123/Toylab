@@ -1,12 +1,19 @@
+ul.collection.cards {
+    list-style:none;
+}
+
 body.show-page input.add-aspect {margin-left:1.67em;}
 body.show-page .inner {font-size:1em;}
 body.show-page td.aspect-kind-cell.inner {font-size:.5em;}
 
 
 td.aspect-cell{vertical-align:top;}
-div.slide {font-size:262%; text-align:center;}
-div.slide ol{list-style-type:lower-alpha;font-size:38%;}
+div.slide {font-size:1.5em; text-align:center;}
+div.slide ol.point-form{list-style-type:decimal;font-size:38%;}
 div.slide li{}
+div.slide input.delete-button {
+    margin:.68em;
+}
 
 
 body.edit-page div.content-body {font-size:262%;}

@@ -3,7 +3,7 @@
 <def tag="form" for="Card">
   <form merge param="default">
     <error-messages param/>
-    <field-list fields="name, body, kind, script, theme, number, aspects, based_on, columns, instances, items, list, owner, table, whole" param/>
+    <field-list fields="name, body, kind, script, view, theme, number, aspects, based_on, columns, instances, items, list, owner, table, whole" param/>
     <div param="actions">
       <submit label="Save" param/><or-cancel param="cancel"/>
     </div>
