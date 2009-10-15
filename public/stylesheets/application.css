@@ -78,7 +78,7 @@ div.slide {font-size:1.5em; text-align:center;}
 div.slide ol.point-form{list-style-type:decimal;font-size:38.2%;}
 div.slide li{}
 div.slide input.delete-button {
-    margin:.618em;
+   margin:3.618em;
 }
 
 
@@ -146,7 +146,7 @@ td.aspect-body-cell {font-size:162%;}
 
 /* td.inner.aspect-name-cell { font-size:100%;} */
 .inner {font-size:62.5%;}
-
+ul.view-nav li.not-enabled {padding:3em;}
 
 
 

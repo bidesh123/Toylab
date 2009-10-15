@@ -39,8 +39,8 @@
       <content-body:  >
         <rails-authenticity-token/>
         <h1><editor:name blank-message="Untitled"/></h1>
-        <% blank_message = "Blah blah blah, blah blah blah blah. Bla! Bla? Blah blah blah. " *13 %>
-        <% blank_message += "   Don't forget to give your page a name too. Just click on it to change it." if this.name.blank? %>
+        <% blank_message = "This is where your text will appear. Just click on this text to replace by your entry. " %>
+        <% blank_message += "Don't forget to give your page a name too. Just click on it to change it." if this.name.blank? %>
         <p ><editor:body blank-message="&blank_message"/></p>
        </content-body:  >
       <aside:         >

@@ -5,24 +5,21 @@
 
 <def tag="toy-show">
 <%
-  @calculated_view = case (v = this.view)
+  @auto_view = case (v = this.view)
      when "list"  ,"slide", "table", "page",
           "report","tree"                    then v
      when "custom", "chart"                  then "tree"
      when "none"  ,"view" ,  ""    ,  nil    then "report"
      else                                         "report"
    end
-   @calculated_path = "cards/#{@calculated_view}"
+   @auto_path = "cards/#{@auto_view}"
 %>
-<% logger.debug "gogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogogo" %>
-<% logger.debug @rrr %>
-<%=@calculated_path %>
-  <toy-page    if="&false && @calculated_view=='page'  " />
-  <toy-tree    if="&false && @calculated_view=='tree'  " />
-  <toy-list    if="&false && @calculated_view=='list'  " />
-  <toy-table   if="&false && @calculated_view=='table' " />
-  <toy-slide   if="&false && @calculated_view=='slide' " />
-  <toy-report  if="&false && @calculated_view=='report'" />
+  <toy-page    if="&false && @auto_view=='page'  " />
+  <toy-tree    if="&false && @auto_view=='tree'  " />
+  <toy-list    if="&false && @auto_view=='list'  " />
+  <toy-table   if="&false && @auto_view=='table' " />
+  <toy-slide   if="&false && @auto_view=='slide' " />
+  <toy-report  if="&false && @auto_view=='report'" />
   <toy-report />
 </def>
 

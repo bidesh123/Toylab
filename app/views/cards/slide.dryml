@@ -20,14 +20,12 @@
 </def>
 
 <def tag="card" for="Card">
-  <div class="slide">
-    <p><editor:name /></p>
-    <ol class="point-form">
-      <li repeat="&this.items">
-        <editor:name />
-      </li>
-    </ol>
-  </div>
+  <p><editor:name /></p>
+  <ol class="point-form">
+    <li repeat="&this.items">
+      <editor:name />
+    </li>
+  </ol>
 </def>
 
 <def tag="slide-view">
