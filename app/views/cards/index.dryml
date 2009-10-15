@@ -25,7 +25,6 @@
     %>
     <form with="&Card.new(:body => welcome)">
       <submit label="Create your own office suite" />
-      <after-submit uri="/cards" />
     </form>
   </new-link:>
 </index-page>

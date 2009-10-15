@@ -26,15 +26,19 @@ class CardsController < ApplicationController
       if valid? then
         if @card.list && @card.list.owner_is?(current_user)
         else
-          uri = params[:after_submit]
-          uri.gsub!(/(?:\?|&)?edit_id=\d+/, "")
-          if uri.include?("?") then
-            uri << "&edit_id=#{@card.id}"
-          else
-            uri << "?edit_id=#{@card.id}"
-          end
+          if params[:after_submit].present? then
+            uri = params[:after_submit]
+            uri.gsub!(/(?:\?|&)?edit_id=\d+/, "")
+            if uri.include?("?") then
+              uri << "&edit_id=#{@card.id}"
+            else
+              uri << "?edit_id=#{@card.id}"
+            end
 
-          redirect_to uri
+            redirect_to uri
+          else
+            redirect_to @card
+          end
         end
       end
     end
