@@ -544,8 +544,8 @@ Ajax.InPlaceEditor = Class.create({
     } else {
       fld = document.createElement('textarea');
       normalRows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
-      fld.rows = (2 == normalRows ? 16 : normalRows);
-      fld.cols = this.options.cols || 80;
+      fld.rows = (2 == normalRows ? 12 : normalRows);
+      fld.cols = this.options.cols || 40;
     }
     fld.name = this.options.paramName;
     fld.value = text; // No HTML breaks conversion anymore

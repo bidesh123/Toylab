@@ -361,7 +361,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
   def reference_name
     if name.blank?
-      kind.blank? ? "office suite #{id}" : "Untitled #{kind}"
+      kind.blank? ? "Empty" : "Empty #{kind}"
     else
       last_char  = name.to_s[-1]
       first_char = name.to_s[ 0]

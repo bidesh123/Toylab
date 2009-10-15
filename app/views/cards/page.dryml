@@ -1,5 +1,54 @@
 <toy-page />
 
+<def tag="show-page">
+  <page merge title="Card">
+    <body: class="page-page card" onLoad="adjustRows(document.InsertForm.txtDescription);" param/>
+    <content: param>
+      <section-group>
+        <section param="main-content">
+          <header param="content-header">
+            <h2 param="heading"><name/></h2>
+            <record-flags fields="" param/>
+            <a:owner param="creator-link"/>
+            <a action="edit" if="&can_edit?" param="edit-link">Edit Card</a>
+          </header>
+          <section param="content-body" with-flash-messages>
+            <view:body param="description"/>
+            <field-list fields="kind, script, theme, number, based_on, list, whole" param/>
+            <section param="collection-section">
+              <h3 param="collection-heading">Items</h3>
+              <collection:items></collection:items>
+            </section>
+          </section>
+        </section>
+        <aside param>
+            <collection:items/>
+        </aside>
+      </section-group>
+    </content:>
+  </page>
+</def>
+
+
+<def tag="toy-page">
+    <show-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:  >
+        <rails-authenticity-token/>
+        <h1><editor:name blank-message="Untitled"/></h1>
+        <% blank_message = "Blah blah blah, blah blah blah blah. Bla! Bla? Blah blah blah. " *13 %>
+        <% blank_message += "   Don't forget to give your page a name too. Just click on it to change it." if this.name.blank? %>
+        <p ><editor:body blank-message="&blank_message"/></p>
+       </content-body:  >
+      <aside:         >
+        <google                               />
+      </aside:         >
+    </show-page>
+</def>
+
 <def tag="recursive-card">
 </def>
 

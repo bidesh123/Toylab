@@ -1,5 +1,30 @@
 <toy-list />
 
+<def tag="toy-list">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:  >
+        <rails-authenticity-token/>
+        <card first                           />
+      </content-body:  >
+      <aside:         ><google                               /></aside:         >
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="self-and-aspects-row">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+      <core />
+    </td>
+    <empty-cell/>
+  </tr>
+</def>
+
 <def tag="recursive-card">
   <table class="card inner list">
     <self-and-aspects-row />
@@ -22,7 +47,7 @@
 
 <def tag="reveal-aspect-or-item">
   <%= link_to_function(
-    image_tag("icons/bullet_arrow_right.png", :size => "16x16", :alt => "Reveal the items below #{this.reference_name}"),
+    image_tag("icons/bullet_arrow_down.png", :size => "16x16", :alt => "Reveal the items below #{this.reference_name}"),
     "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 

@@ -2,6 +2,10 @@
 
 <!-- 2===================== tag definitions ================================ -->
 
+<def tag="toy-table">
+  <toy-show shallow />
+</def>
+
 <def tag="left-tool-cell">
 
   <%

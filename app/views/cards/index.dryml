@@ -17,13 +17,13 @@
 
 <index-page>
   <new-link:>
-    <% user_name = if current = current_user.name
-         "Untitled #{current}"
-       else
-         "Untitled"
-       end + " office suite"
-    %>
-    <form with="&Card.new(:name => user_name)">
+    <% welcome = <<EOF
+Welcome to your toy office suite.
+You may want to do a few things before you start:
+name your suite, then erase this text.
+EOF
+%>
+    <form with="&Card.new(:body => welcome)">
       <submit label="Create your own office suite" />
       <after-submit uri="/cards" />
     </form>

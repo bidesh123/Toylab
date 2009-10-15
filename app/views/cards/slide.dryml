@@ -1,5 +1,24 @@
 <toy-slide />
 
+<def tag="toy-slide">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header: >
+        <context />
+        <views />
+      </content-header:>
+      <content-body:   >
+        <div class="slide">
+          <rails-authenticity-token />
+          <card />
+          <trash />
+        </div>
+      </content-body:  >
+      <aside:          ><google /></aside:>
+    </edit-page>
+  </set-scoped>
+</def>
+
 <def tag="card" for="Card">
   <div class="slide">
     <p><editor:name /></p>
