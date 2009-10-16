@@ -1,4 +1,6 @@
-Delete that hangs:
+* Editing the head card in Tree removes the text in the SPAN
+
+* Delete that hangs
 
   * Hobo.objectElementFor() returns nil
 
