@@ -23,7 +23,9 @@ function installAutocomplete(el, url, parentName) {
   var inplaceFields = inplaceForm.select("input");
   var inplaceField = inplaceFields[0];
   var update = $("auto_completer");
-  new Ajax.Autocompleter(inplaceField, update, url, {method:'get', paramName: 'q'});
+  var cardId = $(el).up("table.core").id;
+  var id = cardId.split("_").last();
+  new Ajax.Autocompleter(inplaceField, update, url, {method:'get', paramName: 'q', parameters: 'parent_id=' + id});
 };
 
 // Number of seconds before we trigger the appear animation
