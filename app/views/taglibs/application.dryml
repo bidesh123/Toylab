@@ -414,8 +414,9 @@
 </def>
 
 <def tag="reveal-aspect-or-item">
+  <%# image_tag("icons/eye.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"), %>
   <%= link_to_function(
-    image_tag("icons/eye.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"),
+    "Toggle #{attributes[:which] == "aspects" ? "Right" : "Below"}",
     "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 
