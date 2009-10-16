@@ -1,0 +1,27 @@
+Delete that hangs:
+
+  * Hobo.objectElementFor() returns nil
+
+diff --git a/public/javascripts/hobo-rapid.js b/public/javascripts/hobo-rapid.js
+index 0086aba..7683268 100644
+--- a/public/javascripts/hobo-rapid.js
++++ b/public/javascripts/hobo-rapid.js
+@@ -292,7 +292,9 @@ var Hobo = {
+             var objEl = Hobo.objectElementFor(el)
+             Hobo.showSpinner('Removing');
+             function complete() {
+-                if (options.fade) { Hobo.fadeObjectElement(objEl) }
++              console.log("complete()");
++                if (options.fade) { console.log("fade=true\nobjEl: %o", objEl); Hobo.fadeObjectElement(objEl); console.log("after fade"); }
++                console.log("hideSpinner");
+                 Hobo.hideSpinner()
+             }
+             if (updates && updates.length > 0) {
+@@ -351,6 +353,7 @@ var Hobo = {
+ 
+ 
+     objectElementFor: function(el) {
++      console.log("in objectElementFor(%o)", el);
+         var m
+         while(el.getAttribute) {
+             id = Hobo.getModelId(el)
