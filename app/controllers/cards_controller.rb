@@ -12,6 +12,7 @@ class CardsController < ApplicationController
   show_action :list
 
   before_filter :load_editable_card, :only => %w(show edit)
+  before_filter :load_parent_card, :only => %w(auto_kind auto_name)
 
   def show
     hobo_show do
@@ -89,12 +90,19 @@ class CardsController < ApplicationController
   end
 
   def auto_kind
-    @cards = Card.all(:conditions => ["LOWER(kind) LIKE ?", "#{params[:q].to_s.downcase}%"]).map(&:kind).uniq.sort
+    # NOTE: To remove LOWER(name), remove the SQL condition and the 2nd Array element ====================================
+    @cards = Card.all(:conditions => [
+                      "LOWER(kind) LIKE ? AND LOWER(name) = ?",
+                      "#{params[:q].to_s.downcase}%",
+                      @parent_card.name]).map(&:kind).uniq.sort
     render :action => :auto
   end
 
   def auto_name
-    @cards = Card.all(:conditions => ["LOWER(name) LIKE ?", "%#{params[:q].to_s.downcase}%"]).map(&:reference_name).uniq.sort
+    @cards = Card.all(:conditions => [
+                      "LOWER(name) LIKE ? AND LOWER(kind) = ?",
+                      "%#{params[:q].to_s.downcase}%",
+                      @parent_card.kind]).map(&:reference_name).uniq.sort
     render :action => :auto
   end
 
@@ -104,5 +112,9 @@ class CardsController < ApplicationController
 
     @editable_card     = Card.find(params[:edit_id])
     @editable_children = Array(@editable_card) + @editable_card.find_deep_aspects
+  end
+
+  def load_parent_card
+    @parent_card = Card.find(params[:parent_id])
   end
 end
