@@ -150,11 +150,10 @@ class Card < ActiveRecord::Base
 
   def auto_view
     case self.view
-    when "list"  ,"slide", "table", "page", "report","tree"
+    when "list", "slide", "table", "page", "report", "tree"
       self.view
     when "custom", "chart"
       "tree"
-      "report"
     else
       "report"
     end
