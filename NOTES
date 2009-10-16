@@ -25,3 +25,20 @@ index 0086aba..7683268 100644
          var m
          while(el.getAttribute) {
              id = Hobo.getModelId(el)
+
+
+* Toggle should be Show or Hide, depending on the element's state
+
+diff --git a/app/views/taglibs/application.dryml b/app/views/taglibs/application.dryml
+index dc95a54..55206d1 100644
+--- a/app/views/taglibs/application.dryml
++++ b/app/views/taglibs/application.dryml
+@@ -386,7 +386,7 @@
+ 
+ <def tag="body-toggle">
+   <div class="tool">
+-    <%= cid = dom_id(this, :body_cell); link_to_function("Toggle Body", "$(#{cid.to_json}).toggle()") %>
++    <%= cid = dom_id(this, :body_cell); link_to_function("Hide Body", "if($(#{cid.to_json}).visible()) {this.innerHTML = 'Show Body';} else {this.innerHTML = 'Hide Body';}; $(#{cid.to_json}).toggle()") %>
+   </div>
+ </def>
+ 
