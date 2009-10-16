@@ -148,6 +148,18 @@ class Card < ActiveRecord::Base
     column_number
   end
 
+  def auto_view
+    case self.view
+    when "list"  ,"slide", "table", "page", "report","tree"
+      self.view
+    when "custom", "chart"
+      "tree"
+      "report"
+    else
+      "report"
+    end
+  end
+
   def inherit_from_siblings this_list
     siblings = this_list.items(:order => "updated_at DESC", :limit => 1)
     if this_sibling = siblings[0] # last one modified

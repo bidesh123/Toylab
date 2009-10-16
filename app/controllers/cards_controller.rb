@@ -14,7 +14,8 @@ class CardsController < ApplicationController
   before_filter :load_editable_card, :only => %w(show edit)
 
   def show
-    hobo_show
+    self.this ||= find_instance({})
+    render :action => this.auto_view
   end
 
   def index
