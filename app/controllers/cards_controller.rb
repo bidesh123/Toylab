@@ -4,17 +4,59 @@ class CardsController < ApplicationController
 
   auto_actions :all
   auto_actions_for :aspects, :create
-  show_action :list
-  show_action :slide
   show_action :report
-  show_action :tree
-  show_action :page
   show_action :table
+  show_action :page
+  show_action :tree
+  show_action :slide
+  show_action :list
 
   before_filter :load_editable_card, :only => %w(show edit)
 
   def show
     hobo_show do
+      render :action => this.auto_view
+    end
+  end
+
+  def report
+    hobo_show do
+      this.update_attribute(:view, "report")
+      render :action => this.auto_view
+    end
+  end
+
+  def table
+    hobo_show do
+      this.update_attribute(:view, "table")
+      render :action => this.auto_view
+    end
+  end
+
+  def page
+    hobo_show do
+      this.update_attribute(:view, "page")
+      render :action => this.auto_view
+    end
+  end
+
+  def tree
+    hobo_show do
+      this.update_attribute(:view, "tree")
+      render :action => this.auto_view
+    end
+  end
+
+  def slide
+    hobo_show do
+      this.update_attribute(:view, "slide")
+      render :action => this.auto_view
+    end
+  end
+
+  def list
+    hobo_show do
+      this.update_attribute(:view, "list")
       render :action => this.auto_view
     end
   end
