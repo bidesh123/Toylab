@@ -27,10 +27,10 @@ function installAutocomplete(el, url, parentName) {
 };
 
 // Number of seconds before we trigger the appear animation
-var showDelay = 2;
+var showDelay = 1.0;
 
 // Duration of the appear animation
-var appearDelay = 0.0;
+var appearDelay = 0.25;
 
 // Number of seconds before we trigger the fade animation
 var hideDelay = 0.5;
