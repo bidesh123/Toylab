@@ -23,7 +23,7 @@
         "name your suite, then erase this text." +
         ""
     %>
-    <form with="&Card.new(:body => welcome)">
+    <form with="&Card.new(:view => 'Page', :body => welcome)">
       <submit label="Create your own office suite" />
     </form>
   </new-link:>
