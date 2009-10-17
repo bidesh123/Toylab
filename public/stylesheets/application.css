@@ -1,3 +1,7 @@
+input {
+    text-align:inherit;
+}
+
 td.cell, div.cells th{
     border-right:1px solid #eee; padding-left:.618em
 }
