@@ -1,3 +1,7 @@
+input, textarea, .input {
+  width: auto
+}
+
 input {
     text-align:inherit;
 }
@@ -920,10 +924,6 @@ td.delete-button form.button-to{
 
 tr.controls td {
    padding-right: .8em;
-}
-
-input, textarea, .input {
-  width: auto
 }
 
 input {

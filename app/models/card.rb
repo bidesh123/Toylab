@@ -7,13 +7,10 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    view         enum_string(:view ,  :none , :auto  , :custom,
-                             :page , :list  , :slide , :tree  ,
-                             :table, :report, :chart
-                            )
-    theme        enum_string(:theme, :none  , :auto,
-                             :pink , :orange, :yellow, :green , :purple
-                            ) #no blue
+    view         enum_string(:view , :page  , :list, :table, :slide,
+                             :none , :custom, :tree, :report, :chart )
+    theme        enum_string(:theme, :pink, :orange, :yellow, :green, :purple,
+                             :none                                   )
     context_id   :integer
     timestamps
   end
@@ -153,11 +150,11 @@ class Card < ActiveRecord::Base
 
   def auto_view
     case self.view
-    when           "list"  , "slide", "table", "page", "report", "tree"
+    when "list", "slide", "table", "page", "report", "tree"
       self.view
-    when           "custom", "chart"
+    when "custom", "chart"
       "tree"
-    else #         "view", "none"
+    else
       "report"
     end
   end
