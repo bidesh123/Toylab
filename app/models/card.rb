@@ -72,13 +72,8 @@ class Card < ActiveRecord::Base
     cols = this_list.columns
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
     update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
-<<<<<<< HEAD
-    cols.each do |col|
-      on_automatic do
-=======
-    create_dependents do
+    on_automatic do
       cols.each do |col|
->>>>>>> cdc259d926f639d33ea4a24a348e69608c02d152
         this_new_aspect = self.aspects.create!(
           :based_on_id => col.id,
           :kind        => col.kind
