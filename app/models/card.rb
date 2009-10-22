@@ -14,7 +14,14 @@ class Card < ActiveRecord::Base
     theme        enum_string(:theme   ,
                              :pink   , :orange, :yellow  , :green          , :purple,
                              :none                                                  )
-    context_id   :integer
+
+    context_id     :integer # Deprecated
+    number         :integer # Deprecated
+
+    list_position  :integer
+    whole_position :integer
+    table_position :integer
+
     timestamps
   end
 
@@ -357,7 +364,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   #  super
   #end
 
-  def move_to!(target)
+  def move_to!(target, list_name)
     remove_from_list
     update_attributes( :list => nil,         :whole => target.whole) if target.whole
     update_attributes( :list => target.list, :whole => nil         ) if target.list
