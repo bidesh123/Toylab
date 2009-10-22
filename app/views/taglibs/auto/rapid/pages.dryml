@@ -83,11 +83,11 @@
     
           <section param="content-body" with-flash-messages>
             <view:body param="description"/>
-            <field-list fields="kind, script, view, access, theme, number, list, table, whole" param/>
+            <field-list fields="kind, script, view, access, theme, number, list_position, whole_position, table_position, list, table, whole" param/>
             <section param="collection-section">
               <h3 param="collection-heading">Items</h3>
               
-              <sortable-collection:items param="collection"/>
+              <collection:items param/>
             </section>
           </section>
         </section>

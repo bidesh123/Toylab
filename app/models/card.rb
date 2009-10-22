@@ -30,23 +30,24 @@ class Card < ActiveRecord::Base
 
   #1
   belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true
-  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true, :dependent => :destroy, :order => "number"
+  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true, :dependent => :destroy, :order => "list_position"
 
   #2
   belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true
-  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true, :dependent => :destroy, :order => "number"
+  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true, :dependent => :destroy, :order => "whole_position"
 
   #3
   belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true
-  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true, :dependent => :destroy, :order => "number"
+  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true, :dependent => :destroy, :order => "table_position"
 
   #4
   belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
   has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
 
- sortable :scope => :list_id,  :column => :list_position,  :list_name => :list
- sortable :scope => :whole_id, :column => :whole_position, :list_name => :whole
- sortable :scope => :table_id, :column => :table_position, :list_name => :table
+ sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
+ sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
+ sortable :scope => :table_id,   :column => :table_position, :list_name => :table
+ sortable :scope => :context_id, :column => :number
 
   named_scope :top_level        ,
      :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil], :order => "created_at DESC"
@@ -68,7 +69,7 @@ class Card < ActiveRecord::Base
 
  def inherit_from_columns this_list
     #self is new item
-    cols = this_list.columns :order => "number"
+    cols = this_list.columns
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
     update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
     create_dependents do
@@ -364,12 +365,30 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   #  super
   #end
 
-  def move_to!(target, list_name)
-    remove_from_list
-    update_attributes( :list => nil,         :whole => target.whole) if target.whole
-    update_attributes( :list => target.list, :whole => nil         ) if target.list
-    #logger.debug {"==> Inserting at #{target.number}"}
-    insert_at(target.number)
+  def move_to!(target)
+    case
+    when self.whole
+      # If we have the same parent...
+      if self.whole == target.whole then
+        # Then move this node in front of the one we're dropping on
+        logger.debug {"==> Removing from whole list"}
+        self.remove_from_list(:whole)
+        logger.debug {"==> Moving in front of #{target.id}/#{target.whole_position}"}
+        self.insert_at!(target.whole_position, :whole)
+      elsif false then
+      else
+        target.aspects << self
+      end
+    when self.list
+    when self.table
+    else
+      raise ArgumentError, "Don't know where this came from?  It's not whole, list or table..."
+    end
+
+#    remove_from_list
+#    update_attributes( :list => nil,         :whole => target.whole) if target.whole
+#    update_attributes( :list => target.list, :whole => nil         ) if target.list
+#    insert_at!(target.number)
   end
 
   def find_deep_aspects
