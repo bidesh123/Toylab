@@ -6,6 +6,19 @@
 
 <!-- view-page -->
 
+<def tag="add-aspect">
+  <if test="&this">
+    <% tooltip =
+         (this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
+         this.reference_name
+    %>
+    <form class="add-aspect" with="&Card.new(:whole_id => this.id)">
+      <submit label="Add an aspect" title ="&tooltip" class ="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
 <def tag="show-page" for="User">
   <page merge title="User">
     <body: class="show-page user" param/>
@@ -212,7 +225,7 @@
         class="toy"   ><span
             class="t" >t</span><span
             class="oy">o</span><span
-            class="y">y</span></span><span
+            class="y" >y</span></span><span
         class="office"><span
             class="o" >o</span><span
             class="ff">f</span><span
@@ -261,19 +274,6 @@
 
 <def tag="bottom-right-border-cell">
   <td class="bottom-right-border-cell"><span param="default"></span></td>
-</def>
-
-<def tag="add-aspect">
-  <if test="&this">
-    <% tooltip =
-         (this.aspects.count > 0 ? " Describe another aspect of " : "Describe aspects of ") +
-         this.reference_name
-    %>
-    <form class="add-aspect" with="&Card.new(:whole_id => this.id)">
-      <submit label="Add an aspect" title ="&tooltip" class ="toy-nav add-aspect"/>
-      <after-submit uri="#{request.request_uri}"/>
-    </form>
-  </if>
 </def>
 
 <def tag="add-row">
@@ -396,6 +396,7 @@
       <td class="core-add-item"><add-item /></td>
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
+      <td class="access"><editor:access     /></td>
       <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
       <td class="core-body-toggle"><body-toggle/></td>
     </tr>

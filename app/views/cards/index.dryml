@@ -17,53 +17,7 @@
 
 <index-page>
   <new-link:>
-    <% welcome = <<-EOF
-Welcome to your toy office suite
-
-How to change text:
-- Click in the text you want to change
-- It should become blue in a yellow box
-- Type your new text
-- Click on a blank art of the sheet to see the result
-
-How to change part of a text:
-- Click in the text you want to change
-- It should become blue in a yellow box
-- Select the words you want to replace.
-- They should become blue in a yellow box
-- Type in new words
-- Click on a blank art of the sheet to see the result.
-
-You can't change the blue buttons.
-When you click on a piece of text, you turn on the text-changer, which is yellow.
-Try it: click on the big grey title then click in a blank spot.
-Do it a couple of times so you know what it looks like when the text changer is on
-Type your text then click in a blank space on the page.
-If you are allowed to change it, its background will become yellow.
-This tells you that you can now enter text.
-1. Name your suite: Click in the gray text above to replace with the right name.
-1. Name your suite: Click in the gray text above to replace with the right name.
-2. If you want text, such as this one on your lop level, simply click in this text and replace it
-2. erase this text.
-You may want to do a few things before you start:
-
-2. If you want text text in your suite, lick here and simply press delete to erase this text.  Or, if you want text on this page
-
-  EOF
-    %>
-
-    <% welcome = <<-EOF
-Welcome to your toy office suite.
-
-You may want to do a few things before you start
-1. Name your suite. Click on the grey title, type the new name, then click somewhere else.
-2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
-3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
-
-Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
-  EOF
-    %>
-    <form with="&Card.new(:body => welcome, :view => 'page')">
+    <form with="&Card.new_suite">
       <submit label="Create your own office suite" />
     </form>
   </new-link:>

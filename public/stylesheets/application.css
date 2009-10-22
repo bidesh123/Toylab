@@ -1,3 +1,14 @@
+div.context ul, ul.view-nav {
+    padding-top:.618em;
+}
+div.views {
+    padding-bottom:.618em;
+}
+
+td.theme, td.go, td.bottom-controls td.reveal, td.core-body-toggle {
+    padding-left:.382em;
+}
+
 input, textarea, .input {
   width: auto
 }
@@ -145,6 +156,7 @@ body.user h2 { margin-bottom:.62em;}
         outline-offset:0px;
         border:0;margin:0;
 }
+
 /*
 tr.self-and-aspects-row {font-size: 62.5%;}
 .tiny-gray {font-size: 62.5%; color:#ccc;}
@@ -154,7 +166,6 @@ td.aspect-body-cell {font-size:162%;}
 
 /* td.inner.aspect-name-cell { font-size:100%;} */
 .inner {font-size:62.5%;}
-ul.view-nav li.not-enabled {padding:3em;}
 
 
 
@@ -167,9 +178,6 @@ div.aspects {margin-top:.62em;}
 a {
   text-decoration:none;
   color: #69f;
-}
-div.context ul, ul.view-nav {
-    padding-top:.618em;
 }
 ul.sub-pitch, ul.cards,
 h1, h2,

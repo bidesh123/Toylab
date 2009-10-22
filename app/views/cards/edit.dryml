@@ -21,8 +21,8 @@
 <def tag="self-and-aspects-row">
   <tr class="self-and-aspects-row">
     <td class="core">
-      <%logger.debug :this
-        logger.debug this.to_yaml %>
+      <%#logger.debug :this
+        #logger.debug this.to_yaml %>
         <core />
     </td>
     <td class="aspects-table" if="&this.aspects" id="<%= dom_id(this, 'aspects') %>">

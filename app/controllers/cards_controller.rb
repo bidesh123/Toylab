@@ -12,7 +12,7 @@ class CardsController < ApplicationController
   show_action :list
 
   before_filter :load_editable_card, :only => %w(show edit)
-  before_filter :load_parent_card, :only => %w(auto_kind auto_name)
+  before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
 
   def show
     hobo_show do

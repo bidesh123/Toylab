@@ -7,12 +7,13 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    view         enum_string(:view    , :page  , :list, :table, :slide,
-                             :none    , :custom, :tree, :report, :chart )
-    access       enum_string(:private , :public, :sandbox,
-                             :none    , :auto                           )
-    theme        enum_string(:theme   , :pink  , :orange, :yellow, :green, :purple,
-                             :none                                      )
+    view         enum_string(:view    , :page   , :list  , :table          , :slide,
+                             :none    , :custom , :tree  , :report         , :chart )
+    access       enum_string(:access  , :private, :public, :collaboration  , :sandbox,
+                             :auto                                                  )
+    theme        enum_string(:theme   ,
+                             :pink   , :orange, :yellow  , :green          , :purple,
+                             :none                                                  )
     context_id   :integer
     timestamps
   end
@@ -42,7 +43,7 @@ class Card < ActiveRecord::Base
   named_scope :top_level        ,
      :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil], :order => "created_at DESC"
 #  named_scope :similar_instances, lambda {
-#    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, current_user.id]}
+#    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, acting_user.id]}
 #  }
 
   before_save do |c| c.context_id = c.whole_id || c.list_id end
@@ -57,7 +58,7 @@ class Card < ActiveRecord::Base
 #    end
 #  end
 
-  def inherit_from_columns this_list
+ def inherit_from_columns this_list
     #self is new item
     cols = this_list.columns :order => "number"
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
@@ -183,7 +184,10 @@ class Card < ActiveRecord::Base
   end
 
   def already_inherited prototype
-    self.aspects.m
+    self.aspects.each do |asp|
+      return true if asp.based_on_id == [prototype.id, prototype.based_on_id]
+    end
+    false
   end
 
   def inherit_by_example example
@@ -285,6 +289,36 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
   def itself
     @itself_cache ||= Card.find id
+  end
+
+  def self.new_suite
+    self.create_suite do
+      Card.new  :body   => self.welcome        ,
+                :view   => 'page'         ,
+                :access => 'collaboration'
+    end
+  end
+
+  def self.welcome
+    <<-QUOTe
+      Welcome to your toy office suite.
+
+      You may want to do a few things before you start
+      1. Name your suite. Click on the grey title, type the new name, then click somewhere else.
+      2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
+      3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
+
+      Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
+
+       QUOTe
+  end
+
+  def self.create_suite
+    raise "Must pass block to yield to" unless block_given?
+    Thread.current["creating_suite"] = true
+    yield
+  ensure
+    Thread.current["creating_suite"] = false
   end
 
   def create_dependents
@@ -417,33 +451,185 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     Thread.current["creating_child_aspects"]
   end
 
-  def create_permitted?
-    return true if owner_or_admin?
-    return false unless acting_user.signed_up?
+  def owner_or_admin?
+    owner_is?(acting_user) || acting_user.administrator?
+  end
 
-    if whole_id then
-      Card.find(whole_id).owner_is?(acting_user)
+  def sandbox_level_requirements intent_level
+    case intent_level
+    when :manage
+      :administrator
+    when :script
+      :owner
+    when :design
+      :signed_in
+    when :edit, :see
+      :guest
     else
-      whole_id.nil? || creating_child_aspects?
+      :error
+    end
+  end
+
+  def collaboration_requirements intent
+    case intent
+    when :manage
+      :administrator
+    when :script, :design
+      :owner
+    when :use
+      :signed_in
+    when :see
+      :guest
+    else
+      :error
+    end
+  end
+
+  def public_requirements intent
+    case intent
+    when :manage
+      :administrator
+    when :script, :design, :use
+      :owner
+    when :see
+      :guest
+    else
+      :error
+    end
+  end
+
+  def private_requirements intent
+    case intent
+    when :manage
+      :administrator
+    when :script, :design, :use, :see
+      :owner
+    else
+      :error
+    end
+  end
+
+  def intent_permitted? intent, access_source = nil
+    access_level = (access_source || self).access || "private"
+    intent_level = case intent
+    when :manage
+      :administrate
+    when :add_aspect, :add_column, :delete_suite, :delete_aspect, :delete_column, :edit_structure
+      :design
+    when :add_item, :delete_item, :edit_data
+      :use
+    when :new_suite
+      :start
+    when :read
+      :see
+    else
+      #including :error, :dangling, :program_error, data_error, :illegal
+      :error
+    end
+marielle  end
+
+  def grant_permission requirements
+    acting_user.administrator? || case requirements
+    when :owner
+      acting_user == context_card.owner
+    when :signed_up
+      acting_user.signed_up?
+    when :guest
+      true
+    else
+      false
+    end
+  end
+
+  def intent_level_permitted? intent, access_level
+    requirements = case access_level
+    when :sandbox
+      sandbox_requirements intent_level
+    when :collaboration
+      collaboration_requirements intent_level
+    when :public
+      public_requirements intent_level
+    when :private, :access, :nil
+      private_requirements intent_level
+    else
+      :error
+    end
+    grant_permission requirements
+  end
+
+  def create_permitted?
+    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+    logger.debug self.to_yaml
+    return true
+    ancestor_id = (pointing_left = whole_id || table_id) || list_id
+    if !ancestor_id
+      intent_permitted? :create_suite
+    elsif !ancestor = Card.find(ancestor_id)
+      self.theme = "pink"
+      intent_permitted? :illegal
+    elsif whole_id
+      intent_permitted? :add_aspect, whole.access
+    elsif table_id
+      intent_permitted? :add_column, table.access
+    elsif item_id
+      intent_permitted? :add_item  , list.access
+    else
+      intent_permitted? :error
+    end
+  end
+
+  def destroy_permitted?
+    logger.debug "========================destroy_permitted?=================================================="
+    logger.debug self.to_yaml
+    return true
+    ancestor_id = (pointing_left = whole_id || table_id) || list_id
+    if ancestor_id
+      intent_permitted? :delete_suite
+    elsif !ancestor = Card.find(ancestor_id)
+      self.theme = "pink"
+      intent_permitted? :delete_suite
+    elsif whole_id
+      intent_permitted? :delete_aspect, whole.access
+    elsif table_id
+      intent_permitted? :delete_column, table.access
+    elsif item_id
+      intent_permitted? :delete_item  , list.access
+    else
+      intent_permitted? :error
+    end
+  end
+
+  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
+    logger.debug "======================edit_permitted?======================================================"
+    logger.debug self.to_yaml
+    return true
+    if    ["name", "body"  , "theme"].include attribute.name
+      intent_permitted? :edit_data
+    elsif ["kind", "script"].include attribute.name
+      intent_permitted? :edit_structure
+    else
+      intent_permitted? :error
     end
   end
 
   def update_permitted?
-    return true if owner_or_admin?
-    return false unless acting_user.signed_up?
-
-    only_changed?(:name, :body, :theme)
-  end
-
-  def destroy_permitted?
-    owner_or_admin?
+    logger.debug "====================update_permitted?================================================"
+    logger.debug self.to_yaml
+    return true
+    if only_changed?       :name, :body  , :theme
+      intent_permitted? :edit_data
+    elsif only_changed?    :kind, :script, :name, :body  , :theme
+      intent_permitted? :edit_structure
+    else
+      intent_permitted? :error
+    end
   end
 
   def view_permitted?(field)
-    true
+    logger.debug "=======================view_permitted?=========================================================="
+    logger.debug self.to_yaml
+    return true
+    intent_permitted?   :read
   end
 
-  def owner_or_admin?
-    owner_is?(acting_user) || acting_user.administrator?
-  end
 end
