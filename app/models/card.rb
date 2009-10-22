@@ -37,8 +37,9 @@ class Card < ActiveRecord::Base
   belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
   has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
 
-  acts_as_list :column => :number, :scope =>  :context
-# sortable                         :scope => [:list_id, whole_id, table_id]
+ sortable :scope => :list_id,  :column => :list_position,  :list_name => :list
+ sortable :scope => :whole_id, :column => :whole_position, :list_name => :whole
+ sortable :scope => :table_id, :column => :table_position, :list_name => :table
 
   named_scope :top_level        ,
      :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil], :order => "created_at DESC"
