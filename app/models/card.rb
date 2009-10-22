@@ -560,6 +560,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 marielle  end
 
   def grant_permission requirements
+    return true if on_automatic?
+
     acting_user.administrator? || case requirements
     when :owner
       acting_user == context_card.owner
