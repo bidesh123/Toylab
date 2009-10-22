@@ -334,6 +334,14 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     Thread.current[thread_name] = false
   end
 
+  def self.on_automatic? thread_name = "on automatic"
+    Thread.current[thread_name]
+  end
+
+  def on_automatic? thread_name = "on automatic"
+    self.class.on_automatic? thread_name
+  end
+
   def column_name_rows deep
     names        = deep[:columns][:names]
     column_names = names.map do |column_name|
