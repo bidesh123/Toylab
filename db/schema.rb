@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091019072537) do
+ActiveRecord::Schema.define(:version => 20091022185207) do
 
   create_table "cards", :force => true do |t|
     t.string   "kind"
@@ -28,6 +28,9 @@ ActiveRecord::Schema.define(:version => 20091019072537) do
     t.integer  "table_id"
     t.string   "view"
     t.string   "access"
+    t.integer  "list_position"
+    t.integer  "whole_position"
+    t.integer  "table_position"
   end
 
   create_table "users", :force => true do |t|
