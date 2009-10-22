@@ -63,14 +63,14 @@ class Card < ActiveRecord::Base
     cols = this_list.columns :order => "number"
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
     update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
-    cols.each do |col|
-      create_dependents do
+    create_dependents do
+      cols.each do |col|
         this_new_aspect = self.aspects.create!(
           :based_on_id => col.id,
           :kind        => col.kind
         )
         this_new_aspect.generate_aspects_recursively col
-      end if col
+      end
     end
   end
 
