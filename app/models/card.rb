@@ -64,7 +64,7 @@ class Card < ActiveRecord::Base
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
     update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
     cols.each do |col|
-      create_dependents do
+      on_automatic do
         this_new_aspect = self.aspects.create!(
           :based_on_id => col.id,
           :kind        => col.kind
@@ -78,7 +78,7 @@ class Card < ActiveRecord::Base
     # self is a new column
     return unless dest_items = this_table.items    
     if this_table.columns.length == 1 #special case for no pre-existing columns
-      create_dependents do
+      on_automatic do
 #       if (base = self.table.based_on) &&
 #          (cols = base.columns)        &&
 #          (col = cols[0])
@@ -91,7 +91,7 @@ class Card < ActiveRecord::Base
         generic_row = this_table.columns.create!
       end
     else
-      create_dependents do
+      on_automatic do
         dest_items.each do |dest_item|
           dest_item.aspects.create!(
             :based_on_id => self.id,
@@ -192,7 +192,7 @@ class Card < ActiveRecord::Base
 
   def inherit_by_example example
     return false if already_inherited(example)
-    create_dependents do
+    on_automatic do
       generate_aspects_recursively example
     end
   end
@@ -292,8 +292,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def self.new_suite
-    self.create_suite do
-      Card.new  :body   => self.welcome        ,
+    on_automatic do
+      Card.new  :body   => welcome        ,
                 :view   => 'page'         ,
                 :access => 'collaboration'
     end
@@ -313,20 +313,16 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
        QUOTe
   end
 
-  def self.create_suite
-    raise "Must pass block to yield to" unless block_given?
-    Thread.current["creating_suite"] = true
-    yield
-  ensure
-    Thread.current["creating_suite"] = false
+  def on_automatic thread_name = "on automatic"
+    self.class.on_automatic thread_name
   end
 
-  def create_dependents
+  def self.on_automatic thread_name = "on automatic"
     raise "Must pass block to yield to" unless block_given?
-    Thread.current["creating_dependents"] = true
+    Thread.current[thread_name] = true
     yield
   ensure
-    Thread.current["creating_dependents"] = false
+    Thread.current[thread_name] = false
   end
 
   def column_name_rows deep
