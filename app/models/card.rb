@@ -390,8 +390,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
        QUOTe
   end
 
-  def on_automatic thread_name = "on automatic"
-    self.class.on_automatic thread_name
+  def on_automatic thread_name = "on automatic", &block
+    self.class.on_automatic thread_name, &block
   end
 
   def self.on_automatic thread_name = "on automatic"
