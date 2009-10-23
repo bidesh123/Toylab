@@ -44,10 +44,10 @@ class Card < ActiveRecord::Base
   belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
   has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
 
- sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
- sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
- sortable :scope => :table_id,   :column => :table_position, :list_name => :table
- sortable :scope => :context_id, :column => :number
+  sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
+  sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
+  sortable :scope => :table_id,   :column => :table_position, :list_name => :table
+  sortable :scope => :context_id, :column => :number # deprecated
 
   named_scope :top_level        ,
      :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil], :order => "created_at DESC"
@@ -59,13 +59,73 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
-#  def what_to_do_after_a_change
-#    if it is a column name, update the kinds in the columns
-#    elsif it is a name change, and it has a base
-#      update the dependents
-#      fill in the address from the customer
-#    end
-#  end
+  def source_group
+    case
+    when whole_id                   then :whole
+    when table_id                   then :table
+    when list_id                    then :list
+    when suite?                     then :suites
+    end
+  end
+
+  def destination_group
+    original_group
+    :table       if               whole_id &&  target.list && target.whole
+    :table       if               whole_id &&  target.table
+    :unsupported if table_id               &&  target.list
+    :unsupported if list_id   &&  whole_id &&  target.list
+    :unsupported if list_id   && !whole_id &&  target.table
+    :unsupported if list_id   && !whole_id &&  target.list && target.whole
+    :suites      if list_id   && !whole_id &&  target.suite?
+    :unsupported if suite?                 &&  target.table
+    :unsupported if suite?                 &&  target.list && target.whole
+    :item        if suite?                 && !target.suite?
+  end
+
+  def move_to!(target)
+    operation = self.horizontal? == target.horizontal? ? :insert : :add
+    unless new_group = destination_group == :unsupported
+      self.remove_from_list original_group
+      case operation
+      when :insert
+        case new_group
+        when :whole
+          self.insert_at!(target.whole_position, :whole) if target.whole
+        when :table
+          self.insert_at!(target.table_position, :table) if target.table
+        else # :item, suite?
+          self.insert_at! target.list_position , :list
+        end
+      when :add
+        case new_group
+        when :whole
+          target.aspects << self
+        when :table
+          target.columns << self
+        when :list
+          target.items   << self
+        else # :suite
+           #error # you'd have to drag to the root.
+           #is the root the suites button or the toy office logo ? or both?
+        end
+      else #error
+      end
+    end
+  #to do what if you drag to the top item in the page!!!!? it should NOT become a peer
+  #if it does, the redirect should be the context, at least one level
+  end
+
+  def suite?
+    vertical? && !list_id
+  end
+
+  def horizontal?
+    whole_id || table_id
+  end
+
+  def vertical?
+    !horizontal?
+  end
 
  def inherit_from_columns this_list
     #self is new item
@@ -133,7 +193,15 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def which_column contexts, names, deep
+#  def follow_up_on_update
+#    if it is a column name, update the kinds in the columns
+#    elsif it is a name change, and it has a base
+#      update the dependents
+#      fill in the address from the customer
+#    end
+#  end
+
+def which_column contexts, names, deep
     column_number = 0
     if base || !kind.blank?               # we need a vague column
       until (finished = contexts.length == 0) || column_number
@@ -369,32 +437,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   #  super
   #end
 
-  def move_to!(target)
-    case
-    when self.whole
-      # If we have the same parent...
-      if self.whole == target.whole then
-        # Then move this node in front of the one we're dropping on
-        logger.debug {"==> Removing from whole list"}
-        self.remove_from_list(:whole)
-        logger.debug {"==> Moving in front of #{target.id}/#{target.whole_position}"}
-        self.insert_at!(target.whole_position, :whole)
-      elsif false then
-      else
-        target.aspects << self
-      end
-    when self.list
-    when self.table
-    else
-      raise ArgumentError, "Don't know where this came from?  It's not whole, list or table..."
-    end
-
-#    remove_from_list
-#    update_attributes( :list => nil,         :whole => target.whole) if target.whole
-#    update_attributes( :list => target.list, :whole => nil         ) if target.list
-#    insert_at!(target.number)
-  end
-
   def find_deep_aspects
     returning([]) do |accumulator|
       find_deep_aspects_helper(accumulator)
@@ -557,9 +599,10 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       #including :error, :dangling, :program_error, data_error, :illegal
       :error
     end
-marielle  end
+    intent_level_permitted? intent, access_level
+  end
 
-  def grant_permission requirements
+  def grant_permission? requirements
     acting_user.administrator? || case requirements
     when :owner
       acting_user == context_card.owner
@@ -585,12 +628,12 @@ marielle  end
     else
       :error
     end
-    grant_permission requirements
+    grant_permission? requirements
   end
 
   def create_permitted?
-    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
-    logger.debug self.to_yaml
+#    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+#    logger.debug self.to_yaml
     return true
     ancestor_id = (pointing_left = whole_id || table_id) || list_id
     if !ancestor_id
@@ -610,8 +653,8 @@ marielle  end
   end
 
   def destroy_permitted?
-    logger.debug "========================destroy_permitted?=================================================="
-    logger.debug self.to_yaml
+#    logger.debug "========================destroy_permitted?=================================================="
+#    logger.debug self.to_yaml
     return true
     ancestor_id = (pointing_left = whole_id || table_id) || list_id
     if ancestor_id
@@ -631,8 +674,8 @@ marielle  end
   end
 
   def edit_permitted?(attribute) #try_the_automatically_derived_version_first
-    logger.debug "======================edit_permitted?======================================================"
-    logger.debug self.to_yaml
+#    logger.debug "======================edit_permitted?======================================================"
+#    logger.debug self.to_yaml
     return true
     if    ["name", "body"  , "theme"].include attribute.name
       intent_permitted? :edit_data
@@ -644,8 +687,8 @@ marielle  end
   end
 
   def update_permitted?
-    logger.debug "====================update_permitted?================================================"
-    logger.debug self.to_yaml
+#    logger.debug "====================update_permitted?================================================"
+#    logger.debug self.to_yaml
     return true
     if only_changed?       :name, :body  , :theme
       intent_permitted? :edit_data
@@ -657,8 +700,8 @@ marielle  end
   end
 
   def view_permitted?(field)
-    logger.debug "=======================view_permitted?=========================================================="
-    logger.debug self.to_yaml
+#    logger.debug "=======================view_permitted?=========================================================="
+#    logger.debug self.to_yaml
     return true
     intent_permitted?   :read
   end
