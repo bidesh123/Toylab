@@ -44,14 +44,13 @@ class Card < ActiveRecord::Base
   belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
   has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
 
-#  sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
-#  sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
-#  sortable :scope => :table_id,   :column => :table_position, :list_name => :table
-#  sortable :scope => :context_id, :column => :number # deprecated
+  sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
+  sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
+  sortable :scope => :table_id,   :column => :table_position, :list_name => :table
+  sortable :scope => :context_id, :column => :number # deprecated
 
-  named_scope :top_level                                                               ,
-     :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil],
-     :order => "created_at DESC"
+  named_scope :top_level        ,
+     :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil], :order => "created_at DESC"
 #  named_scope :similar_instances, lambda {
 #    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, acting_user.id]}
 #  }
@@ -603,8 +602,13 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     intent_level_permitted? intent, access_level
   end
 
+<<<<<<< HEAD
   def grant_permission? requirements
+=======
+  def grant_permission requirements
     return true if on_automatic?
+
+>>>>>>> 03dc3051598fb452674037ed0a93e2e367c59e00
     acting_user.administrator? || case requirements
     when :owner
       acting_user == context_card.owner
