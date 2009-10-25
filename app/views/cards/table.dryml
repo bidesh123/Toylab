@@ -25,7 +25,7 @@
     end
 
     redirect_uri = if @card.id == this.id then
-      if target = this.whole || this.list then
+      if target = this.context then
         url_for(:action => params[:action], :id => target)
       else
         cards_url

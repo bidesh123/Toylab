@@ -15,7 +15,7 @@ class Card < ActiveRecord::Base
                              :pink   , :orange, :yellow  , :green          , :purple,
                              :none                                                  )
 
-    context_id     :integer # Deprecated
+    #context_id     :integer # Deprecated
     number         :integer # Deprecated
 
     list_position  :integer
@@ -44,10 +44,10 @@ class Card < ActiveRecord::Base
   belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
   has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
 
-#  sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
-#  sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
-#  sortable :scope => :table_id,   :column => :table_position, :list_name => :table
-#  sortable :scope => :context_id, :column => :number # deprecated
+  sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
+  sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
+  sortable :scope => :table_id,   :column => :table_position, :list_name => :table
+  sortable :scope => :context_id, :column => :number # deprecated
 
   named_scope :top_level                                                               ,
      :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil],
@@ -94,6 +94,8 @@ class Card < ActiveRecord::Base
           self.insert_at!(target.whole_position, :whole) if target.whole
         when :table
           self.insert_at!(target.table_position, :table) if target.table
+        when :list
+          self.insert_at!(target.list_position , :list ) if target.list
         else # :item, suite?
           self.insert_at! target.list_position , :list
         end
@@ -116,19 +118,45 @@ class Card < ActiveRecord::Base
   #if it does, the redirect should be the context, at least one level
   end
 
+  def context
+     case
+     when list_id
+       list
+     when whole_id
+       whole
+     when table_id
+       table
+     else #suite
+       nil
+     end
+  end
+  
+  def context_id
+     list_id ||  whole_id ||  table_id
+  end
+
   def suite?
-    vertical? && !list_id
+    !list_id && !whole_id && !table_id
   end
 
   def horizontal?
-    whole_id || table_id
+                 whole_id ||  table_id
   end
 
   def vertical?
-    !horizontal?
+     list    || !whole    && !table
   end
 
- def inherit_from_columns this_list
+  def next_up_id
+    context_id || id
+  end
+
+  def recursive_access
+    return access unless access == "access"
+    c = context ? c.recursive_access : access
+  end
+
+  def inherit_from_columns this_list
     #self is new item
     cols = this_list.columns
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
@@ -472,10 +500,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     {:origin => id}
   end
 
-  def next_up
-    whole_id || list_id || id
-  end
-
   def numeric?
     true if Float(name) rescue false
   end
@@ -529,8 +553,9 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     owner_is?(acting_user) || acting_user.administrator?
   end
 
-  def sandbox_level_requirements intent_level
-    case intent_level
+  def sandbox_level_requirements intent
+logger.debug "Cap'n, will ye let me #{intent} the sandbag booty now?"
+    case intent
     when :manage
       :administrator
     when :script
@@ -540,11 +565,12 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     when :edit, :see
       :guest
     else
-      :error
+      :sandbox_error
     end
   end
 
   def collaboration_requirements intent
+logger.debug "So Cap'n can I #{intent} this collar bone and shin doctor?"
     case intent
     when :manage
       :administrator
@@ -555,11 +581,12 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     when :see
       :guest
     else
-      :error
+      :collaboration_error
     end
   end
 
   def public_requirements intent
+logger.debug "Well, Cap'n do I #{intent} this publick docomant or not?"
     case intent
     when :manage
       :administrator
@@ -568,27 +595,104 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     when :see
       :guest
     else
-      :error
+      :public_error
     end
   end
 
-  def private_requirements intent
-    case intent
-    when :manage
-      :administrator
-    when :script, :design, :use, :see
-      :owner
+  def create_permitted?
+#    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+#    logger.debug self.to_yaml
+return true
+    if !context_id
+      permitted? :create_suite
+    elsif !context
+      self.theme = "pink"
+      permitted? :illegal
+    elsif whole_id
+      permitted? :add_aspect, whole.access
+    elsif table_id
+      permitted? :add_column, table.access
+    elsif item_id
+      permitted? :add_item  , list.access
     else
-      :error
+      permitted? :error
     end
   end
 
-  def intent_permitted? intent, access_source = nil
-    access_level = (access_source || self).access || "private"
-    intent_level = case intent
+  def destroy_permitted?
+#    logger.debug "========================destroy_permitted?=================================================="
+#    logger.debug self.to_yaml
+return true    
+    if !context_id
+      permitted? :delete_suite
+    elsif !context
+      self.theme = "pink"
+      permitted? :delete_suite
+    elsif whole_id
+      permitted? :delete_aspect, whole.access
+    elsif table_id
+      permitted? :delete_column, table.access
+    elsif item_id
+      permitted? :delete_item  , list.access
+    else
+      permitted? :error
+    end
+  end
+
+  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
+#    logger.debug "======================edit_permitted?======================================================"
+#    logger.debug self.to_yaml
+return true
+    if    ["name", "body"  , "theme"].include attribute.name
+      permitted? :edit_data
+    elsif ["kind", "script"].include attribute.name
+      permitted? :edit_structure
+    else
+      permitted? :error
+    end
+  end
+
+  def update_permitted?
+#    logger.debug "====================update_permitted?================================================"
+#    logger.debug self.to_yaml
+return true
+    if only_changed?       :name, :body  , :theme
+      permitted? :edit_data
+    elsif only_changed?    :kind, :script, :name, :body  , :theme
+      permitted? :edit_structure
+    else
+      permitted? :error
+    end
+  end
+
+  def view_permitted?(field)
+#    logger.debug "=======================view_permitted?=========================================================="
+#    logger.debug self.to_yaml
+return true
+    case field
+    when :name, :body, :theme
+      permitted? :read
+    when :kind
+      true
+    when :script
+      permitted? :script
+    else
+      permitted? :manage
+    end
+  end
+
+  def permitted? demand
+logger.debug "========================================================================"
+logger.debug "Ahoy, Avast, By the Powers, Matey, Sweet trade, Yo ho ho".split(", ").rand +
+             "! Who goes thar?"
+    source ||= self
+    intent = case demand
     when :manage
       :administrate
-    when :add_aspect, :add_column, :delete_suite, :delete_aspect, :delete_column, :edit_structure
+    when :add_aspect, :delete_aspect,
+         :add_column, :delete_column,
+                      :delete_suite,
+                      :edit_structure
       :design
     when :add_item, :delete_item, :edit_data
       :use
@@ -596,116 +700,62 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       :start
     when :read
       :see
-    else
-      #including :error, :dangling, :program_error, data_error, :illegal
-      :error
+    else#including :error, :dangling, :program_error, data_error, :illegal
+      logger.debug "****error 9999999999999999999999999999999999999999999999999999"
+      :unsupported_demand
     end
-    intent_level_permitted? intent, access_level
+logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{(source || self) ? source.reference_name : "nil"}!"
+    intent_permitted? intent, source
   end
 
-  def grant_permission? requirements
+  def grant_permission? requirements, source
+logger.debug "Are ye #{requirements} for this #{source.reference_name} booty? We hang snoopers here!"
     return true if on_automatic?
     acting_user.administrator? || case requirements
-    when :owner
-      acting_user == context_card.owner
-    when :signed_up
-      acting_user.signed_up?
     when :guest
       true
+    when :signed_up
+      acting_user.signed_up?
+    when :owner
+      acting_user == source.owner
+    when :administrator
+      acting_user.administrator?
     else
       false
     end
   end
 
-  def intent_level_permitted? intent, access_level
+  def intent_permitted? intent, source
+    access_level = source.access || "private"
+logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
     requirements = case access_level
-    when :sandbox
-      sandbox_requirements intent_level
-    when :collaboration
-      collaboration_requirements intent_level
-    when :public
-      public_requirements intent_level
-    when :private, :access, :nil
-      private_requirements intent_level
+    when "sandbox"
+      sandbox_requirements intent
+    when "collaboration"
+      collaboration_requirements intent
+    when "public"
+      public_requirements intent
+    when "private"
+      private_requirements intent
+    when "access", "nil"
+      context?
+      private_requirements intent
     else
-      :error
+      :access_level_error
     end
-    grant_permission? requirements
+    grant_permission? requirements, source
   end
 
-  def create_permitted?
-#    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
-#    logger.debug self.to_yaml
-    return true
-    ancestor_id = (pointing_left = whole_id || table_id) || list_id
-    if !ancestor_id
-      intent_permitted? :create_suite
-    elsif !ancestor = Card.find(ancestor_id)
-      self.theme = "pink"
-      intent_permitted? :illegal
-    elsif whole_id
-      intent_permitted? :add_aspect, whole.access
-    elsif table_id
-      intent_permitted? :add_column, table.access
-    elsif item_id
-      intent_permitted? :add_item  , list.access
+  def private_requirements intent
+logger.debug "So Cap'n may I #{intent} the private doc?"
+    case intent
+    when :manage
+      :administrator
+    when :script, :design, :use, :see
+      :owner
     else
-      intent_permitted? :error
+      :private_error
     end
-  end
-
-  def destroy_permitted?
-#    logger.debug "========================destroy_permitted?=================================================="
-#    logger.debug self.to_yaml
-    return true
-    ancestor_id = (pointing_left = whole_id || table_id) || list_id
-    if ancestor_id
-      intent_permitted? :delete_suite
-    elsif !ancestor = Card.find(ancestor_id)
-      self.theme = "pink"
-      intent_permitted? :delete_suite
-    elsif whole_id
-      intent_permitted? :delete_aspect, whole.access
-    elsif table_id
-      intent_permitted? :delete_column, table.access
-    elsif item_id
-      intent_permitted? :delete_item  , list.access
-    else
-      intent_permitted? :error
-    end
-  end
-
-  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
-#    logger.debug "======================edit_permitted?======================================================"
-#    logger.debug self.to_yaml
-    return true
-    if    ["name", "body"  , "theme"].include attribute.name
-      intent_permitted? :edit_data
-    elsif ["kind", "script"].include attribute.name
-      intent_permitted? :edit_structure
-    else
-      intent_permitted? :error
-    end
-  end
-
-  def update_permitted?
-#    logger.debug "====================update_permitted?================================================"
-#    logger.debug self.to_yaml
-    return true
-    if only_changed?       :name, :body  , :theme
-      intent_permitted? :edit_data
-    elsif only_changed?    :kind, :script, :name, :body  , :theme
-      intent_permitted? :edit_structure
-    else
-      intent_permitted? :error
-    end
-  end
-
-  def view_permitted?(field)
-#    logger.debug "=======================view_permitted?=========================================================="
-#    logger.debug self.to_yaml
-    return true
-    intent_permitted?   :read
   end
 
 end

@@ -145,7 +145,8 @@
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-      <if test="&(this =~ /^\d+=>$/) && (the_column = Card.find(Integer(this.delete '=>')))">
+      <% is_a_numeric_pointer = (this =~ /^\d+=>$/) %>
+      <if test="&is_a_numeric_pointer && the_column = Card.find(Integer this.delete('=>') )">
         <editor:kind with="&the_column" blank-message="Untitled"/>
       </if><else>
         <%= this %>
@@ -179,7 +180,7 @@
     end
 
     redirect_uri = if @card.id == this.id then
-      if target = this.whole || this.list then
+      if target = this.context then
         url_for(:action => params[:action], :id => target)
       else
         cards_url
@@ -236,7 +237,7 @@
 </def>
 
 <def tag="context">
-  <div if="&this.whole || this.list || this.table" class="context">
+  <div if="&this.context" class="context">
     <ul>Context <out whole-off /></ul>
   </div>
 </def>
