@@ -1,5 +1,4 @@
 class Card < ActiveRecord::Base
-
   hobo_model # Don't put anything above this
 
   fields do
@@ -7,16 +6,16 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    view         enum_string(:view    , :page   , :list  , :table   , :slide,
-                             :none    , :custom , :tree  , :report  , :chart )
-    access       enum_string(:access  , :private, :public, :shared  , :demo,
-                             :auto                                                  )
+    view         enum_string(:view    , :page   , :list  , :table   , :slide ,
+                             :none    , :custom , :tree  , :report  , :chart  )
+    access       enum_string(:access  , :private, :public, :shared  , :demo  ,
+                             :auto                                            )
     theme        enum_string(:theme   ,
                              :pink   , :orange, :yellow  , :green   , :purple,
-                             :none                                                  )
+                             :none                                            )
 
     #context_id     :integer # Deprecated
-    number         :integer # Deprecated
+    #number         :integer # Deprecated
 
     list_position  :integer
     whole_position :integer
@@ -26,28 +25,32 @@ class Card < ActiveRecord::Base
   end
 
   #0
-  belongs_to :owner     , :class_name => "User", :creator => true
+  belongs_to :owner    , :class_name => "User"  , :creator => true
 
   #1
-  belongs_to :list      , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true
-  has_many   :items     , :class_name => 'Card', :foreign_key => :list_id    , :accessible => true, :dependent => :destroy, :order => "list_position"
+  belongs_to :list     , :class_name => 'Card'  , :foreign_key => :list_id    , :accessible => true
+  has_many   :items    , :class_name => 'Card'  , :foreign_key => :list_id    , :accessible => true,
+                         :dependent  => :destroy, :order       => "list_position"
 
   #2
-  belongs_to :whole     , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true
-  has_many   :aspects   , :class_name => 'Card', :foreign_key => :whole_id   , :accessible => true, :dependent => :destroy, :order => "whole_position"
+  belongs_to :whole    , :class_name => 'Card'  , :foreign_key => :whole_id   , :accessible => true
+  has_many   :aspects  , :class_name => 'Card'  , :foreign_key => :whole_id   , :accessible => true,
+                         :dependent  => :destroy, :order       => "whole_position"
 
   #3
-  belongs_to :table     , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true
-  has_many   :columns   , :class_name => 'Card', :foreign_key => :table_id   , :accessible => true, :dependent => :destroy, :order => "table_position"
+  belongs_to :table    , :class_name => 'Card'  , :foreign_key => :table_id   , :accessible => true
+  has_many   :columns  , :class_name => 'Card'  , :foreign_key => :table_id   , :accessible => true,
+                         :dependent  => :destroy, :order       => "table_position"
 
   #4
-  belongs_to :based_on  , :class_name => "Card", :foreign_key => :based_on_id, :accessible => true
-  has_many   :instances , :class_name => 'Card', :foreign_key => :based_on_id, :accessible => true, :dependent => :destroy
+  belongs_to :based_on , :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true
+  has_many   :instances, :class_name => 'Card'  , :foreign_key => :based_on_id, :accessible => true,
+                         :dependent  => :destroy
 
   sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
   sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
   sortable :scope => :table_id,   :column => :table_position, :list_name => :table
-  sortable :scope => :context_id, :column => :number # deprecated
+#  sortable :scope => :context_id, :column => :number # deprecated
 
   named_scope :top_level                                                               ,
      :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil],
@@ -70,7 +73,7 @@ class Card < ActiveRecord::Base
   end
 
   def destination_group
-    original_group
+    source_group
     :table       if               whole_id &&  target.list && target.whole
     :table       if               whole_id &&  target.table
     :unsupported if table_id               &&  target.list
@@ -86,7 +89,7 @@ class Card < ActiveRecord::Base
   def move_to!(target)
     operation = self.horizontal? == target.horizontal? ? :insert : :add
     unless new_group = destination_group == :unsupported
-      self.remove_from_list original_group
+      self.remove_from_list source_group
       case operation
       when :insert
         case new_group
@@ -340,8 +343,8 @@ def which_column contexts, names, deep
     deep
   end
 
-def look_wide
-end
+#def look_wide
+#end
 
 def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect_depth = 9, item_depth = 0
     unless item_depth == 0
@@ -411,17 +414,16 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def self.welcome
-    <<-QUOTe
-      Welcome to your toy office suite.
+    "
+     Welcome to your toy office suite.
 
-      You may want to do a few things before you start
-      1. Name your suite. Click on the grey title, type the new name, then click somewhere else.
-      2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
-      3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
+     You may want to do a few things before you start
+     1. Name your suite. Click on the grey title, type the new name, then click somewhere else.
+     2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
+     3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
 
-      Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
-
-       QUOTe
+     Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
+    "
   end
 
   def on_automatic thread_name = "on automatic", &block
@@ -559,7 +561,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def demo_level_requirements intent
-logger.debug "Cap'n, will ye let me #{intent} the sandbag booty now?"
+#logger.debug "Cap'n, will ye let me #{intent} the demo booty now?"
     case intent
     when :manage
       :administrator
@@ -575,7 +577,7 @@ logger.debug "Cap'n, will ye let me #{intent} the sandbag booty now?"
   end
 
   def shared_requirements intent
-logger.debug "So Cap'n can I #{intent} this collar bone and shin doctor?"
+#logger.debug "So Cap'n can I #{intent} this shared booty?"
     case intent
     when :manage
       :administrator
@@ -591,7 +593,7 @@ logger.debug "So Cap'n can I #{intent} this collar bone and shin doctor?"
   end
 
   def public_requirements intent
-logger.debug "Well, Cap'n do I #{intent} this publick docomant or not?"
+#logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
     case intent
     when :manage
       :administrator
@@ -620,7 +622,7 @@ return true
     elsif item_id
       permitted? :add_item  , list.recursive_access
     else
-      permitted? "create_error;#{attribute.inspect}".to_sym
+      permitted? "create_error_for_card_id_;#{id}".to_sym
     end
   end
 
@@ -639,71 +641,92 @@ return true
     elsif item_id
       permitted? :delete_item  , list.recursive_access
     else
-      permitted? "destroy_error;#{attribute.inspect}".to_sym
+      permitted? "destroy_error_for_card_id_;#{id}".to_sym
     end
   end
 
-  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
+  def edit_permitted_notttttttttttttttttttt?(attribute) #try_the_automatically_derived_version_first
     return true
-
-    if    [:name, :body, :theme].include? attribute
+    if !attribute
       permitted? :edit_data
-    elsif [:kind, :script].include? attribute
+    elsif [:id,
+           :created_at   , :updated_at    ,
+           :whole_id     , :list_id       , :based_on_id   , :table_id, :owner_id,
+           :list_position, :whole_position, :table_position
+                                ].include? attribute
+      permitted? :control_access
+    elsif [:script              ].include? attribute
+      permitted? :script
+    elsif [:kind         , :view          , :access].include? attribute
       permitted? :edit_structure
+    elsif [:name         , :body          , :theme ].include? attribute
+      permitted? :edit_data
     else
-      permitted? "edit_error;#{attribute.inspect}".to_sym
+      permitted? "unknown_field_#{attribute.inspect}_in_card_id#{id}".to_sym
     end
   end
 
   def update_permitted?
     return true
-
-    if only_changed?       :name, :body  , :theme
-      permitted? :edit_data
-    elsif only_changed?    :kind, :script, :name, :body  , :theme
+    if    any_changed? :id,
+                       :created_at, :updated_at,
+                       :whole_id, :list_id, :table_id, :based_on_id, :owner_id,
+                       :list_position, :whole_position, :table_position
+      permitted? :manage
+    elsif any_changed? :script
+      permitted? :script
+    elsif any_changed? :access
+      permitted? :control_access
+    elsif any_changed? :kind, :view
       permitted? :edit_structure
+    elsif any_changed? :name, :body, :theme
+      permitted? :edit_data
     else
-      permitted? "update_error;#{attribute.inspect}".to_sym
+      permitted? "no_field_changed_in_card_id_;#{id}".to_sym
     end
   end
 
   def view_permitted?(field)
     return true
-
     case field
-    when :name, :body, :theme
+    when :name, :body, :theme, :view, :kind, nil
       permitted? :read
-    when :kind
-      true
+    when :access
+      permitted? :design
     when :script
       permitted? :script
     when nil
       permitted? :read
-    else
+    when :id,
+         :created_at, :updated_at,
+         :whole_id, :list_id, :based_on_id, :owner_id, :table_id,
+         :list_position, :whole_position, :table_position
       permitted? :manage
+    else
+      :no_such_field_in_view_permitted?
     end
   end
 
   def permitted? demand
     intent = case demand
-             when :manage
-               :administrate
-             when :add_aspect, :delete_aspect,
-               :add_column, :delete_column,
-               :delete_suite,
-               :edit_structure, :script
-               :design
-             when :add_item, :delete_item, :edit_data
-               :use
-             when :new_suite
-               :start
-             when :read
-               :see
-             else#including :error, :dangling, :program_error, data_error, :illegal
-               logger.debug "****error 9999999999999999999999999999999999999999999999999999: #{demand}"
-               :unsupported_demand
-             end
-    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
+      when :manage
+        :administrate
+      when :add_aspect, :delete_aspect,
+           :add_column, :delete_column,
+           :delete_suite,
+           :edit_structure, :script
+           :design
+      when :add_item, :delete_item, :edit_data
+       :use
+      when :new_suite
+       :start
+      when :read
+       :see
+      else#including :error, :dangling, :program_error, data_error, :illegal
+       logger.debug "unsupported demand: #{demand} 9999999999999999999999999999999999999999999999999999:"
+       :unsupported_demand
+      end
+#    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
     intent_permitted? intent
   end
 
@@ -716,7 +739,8 @@ return true
   alias_method_chain :acting_user=, :logging
 
   def grant_permission? requirements
-    logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
+#    logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
+    logger.debug "About to return true or false permission for #{reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
     return true if on_automatic?
 
     acting_user.administrator? || case requirements
@@ -736,7 +760,7 @@ return true
 
   def intent_permitted? intent
     access_level = self.recursive_access || "shared"
-    logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
+#    logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
 
     requirements = case access_level
     when "demo"
@@ -757,7 +781,7 @@ return true
   end
 
   def private_requirements intent
-logger.debug "So Cap'n may I #{intent} the private doc?"
+#logger.debug "So Cap'n may I #{intent} the private doc?"
     case intent
     when :manage
       :administrator
