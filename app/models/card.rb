@@ -138,6 +138,23 @@ class Card < ActiveRecord::Base
      list_id ||  whole_id ||  table_id
   end
 
+  def number
+    case
+    when whole_id; whole_position
+    when table_id; table_position
+    else;          list_position
+    end
+  end
+
+  def number=(value)
+    attr = case
+           when whole_id; :whole_position
+           when table_id; :table_position
+           else;          :list_position
+           end
+    write_attribute(attr, value)
+  end
+
   def suite?
     !list_id && !whole_id && !table_id
   end

@@ -67,8 +67,7 @@
 
 <def tag="card-id" >
   <div class="tool" if="&current_user.administrator?">Suite <%= this.id  %></div>
-  <div class="tool" if="&current_user.administrator?"><editor:number  /><%=  this.number.ordinalize[-2..-1] %>
-</div>
+  <div class="tool" if="&current_user.administrator?"><editor:number/></div>
 </def>
 
 <def tag="core-right-controls-td">
