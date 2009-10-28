@@ -119,16 +119,16 @@ class Card < ActiveRecord::Base
   end
 
   def context
-     case
-     when list_id
-       list
-     when whole_id
-       whole
-     when table_id
-       table
-     else #suite
-       nil
-     end
+    @context ||= case
+                 when list_id
+                   list
+                 when whole_id
+                   whole
+                 when table_id
+                   table
+                 else #suite
+                   nil
+                 end
   end
   
   def context_id
@@ -149,6 +149,11 @@ class Card < ActiveRecord::Base
 
   def next_up_id
     context_id || id
+  end
+
+  def recursive_owner
+    return owner unless owner.nil?
+    context ? context.recursive_owner : owner
   end
 
   def recursive_access
@@ -615,7 +620,7 @@ return true
     elsif item_id
       permitted? :add_item  , list.recursive_access
     else
-      permitted? :error
+      permitted? "create_error;#{attribute.inspect}".to_sym
     end
   end
 
@@ -632,17 +637,17 @@ return true
     elsif item_id
       permitted? :delete_item  , list.recursive_access
     else
-      permitted? :error
+      permitted? "destroy_error;#{attribute.inspect}".to_sym
     end
   end
 
   def edit_permitted?(attribute) #try_the_automatically_derived_version_first
-    if    ["name", "body"  , "theme"].include? attribute
+    if    [:name, :body, :theme].include? attribute
       permitted? :edit_data
-    elsif ["kind", "script"].include? attribute
+    elsif [:kind, :script].include? attribute
       permitted? :edit_structure
     else
-      permitted? :error
+      permitted? "edit_error;#{attribute.inspect}".to_sym
     end
   end
 
@@ -652,7 +657,7 @@ return true
     elsif only_changed?    :kind, :script, :name, :body  , :theme
       permitted? :edit_structure
     else
-      permitted? :error
+      permitted? "update_error;#{attribute.inspect}".to_sym
     end
   end
 
@@ -672,39 +677,48 @@ return true
   end
 
   def permitted? demand
-    source ||= self
     intent = case demand
-    when :manage
-      :administrate
-    when :add_aspect, :delete_aspect,
-         :add_column, :delete_column,
-                      :delete_suite,
-                      :edit_structure
-      :design
-    when :add_item, :delete_item, :edit_data
-      :use
-    when :new_suite
-      :start
-    when :read
-      :see
-    else#including :error, :dangling, :program_error, data_error, :illegal
-      logger.debug "****error 9999999999999999999999999999999999999999999999999999"
-      :unsupported_demand
-    end
-logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{(source || self) ? source.reference_name : "nil"}!"
-    intent_permitted? intent, source
+             when :manage
+               :administrate
+             when :add_aspect, :delete_aspect,
+               :add_column, :delete_column,
+               :delete_suite,
+               :edit_structure, :script
+               :design
+             when :add_item, :delete_item, :edit_data
+               :use
+             when :new_suite
+               :start
+             when :read
+               :see
+             else#including :error, :dangling, :program_error, data_error, :illegal
+               logger.debug "****error 9999999999999999999999999999999999999999999999999999: #{demand}"
+               :unsupported_demand
+             end
+    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
+    intent_permitted? intent
   end
 
-  def grant_permission? requirements, source
-logger.debug "Are ye #{requirements} for this #{source.reference_name} booty? We hang snoopers here!"
+  def acting_user_with_logging=(*args)
+    logger.debug {"==> acting_user=(#{args.inspect})"}
+    #logger.debug { caller.join("\n") }
+    send("acting_user_without_logging=", *args)
+  end
+
+  alias_method_chain :acting_user=, :logging
+
+  def grant_permission? requirements
+    logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
     return true if on_automatic?
+
     acting_user.administrator? || case requirements
     when :guest
       true
     when :signed_up
       acting_user.signed_up?
     when :owner
-      acting_user == source.owner
+      logger.debug {"==> Checking against #{recursive_owner.inspect}"}
+      acting_user == recursive_owner
     when :administrator
       acting_user.administrator?
     else
@@ -712,8 +726,8 @@ logger.debug "Are ye #{requirements} for this #{source.reference_name} booty? We
     end
   end
 
-  def intent_permitted? intent, source
-    access_level = source.recursive_access || "shared"
+  def intent_permitted? intent
+    access_level = self.recursive_access || "shared"
     logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
 
     requirements = case access_level
@@ -731,7 +745,7 @@ logger.debug "Are ye #{requirements} for this #{source.reference_name} booty? We
     else
       :access_level_error
     end
-    grant_permission? requirements, source
+    grant_permission? requirements
   end
 
   def private_requirements intent

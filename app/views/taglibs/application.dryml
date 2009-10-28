@@ -396,7 +396,9 @@
       <td class="core-add-item"><add-item /></td>
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
-      <td class="access"><editor:access     /></td>
+      <if test="&false">
+        <td class="access"><editor:access     /></td>
+      </if>
       <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
       <td class="core-body-toggle"><body-toggle/></td>
     </tr>
@@ -478,18 +480,20 @@
         </else>
       </td>
     </tr>
-    <tr class="script">
-      <td class="script-cell">
-	<div id="<%= dom_id(this, :script_cell) %>" style="display:none">
-	<if test="&this.body ">
-	  <editor:script                   blank-message="....." />
-	</if>
-	<else>
-	  <editor:script class="tiny-gray" blank-message="....." />
-	</else>
-        </div>
-      </td>
-    </tr>
+    <if test="&this.view_permitted?(:script)">
+      <tr class="script">
+        <td class="script-cell">
+          <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
+            <if test="&this.script">
+              <editor:script                   blank-message="....." />
+            </if>
+            <else>
+              <editor:script class="tiny-gray" blank-message="....." />
+            </else>
+          </div>
+        </td>
+      </tr>
+    </if>
     <core-bottom-controls-tr />
   </table>
 </def>
