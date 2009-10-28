@@ -7,12 +7,12 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    view         enum_string(:view    , :page   , :list  , :table          , :slide,
-                             :none    , :custom , :tree  , :report         , :chart )
-    access       enum_string(:access  , :private, :public, :collaboration  , :sandbox,
+    view         enum_string(:view    , :page   , :list  , :table   , :slide,
+                             :none    , :custom , :tree  , :report  , :chart )
+    access       enum_string(:access  , :private, :public, :shared  , :demo,
                              :auto                                                  )
     theme        enum_string(:theme   ,
-                             :pink   , :orange, :yellow  , :green          , :purple,
+                             :pink   , :orange, :yellow  , :green   , :purple,
                              :none                                                  )
 
     #context_id     :integer # Deprecated
@@ -399,9 +399,9 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
   def self.new_suite
     on_automatic do
-      Card.new  :body   => welcome        ,
-                :view   => 'page'         ,
-                :access => 'collaboration'
+      Card.new  :body   => welcome ,
+                :view   => 'page'  ,
+                :access => 'shared'
     end
   end
 
@@ -553,7 +553,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     owner_is?(acting_user) || acting_user.administrator?
   end
 
-  def sandbox_level_requirements intent
+  def demo_level_requirements intent
 logger.debug "Cap'n, will ye let me #{intent} the sandbag booty now?"
     case intent
     when :manage
@@ -565,11 +565,11 @@ logger.debug "Cap'n, will ye let me #{intent} the sandbag booty now?"
     when :edit, :see
       :guest
     else
-      :sandbox_error
+      :demo_error
     end
   end
 
-  def collaboration_requirements intent
+  def shared_requirements intent
 logger.debug "So Cap'n can I #{intent} this collar bone and shin doctor?"
     case intent
     when :manage
@@ -581,7 +581,7 @@ logger.debug "So Cap'n can I #{intent} this collar bone and shin doctor?"
     when :see
       :guest
     else
-      :collaboration_error
+      :shared_error
     end
   end
 
@@ -609,11 +609,11 @@ return true
       self.theme = "pink"
       permitted? :illegal
     elsif whole_id
-      permitted? :add_aspect, whole.access
+      permitted? :add_aspect, whole.recursive_access
     elsif table_id
-      permitted? :add_column, table.access
+      permitted? :add_column, table.recursive_access
     elsif item_id
-      permitted? :add_item  , list.access
+      permitted? :add_item  , list.recursive_access
     else
       permitted? :error
     end
@@ -629,11 +629,11 @@ return true
       self.theme = "pink"
       permitted? :delete_suite
     elsif whole_id
-      permitted? :delete_aspect, whole.access
+      permitted? :delete_aspect, whole.recursive_access
     elsif table_id
-      permitted? :delete_column, table.access
+      permitted? :delete_column, table.recursive_access
     elsif item_id
-      permitted? :delete_item  , list.access
+      permitted? :delete_item  , list.recursive_access
     else
       permitted? :error
     end
@@ -726,13 +726,12 @@ logger.debug "Are ye #{requirements} for this #{source.reference_name} booty? We
   end
 
   def intent_permitted? intent, source
-    access_level = source.access || "private"
-logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
+logger.debug "Now let's see, lad. That would be a #{source.recursive_access || "shared"} document ye be tryin to #{intent}! "
     requirements = case access_level
-    when "sandbox"
-      sandbox_requirements intent
-    when "collaboration"
-      collaboration_requirements intent
+    when "demo"
+      demo_requirements intent
+    when "shared"
+      shared_requirements intent
     when "public"
       public_requirements intent
     when "private"
