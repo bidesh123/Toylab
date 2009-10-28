@@ -656,6 +656,8 @@ return true
   end
 
   def update_permitted?
+    return true
+
     if only_changed?       :name, :body  , :theme
       permitted? :edit_data
     elsif only_changed?    :kind, :script, :name, :body  , :theme
