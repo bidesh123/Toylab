@@ -59,7 +59,7 @@ class Card < ActiveRecord::Base
 #    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, acting_user.id]}
 #  }
 
-  before_save do |c| c.context_id = c.whole_id || c.list_id end
+  #before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
@@ -152,16 +152,6 @@ class Card < ActiveRecord::Base
 
   def next_up_id
     context_id || id
-  end
-
-  def recursive_owner
-    return owner unless owner.nil?
-    context ? context.recursive_owner : owner
-  end
-
-  def recursive_access
-    return access unless access == "access"
-    c = context ? c.recursive_access : access
   end
 
   def inherit_from_columns this_list
@@ -560,236 +550,259 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     owner_is?(acting_user) || acting_user.administrator?
   end
 
-  def demo_level_requirements intent
-#logger.debug "Cap'n, will ye let me #{intent} the demo booty now?"
-    case intent
-    when :manage
-      :administrator
-    when :script
-      :owner
-    when :design
-      :signed_in
-    when :edit, :see
-      :guest
-    else
-      :demo_error
-    end
-  end
-
-  def shared_requirements intent
-#logger.debug "So Cap'n can I #{intent} this shared booty?"
-    case intent
-    when :manage
-      :administrator
-    when :script, :design
-      :owner
-    when :use
-      :signed_in
-    when :see
-      :guest
-    else
-      :shared_error
-    end
-  end
-
-  def public_requirements intent
-#logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
-    case intent
-    when :manage
-      :administrator
-    when :script, :design, :use
-      :owner
-    when :see
-      :guest
-    else
-      :public_error
-    end
-  end
-
   def create_permitted?
 #    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
 #    logger.debug self.to_yaml
 return true
-    if !context_id
-      permitted? :create_suite
-    elsif !context
-      self.theme = "pink"
-      permitted? :illegal
-    elsif whole_id
-      permitted? :add_aspect, whole.recursive_access
-    elsif table_id
-      permitted? :add_column, table.recursive_access
-    elsif item_id
-      permitted? :add_item  , list.recursive_access
-    else
-      permitted? "create_error_for_card_id_;#{id}".to_sym
-    end
+    demand = case
+      when !context_id
+        :add_suite
+      when !context
+        :error_context_not_found
+      when whole_id
+        :add_aspect
+      when table_id
+        :add_column
+      when item_id
+        :add_item
+      else
+        :error_invalid_creation_context
+      end
+    !forbidden? demand
   end
 
   def destroy_permitted?
-    return true
-
-    if !context_id
-      permitted? :delete_suite
-    elsif !context
-      self.theme = "pink"
-      permitted? :delete_suite
-    elsif whole_id
-      permitted? :delete_aspect, whole.recursive_access
-    elsif table_id
-      permitted? :delete_column, table.recursive_access
-    elsif item_id
-      permitted? :delete_item  , list.recursive_access
-    else
-      permitted? "destroy_error_for_card_id_;#{id}".to_sym
-    end
+return true
+    demand = case
+      when !context_id
+        :delete_suite
+      when !context
+        :delete_orphan
+      when whole_id
+        :delete_aspect
+      when table_id
+        :delete_column
+      when item_id
+        :delete_item
+      else
+        :error_invalid_destruction_context
+      end
+    permitted? demand
   end
 
-  def edit_permitted_notttttttttttttttttttt?(attribute) #try_the_automatically_derived_version_first
-    return true
-    if !attribute
-      permitted? :edit_data
-    elsif [:id,
-           :created_at   , :updated_at    ,
-           :whole_id     , :list_id       , :based_on_id   , :table_id, :owner_id,
-           :list_position, :whole_position, :table_position
-                                ].include? attribute
-      permitted? :control_access
-    elsif [:script              ].include? attribute
-      permitted? :script
-    elsif [:kind         , :view          , :access].include? attribute
-      permitted? :edit_structure
-    elsif [:name         , :body          , :theme ].include? attribute
-      permitted? :edit_data
-    else
-      permitted? "unknown_field_#{attribute.inspect}_in_card_id#{id}".to_sym
-    end
+  def edit_permitted_nottt?(attribute) #try_the_automatically_derived_version_first
+return true
+    demand = case attribute
+      when nil
+        :see
+      when              :id,
+                        :created_at, :updated_at,
+                        :whole_id, :list_id, :based_on_id, :table_id, :owner_id
+        :program
+      when              :list_position, :whole_position, :table_position
+        :manage
+      when              :script
+        :script
+      when              :access
+        :control_access
+      when              :kind, :view
+        :edit_structure
+      when              :name, :body, :theme
+        :edit_data
+      else
+        "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
+      end
+    permitted? demand
   end
 
   def update_permitted?
-    return true
-    if    any_changed? :id,
-                       :created_at, :updated_at,
-                       :whole_id, :list_id, :table_id, :based_on_id, :owner_id,
-                       :list_position, :whole_position, :table_position
-      permitted? :manage
-    elsif any_changed? :script
-      permitted? :script
-    elsif any_changed? :access
-      permitted? :control_access
-    elsif any_changed? :kind, :view
-      permitted? :edit_structure
-    elsif any_changed? :name, :body, :theme
-      permitted? :edit_data
-    else
-      permitted? "no_field_changed_in_card_id_;#{id}".to_sym
+return true
+    demand = case
+      when any_changed?(:id,
+                        :created_at, :updated_at,
+                        :whole_id, :list_id, :table_id, :based_on_id, :owner_id)
+        :program
+      when any_changed?(:list_position, :whole_position, :table_position       )
+        :manage
+      when any_changed?(:script                                                )
+        :script
+      when any_changed?(:access                                                )
+        :control_access
+      when any_changed?(:kind, :view                                           )
+        :edit_structure
+      when any_changed?(:name, :body, :theme                                   )
+        :edit_data
+      else
+        :error_unknown_attribute_changed
     end
+    permitted? demand
   end
 
-  def view_permitted?(field)
-    return true
-    case field
-    when :name, :body, :theme, :view, :kind, nil
-      permitted? :read
+  def view_permitted?(attribute)
+return true
+    demand = case attribute
+    when nil, :name, :body, :theme, :view, :kind
+      :see
     when :access
-      permitted? :design
+      :design
     when :script
-      permitted? :script
+      :script
     when nil
-      permitted? :read
+      :see
     when :id,
          :created_at, :updated_at,
          :whole_id, :list_id, :based_on_id, :owner_id, :table_id,
          :list_position, :whole_position, :table_position
-      permitted? :manage
+      :manage
     else
-      :no_such_field_in_view_permitted?
+      "error_view_unknown_attribute_#{attribute.inspect}".to_sym
     end
+    permitted? demand
   end
 
   def permitted? demand
+    return true if !forbidden = forbidden?(demand)
+    logger.debug "8888888888888888888888888888888888888888888888888"
+    logger.debug "Requirements error for #{reference_name}, user: #{acting_user.inspect}, owner: #{owner.inspect}"
+    logger.debug "Requirements: #{requirements}"      
+    false
+  end
+  
+  def forbidden? demand
     intent = case demand
-      when :manage
-        :administrate
+      when :program
+        :program
+      when :manage, :delete_orphan
+        :manage
+      when :control_access
+        :author
+      when :script
+        :script
       when :add_aspect, :delete_aspect,
            :add_column, :delete_column,
            :delete_suite,
-           :edit_structure, :script
-           :design
+           :edit_structure
+        :design
       when :add_item, :delete_item, :edit_data
-       :use
-      when :new_suite
-       :start
-      when :read
-       :see
-      else#including :error, :dangling, :program_error, data_error, :illegal
-       logger.debug "unsupported demand: #{demand} 9999999999999999999999999999999999999999999999999999:"
-       :unsupported_demand
+        :use
+      when :add_suite
+        :initiate
+      when :see
+        :see
+      else
+        "unsupported_demand_#{demand.inspect}".to_sym
       end
-#    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
-    intent_permitted? intent
+  # logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
+    intent_forbidden? intent
   end
 
   def acting_user_with_logging=(*args)
     logger.debug {"==> acting_user=(#{args.inspect})"}
-    #logger.debug { caller.join("\n") }
+  # logger.debug { caller.join("\n") }
     send("acting_user_without_logging=", *args)
   end
 
   alias_method_chain :acting_user=, :logging
 
-  def grant_permission? requirements
-#    logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
-    logger.debug "About to return true or false permission for #{reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
-    return true if on_automatic?
-
-    acting_user.administrator? || case requirements
+  def grant_withheld? requirements
+  # logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
+    return false if on_automatic? || acting_user.administrator?
+    case requirements
     when :guest
-      true
-    when :signed_up
-      acting_user.signed_up?
-    when :owner
-      logger.debug {"==> Checking against #{recursive_owner.inspect}"}
-      acting_user == recursive_owner
-    when :administrator
-      acting_user.administrator?
-    else
       false
+    when :signed_up
+      !acting_user.signed_up?
+    when :owner
+      inherited_owner = recursive_owner.inspect
+      logger.debug {"==> Checking against #{recursive_owner.inspect}"}
+      acting_user != inherited_owner
+    when :administrator
+      !acting_user.administrator?
+    else
+      requirements
     end
   end
 
-  def intent_permitted? intent
-    access_level = self.recursive_access || "shared"
-#    logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
-
-    requirements = case access_level
+  def intent_forbidden?    intent
+    inherited_access = recursive_access
+  # logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
+    requirements = case inherited_access
     when "demo"
-      demo_requirements intent
+      demo_requirements    intent
     when "shared"
-      shared_requirements intent
+      shared_requirements  intent
     when "public"
-      public_requirements intent
+      public_requirements  intent
     when "private"
       private_requirements intent
-    when "access", "nil"
-      context?
-      private_requirements intent
     else
-      :access_level_error
+      intent.inspect.to_s
     end
-    grant_permission? requirements
+    permission_withheld? requirements
+  end
+
+  def demo_requirements intent
+  # logger.debug "So Cap'n can I #{intent} this shared booty?"
+    return :signed_in if intent == :design
+    return :guest     if intent == :use
+    shared_requirements intent
+  end
+
+  def shared_requirements intent
+  # logger.debug "So Cap'n can I #{intent} this shared booty?"
+    return :signed_in if intent == :use
+    public_requirements intent
+  end
+
+  def public_requirements intent
+  # logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
+    return :guest     if intent == :see
+    private_requirements intent
   end
 
   def private_requirements intent
-#logger.debug "So Cap'n may I #{intent} the private doc?"
+  # logger.debug "So Cap'n may I #{intent} the private doc?"
+    tightest_requirements intent
+  end
+
+  def tightest_requirements intent
+  # logger.debug "So Cap'n may I #{intent} the private doc?"
     case intent
-    when :manage
+    when :program, :manage
       :administrator
-    when :script, :design, :use, :see
+    when :author, :script, :design, :use, :see
       :owner
-    else
-      :private_error
+    when :initiate
+      :signed_in
+    when :nothing
+      :guest
+    else # not :program, :manage, :author, :script, :design, :use, :initiate, :see
+      "unknown_intent_#{intent.to_s}_error".to_sym
     end
+  end
+
+  def recursive_owner
+    if owner
+      owner
+    elsif context
+      context.recursive_owner
+    end
+  end
+
+  def recursive_access
+    if access && access != "access"
+      access
+    elsif context
+      context.recursive_owner
+    else
+      default_access
+    end
+    return access unless !access || access == "access"
+    context ? context.recursive_access : default_access
+  end
+
+  def default_access
+    "shared"
   end
 
 end

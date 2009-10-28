@@ -232,7 +232,7 @@
 </def>
 
 <def tag="list">
-  <tiny><view:name /> is item </tiny><editor:number blank-message="number"  /><tiny> in </tiny><a:list param="parent-link" />
+  <tiny><view:name /> is item </tiny><editor:list_position blank-message="&list_position"/><tiny> in </tiny><a:list param="parent-link" />
 </def>
 
 <def tag="tiny">
