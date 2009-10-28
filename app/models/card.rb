@@ -620,9 +620,6 @@ return true
   end
 
   def destroy_permitted?
-#    logger.debug "========================destroy_permitted?=================================================="
-#    logger.debug self.to_yaml
-return true    
     if !context_id
       permitted? :delete_suite
     elsif !context
@@ -640,12 +637,9 @@ return true
   end
 
   def edit_permitted?(attribute) #try_the_automatically_derived_version_first
-#    logger.debug "======================edit_permitted?======================================================"
-#    logger.debug self.to_yaml
-return true
-    if    ["name", "body"  , "theme"].include attribute.name
+    if    ["name", "body"  , "theme"].include? attribute
       permitted? :edit_data
-    elsif ["kind", "script"].include attribute.name
+    elsif ["kind", "script"].include? attribute
       permitted? :edit_structure
     else
       permitted? :error
@@ -653,9 +647,6 @@ return true
   end
 
   def update_permitted?
-#    logger.debug "====================update_permitted?================================================"
-#    logger.debug self.to_yaml
-return true
     if only_changed?       :name, :body  , :theme
       permitted? :edit_data
     elsif only_changed?    :kind, :script, :name, :body  , :theme
@@ -666,9 +657,6 @@ return true
   end
 
   def view_permitted?(field)
-#    logger.debug "=======================view_permitted?=========================================================="
-#    logger.debug self.to_yaml
-return true
     case field
     when :name, :body, :theme
       permitted? :read
@@ -676,15 +664,14 @@ return true
       true
     when :script
       permitted? :script
+    when nil
+      permitted? :read
     else
       permitted? :manage
     end
   end
 
   def permitted? demand
-logger.debug "========================================================================"
-logger.debug "Ahoy, Avast, By the Powers, Matey, Sweet trade, Yo ho ho".split(", ").rand +
-             "! Who goes thar?"
     source ||= self
     intent = case demand
     when :manage
@@ -726,7 +713,9 @@ logger.debug "Are ye #{requirements} for this #{source.reference_name} booty? We
   end
 
   def intent_permitted? intent, source
-logger.debug "Now let's see, lad. That would be a #{source.recursive_access || "shared"} document ye be tryin to #{intent}! "
+    access_level = source.recursive_access || "shared"
+    logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
+
     requirements = case access_level
     when "demo"
       demo_requirements intent
