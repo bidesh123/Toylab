@@ -79,7 +79,6 @@
  %>   </title>
       <do param="stylesheets">
         <stylesheet name="reset, hobo-rapid"/>
-        <theme-stylesheet/>
         <stylesheet name="application" param="app-stylesheet"/>
       </do>
 
