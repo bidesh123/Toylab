@@ -9,7 +9,7 @@ class Card < ActiveRecord::Base
     script       :text
     view         enum_string(:view    , :page   , :list  , :table          , :slide,
                              :none    , :custom , :tree  , :report         , :chart )
-    access       enum_string(:access  , :private, :public, :collaboration  , :sandbox,
+    access       enum_string(:access  , :private, :public, :shared  , :sandbox,
                              :auto                                                  )
     theme        enum_string(:theme   ,
                              :pink   , :orange, :yellow  , :green          , :purple,
@@ -372,7 +372,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     on_automatic do
       Card.new  :body   => welcome        ,
                 :view   => 'page'         ,
-                :access => 'collaboration'
+                :access => 'shared'
     end
   end
 
@@ -543,7 +543,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     end
   end
 
-  def collaboration_requirements intent
+  def shared_requirements intent
     case intent
     when :manage
       :administrator
@@ -625,8 +625,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     requirements = case access_level
     when :sandbox
       sandbox_requirements intent_level
-    when :collaboration
-      collaboration_requirements intent_level
+    when :shared
+      shared_requirements intent_level
     when :public
       public_requirements intent_level
     when :private, :access, :nil
