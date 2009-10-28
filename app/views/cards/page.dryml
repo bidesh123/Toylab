@@ -44,9 +44,9 @@
              This is where your text will appear.
              Just click on this text to replace by your own entry.
              Don't forget to give your page a name too.
-             Just click on the large letters to change it."
-             if this.name.blank?
+             Just click on the large letters to change it.
            QUOTe
+         end
 %>
         <p ><editor:body blank-message="&blank_message"/></p>
         <div param="controls">
