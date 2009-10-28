@@ -451,7 +451,7 @@
 </def>
 
 <def tag="item-row">
-  <tr class="item-row">
+  <tr class="item-row in-application-view model::card:#{this.id}">
     <%  klass="item-cell #{this.theme_class}" %>
     <td class="#{klass}">
       <recursive-card item if="&true"/>
