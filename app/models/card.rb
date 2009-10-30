@@ -13,10 +13,6 @@ class Card < ActiveRecord::Base
     theme        enum_string(:theme   ,
                              :pink   , :orange, :yellow  , :green   , :purple,
                              :none                                            )
-
-    #context_id     :integer # Deprecated
-    #number         :integer # Deprecated
-
     list_position  :integer
     whole_position :integer
     table_position :integer
@@ -28,23 +24,23 @@ class Card < ActiveRecord::Base
   belongs_to :owner    , :class_name => "User"  , :creator => true
 
   #1
-  belongs_to :list     , :class_name => 'Card'  , :foreign_key => :list_id    , :accessible => true
-  has_many   :items    , :class_name => 'Card'  , :foreign_key => :list_id    , :accessible => true,
+  belongs_to :list     , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true
+  has_many   :items    , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true,
                          :dependent  => :destroy, :order       => "list_position"
 
   #2
-  belongs_to :whole    , :class_name => 'Card'  , :foreign_key => :whole_id   , :accessible => true
-  has_many   :aspects  , :class_name => 'Card'  , :foreign_key => :whole_id   , :accessible => true,
+  belongs_to :whole    , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true
+  has_many   :aspects  , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true,
                          :dependent  => :destroy, :order       => "whole_position"
 
   #3
-  belongs_to :table    , :class_name => 'Card'  , :foreign_key => :table_id   , :accessible => true
-  has_many   :columns  , :class_name => 'Card'  , :foreign_key => :table_id   , :accessible => true,
+  belongs_to :table    , :class_name => "Card"  , :foreign_key => :table_id   , :accessible => true
+  has_many   :columns  , :class_name => "Card"  , :foreign_key => :table_id   , :accessible => true,
                          :dependent  => :destroy, :order       => "table_position"
 
   #4
   belongs_to :based_on , :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true
-  has_many   :instances, :class_name => 'Card'  , :foreign_key => :based_on_id, :accessible => true,
+  has_many   :instances, :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true,
                          :dependent  => :destroy
 
   sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
@@ -53,10 +49,10 @@ class Card < ActiveRecord::Base
 #  sortable :scope => :context_id, :column => :number # deprecated
 
   named_scope :top_level                                                               ,
-     :conditions => ['list_id IS ? AND whole_id IS ? AND table_id IS ?', nil, nil, nil],
+     :conditions => ["list_id IS ? AND whole_id IS ? AND table_id IS ?", nil, nil, nil],
      :order => "created_at DESC"
 #  named_scope :similar_instances, lambda {
-#    {:conditions => ['kind    IS ? AND owner_id IS ?', kind, acting_user.id]}
+#    {:conditions => ["kind    IS ? AND owner_id IS ?", kind, acting_user.id]}
 #  }
 
   #before_save do |c| c.context_id = c.whole_id || c.list_id end
@@ -306,7 +302,7 @@ def which_column contexts, names, deep
 
   def already_inherited prototype
     self.aspects.each do |asp|
-      return true if asp.based_on_id == [prototype.id, prototype.based_on_id]
+      ac if asp.based_on_id == [prototype.id, prototype.based_on_id]
     end
     false
   end
@@ -355,7 +351,7 @@ def which_column contexts, names, deep
 
 def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect_depth = 9, item_depth = 0
     unless item_depth == 0
-      deep = look_wider         wide_context, deep, max_aspect_depth, 0
+      deep = look_wider       wide_context, deep, max_aspect_depth, 0
       deep[:row] += 1
     end
     unless (item_depth += 1) >= max_item_depth
@@ -570,7 +566,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   def create_permitted?
 #    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
 #    logger.debug self.to_yaml
-return true
     demand = case
       when !context_id
         :add_suite
@@ -580,7 +575,7 @@ return true
         :add_aspect
       when table_id
         :add_column
-      when item_id
+      when list_id
         :add_item
       else
         :error_invalid_creation_context
@@ -589,7 +584,6 @@ return true
   end
 
   def destroy_permitted?
-return true
     demand = case
       when !context_id
         :delete_suite
@@ -599,7 +593,7 @@ return true
         :delete_aspect
       when table_id
         :delete_column
-      when item_id
+      when list_id
         :delete_item
       else
         :error_invalid_destruction_context
@@ -607,8 +601,7 @@ return true
     permitted? demand
   end
 
-  def edit_permitted_nottt?(attribute) #try_the_automatically_derived_version_first
-return true
+  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
     demand = case attribute
       when nil
         :see
@@ -633,7 +626,6 @@ return true
   end
 
   def update_permitted?
-return true
     demand = case
       when any_changed?(:id,
                         :created_at, :updated_at,
@@ -656,7 +648,6 @@ return true
   end
 
   def view_permitted?(attribute)
-return true
     demand = case attribute
     when nil, :name, :body, :theme, :view, :kind
       :see
@@ -678,11 +669,11 @@ return true
   end
 
   def permitted? demand
-    return true if !forbidden = forbidden?(demand)
+    return true unless forbidden?(demand)
     logger.debug "8888888888888888888888888888888888888888888888888"
-    logger.debug "Requirements error for #{reference_name}, user: #{acting_user.inspect}, owner: #{owner.inspect}"
-    logger.debug "Requirements: #{requirements}"      
-    false
+    logger.debug "demand error for #{reference_name}, user: #{acting_user.inspect}, owner: #{owner.inspect}"
+    logger.debug "demand #{demand}"
+    nil
   end
   
   def forbidden? demand
@@ -713,15 +704,15 @@ return true
     intent_forbidden? intent
   end
 
-  def acting_user_with_logging=(*args)
-    logger.debug {"==> acting_user=(#{args.inspect})"}
-  # logger.debug { caller.join("\n") }
-    send("acting_user_without_logging=", *args)
-  end
-
-  alias_method_chain :acting_user=, :logging
-
-  def grant_withheld? requirements
+#  def acting_user_with_logging=(*args)
+#    logger.debug {"==> acting_user=(#{args.inspect})"}
+#  # logger.debug { caller.join("\n") }
+#    send("acting_user_without_logging=", *args)
+#  end
+#
+#  alias_method_chain :acting_user=, :logging
+#
+  def permission_withheld? requirements
   # logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
     return false if on_automatic? || acting_user.administrator?
     case requirements
@@ -731,7 +722,7 @@ return true
       !acting_user.signed_up?
     when :owner
       inherited_owner = recursive_owner.inspect
-      logger.debug {"==> Checking against #{recursive_owner.inspect}"}
+    # logger.debug {"==> Checking against #{recursive_owner.inspect}"}
       acting_user != inherited_owner
     when :administrator
       !acting_user.administrator?

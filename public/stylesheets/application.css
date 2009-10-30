@@ -322,6 +322,10 @@ select.dev-user-changer {
     opacity:0.6;padding:2px;
 }
 
+.index-page .submit-button {
+    margin-top:1.618em;
+}
+
 /*
 body {
  font-size: 1em;

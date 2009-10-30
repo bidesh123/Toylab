@@ -97,7 +97,7 @@ module Hobo::RapidHelper
     blank_message = attributes.delete(:blank_message) || click_to_edit_text
 
     attributes = add_classes(attributes, "in-place-edit", model_id_class(this_parent, this_field))
-    logger.debug attributes.to_yaml
+  # logger.debug attributes.to_yaml
     attributes.update(:hobo_blank_message => blank_message,
                       :click_to_edit_text => click_to_edit_text,
                       :if_blank => blank_message,

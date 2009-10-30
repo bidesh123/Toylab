@@ -141,11 +141,45 @@
    end
    first_time = true
 %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-      <% is_a_numeric_pointer = (this =~ /^\d+=>$/) %>
-      <if test="&is_a_numeric_pointer && the_column = Card.find(Integer this.delete('=>') )">
+<%    is_a_numeric_pointer = (this =~ /^\d+=>$/) >
+      the_column = if is_a_numeric_pointer
+        Card.find Integer(this.delete '=>')
+      else
+        nil
+      end
+%>
+      <if test="&the_column">
         <editor:kind with="&the_column" blank-message="Untitled"/>
       </if><else>
         <%= this %>

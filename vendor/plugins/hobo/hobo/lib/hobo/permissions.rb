@@ -113,9 +113,10 @@ module Hobo
     
 
     # --- Permissions API --- #
-    
-    
+       
     def with_acting_user(user)
+      logger.debug "user: #{user.name}77777777777777777777777777777777777777777"
+      plougne unless user
       old = acting_user
       self.acting_user = user
       result = yield

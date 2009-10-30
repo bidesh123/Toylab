@@ -1,21 +1,5 @@
-<def tag="index-page" for="Card">
-  <page merge title="Suites">
-    <body: class="index-page card" param/>
-    <content: param>
-      <header param="content-header">
-        <h1 param="title">Latest office suites</h1>
-      </header>
-      <section param="content-body">
-        <span param="new-link"><a action="new" to="&model"/></span>  <!-- modified fg -->
-        <page-nav param="top-page-nav"/>
-        <collection param/>
-        <page-nav param="bottom-page-nav"/>
-      </section>
-    </content:>
-  </page>
-</def>
-
 <index-page>
+  <content-header:></content-header:>
   <new-link:>
     <form with="&Card.new_suite">
       <submit label="Create your own office suite" />
@@ -27,10 +11,13 @@
   <card class="card" param="default" merge>
     <header: param>
       <h4 param="heading">
-        <a>
+        <% tooltip = "a #{this.recursive_access} suite by #{(this.owner || Guest).name}" %>
+        <a title="&tooltip">
           <if test="&this.reference_name"><%=  this.reference_name %></if>
           <else><%= image_tag "toy_magnifier.png" %></else>
         </a>
+        <span class="author tiny-gray">
+        </span>
       </h4>
     </header:>
     <body: param >
