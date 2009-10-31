@@ -6,7 +6,7 @@
 <def tag="toy-show">
 <%
   @auto_view = case (v = this.view)
-     when "list"  ,"slide", "table", "page",
+     when "list"  ,"presentation", "table", "page",
           "report","tree"                    then v
      when "custom", "chart"                  then "tree"
      when "none"  ,"view" ,  ""    ,  nil    then "report"
@@ -18,7 +18,7 @@
   <toy-tree    if="&false && @auto_view=='tree'  " />
   <toy-list    if="&false && @auto_view=='list'  " />
   <toy-table   if="&false && @auto_view=='table' " />
-  <toy-slide   if="&false && @auto_view=='slide' " />
+  <toy-presentation   if="&false && @auto_view=='presentation' " />
   <toy-report  if="&false && @auto_view=='report'" />
   <toy-report />
 </def>

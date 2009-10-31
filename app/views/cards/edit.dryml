@@ -67,9 +67,9 @@
 
 <def tag="card-number-editor">
   <if test="&this.context_id">
-    <if       test="&whole_id"><editor:whole_position /></if>
-    <else><if test="&table_id"><editor:table_position /></if>
-    <else><if test="&list_id" ><editor:list_position  /></if>
+    <if       test="&this.whole_id"><editor:whole_position /></if>
+    <else><if test="&this.table_id"><editor:table_position /></if>
+    <else><if test="&this.list_id" ><editor:list_position  /></if>
     </else></else>
   </if>
 </def>

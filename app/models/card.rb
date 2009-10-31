@@ -659,13 +659,12 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def view_permitted?(attribute)
-    plantoins1 unless acting_user
-
     demand = case attribute
-    when nil, :name, :body, :theme, :view, :kind
+    when nil, :name, :body, :theme, :view, :kind,
+        :aspects, :items, :columns
       :see
     when :access
-      :design
+      :control_access
     when :script
       :script
     when nil
@@ -683,7 +682,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def permitted? demand
-    reason = forbidden?(demand)
+    reason = forbidden? demand
     return !reason unless reason.is_a? String
     logger.debug "8888888888888888888888888888888888888888888888888"
     logger.debug "toy permission error"
@@ -766,7 +765,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     send("acting_user_without_logging=", *args)
   end
 
-  alias_method_chain :acting_user=, :logging
+#  alias_method_chain :acting_user=, :logging
 
   def demo_requirements intent
   # logger.debug "So Cap'n can I #{intent} this shared booty?"
