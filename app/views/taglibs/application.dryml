@@ -141,38 +141,10 @@
    end
    first_time = true
 %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-<%    is_a_numeric_pointer = (this =~ /^\d+=>$/) >
+<%    is_a_numeric_pointer = (this =~ /^\d+=>$/)
       the_column = if is_a_numeric_pointer
         Card.find Integer(this.delete '=>')
       else
@@ -385,8 +357,8 @@
     <ul class="view-nav">View as
       <table-view if="&false" />
       <page-view />
-      <slide-view />
       <list-view />
+      <slide-view />
       <report-view />
       <tree-view />
     </ul>
@@ -410,11 +382,11 @@
 </def>
 
 <def tag="table-view">
-  <li class="view-link"><%= link_to("table"   , url_for(:action => "table"), :disabled => false  )  %></li>
+  <li class="view-link"         ><%= link_to("table"   , url_for(:action => "table"), :disabled => false  )  %></li>
 </def>
 
 <def tag="list-view">
-  <li class="view-link"><%= link_to("list"    , url_for(:action => "list" ), :disabled => false  )  %></li>
+  <li class="view-link"         ><%= link_to("list"    , url_for(:action => "list" ), :disabled => false  )  %></li>
 </def>
 
 
@@ -514,7 +486,7 @@
         </else>
       </td>
     </tr>
-    <if test="&this.view_permitted?(:script)">
+    <if test="&can_view?(:script)">
       <tr class="script">
         <td class="script-cell">
           <div id="<%= dom_id(this, :script_cell) %>" style="display:none">

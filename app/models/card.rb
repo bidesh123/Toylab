@@ -59,12 +59,23 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  def reported_view
+    case view
+    when "view", "none", nil
+      "suite"
+    when "custom"
+      "custom suite"
+    else
+      view
+    end
+  end
+
   def source_group
     case
-    when whole_id                   then :whole
-    when table_id                   then :table
-    when list_id                    then :list
-    when suite?                     then :suites
+    when whole_id then :whole
+    when table_id then :table
+    when list_id  then :list
+    when suite?   then :suites
     end
   end
 
@@ -134,23 +145,23 @@ class Card < ActiveRecord::Base
      list_id ||  whole_id ||  table_id
   end
 
-  def number
-    case
-    when whole_id; whole_position
-    when table_id; table_position
-    else;          list_position
-    end
-  end
-
-  def number=(value)
-    attr = case
-           when whole_id; :whole_position
-           when table_id; :table_position
-           else;          :list_position
-           end
-    write_attribute(attr, value)
-  end
-
+#  def number
+#    case
+#    when whole_id; whole_position
+#    when table_id; table_position
+#    else;          list_position
+#    end
+#  end
+#
+#  def number=(value)
+#    attr = case
+#           when whole_id; :whole_position
+#           when table_id; :table_position
+#           else;          :list_position
+#           end
+#    write_attribute(attr, value)
+#  end
+#
   def suite?
     !list_id && !whole_id && !table_id
   end
@@ -648,6 +659,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def view_permitted?(attribute)
+    plantoins1 unless acting_user
+
     demand = case attribute
     when nil, :name, :body, :theme, :view, :kind
       :see
@@ -658,9 +671,10 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     when nil
       :see
     when :id,
-         :created_at, :updated_at,
-         :whole_id, :list_id, :based_on_id, :owner_id, :table_id,
-         :list_position, :whole_position, :table_position
+         :created_at   , :updated_at    , :based_on_id   , :owner_id,
+         :list_id      , :whole_id      , :table_id      ,
+         :list_position, :whole_position, :table_position,
+         :list         , :whole         , :table
       :manage
     else
       "error_view_unknown_attribute_#{attribute.inspect}".to_sym
@@ -669,11 +683,16 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def permitted? demand
-    return true unless forbidden?(demand)
+    reason = forbidden?(demand)
+    return !reason unless reason.is_a? String
     logger.debug "8888888888888888888888888888888888888888888888888"
-    logger.debug "demand error for #{reference_name}, user: #{acting_user.inspect}, owner: #{owner.inspect}"
-    logger.debug "demand #{demand}"
-    nil
+    logger.debug "toy permission error"
+    logger.debug "card: #{reference_name}"
+    logger.debug "user: #{acting_user.to_yaml}"
+    logger.debug "owner: #{owner.to_yaml}"
+    logger.debug "demand #{demand.to_yaml}"
+    logger.debug "reason #{reason.to_yaml}"
+    die
   end
   
   def forbidden? demand
@@ -698,20 +717,30 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       when :see
         :see
       else
-        "unsupported_demand_#{demand.inspect}".to_sym
+        return "unsupported_demand_#{demand.inspect}"
       end
   # logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
     intent_forbidden? intent
   end
 
-#  def acting_user_with_logging=(*args)
-#    logger.debug {"==> acting_user=(#{args.inspect})"}
-#  # logger.debug { caller.join("\n") }
-#    send("acting_user_without_logging=", *args)
-#  end
-#
-#  alias_method_chain :acting_user=, :logging
-#
+  def intent_forbidden?    intent
+    inherited_access = recursive_access
+  # logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
+    requirements = case inherited_access
+    when "demo"
+      demo_requirements    intent
+    when "shared"
+      shared_requirements  intent
+    when "public"
+      public_requirements  intent
+    when "private"
+      private_requirements intent
+    else
+      shared_requirements  intent
+    end
+    permission_withheld? requirements
+  end
+
   def permission_withheld? requirements
   # logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
     return false if on_automatic? || acting_user.administrator?
@@ -731,23 +760,13 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     end
   end
 
-  def intent_forbidden?    intent
-    inherited_access = recursive_access
-  # logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
-    requirements = case inherited_access
-    when "demo"
-      demo_requirements    intent
-    when "shared"
-      shared_requirements  intent
-    when "public"
-      public_requirements  intent
-    when "private"
-      private_requirements intent
-    else
-      intent.inspect.to_s
-    end
-    permission_withheld? requirements
+  def acting_user_with_logging=(*args)
+    logger.debug {"==> acting_user=(#{args.inspect})"}
+    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
+    send("acting_user_without_logging=", *args)
   end
+
+  alias_method_chain :acting_user=, :logging
 
   def demo_requirements intent
   # logger.debug "So Cap'n can I #{intent} this shared booty?"
@@ -782,8 +801,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       :owner
     when :initiate
       :signed_in
-    when :nothing
-      :guest
     else # not :program, :manage, :author, :script, :design, :use, :initiate, :see
       "unknown_intent_#{intent.to_s}_error".to_sym
     end

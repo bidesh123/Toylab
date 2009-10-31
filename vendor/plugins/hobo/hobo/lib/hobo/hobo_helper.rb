@@ -286,6 +286,7 @@ module Hobo
     # proxy, we don't want to loose the information that the object
     # belongs_to the proxy owner.
     def can_view?(*args)
+      planton unless current_user
       # TODO: Man does this need a big cleanup!
       
       if args.empty?

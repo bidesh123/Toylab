@@ -2,7 +2,7 @@
 
 <def tag="toy-edit">
   <set-scoped deep="&@card.edit_deep" >
-    <edit-page>
+    <show-page>
       <content-header:>
         <views />
         <context />
@@ -14,7 +14,7 @@
       <aside:          >
         <google />
       </aside:         >
-    </edit-page>
+    </show-page>
   </set-scoped>
 </def>
 
@@ -65,9 +65,27 @@
   </div>
 </def>
 
+<def tag="card-number-editor">
+  <if test="&this.context_id">
+    <if       test="&whole_id"><editor:whole_position /></if>
+    <else><if test="&table_id"><editor:table_position /></if>
+    <else><if test="&list_id" ><editor:list_position  /></if>
+    </else></else>
+  </if>
+</def>
+
+
+<def tag="context-editors">
+  <editor:whole />
+  <editor:table />
+  <editor:list  />
+</def>
+
+
 <def tag="card-id" >
-  <div class="tool" if="&current_user.administrator?">Suite <%= this.id  %></div>
-  <div class="tool" if="&current_user.administrator?"><editor:number/></div>
+  <div class="tool" if="&current_user.administrator?">Card <%= this.id  %></div>
+  <div class="tool" if="&current_user.administrator?"><card-number-editor/></div>
+  <div class="tool" if="&current_user.administrator?"><context-editors/></div>
 </def>
 
 <def tag="core-right-controls-td">

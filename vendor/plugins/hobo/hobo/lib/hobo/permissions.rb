@@ -172,6 +172,9 @@ module Hobo
     end
     
     def viewable_by?(user, attribute=nil)
+logger.debug "5555555555555555555555555555"
+logger.debug user.to_yaml
+
       if attribute
         attribute = attribute.to_s.sub(/\?$/, '').to_sym
         return false if attribute && self.class.never_show?(attribute)
