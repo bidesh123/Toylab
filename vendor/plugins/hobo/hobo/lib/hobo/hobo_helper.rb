@@ -222,61 +222,39 @@ module Hobo
           return false
         end
       end
- #     logger.debug "can_create? :#{object.creatable_by?(current_user)}#"
       object.creatable_by?(current_user)
     end
 
 
     def can_update?(object=this)
-#      logger.debug "can_update? :#{object.updatable_by?(current_user)}#"
       object.updatable_by?(current_user)
     end
 
 
     def can_edit?(*args)
-#      logger.debug "can edit? 11111111111111111111111"
-      object, field =
-        if args.empty?
-          if this.respond_to?(:editable_by?) && !this_field_reflection
-#            logger.debug "responds to editable_by? 9999999999999999999"
-            [this, nil]
-          elsif this_parent && this_field
-            logger.debug "this_parent = #{this_parent} 9999999999999999999"
-            logger.debug "this_field = #{this_field} 9999999999999999999"
-            [this_parent, this_field]
-          else
-#            logger.debug "field only 9999999999999999999"
-            [this, nil]
-          end
-        elsif args.length == 2
-#          logger.debug "2 args 9999999999999999999"
-          args
-        else
-#          logger.debug "one arg 9999999999999999999"
-          [this, args.first]
-        end
-#      logger.debug "object = #{object} 9999999999999999999"
-#      logger.debug "field = #{field} 2999999999999999999"
-#      logger.debug "origin = #{object.try.origin} 9999999999999999999"
+      object, field = if args.empty?
+                        if this.respond_to?(:editable_by?) && !this_field_reflection
+                          [this, nil]
+                        elsif this_parent && this_field
+                          [this_parent, this_field]
+                        else 
+                          [this, nil]
+                        end
+                      elsif args.length == 2
+                        args
+                      else
+                        [this, args.first]
+                      end
+
       if !field && (origin = object.try.origin)
-          logger.debug "try origin 9999999999999999999"
-          object, field = origin, object.origin_attribute
+        object, field = origin, object.origin_attribute
       end
-      object1, field1 = [object, field]
-      "gaaaaa"
-      object1
+
+      object.editable_by?(current_user, field)
     end
     
-#    def can_edit_logged?(*args)
-#    # logger.debug { caller.join("\n") }
-#      response = send("can_edit_original?", *args)
-# #     logger.debug {"==> can_edit?(#{response})"}
-#      response
-#    end
 
- 
     def can_delete?(object=this)
-#      logger.debug "can_delete? :#{object.destroyable_by?(current_user)}#"
       object.destroyable_by?(current_user)
     end
 
@@ -286,7 +264,6 @@ module Hobo
       method = args.last
       object = args.length == 2 ? args.first : this
 
-#      logger.debug "can_call? :#{object.method_callable_by?(current_user, method)}#"
       object.method_callable_by?(current_user, method)
     end
 
@@ -340,8 +317,6 @@ module Hobo
         else
           false
         end
-#        logger.debug "can_view? :#{@can_view_cache[ [object, field] ]}#"
-        @can_view_cache[ [object, field] ]
     end
     
 

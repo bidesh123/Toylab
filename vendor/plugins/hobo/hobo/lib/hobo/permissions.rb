@@ -40,6 +40,7 @@ module Hobo
         record
       end
 
+
       def user_new(user, attributes={})
         new(attributes) do |r|
           r.set_creator user
@@ -48,6 +49,7 @@ module Hobo
           r.send :callback, :after_user_new
         end
       end
+
 
       def user_create(user, attributes={}, &block)
         if attributes.is_a?(Array)
@@ -58,6 +60,7 @@ module Hobo
           record
         end
       end
+
 
       def user_create!(user, attributes={}, &block)
         if attributes.is_a?(Array)
@@ -110,7 +113,8 @@ module Hobo
     
 
     # --- Permissions API --- #
-       
+    
+    
     def with_acting_user(user)
       old = acting_user
       self.acting_user = user
@@ -167,8 +171,6 @@ module Hobo
     end
     
     def viewable_by?(user, attribute=nil)
-#logger.debug "5555555555555555555555555555"
-#logger.debug user.to_yaml
       if attribute
         attribute = attribute.to_s.sub(/\?$/, '').to_sym
         return false if attribute && self.class.never_show?(attribute)
@@ -178,7 +180,6 @@ module Hobo
     
     
     def editable_by?(user, attribute=nil)
-      logger.debug "entering editable_by?"
       return false if attribute_protected?(attribute)
       
       return true if exempt_from_edit_checks?

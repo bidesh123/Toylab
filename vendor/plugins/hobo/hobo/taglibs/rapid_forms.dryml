@@ -141,14 +141,15 @@ AJAX based submission can be enabled by simply adding an `update` attribute. e.g
               end
      action = web_method || lifecycle
      object_url(target, action, :method => method)
-  end
+   end
    
   if action.nil? && (html_attrs[:action].nil? ||
                      (lifecycle.nil? && new_record && !this.creatable_by?(current_user)) ||
                      (lifecycle.nil? && !new_record && !can_edit?))
     Hobo::Dryml.last_if = false
+    ""
   else
-   if method == "put"
+    if method == "put"
       # browsers don't support put -- use post and add the Rails _method hack
       http_method_hidden = hidden_field_tag("_method", "PUT") 
       html_attrs[:method] = "post" 
@@ -311,7 +312,6 @@ edit collections a `Category` model in your application:
 
 <!-- A `<textarea>` input -->
 <def tag="input" for="text" attrs="name">
-  <%=  attributes.to_yaml.split.join "<br>" %>
   <%= text_area_tag(name, this, attributes) %>
 </def>
 
