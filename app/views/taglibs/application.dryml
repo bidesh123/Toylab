@@ -146,12 +146,11 @@
     <th repeat>
 <%    is_a_numeric_pointer = (this =~ /^\d+=>$/)
       the_column = if is_a_numeric_pointer
-        reference_string = this.delete '=>'
-        Card.find Integer reference_id
-        Card.find Integer reference_id
-      else
-        nil
-      end
+          reference_string = this.delete '=>'
+          Card.find Integer(reference_string)
+         else
+          nil
+         end
 %>
       <if test="&the_column">
         <editor:kind with="&the_column" blank-message="Untitled"/>

@@ -687,14 +687,15 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     logger.debug "8888888888888888888888888888888888888888888888888"
     logger.debug "toy permission error"
     logger.debug "card: #{reference_name}"
-    logger.debug "user: #{acting_user.to_yaml}"
-    logger.debug "owner: #{owner.to_yaml}"
-    logger.debug "demand #{demand.to_yaml}"
-    logger.debug "reason #{reason.to_yaml}"
+    logger.debug "user: #{acting_user.name if acting_user}"
+    logger.debug "owner: #{owner.name if owner}"
+    logger.debug "demand #{demand.to_s}"
+    logger.debug "reason #{reason.to_s}"
     die
   end
   
   def forbidden? demand
+   logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
     intent = case demand
       when :program
         :program
@@ -707,9 +708,13 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       when :add_aspect, :delete_aspect,
            :add_column, :delete_column,
            :delete_suite,
-           :edit_structure
+           :edit_structure, :delete_item
         :design
-      when :add_item, :delete_item, :edit_data
+      when :add_item
+        :use
+      when :edit_data
+        :use
+      when :edit_data
         :use
       when :add_suite
         :initiate
@@ -718,13 +723,12 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       else
         return "unsupported_demand_#{demand.inspect}"
       end
-  # logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.inspect}! intent: #{intent.inspect}"
     intent_forbidden? intent
   end
 
   def intent_forbidden?    intent
     inherited_access = recursive_access
-  # logger.debug "Now let's see, lad. That would be a #{access_level} document ye be tryin to #{intent}! "
+   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
     requirements = case inherited_access
     when "demo"
       demo_requirements    intent
@@ -741,18 +745,24 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def permission_withheld? requirements
-  # logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.inspect}, owner: #{owner.inspect}"
+   logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.name if acting_user}, owner: #{owner.name if owner}"
     return false if on_automatic? || acting_user.administrator?
+   logger.debug "I can see yer not an administrator."
     case requirements
     when :guest
+      logger.debug "this needs a guest"
       false
     when :signed_up
+      logger.debug "this needs a signed_up user"
       !acting_user.signed_up?
     when :owner
       inherited_owner = recursive_owner.inspect
+      logger.debug "You must be the owner!"
+      logger.debug acting_user != inherited_owner
     # logger.debug {"==> Checking against #{recursive_owner.inspect}"}
       acting_user != inherited_owner
     when :administrator
+      logger.debug "this needs an administrator"
       !acting_user.administrator?
     else
       requirements
@@ -768,31 +778,31 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 #  alias_method_chain :acting_user=, :logging
 
   def demo_requirements intent
-  # logger.debug "So Cap'n can I #{intent} this shared booty?"
+    logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_in if intent == :design
     return :guest     if intent == :use
     shared_requirements intent
   end
 
   def shared_requirements intent
-  # logger.debug "So Cap'n can I #{intent} this shared booty?"
+    logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_in if intent == :use
     public_requirements intent
   end
 
   def public_requirements intent
-  # logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
+    logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
     return :guest     if intent == :see
     private_requirements intent
   end
 
   def private_requirements intent
-  # logger.debug "So Cap'n may I #{intent} the private doc?"
+    logger.debug "So Cap'n may I #{intent} the private doc?"
     tightest_requirements intent
   end
 
   def tightest_requirements intent
-  # logger.debug "So Cap'n may I #{intent} the private doc?"
+    logger.debug "So Cap'n may I #{intent} the private doc?"
     case intent
     when :program, :manage
       :administrator

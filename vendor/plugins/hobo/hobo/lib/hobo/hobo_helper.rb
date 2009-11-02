@@ -234,23 +234,37 @@ module Hobo
 
 
     def can_edit?(*args)
-      object, field = if args.empty?
-                        if this.respond_to?(:editable_by?) && !this_field_reflection
-                          [this, nil]
-                        elsif this_parent && this_field
-                          [this_parent, this_field]
-                        else 
-                          [this, nil]
-                        end
-                      elsif args.length == 2
-                        args
-                      else
-                        [this, args.first]
-                      end
-
+#      logger.debug "can edit? 11111111111111111111111"
+      object, field =
+        if args.empty?
+          if this.respond_to?(:editable_by?) && !this_field_reflection
+#            logger.debug "responds to editable_by? 9999999999999999999"
+            [this, nil]
+          elsif this_parent && this_field
+            logger.debug "this_parent = #{this_parent} 9999999999999999999"
+            logger.debug "this_field = #{this_field} 9999999999999999999"
+            [this_parent, this_field]
+          else
+#            logger.debug "field only 9999999999999999999"
+            [this, nil]
+          end
+        elsif args.length == 2
+#          logger.debug "2 args 9999999999999999999"
+          args
+        else
+#          logger.debug "one arg 9999999999999999999"
+          [this, args.first]
+        end
+#      logger.debug "object = #{object} 9999999999999999999"
+#      logger.debug "field = #{field} 2999999999999999999"
+#      logger.debug "origin = #{object.try.origin} 9999999999999999999"
       if !field && (origin = object.try.origin)
-        object, field = origin, object.origin_attribute
+          logger.debug "try origin 9999999999999999999"
+          object, field = origin, object.origin_attribute
       end
+      object1, field1 = [object, field]
+      "gaaaaa"
+      object1
     end
     
 #    def can_edit_logged?(*args)
@@ -286,7 +300,6 @@ module Hobo
     # proxy, we don't want to loose the information that the object
     # belongs_to the proxy owner.
     def can_view?(*args)
-      planton unless current_user
       # TODO: Man does this need a big cleanup!
       
       if args.empty?
