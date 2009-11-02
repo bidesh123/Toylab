@@ -618,7 +618,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :see
       when              :id,
                         :created_at, :updated_at,
-                        :whole_id, :list_id, :based_on_id, :table_id, :owner_id
+                        :whole_id, :list_id, :based_on_id, :table_id, :owner_id,
+                        :whole,    :list,    :table
         :program
       when              :list_position, :whole_position, :table_position
         :manage
