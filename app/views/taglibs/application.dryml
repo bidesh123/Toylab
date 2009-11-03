@@ -399,13 +399,11 @@
 
 <def tag="bottom-controls">
   <table class="bottom-controls">
-    <tr class="bottom-controls">
+    <tr  class="bottom-controls">
       <td class="core-add-item"><add-item /></td>
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
-      <if test="&false">
-        <td class="access"><editor:access     /></td>
-      </if>
+      <td class="access"><editor:access     /></td>
       <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
       <td class="core-body-toggle"><body-toggle/></td>
     </tr>

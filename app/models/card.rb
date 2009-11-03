@@ -575,8 +575,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def create_permitted?
-#    logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
-#    logger.debug self.to_yaml
+#   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+#   logger.debug self.to_yaml
     demand = case
       when !context_id
         :add_suite
@@ -616,18 +616,18 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     demand = case attribute
       when nil
         :see
-      when              :id,
-                        :created_at, :updated_at,
-                        :whole_id, :list_id, :based_on_id, :table_id, :owner_id,
-                        :whole,    :list,    :table
+      when              :id            , :created_at   , :updated_at,
+                        :based_on_id   , :owner_id     , :owner,
+                        :whole_id      , :list_id      , :table_id                                                                      :owner
         :program
-      when              :list_position, :whole_position, :table_position
+      when              :whole_position, :list_position, :table_position
         :manage
       when              :script
         :script
       when              :access
         :control_access
-      when              :kind, :view
+      when              :kind, :view,
+                        :whole   , :list   , :table   , :based_on
         :edit_structure
       when              :name, :body, :theme
         :edit_data
@@ -640,18 +640,19 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   def update_permitted?
     demand = case
       when any_changed?(:id,
-                        :created_at, :updated_at,
-                        :whole_id, :list_id, :table_id, :based_on_id, :owner_id)
+                        :created_at    , :updated_at   ,
+                        :based_on_id   , :owner_id     , :owner         ,
+                        :whole_id      , :list_id      , :table_id      )
         :program
-      when any_changed?(:list_position, :whole_position, :table_position       )
+      when any_changed?(:whole_position, :list_position, :table_position)
         :manage
-      when any_changed?(:script                                                )
+      when any_changed?(:script                                         )
         :script
-      when any_changed?(:access                                                )
+      when any_changed?(:access                                         )
         :control_access
-      when any_changed?(:kind, :view                                           )
+      when any_changed?(:kind, :view                                    )
         :edit_structure
-      when any_changed?(:name, :body, :theme                                   )
+      when any_changed?(:name, :body, :theme                            )
         :edit_data
       else
         :error_unknown_attribute_changed
@@ -659,26 +660,24 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     permitted? demand
   end
 
-  def view_permitted?(attribute)
+  def view_permitted? attribute
     demand = case attribute
-    when nil, :name, :body, :theme, :view, :kind,
-        :aspects, :items, :columns
-      :see
-    when :access
-      :control_access
-    when :script
-      :script
-    when nil
-      :see
-    when :id,
-         :created_at   , :updated_at    , :based_on_id   , :owner_id,
-         :list_id      , :whole_id      , :table_id      ,
-         :list_position, :whole_position, :table_position,
-         :list         , :whole         , :table
-      :manage
-    else
-      "error_view_unknown_attribute_#{attribute.inspect}".to_sym
-    end
+      when nil, :name, :body, :theme, :view, :kind,
+          :aspects, :items, :columns, :access
+        :see
+      when :script
+        :script
+      when nil
+        :see
+      when :id,
+           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+           :list_id      , :whole_id      , :table_id      ,
+           :list_position, :whole_position, :table_position,
+           :list         , :whole         , :table
+        :manage
+      else
+        "error_view_unknown_attribute_#{attribute.inspect}".to_sym
+      end
     permitted? demand
   end
 
@@ -696,7 +695,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
   
   def forbidden? demand
-   logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
+    #logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
     intent = case demand
       when :program
         :program
@@ -715,8 +714,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :use
       when :edit_data
         :use
-      when :edit_data
-        :use
       when :add_suite
         :initiate
       when :see
@@ -729,43 +726,43 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
   def intent_forbidden?    intent
     inherited_access = recursive_access
-   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
+#   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
     requirements = case inherited_access
-    when "demo"
-      demo_requirements    intent
-    when "shared"
-      shared_requirements  intent
-    when "public"
-      public_requirements  intent
-    when "private"
-      private_requirements intent
-    else
-      shared_requirements  intent
-    end
+      when "demo"
+        demo_requirements    intent
+      when "shared"
+        shared_requirements  intent
+      when "public"
+        public_requirements  intent
+      when "private"
+        private_requirements intent
+      else
+        shared_requirements  intent
+      end
     permission_withheld? requirements
   end
 
   def permission_withheld? requirements
-   logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.name if acting_user}, owner: #{owner.name if owner}"
+#   logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.name if acting_user}, owner: #{owner.name if owner}"
     return false if on_automatic? || acting_user.administrator?
-   logger.debug "I can see yer not an administrator."
-    case requirements
+#   logger.debug "I can see yer not an administrator."
+    withheld = case requirements
     when :guest
-      logger.debug "this needs a guest"
+#     logger.debug "this only needs a guest"
       false
     when :signed_up
-      logger.debug "this needs a signed_up user"
+#     logger.debug "this needs a signed_up user #{acting_user.signed_up? ? 'OK' : 'After him men'}"
       !acting_user.signed_up?
     when :owner
       inherited_owner = recursive_owner.inspect
-      logger.debug "You must be the owner!"
-      logger.debug acting_user != inherited_owner
-    # logger.debug {"==> Checking against #{recursive_owner.inspect}"}
+      logger.debug "You must be the owner! You #{acting_user == inherited_owner ? 'are': 'are NOT'}!"
+#     logger.debug {"==> Checking against #{recursive_owner.inspect}"}
       acting_user != inherited_owner
     when :administrator
-      logger.debug "this needs an administrator"
+#      logger.debug "this needs an administrator"
       !acting_user.administrator?
     else
+      logger.debug "this seems to need #{requirements}"
       requirements
     end
   end
@@ -779,38 +776,38 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 #  alias_method_chain :acting_user=, :logging
 
   def demo_requirements intent
-    logger.debug "So Cap'n can I #{intent} this shared booty?"
-    return :signed_in if intent == :design
+#   logger.debug "So Cap'n can I #{intent} this shared booty?"
+    return :signed_up if intent == :design
     return :guest     if intent == :use
     shared_requirements intent
   end
 
   def shared_requirements intent
-    logger.debug "So Cap'n can I #{intent} this shared booty?"
-    return :signed_in if intent == :use
+#   logger.debug "So Cap'n can I #{intent} this shared booty?"
+    return :signed_up if intent == :use
     public_requirements intent
   end
 
   def public_requirements intent
-    logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
+#   logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
     return :guest     if intent == :see
     private_requirements intent
   end
 
   def private_requirements intent
-    logger.debug "So Cap'n may I #{intent} the private doc?"
+#   logger.debug "So Cap'n may I #{intent} the private doc?"
     tightest_requirements intent
   end
 
   def tightest_requirements intent
-    logger.debug "So Cap'n may I #{intent} the private doc?"
+#   logger.debug "So Cap'n may I #{intent} the private doc?"
     case intent
     when :program, :manage
       :administrator
     when :author, :script, :design, :use, :see
       :owner
     when :initiate
-      :signed_in
+      :signed_up
     else # not :program, :manage, :author, :script, :design, :use, :initiate, :see
       "unknown_intent_#{intent.to_s}_error".to_sym
     end
