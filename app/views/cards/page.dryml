@@ -12,7 +12,9 @@
       <content-body: >
         <rails-authenticity-token/>
         <% logger.debug "before================================" %>
-        <h1><editor:name blank-message="Untitled"/></h1>
+        <h1>
+          <editor:name blank-message="Untitled" />
+        </h1>
         <% logger.debug "after" %>
 <%       if this.name.blank?
            blank_message = <<-QUOTe

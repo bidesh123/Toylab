@@ -6,6 +6,64 @@
 
 <!-- view-page -->
 
+<def tag="toy-report" attrs="shallow">
+   <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
+   <show-page>
+      <content-header:>
+        <views />
+        <context />
+        <!-- % whole_off = "&false" %       -->
+        <!-- <toy-header if="&whole_off"/>  -->
+      </content-header:>
+
+      <content-body:  >
+        <rails-authenticity-token/>
+        <%         whole_off = "&false" %>
+        <if test="&whole_off ==  true">
+          <card    whole-off="&whole_off" />
+        </if><else>
+          <card                           />
+        </else>
+      </content-body: >
+      <aside:><google /></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
+<def tag="toy-show">
+<%
+  @auto_view = case (v = this.view)
+     when "list"  ,"slide", "table", "page",
+          "report","tree"                    then v
+     when "custom", "chart"                  then "tree"
+     when "none"  ,"view" ,  ""    ,  nil    then "report"
+     else                                         "report"
+   end
+   @auto_path = "cards/#{@auto_view}"
+%>
+  <toy-page    if="&false && @auto_view=='page'  " />
+  <toy-tree    if="&false && @auto_view=='tree'  " />
+  <toy-list    if="&false && @auto_view=='list'  " />
+  <toy-table   if="&false && @auto_view=='table' " />
+  <toy-slide   if="&false && @auto_view=='slide' " />
+  <toy-report  if="&false && @auto_view=='report'" />
+  <toy-report merge-attrs/>
+</def>
+
+<def tag="bottom-controls">
+  <table class="bottom-controls">
+    <tr  class="bottom-controls">
+      <td class="core-add-item"><add-item /></td>
+      <td class="go"   ><show-card-inline /></td>
+      <td class="theme"><editor:theme     /></td>
+      <td class="access"><editor:access     /></td>
+      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
+      <td class="core-body-toggle"><body-toggle/></td>
+      <td class="core-trash"><trash/></td>
+    </tr>
+  </table>
+</def>
+
 <def tag="add-aspect">
   <if test="&this">
     <% tooltip =
@@ -356,12 +414,12 @@
 <def tag="views">
   <div class="views">
     <ul class="view-nav">View as
-      <table-view if="&false" />
-      <page-view />
-      <list-view />
-      <presentation-view />
+      <page-view   />
+      <list-view   />
+      <tree-view   />
+      <table-view  />
       <report-view />
-      <tree-view />
+      <slide-view  />
     </ul>
   </div>
 </def>
@@ -370,8 +428,8 @@
   <li class="view-link advanced"><%= link_to("page", url_for(:action => "page" ), :disabled => false  )  %></li>
 </def>
 
-<def tag="presentation-view" attrs="off">
-  <li class="view-link advanced"><%= link_to("presentation", url_for(:action => "presentation" ), :disabled => false  )  %></li>
+<def tag="slide-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("slide", url_for(:action => "slide" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="tree-view" attrs="off">
@@ -397,17 +455,8 @@
   </div>
 </def>
 
-<def tag="bottom-controls">
-  <table class="bottom-controls">
-    <tr  class="bottom-controls">
-      <td class="core-add-item"><add-item /></td>
-      <td class="go"   ><show-card-inline /></td>
-      <td class="theme"><editor:theme     /></td>
-      <td class="access"><editor:access     /></td>
-      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
-      <td class="core-body-toggle"><body-toggle/></td>
-    </tr>
-  </table>
+<def tag="corner-controls">
+  <drag-handle/>
 </def>
 
 <def tag="core-bottom-controls-tr">
@@ -415,9 +464,9 @@
     <td class="bottom-controls">
       <bottom-controls />
     </td>
-    <td class="core-trash" >
-      <trash />
-    </td                   >
+    <td class="corner-controls">
+      <corner-controls />
+    </td>
   </tr>
 </def>
 

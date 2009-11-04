@@ -93,10 +93,10 @@ body.show-page .inner {font-size:1em;}
 body.show-page td.aspect-kind-cell.inner {font-size:.5em;}
 
 
-div.presentation {font-size:1.5em; text-align:center;}
-div.presentation ol.point-form{list-style-type:decimal;font-size:38.2%;}
-div.presentation li{}
-div.presentation input.delete-button {
+div.slide {font-size:1.5em; text-align:center;}
+div.slide ol.point-form{list-style-type:decimal;font-size:38.2%;}
+div.slide li{}
+div.slide input.delete-button {
    margin:3.618em;
 }
 
@@ -132,7 +132,7 @@ ul.sub-pitch li {font-size:62%;}
 /* Suites */
 /* list & tree */
 td.body-cell {font-size:61.8%;}
-div.presentation, div.card-body{margin-top:.62em;}
+div.slide, div.card-body{margin-top:.62em;}
 td.right-controls, tr.core-controls{font-size:12pt;background: #9cf}
 td.right-controls a, tr.core-controls a, .drag-handle {color:white;}
 td.right-controls a:hover, tr.core-controls a:hover, .drag-handle:hover{color:#f9c;}
@@ -203,7 +203,7 @@ body, ul.sub-pitch li {
 }
 
 .hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
-.hilite input, th input, h1 input, div.table-header, td.name-cell, td.aspect-name-cell, div.presentation{
+.hilite input, th input, h1 input, div.table-header, td.name-cell, td.aspect-name-cell, div.slide{
     font-family: sans-serif;
     font-weight:900;
 }
@@ -802,26 +802,26 @@ td.core-add-item a.add-item{
 
 }
 
-td.core-trash{
+td.corner-controls{
     background-color: #9cf;
     color:red;
 }
 
-.card td.core-trash {
+.card td.corner-controls {
   border: 0 solid yellow;padding: 0;margin: 0
 }
 
-td.core-trash form{
+td.corner-controls form{
   border: 0 solid red;padding: 0;margin: 0;
 
 }
 
-td.core-trash form div{
+td.corner-controls form div{
   border: 0 solid purple;padding: 0;margin: 0;
 
 }
 
-td.core-trash form div input{
+td.corner-controls form div input{
   border: 0 solid purple;padding: 0;margin: 0;
   font-family:"Arial Black",Gadget,sans-serif;
   color:#666;
@@ -923,7 +923,7 @@ form.core-add-item {
   background-color:fuchsia;margin: 0;padding: 0;border: 0 solid green;
 }
 
-form.core-trash {
+form.corner-controls {
   background-color:red;margin: 0;padding: 0;border: 0 solid yellow;
 }
 

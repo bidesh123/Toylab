@@ -8,7 +8,7 @@ class CardsController < ApplicationController
   show_action :table
   show_action :page
   show_action :tree
-  show_action :presentation
+  show_action :slide
   show_action :list
 
   before_filter :load_editable_card, :only => %w(show edit)
@@ -48,9 +48,9 @@ class CardsController < ApplicationController
     end
   end
 
-  def presentation
+  def slide
     hobo_show do
-      this.update_attribute(:view, "presentation")
+      this.update_attribute(:view, "slide")
       render :action => this.auto_view
     end
   end

@@ -51,17 +51,6 @@
     "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 
-<def tag="core-bottom-controls-tr">
-  <tr class="core-controls" style="display:none">
-    <td class="bottom-controls">
-      <bottom-controls />
-    </td>
-    <td class="core-trash" >
-      <trash />
-    </td                   >
-  </tr>
-</def>
-
 <def tag="core-main-row"></def>
 
 <def tag="aspect-cell">

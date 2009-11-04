@@ -626,8 +626,9 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :script
       when              :access
         :control_access
-      when              :kind, :view,
-                        :whole   , :list   , :table   , :based_on
+      when              :kind, :view   , :based_on      ,
+                        :whole         , :list          , :table
+
         :edit_structure
       when              :name, :body, :theme
         :edit_data
@@ -650,31 +651,33 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :script
       when any_changed?(:access                                         )
         :control_access
-      when any_changed?(:kind, :view                                    )
+      when any_changed?(:kind, :view, :whole, :table                    )
         :edit_structure
-      when any_changed?(:name, :body, :theme                            )
+      when any_changed?(:name, :body, :theme, :list                     )
         :edit_data
       else
-        :error_unknown_attribute_changed
+        "error_unknown_attribute_changed"
     end
     permitted? demand
   end
 
   def view_permitted? attribute
     demand = case attribute
+      when :id,
+           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+           :list_id      , :whole_id      , :table_id      ,
+           :list_position, :whole_position, :table_position,
+           :list         , :whole         , :table         , :owner
+        :manage
+      when
+        :see
       when nil, :name, :body, :theme, :view, :kind,
-          :aspects, :items, :columns, :access
+                :aspects, :items, :columns, :access, :based_on
         :see
       when :script
         :script
       when nil
         :see
-      when :id,
-           :created_at   , :updated_at    , :based_on_id   , :owner_id,
-           :list_id      , :whole_id      , :table_id      ,
-           :list_position, :whole_position, :table_position,
-           :list         , :whole         , :table
-        :manage
       else
         "error_view_unknown_attribute_#{attribute.inspect}".to_sym
       end
@@ -691,7 +694,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     logger.debug "owner: #{owner.name if owner}"
     logger.debug "demand #{demand.to_s}"
     logger.debug "reason #{reason.to_s}"
-    die
+    seppukku
   end
   
   def forbidden? demand
@@ -742,8 +745,16 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     permission_withheld? requirements
   end
 
+  def who
+    (acting_user || Guest).name
+  end
+
   def permission_withheld? requirements
-#   logger.debug "Are ye #{requirements} for this #{self.reference_name} booty? We hang snoopers here! for #{acting_user.name if acting_user}, owner: #{owner.name if owner}"
+    logger.debug
+      "#{who}!" +
+      "Are ye at least #{requirements}" +
+      "for owner: #{owner.name if owner}'s" +
+      "#{self.reference_name}?"
     return false if on_automatic? || acting_user.administrator?
 #   logger.debug "I can see yer not an administrator."
     withheld = case requirements
@@ -751,7 +762,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 #     logger.debug "this only needs a guest"
       false
     when :signed_up
-#     logger.debug "this needs a signed_up user #{acting_user.signed_up? ? 'OK' : 'After him men'}"
+      logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
       !acting_user.signed_up?
     when :owner
       inherited_owner = recursive_owner.inspect
@@ -765,6 +776,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       logger.debug "this seems to need #{requirements}"
       requirements
     end
+    logger.debug "PERMISSION WITHHELD" if withheld
+    withheld
   end
 
   def acting_user_with_logging=(*args)

@@ -3,50 +3,6 @@
 
 <!-- show================== tag definitions ================================ -->
 
-<def tag="toy-show">
-<%
-  @auto_view = case (v = this.view)
-     when "list"  ,"presentation", "table", "page",
-          "report","tree"                    then v
-     when "custom", "chart"                  then "tree"
-     when "none"  ,"view" ,  ""    ,  nil    then "report"
-     else                                         "report"
-   end
-   @auto_path = "cards/#{@auto_view}"
-%>
-  <toy-page    if="&false && @auto_view=='page'  " />
-  <toy-tree    if="&false && @auto_view=='tree'  " />
-  <toy-list    if="&false && @auto_view=='list'  " />
-  <toy-table   if="&false && @auto_view=='table' " />
-  <toy-presentation   if="&false && @auto_view=='presentation' " />
-  <toy-report  if="&false && @auto_view=='report'" />
-  <toy-report />
-</def>
-
-<def tag="toy-report" attrs="shallow">
-   <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
-   <show-page>
-      <content-header:>
-        <views />
-        <context />
-        <!-- % whole_off = "&false" %       -->
-        <!-- <toy-header if="&whole_off"/>  -->
-      </content-header:>
-
-      <content-body:  >
-        <rails-authenticity-token/>
-        <%         whole_off = "&false" %>
-        <if test="&whole_off ==  true">
-          <card    whole-off="&whole_off" />
-        </if><else>
-          <card                           />
-        </else>
-      </content-body: >
-      <aside:><google /></aside:>
-    </show-page>
-  </set-scoped>
-</def>
-
 <def tag="aspect-kind-cell">
   <% css_class  = "aspect-kind-cell"
      css_class += " inner" if !attributes[:first] %>

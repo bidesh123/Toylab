@@ -1,5 +1,15 @@
 <toy-edit />
 
+<def tag="core-right-controls-td">
+  <td class="right-controls" rowspan="4" style="display:none">
+    <drag-handle/>
+    <reveal-aspect-or-item which="aspects"/>
+    <script-editor-toggle/>
+    <add-aspect />
+    <card-id />
+  </td>
+</def>
+
 <def tag="toy-edit">
   <set-scoped deep="&@card.edit_deep" >
     <show-page>
@@ -86,16 +96,6 @@
   <div class="tool" if="&current_user.administrator?">Card <%= this.id  %></div>
   <div class="tool" if="&current_user.administrator?"><card-number-editor/></div>
   <div class="tool" if="&current_user.administrator?"><context-editors/></div>
-</def>
-
-<def tag="core-right-controls-td">
-  <td class="right-controls" rowspan="4" style="display:none">
-    <drag-handle/>
-    <reveal-aspect-or-item which="aspects"/>
-    <script-editor-toggle/>
-    <add-aspect />
-    <card-id />
-  </td>
 </def>
 
 <def tag="core-main-row">
