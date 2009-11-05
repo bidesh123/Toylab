@@ -11,7 +11,7 @@ class Card < ActiveRecord::Base
     access       enum_string(:access  , :private, :public, :shared  , :demo  ,
                              :auto                                            )
     theme        enum_string(:theme   ,
-                             :pink   , :orange, :yellow  , :green   , :purple,
+                             :pink    , :orange , :yellow, :green   , :purple,
                              :none                                            )
     list_position  :integer
     whole_position :integer

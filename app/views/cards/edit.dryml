@@ -70,8 +70,9 @@
 </def>
 
 <def tag="drag-handle">
-  <div class="tool">
-    <span class="drag_handle drag-handle" id="<%= dom_id(this, :drag_handle) %>">Drag</span>
+  <% can_drag = can_edit?(this.horizontal? ? :kind : :name) %>
+  <div class="tool" if="&can_drag">
+    <span class="drag_handle drag-handle" id="<%= dom_id(this, :drag_handle) %>">Move</span>
   </div>
 </def>
 

@@ -7,47 +7,46 @@
 <!-- view-page -->
 
 <def tag="toy-report" attrs="shallow">
-   <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
-   <show-page>
+  <%         whole_off = "&false" %>
+  <if test="&whole_off ==  true">
+    <card    whole-off="&whole_off" />
+  </if><else>
+    <card                           />
+  </else>
+</def>
+
+<def tag="toy-edit"> <!--looks a lot like toy-show -->
+  <set-scoped deep="&@card.edit_deep" >
+    <show-page>
       <content-header:>
         <views />
         <context />
-        <!-- % whole_off = "&false" %       -->
-        <!-- <toy-header if="&whole_off"/>  -->
       </content-header:>
-
-      <content-body:  >
-        <rails-authenticity-token/>
-        <%         whole_off = "&false" %>
-        <if test="&whole_off ==  true">
-          <card    whole-off="&whole_off" />
-        </if><else>
-          <card                           />
-        </else>
-      </content-body: >
-      <aside:><google /></aside:>
+      <content-body:>
+        <rails-authenticity-token />
+        <card first />
+      </content-body:  >
+      <aside:          >
+        <google />
+      </aside:         >
     </show-page>
   </set-scoped>
 </def>
 
 <def tag="toy-show">
-<%
-  @auto_view = case (v = this.view)
-     when "list"  ,"slide", "table", "page",
-          "report","tree"                    then v
-     when "custom", "chart"                  then "tree"
-     when "none"  ,"view" ,  ""    ,  nil    then "report"
-     else                                         "report"
-   end
-   @auto_path = "cards/#{@auto_view}"
-%>
-  <toy-page    if="&false && @auto_view=='page'  " />
-  <toy-tree    if="&false && @auto_view=='tree'  " />
-  <toy-list    if="&false && @auto_view=='list'  " />
-  <toy-table   if="&false && @auto_view=='table' " />
-  <toy-slide   if="&false && @auto_view=='slide' " />
-  <toy-report  if="&false && @auto_view=='report'" />
-  <toy-report merge-attrs/>
+  <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
+    <show-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:  >
+        <rails-authenticity-token/>
+        <toy-report merge-attrs/>
+      </content-body: >
+      <aside:><google /></aside:>
+    </show-page>
+  </set-scoped>
 </def>
 
 <def tag="bottom-controls">
@@ -456,7 +455,7 @@
 </def>
 
 <def tag="corner-controls">
-  <drag-handle/>
+  <drag-handle />
 </def>
 
 <def tag="core-bottom-controls-tr">
