@@ -1,3 +1,28 @@
+ul, ol, li, ul.collection.cards, ul.collection.cards li {
+    list-style-type: none;
+}
+
+.kind-cell .tiny-gray, .body-cell .tiny-gray, td.aspect-body-cell .tiny-gray {
+  padding-top:0;
+  font-size: .236em;
+  color: #eee;
+}
+
+.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
+.hilite input, th input, h1 input, div.table-header, td.name-cell,
+  td.aspect-name-cell,
+    div.slide.kind-cell .tiny-gray,
+    .body-cell          .tiny-gray,
+    td.aspect-body-cell .tiny-gray{
+    font-family: sans-serif;
+    font-weight:900;
+}
+
+
+html.page-view div.controls {
+    margin-top:.618em;
+}
+
 div.context ul, ul.view-nav {
     padding-top:.618em;
 }
@@ -56,15 +81,6 @@ td.body-cell div.card-body           { padding-top:.426em }
 td.body-cell div.card-body tiny-gray { padding-top:0 }
 
 
-.kind-cell .tiny-gray, .body-cell .tiny-gray, td.aspect-body-cell .tiny-gray {
-  padding-top:0;
-  font-family:sans-serif;
-  font-size: .236em;
-  font-family:sans-serif;
-  font-weight:900;
-  color: #eee;
-}
-
 
 .kind-cell .tiny-gray:hover, .body-cell .tiny-gray:hover {
   color: #9cf;
@@ -82,10 +98,6 @@ td.item-cell {
   border-left: .382em solid #eee;
   padding-left: .382em;
   padding-top: .618em;
-}
-
-ul.collection.cards {
-    list-style:none;
 }
 
 body.show-page input.add-aspect {margin-left:1.617em;}
@@ -130,7 +142,7 @@ th.kind-cell{font-size:38.2%;}
 ul.sub-pitch    {font-size:162% ;}
 ul.sub-pitch li {font-size:62%;}
 /* Suites */
-/* list & tree */
+/* list, paper, tree */
 td.body-cell {font-size:61.8%;}
 div.slide, div.card-body{margin-top:.62em;}
 td.right-controls, tr.core-controls{font-size:12pt;background: #9cf}
@@ -201,13 +213,6 @@ td.aspects-table {
 body, ul.sub-pitch li {
     font-family: sans-serif;
 }
-
-.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
-.hilite input, th input, h1 input, div.table-header, td.name-cell, td.aspect-name-cell, div.slide{
-    font-family: sans-serif;
-    font-weight:900;
-}
-
 
 table.card.inner tr.self-and-aspects-row td table.core tr.name td.name-cell{
     font-weight:100;

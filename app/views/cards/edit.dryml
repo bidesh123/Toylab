@@ -64,15 +64,8 @@
 </def>
 
 <def tag="script-editor-toggle">
-  <div class="tool">
+  <div class="tool" if="&can_edit?(:script)">
     <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
-  </div>
-</def>
-
-<def tag="drag-handle">
-  <% can_drag = can_edit?(this.horizontal? ? :kind : :name) %>
-  <div class="tool" if="&can_drag">
-    <span class="drag_handle drag-handle" id="<%= dom_id(this, :drag_handle) %>">Move</span>
   </div>
 </def>
 

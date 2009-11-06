@@ -1,21 +1,16 @@
 <toy-page />
 
-
-
-
 <def tag="toy-page">
-    <show-page>
+    <show-page class="page-view">
       <content-header:>
         <views />
         <context />
       </content-header:>
       <content-body: >
         <rails-authenticity-token/>
-        <% logger.debug "before================================" %>
         <h1>
           <editor:name blank-message="Untitled" />
         </h1>
-        <% logger.debug "after" %>
 <%       if this.name.blank?
            blank_message = <<-QUOTe
              This is where your text will appear.
@@ -25,7 +20,7 @@
            QUOTe
          end
 %>
-        <p ><editor:body blank-message="&blank_message"/></p>
+        <p ><editor:body blank-message="A"/></p>
         <div param="controls">
           <trash redir="true"/>
         </div>

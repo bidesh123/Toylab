@@ -8,6 +8,7 @@ class CardsController < ApplicationController
   show_action :table
   show_action :page
   show_action :tree
+  show_action :paper
   show_action :slide
   show_action :list
 
@@ -37,6 +38,13 @@ class CardsController < ApplicationController
   def page
     hobo_show do
       this.update_attribute(:view, "page")
+      render :action => this.auto_view
+    end
+  end
+
+  def paper
+    hobo_show do
+      this.update_attribute(:view, "paper")
       render :action => this.auto_view
     end
   end

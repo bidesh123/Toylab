@@ -6,8 +6,10 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    view         enum_string(:view    , :page   , :list  , :table   , :slide ,
-                             :none    , :custom , :tree  , :report  , :chart  )
+    view         enum_string(:none    , :view    , :custom ,
+                             :page    , :slide   ,
+                             :list    , :paper   , :tree,
+                             :table   , :report  , :chart  )
     access       enum_string(:access  , :private, :public, :shared  , :demo  ,
                              :auto                                            )
     theme        enum_string(:theme   ,
@@ -281,7 +283,7 @@ def which_column contexts, names, deep
 
   def auto_view
     case self.view
-    when "list", "slide", "table", "page", "report", "tree"
+    when "list", "paper", "slide", "table", "page", "report", "tree"
       self.view
     when "custom", "chart"
       "tree"
@@ -525,17 +527,28 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     true if Float(name) rescue false
   end
 
+  def blank_name
+    kind.blank? ? "Empty" : "Empty #{kind}"
+  end
+
   def reference_name
-    if name.blank?
-      kind.blank? ? "Empty" : "Empty #{kind}"
+    case
+    when name.blank?
+      blank_name 
+    when toy_numeric?
+      "#{kind.to_s} #{name}"
     else
-      last_char  = name.to_s[-1]
-      first_char = name.to_s[ 0]
-      toy_numeric = name.is_a?(Numeric)      ||
-        (last_char  >= 48 && last_char  <= 57) ||
-        (first_char >= 48 && first_char <= 57)
-      toy_numeric ? [kind.to_s, name].join(" "): name
+      name
     end
+  end
+
+  def toy_numeric?
+    return false if name.blank?
+    last_char   =   name.to_s[-1]
+    first_char  =   name.to_s[ 0]
+    toy_numeric =   name.is_a?(Numeric) ||
+      (last_char  >= 48 && last_char  <= 57) ||
+      (first_char >= 48 && first_char <= 57)
   end
 
   def deep_aspects
@@ -639,6 +652,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def update_permitted?
+    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+    logger.debug changed?.to_yaml
     demand = case
       when any_changed?(:id,
                         :created_at    , :updated_at   ,
@@ -655,9 +670,13 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :edit_structure
       when any_changed?(:name, :body, :theme, :list                     )
         :edit_data
-      else
-        "error_unknown_attribute_changed"
-    end
+      when changed?
+        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
+        logger.debug changed?.to_yaml
+        "unknown attribute changed: #{changed?.to_s}"
+      else #nothing is changed???
+        :see
+     end
     permitted? demand
   end
 

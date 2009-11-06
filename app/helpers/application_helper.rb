@@ -4,4 +4,9 @@ module ApplicationHelper
   def editable_now?(card)
     @editable_children && @editable_children.include?(card)
   end
+  class String
+    def toy_numeric?
+
+    end
+  end
 end

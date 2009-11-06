@@ -300,7 +300,7 @@
       </else></else>
     </tr>
     <tr>
-      <td   class="name"            ><h1><editor:name   blank-message="name" /></h1></td>
+      <td   class="name"            ><h1><editor:name   blank-message="this.blank_name" /></h1></td>
     </tr>
     <tr>
       <td   class="body"            ><h3><editor:body   blank-message="name" /></h3></td>

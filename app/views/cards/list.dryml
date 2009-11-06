@@ -1,17 +1,58 @@
 <toy-list />
 
+<def tag="core">
+  <table id="#{dom_id(this)}" class="core core-unit">
+    <core-main-row />
+    <tr class="name">
+      <%  name_style="name-cell #{this.theme_class}" %>
+      <td class="#{name_style}">
+        <editor:name blank-message="&this.blank_name"/>
+      </td>
+    </tr>
+    <tr class="body">
+      <%  body_style = "body-cell #{this.theme_class}"
+          display_style = this.body ? "inherit" : "none"  %>
+      <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
+        <if test="&this.body ">
+          <editor:body                   blank-message="A" />
+        </if>
+        <else>
+          <editor:body class="tiny-gray" blank-message="A" />
+        </else>
+      </td>
+    </tr>
+    <if test="&this.viewable_by?(current_user, :script)">
+      <tr class="script">
+        <td class="script-cell">
+          <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
+            <if test="&this.script">
+              <editor:script                   blank-message="....." />
+            </if>
+            <else>
+              <editor:script class="tiny-gray" blank-message="....." />
+            </else>
+          </div>
+        </td>
+      </tr>
+    </if>
+    <core-bottom-controls-tr />
+  </table>
+</def>
+
 <def tag="toy-list">
   <set-scoped deep="&@card.edit_deep" >
-    <edit-page>
-      <content-header:>
-        <views />
-        <context />
-      </content-header:>
-      <content-body:  >
-        <rails-authenticity-token/>
-        <card first                           />
-      </content-body:  >
-      <aside:         ><google                               /></aside:         >
+    <edit-page >
+      <content-header:  >
+        <views                    />
+        <context                  />
+      </content-header: >
+      <content-body:    >
+        <rails-authenticity-token />
+        <card first               />
+      </content-body:   >
+      <aside:           >
+        <google                   />
+      </aside:          >
     </edit-page>
   </set-scoped>
 </def>
@@ -30,25 +71,6 @@
     <self-and-aspects-row />
     <list-row             />
   </table>
-</def>
-
-<def tag="list-row">
-  <tr class="list-row" if="&this.items">
-    <td class="list-row>" colspan="2">
-      <set table-id="&dom_id(this, &quot;items&quot;)" />
-      <table class="list-rows" id="&table_id" if="&this.items">
-        <repeat with="&this.items">
-          <item-row />
-        </repeat>
-      </table>
-    </td>
-  </tr>
-</def>
-
-<def tag="reveal-aspect-or-item">
-  <%= link_to_function(
-    image_tag("icons/bullet_arrow_down.png", :size => "16x16", :alt => "Reveal the items below #{this.reference_name}"),
-    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
 </def>
 
 <def tag="core-main-row"></def>

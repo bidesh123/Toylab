@@ -20,10 +20,10 @@
 </def>
 
 <def tag="card" for="Card">
-  <p><editor:name /></p>
+  <p><editor:name blank-message="&this.blank_name"/></p>
   <ol class="point-form">
     <li repeat="&this.items">
-      <editor:name />
+      <editor:name blank-message="&this.blank_name"/>
     </li>
   </ol>
 </def>

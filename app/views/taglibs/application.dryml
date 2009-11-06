@@ -6,7 +6,27 @@
 
 <!-- view-page -->
 
-<def tag="toy-report" attrs="shallow">
+<def tag="list-row">
+  <tr class="list-row" if="&this.items">
+    <td class="list-row" colspan="2">
+      <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="list-rows" id="&table_dom_id" if="&this.items">
+        <repeat with="&this.items">
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+  </tr>
+</def>
+
+<def tag="drag-handle">
+  <% can_drag = can_edit?(this.horizontal? ? :kind : :name) %>
+  <div class="tool" if="&can_drag">
+    <span class="drag_handle drag-handle" id="<%= dom_id(this, :drag_handle) %>">Move</span>
+  </div>
+</def>
+
+<def tag="toy-report" attrs="shallow, whole-off">
   <%         whole_off = "&false" %>
   <if test="&whole_off ==  true">
     <card    whole-off="&whole_off" />
@@ -33,7 +53,7 @@
   </set-scoped>
 </def>
 
-<def tag="toy-show">
+<def tag="toy-show" attrs="shallow, whole-off">
   <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
     <show-page>
       <content-header:>
@@ -416,6 +436,7 @@
       <page-view   />
       <list-view   />
       <tree-view   />
+      <paper-view   />
       <table-view  />
       <report-view />
       <slide-view  />
@@ -425,6 +446,10 @@
 
 <def tag="page-view" attrs="off">
   <li class="view-link advanced"><%= link_to("page", url_for(:action => "page" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="paper-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("paper", url_for(:action => "paper" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="slide-view" attrs="off">
@@ -446,7 +471,6 @@
 <def tag="list-view">
   <li class="view-link"         ><%= link_to("list"    , url_for(:action => "list" ), :disabled => false  )  %></li>
 </def>
-
 
 <def tag="body-toggle">
   <div class="tool">
@@ -470,24 +494,13 @@
 </def>
 
 <def tag="reveal-aspect-or-item">
-  <%# image_tag("icons/eye.png", :size => "16x16", :alt => "Reveal #{attributes[:which]} of #{this.reference_name}"), %>
-  <%= link_to_function(
+  <%=
+    link_to_function(
     "Toggle #{attributes[:which] == "aspects" ? "Right" : "Below"}",
-    "Effect.toggle('#{dom_id(this, attributes[:which])}')") %>
+    "Effect.toggle('#{dom_id(this, attributes[:which])}')")
+%>
 </def>
 
-<def tag="list-row">
-  <tr class="list-row" if="&this.items">
-    <td class="list-row>" colspan="2">
-      <set table-id="&dom_id(this, &quot;items&quot;)" />
-      <table class="list-rows" id="&table_id" if="&this.items">
-        <repeat with="&this.items">
-          <item-row />
-        </repeat>
-      </table>
-    </td>
-  </tr>
-</def>
 
 <def tag="recursive-card">
   <table class="card inner drop-target">
@@ -513,19 +526,19 @@
 </def>
 
 <def tag="core">
-  <table id="#{dom_id(this)}" class="core">
+  <table id="#{dom_id(this)}" class="core core-unit">
     <core-main-row />
     <tr class="name">
       <%  name_style="name-cell #{this.theme_class}" %>
       <td class="#{name_style}">
-        <editor:name blank-message="&this.reference_name"/>
+        <editor:name blank-message="&this.blank_name"/>
       </td>
     </tr>
     <tr class="body">
       <%  body_style = "body-cell #{this.theme_class}"
           display_style = this.body ? "inherit" : "none"  %>
       <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
-        <if test="&true || this.body ">
+        <if test="&this.body ">
           <editor:body                   blank-message="A" />
         </if>
         <else>
@@ -533,7 +546,7 @@
         </else>
       </td>
     </tr>
-    <if test="&can_view?(:script)">
+    <if test="&this.viewable_by?(current_user, :script)">
       <tr class="script">
         <td class="script-cell">
           <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
