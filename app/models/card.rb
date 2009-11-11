@@ -48,7 +48,6 @@ class Card < ActiveRecord::Base
   sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
   sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
   sortable :scope => :table_id,   :column => :table_position, :list_name => :table
-#  sortable :scope => :context_id, :column => :number # deprecated
 
   named_scope :top_level                                                               ,
      :conditions => ["list_id IS ? AND whole_id IS ? AND table_id IS ?", nil, nil, nil],
@@ -60,6 +59,95 @@ class Card < ActiveRecord::Base
   #before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
+
+  #caching
+  #def self.find
+  #  super
+  #end
+
+  class HtmlTable < Array
+    def rectangular! # changes are not destructive or cumulative
+      peak_rows = map { |column| column.length }.max
+      each { |el| el[peak_rows - 1] ||= nil } if peak_rows > 0
+      peak_rows = map { |column| column.length }.max
+      each { |el| el[peak_rows - 1] ||= nil } if peak_rows > 0
+    end
+    def transpose
+      length == 0 ? [] : (Array.new rectangular!).transpose
+    end
+  end
+
+  def next_slide #bull
+    return first_item_down if first_item_down = (this.items || [nil])[0]
+    this.higher_item(:list)
+  end
+
+  def previous_slide #bull
+     return previous_item if previous_item =  this.lower_item(:list)
+     #if parent = this.list
+     return first_item_down if first_item_down = (this.items || [nil])[0]
+  end
+  
+  def itself
+    @itself ||= self.class.find id
+  end
+
+  def self.default_access
+    "shared"
+  end
+
+  def self.default_view
+    "page"
+  end
+
+  def base
+    @base ||= self.class.find id
+  end
+
+  def recursive_base
+    if base
+      base
+    elsif based_on
+      based_on.recursive_kind
+    end
+  end
+
+  def recursive_kind
+    if kind
+      kind
+    elsif based_on
+      based_on.recursive_kind
+    end
+  end
+
+  def recursive_owner
+    if owner
+      owner
+    elsif context
+      context.recursive_owner
+    end
+  end
+
+  def recursive_access
+    if access && access != "access"
+      access
+    elsif context
+      context.recursive_owner
+    else
+      self.class.default_access
+    end
+  end
+
+  def recursive_view
+    if view && view != "view"
+      view
+    elsif context
+      logger.debug "context:#{context.to_yaml}"
+      context.recursive_view
+    else
+      self.class.default_view
+    end
+  end
 
   def reported_view
     case view
@@ -132,15 +220,15 @@ class Card < ActiveRecord::Base
 
   def context
     @context ||= case
-                 when list_id
-                   list
-                 when whole_id
-                   whole
-                 when table_id
-                   table
-                 else #suite
-                   nil
-                 end
+       when list_id
+         list
+       when whole_id
+         whole
+       when table_id
+         table
+       else #suite
+         nil
+       end
   end
   
   def context_id
@@ -151,16 +239,16 @@ class Card < ActiveRecord::Base
 #    case
 #    when whole_id; whole_position
 #    when table_id; table_position
-#    else;          list_position
+#    else         ; list_position
 #    end
 #  end
 #
 #  def number=(value)
 #    attr = case
-#           when whole_id; :whole_position
-#           when table_id; :table_position
-#           else;          :list_position
-#           end
+#      when whole_id; :whole_position
+#      when table_id; :table_position
+#      else;          :list_position
+#      end
 #    write_attribute(attr, value)
 #  end
 #
@@ -246,14 +334,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-#  def follow_up_on_update
-#    if it is a column name, update the kinds in the columns
-#    elsif it is a name change, and it has a base
-#      update the dependents
-#      fill in the address from the customer
-#    end
-#  end
-
 def which_column contexts, names, deep
     column_number = 0
     if base || !kind.blank?               # we need a vague column
@@ -332,9 +412,9 @@ def which_column contexts, names, deep
     cells          = deep[:columns][:cells]
     row            = deep[:row]
     column         = []
-    column[row]    = [itself]
-    coded_kind     = base ? "#{based_on_id}=>" : (kind || "&nbsp;")
-    wider_context  = wide_context + coded_kind.to_s
+    column[row]    = [self]
+    coded_kind     = 
+    wider_context  = wide_context + recursive_kind.to_s || "&nbsp;"
     contexts       = wide_context.split(' - ')
     wider_context += ' - '
     column_number  = names.index(   wider_context)
@@ -413,33 +493,28 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     column_number
   end
   
-  def base
-    @base_cache ||= based_on_id.blank? ? nil : Card.find(based_on_id)
-  end
-
-  def itself
-    @itself_cache ||= Card.find id
-  end
-
   def self.new_suite
     on_automatic do
-      Card.new  :body   => welcome ,
-                :view   => 'page'  ,
-                :access => 'shared'
+      self.new  :body   => new_suite_help ,
+           :view   => default_view  ,
+           :access => default_access
     end
   end
 
-  def self.welcome
-    "
-     Welcome to your toy office suite.
+  def self.new_suite_help
+    #you should not be a guest and be allowed see this,
+    #any one but the author cannot see it
+    #but the model level (here) don't know about ... (whatever is needed).... solve
+      "
+       Welcome to your new toy office web page.
 
-     You may want to do a few things before you start
-     1. Name your suite. Click on the grey title, type the new name, then click somewhere else.
-     2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
-     3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
+       If you just created this suite, you may want to do a few things before you start.
+       1. Name your page. Click on the large title, type the new name, then click somewhere else.
+       2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
+       3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
 
-     Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
-    "
+       Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
+      "
   end
 
   def on_automatic thread_name = "on automatic", &block
@@ -458,20 +533,29 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     Thread.current[thread_name]
   end
 
-  def on_automatic? thread_name = "on automatic"
+  def      on_automatic? thread_name = "on automatic"
     self.class.on_automatic? thread_name
   end
 
   def column_name_rows deep
     names        = deep[:columns][:names]
+logger.debug "names nnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+logger.debug names.to_yaml
+logger.debug (names.length + 1000000).to_yaml
+asdasdasdasdasd
     column_names = names.map do |column_name|
       column_name.split(" - ")
     end
+logger.debug "column_names 7777777777777"
+logger.debug column_names.to_yaml
+logger.debug column_names.length.to_yaml
+
     number_of_name_rows = column_names.map { |c| c.length }.max
+
     column_names.each do |el|
       el[number_of_name_rows - 1] ||= nil
     end
-    column    = -1
+    column             = -1
     name_rows  = [        ]
     column_names.each do |column_name|
       column += 1
@@ -483,11 +567,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     end
     name_rows
   end
-
-  #caching
-  #def self.find
-  #  super
-  #end
 
   def find_deep_aspects
     returning([]) do |accumulator|
@@ -509,22 +588,21 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
  ## --- Toy --- #
 
-  class HtmlTable < Array
-    def rectangular! # changes are not destructive or cumulative
-      most_rows = map { |column| column.length }.max
-      each { |el| el[most_rows - 1] ||= nil } if most_rows > 0
-    end
-    def transpose
-      length == 0 ? [] : (Array.new rectangular!).transpose
-    end
-  end
-
   def edit_deep
     {:origin => id}
   end
 
   def numeric?
     true if Float(name) rescue false
+  end
+
+  def toy_numeric?
+    return false if name.blank?
+    last_char   =   name.to_s[-1]
+    first_char  =   name.to_s[ 0]
+    toy_numeric =   name.is_a?(Numeric) ||
+      (last_char  >= 48 && last_char  <= 57) ||
+      (first_char >= 48 && first_char <= 57)
   end
 
   def blank_name
@@ -540,15 +618,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     else
       name
     end
-  end
-
-  def toy_numeric?
-    return false if name.blank?
-    last_char   =   name.to_s[-1]
-    first_char  =   name.to_s[ 0]
-    toy_numeric =   name.is_a?(Numeric) ||
-      (last_char  >= 48 && last_char  <= 57) ||
-      (first_char >= 48 && first_char <= 57)
   end
 
   def deep_aspects
@@ -645,6 +714,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :edit_structure
       when              :name, :body, :theme
         :edit_data
+      when              :instances # what ??
+        :edit_data
       else
         "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
       end
@@ -695,6 +766,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
         :see
       when :script
         :script
+      when :instances #what ??
+        :see
       when nil
         :see
       else
@@ -843,30 +916,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     else # not :program, :manage, :author, :script, :design, :use, :initiate, :see
       "unknown_intent_#{intent.to_s}_error".to_sym
     end
-  end
-
-  def recursive_owner
-    if owner
-      owner
-    elsif context
-      context.recursive_owner
-    end
-  end
-
-  def recursive_access
-    if access && access != "access"
-      access
-    elsif context
-      context.recursive_owner
-    else
-      default_access
-    end
-    return access unless !access || access == "access"
-    context ? context.recursive_access : default_access
-  end
-
-  def default_access
-    "shared"
   end
 
 end

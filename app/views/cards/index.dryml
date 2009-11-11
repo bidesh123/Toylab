@@ -10,7 +10,7 @@
 <def tag="card" for="Card">
   <card class="card" param="default" merge>
     <header: param>
-      <h4 param="heading">
+     <h4 param="heading">
         <%  tooltip = "A #{this.recursive_access} #{this.reported_view} by #{(this.owner || Guest).name}" %>
         <a title="&tooltip">
           <if test="&this.reference_name"><%=  this.reference_name %></if>
@@ -21,6 +21,7 @@
       </h4>
     </header:>
     <body: param >
+      <!-- Just the header, ma'am. -->
       <!-- <count:items if="&this.items.count>0" label="subitem" param/> -->
     </body:>
   </card>

@@ -125,7 +125,6 @@ AJAX based submission can be enabled by simply adding an `update` attribute. e.g
   html_attrs[:enctype] ||= "multipart/form-data" if multipart
    
   new_record = this.try.new_record?
-
   method = if method.nil?
              (action || web_method || new_record) ? "post" : "put"
            else
@@ -149,6 +148,8 @@ AJAX based submission can be enabled by simply adding an `update` attribute. e.g
     Hobo::Dryml.last_if = false
     ""
   else
+logger.debug "method"
+logger.debug method.to_yaml
     if method == "put"
       # browsers don't support put -- use post and add the Rails _method hack
       http_method_hidden = hidden_field_tag("_method", "PUT") 
