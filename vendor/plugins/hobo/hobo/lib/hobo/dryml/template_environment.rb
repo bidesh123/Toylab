@@ -556,7 +556,9 @@ module Hobo::Dryml
 
 
     def element(name, attributes, content=nil, escape = true, empty = false, &block)
-      unless attributes.blank?
+logger.debug "jjjjjjjjjjjjjjjjjj"
+#logger.debug block_given?.to_yaml
+unless attributes.blank?
         attrs = []
         if escape
           attributes.each do |key, value|

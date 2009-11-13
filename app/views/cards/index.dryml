@@ -1,11 +1,30 @@
 <index-page>
-  <content-header:></content-header:>
-  <new-link:>
-    <form with="&Card.new_suite">
+  <content-header:></content-header>
+  <new_link:></new_link:>
+  <frankenstef:>
+    <form with="&Card.new_suite"  > 
       <submit label="Create your own office suite" />
     </form>
-  </new-link:>
+  </frankenstef:>
 </index-page>
+
+<def tag="index-page">
+  <page merge title="Suites">
+    <body: class="index-page card" param/>
+    <content: param>
+      <header param="content-header">
+        <h1 param="title">Latest office suites</h1>
+      </header>
+      <section param="content-body">
+        <span param="frankenstef">giogogogogogogqdouyqeougdwfkbj</span>
+        <span param="new-link"></span>  <!-- modified fg -->
+        <page-nav param="top-page-nav"/>
+        <collection param/>
+        <page-nav param="bottom-page-nav"/>
+      </section>
+    </content:>
+  </page>
+</def>
 
 <def tag="card" for="Card">
   <card class="card" param="default" merge>

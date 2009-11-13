@@ -217,7 +217,7 @@ logger.debug method.to_yaml
 <def tag="submit" attrs="label, image">
   <input if="&image" type="image" src="&image" merge-attrs class="image-button submit-button"/>
   <else>
-    <input type="submit" value="#{label}" merge-attrs class="button submit-button"/>
+    <input type="submit" value="&label" merge-attrs class="button submit-button"/>
   </else>
 </def>
 
@@ -261,8 +261,10 @@ If the context is a `has_many :through` association, the polymorphic `<collectio
 -->
 <def tag="input" attrs="no-edit"><%=
   if attributes[:type]
+logger.debug "iiiiiiiiiiiiiiiiii"
     element :input, attributes, nil, true, true
   else
+logger.debug "uuuuuuuuuuuuuu"
     no_edit ||= :view
     no_edit = no_edit.to_sym
     no_edit_permission = !can_edit? unless no_edit == :ignore

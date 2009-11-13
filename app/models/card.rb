@@ -495,7 +495,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   
   def self.new_suite
     on_automatic do
-      self.new  :body   => new_suite_help ,
+      new  :body   => "aaa" || new_suite_help ,
            :view   => default_view  ,
            :access => default_access
     end
@@ -539,16 +539,16 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
   def column_name_rows deep
     names        = deep[:columns][:names]
-logger.debug "names nnnnnnnnnnnnnnnnnnnnnnnnnnnn"
-logger.debug names.to_yaml
-logger.debug (names.length + 1000000).to_yaml
-asdasdasdasdasd
+#logger.debug "names nnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+#logger.debug names.to_yaml
+#logger.debug begin(names.length + 1000000).to_yaml end
+#asdasdasdasdasd
     column_names = names.map do |column_name|
       column_name.split(" - ")
     end
-logger.debug "column_names 7777777777777"
-logger.debug column_names.to_yaml
-logger.debug column_names.length.to_yaml
+#logger.debug "column_names 7777777777777"
+#logger.debug column_names.to_yaml
+#logger.debug column_names.length.to_yaml
 
     number_of_name_rows = column_names.map { |c| c.length }.max
 
