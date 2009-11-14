@@ -124,7 +124,7 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_owner
-    recursive_owned.owner
+    recursive_owner_context.owner
   end
 
   def recursive_owner_is? x
@@ -133,8 +133,8 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_owner_context
-    return self                    if owner   && owner.name.strip
-    return context.recursive_owned if context
+    return self                            if owner   && owner.name.strip
+    return context.recursive_owner_context if context
            self
   end
 
