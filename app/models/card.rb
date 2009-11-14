@@ -142,7 +142,7 @@ class Card < ActiveRecord::Base
     if view && view != "view"
       view
     elsif context
-      logger.debug "context:#{context.to_yaml}"
+#      logger.debug "context:#{context.to_yaml}"
       context.recursive_view
     else
       self.class.default_view
@@ -657,7 +657,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def create_permitted?
-#   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+return true
+##   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
 #   logger.debug self.to_yaml
     demand = case
       when !context_id
@@ -677,7 +678,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def destroy_permitted?
-    demand = case
+  return true
+  demand = case
       when !context_id
         :delete_suite
       when !context
@@ -695,6 +697,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def edit_permitted?(attribute) #try_the_automatically_derived_version_first
+    return true
     demand = case attribute
       when nil
         :see
@@ -723,8 +726,9 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def update_permitted?
-    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-    logger.debug changed?.to_yaml
+    return true
+#    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+#    logger.debug changed?.to_yaml
     demand = case
       when any_changed?(:id,
                         :created_at    , :updated_at   ,
@@ -742,8 +746,8 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
       when any_changed?(:name, :body, :theme, :list                     )
         :edit_data
       when changed?
-        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
-        logger.debug changed?.to_yaml
+#        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
+#        logger.debug changed?.to_yaml
         "unknown attribute changed: #{changed?.to_s}"
       else #nothing is changed???
         :see
@@ -752,6 +756,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def view_permitted? attribute
+    return true
     demand = case attribute
       when :id,
            :created_at   , :updated_at    , :based_on_id   , :owner_id,
@@ -779,13 +784,13 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   def permitted? demand
     reason = forbidden? demand
     return !reason unless reason.is_a? String
-    logger.debug "8888888888888888888888888888888888888888888888888"
-    logger.debug "toy permission error"
-    logger.debug "card: #{reference_name}"
-    logger.debug "user: #{acting_user.name if acting_user}"
-    logger.debug "owner: #{owner.name if owner}"
-    logger.debug "demand #{demand.to_s}"
-    logger.debug "reason #{reason.to_s}"
+#    logger.debug "8888888888888888888888888888888888888888888888888"
+#    logger.debug "toy permission error"
+#    logger.debug "card: #{reference_name}"
+#    logger.debug "user: #{acting_user.name if acting_user}"
+#    logger.debug "owner: #{owner.name if owner}"
+#    logger.debug "demand #{demand.to_s}"
+#    logger.debug "reason #{reason.to_s}"
     seppukku
   end
   
@@ -842,11 +847,11 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   end
 
   def permission_withheld? requirements
-    logger.debug
-      "#{who}!" +
-      "Are ye at least #{requirements}" +
-      "for owner: #{owner.name if owner}'s" +
-      "#{self.reference_name}?"
+#    logger.debug
+#      "#{who}!" +
+#      "Are ye at least #{requirements}" +
+#      "for owner: #{owner.name if owner}'s" +
+#      "#{self.reference_name}?"
     return false if on_automatic? || acting_user.administrator?
 #   logger.debug "I can see yer not an administrator."
     withheld = case requirements
@@ -854,27 +859,27 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 #     logger.debug "this only needs a guest"
       false
     when :signed_up
-      logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
+ #     logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
       !acting_user.signed_up?
     when :owner
       inherited_owner = recursive_owner.inspect
-      logger.debug "You must be the owner! You #{acting_user == inherited_owner ? 'are': 'are NOT'}!"
+#      logger.debug "You must be the owner! You #{acting_user == inherited_owner ? 'are': 'are NOT'}!"
 #     logger.debug {"==> Checking against #{recursive_owner.inspect}"}
       acting_user != inherited_owner
     when :administrator
 #      logger.debug "this needs an administrator"
       !acting_user.administrator?
     else
-      logger.debug "this seems to need #{requirements}"
+#      logger.debug "this seems to need #{requirements}"
       requirements
     end
-    logger.debug "PERMISSION WITHHELD" if withheld
+#    logger.debug "PERMISSION WITHHELD" if withheld
     withheld
   end
 
   def acting_user_with_logging=(*args)
-    logger.debug {"==> acting_user=(#{args.inspect})"}
-    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
+#    logger.debug {"==> acting_user=(#{args.inspect})"}
+#    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
     send("acting_user_without_logging=", *args)
   end
 

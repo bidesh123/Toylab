@@ -17,7 +17,7 @@
              Just click on this text to replace by your own entry.
              Don't forget to give your page a name too.
              Just click on the large letters to change it.
-           QUOTe
+          QUOTe
         end
 %>
         <p ><editor:body blank-message="A"/></p>
