@@ -100,6 +100,10 @@ class Card < ActiveRecord::Base
     "page"
   end
 
+  def self.blank_name
+    "Untitled"
+  end
+
   def base
     @base ||= self.class.find id
   end
@@ -610,18 +614,26 @@ logger.debug column_names.length.to_yaml
   end
 
   def blank_name
-    kind.blank? ? "Empty" : "Empty #{kind}"
+    kind.blank? ? Card.blank_name : "Empty #{kind}"
   end
 
-  def reference_name
+  def suite_reference_name
+    "#{recursive_access} #{recursive_view} #{card_reference_name}"
+  end
+
+  def card_reference_name
     case
     when name.blank?
-      blank_name 
+      blank_name
     when toy_numeric?
       "#{kind.to_s} #{name}"
     else
       name
     end
+  end
+
+  def reference_name
+    suite? ? suite_reference_name : card_reference_name
   end
 
   def deep_aspects
