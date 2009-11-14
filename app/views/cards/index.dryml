@@ -35,7 +35,7 @@
      <h4 param="heading">
         <%  tooltip = "A #{this.recursive_access} #{this.reported_view} by #{(this.owner || Guest).name}" %>
         <a title="&tooltip">
-          <if test="&this.reference_name"><%=  this.reference_name %></if>
+          <if test="&ref = this.card_reference_name"><%= ref %></if>
           <else><%= image_tag "toy_magnifier.png" %></else>
         </a>
         <span class="author tiny-gray">

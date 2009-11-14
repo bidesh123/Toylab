@@ -925,7 +925,7 @@ logger.debug column_names.length.to_yaml
     when :program, :manage
       :administrator
     when :author, :script, :design, :use, :see
-logger.debug "88888888888888888888888"
+#logger.debug "88888888888888888888888"
       :owner
     when :initiate
       :signed_up
