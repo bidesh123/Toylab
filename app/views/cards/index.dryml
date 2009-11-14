@@ -16,10 +16,11 @@
     <body: class="index-page card" param/>
     <content: param>
       <header param="content-header">
-        <h1 param="title">Cards</h1>
+        <h2 param="heading">Cards</h2>
+        <p param="count" if>There <count prefix="are"/></p>
       </header>
       <section param="content-body">
-        <span param="new-link"></span>  <!-- modified fg -->
+        <a action="new" to="&model" param="new-link"/>
         <page-nav param="top-page-nav"/>
         <collection param/>
         <page-nav param="bottom-page-nav"/>

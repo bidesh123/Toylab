@@ -495,9 +495,9 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   
   def self.new_suite
     on_automatic do
-      new  :body   => "aaa" || new_suite_help ,
-           :view   => default_view  ,
-           :access => default_access
+      new :body   => new_suite_help ,
+          :view   => default_view  ,
+          :access => default_access
     end
   end
 
@@ -505,16 +505,12 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     #you should not be a guest and be allowed see this,
     #any one but the author cannot see it
     #but the model level (here) don't know about ... (whatever is needed).... solve
-      "
-       Welcome to your new toy office web page.
-
-       If you just created this suite, you may want to do a few things before you start.
-       1. Name your page. Click on the large title, type the new name, then click somewhere else.
-       2. If you want text, such as this one on your lop level, simply click in this text, replace it, then click somewhere else..
+      "Welcome to your new toy office web page.
+       If you have just created this suite, you may want to do a few things before you start.
+       1. Name your page. To do this, just click on the large title right above this text and type the new name, then click somewhere else.
+       2. If you want text where this one is, simply click in this text, replace it, then click somewhere else..
        3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
-
-       Notice that you always click elsewhere when you are finished. Try it! You can't break anything...
-      "
+       Notice that you always click elsewhere when you have entered your text. Try it! You can't break anything.      "
   end
 
   def on_automatic thread_name = "on automatic", &block
