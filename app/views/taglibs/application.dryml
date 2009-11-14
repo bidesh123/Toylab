@@ -124,15 +124,27 @@
   <do with="&current_user">
     <ul class="navigation account-nav" param>
       <if test="&logged_in?">
-        <li class='nav-item' param="logged-in-as"            ><a to="&current_user">logged in as <name/></a></li>
-        <li class='nav-item' param="account"                 ><a action="account"  >your account        </a  ></li>
-        <li class='nav-item' param="log-out"                 ><a href="&logout_url">log out             </a></li>
+        <li class='nav-item' param="logged-in-as">
+          <a to="&current_user">logged in as <name/></a>
+        </li>
+        <li class='nav-item' param="account">
+          <a action="account"  >your account        </a  >
+        </li>
+        <li class='nav-item' param="log-out">
+          <a href="&logout_url">log out             </a>
+        </li>
       </if>
       <else>
-        <li class='nav-item' param="log-in"                  ><a href="&login_url" >log in              </a></li>
-        <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">sign up             </a></li>
+        <li class='nav-item' param="log-in">
+          <a href="&login_url" >log in              </a>
+        </li>
+        <li if="&signup_url" class="nav-item" param="sign-up">
+          <a href="&signup_url">sign up             </a>
+        </li>
       </else>
-        <li class="dev-user-changer" if="&RAILS_ENV == 'development'"><dev-user-changer/></li>
+      <li class="dev-user-changer" if="&true || RAILS_ENV == 'development'">
+        <dev-user-changer/>
+       </li>
     </ul>
   </do>
 </def>
