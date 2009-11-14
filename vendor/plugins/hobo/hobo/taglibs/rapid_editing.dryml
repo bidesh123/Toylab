@@ -7,9 +7,7 @@ This area of Hobo has had less attention that the non-ajax forms of late, so it'
 <!-- Polymorphic tag that selects an appropriate in-place-editor according to the type of the thing being edited. `<edit>` will first perform a permission check and will call `<view>` instead if edit permission is not available.
   -->
 <def tag="editor" ><%= 
-logger.debug "editing #{this.blank? ? 'blank' : this}: the #{this_field}"
   if !can_edit?
-logger.debug "can't edit so view it"
     view(attributes)
   else
     if this.blank?

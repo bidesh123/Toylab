@@ -148,8 +148,6 @@ AJAX based submission can be enabled by simply adding an `update` attribute. e.g
     Hobo::Dryml.last_if = false
     ""
   else
-logger.debug "method"
-logger.debug method.to_yaml
     if method == "put"
       # browsers don't support put -- use post and add the Rails _method hack
       http_method_hidden = hidden_field_tag("_method", "PUT") 
@@ -261,10 +259,8 @@ If the context is a `has_many :through` association, the polymorphic `<collectio
 -->
 <def tag="input" attrs="no-edit"><%=
   if attributes[:type]
-logger.debug "iiiiiiiiiiiiiiiiii"
     element :input, attributes, nil, true, true
   else
-logger.debug "uuuuuuuuuuuuuu"
     no_edit ||= :view
     no_edit = no_edit.to_sym
     no_edit_permission = !can_edit? unless no_edit == :ignore

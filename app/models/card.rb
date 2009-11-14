@@ -121,10 +121,18 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_owner
+    recursive_owned.owner
+  end
+
+  def recursive_owner_is? x
+    recursive_owned.owner_is? x
+  end
+
+  def recursive_owned
     if owner
-      owner
+      self
     elsif context
-      context.recursive_owner
+      context.recursive_owned
     end
   end
 
@@ -142,7 +150,7 @@ class Card < ActiveRecord::Base
     if view && view != "view"
       view
     elsif context
-      logger.debug "context:#{context.to_yaml}"
+#      logger.debug "context:#{context.to_yaml}"
       context.recursive_view
     else
       self.class.default_view
@@ -649,12 +657,12 @@ logger.debug column_names.length.to_yaml
   end
 
   def owner_or_admin?
-    owner_is?(acting_user) || acting_user.administrator?
+    recursive_owner_is?(acting_user) || acting_user.administrator?
   end
 
   def create_permitted?
-   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
-   logger.debug self.to_yaml
+#   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+#   logger.debug self.to_yaml
     demand = case
       when !context_id
         :add_suite
@@ -715,12 +723,14 @@ logger.debug column_names.length.to_yaml
       else
         "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
       end
+#    logger.debug "edit permitted on #{attribute.inspect} yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+#    logger.debug "demand #{demand.to_yaml}"
     permitted? demand
   end
 
   def update_permitted?
-    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-    logger.debug changed?.to_yaml
+#    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+#    logger.debug changed?.to_yaml
     demand = case
       when any_changed?(:id,
                         :created_at    , :updated_at   ,
@@ -738,8 +748,8 @@ logger.debug column_names.length.to_yaml
       when any_changed?(:name, :body, :theme, :list                     )
         :edit_data
       when changed?
-        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
-        logger.debug changed?.to_yaml
+#        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
+#        logger.debug changed?.to_yaml
         "unknown attribute changed: #{changed?.to_s}"
       else #nothing is changed???
         :see
@@ -755,16 +765,12 @@ logger.debug column_names.length.to_yaml
            :list_position, :whole_position, :table_position,
            :list         , :whole         , :table         , :owner
         :manage
-      when
-        :see
-      when nil, :name, :body, :theme, :view, :kind,
-                :aspects, :items, :columns, :access, :based_on
-        :see
       when :script
         :script
-      when :instances #what ??
-        :see
-      when nil
+      when :access
+        :control_access
+      when nil, :name, :body, :theme, :view, :kind,
+                :aspects, :items, :columns, :based_on, :instances
         :see
       else
         "error_view_unknown_attribute_#{attribute.inspect}".to_sym
@@ -779,14 +785,14 @@ logger.debug column_names.length.to_yaml
     logger.debug "toy permission error"
     logger.debug "card: #{reference_name}"
     logger.debug "user: #{acting_user.name if acting_user}"
-    logger.debug "owner: #{owner.name if owner}"
+    logger.debug "owner: #{recursive_owner.name if recursive_owner}"
     logger.debug "demand #{demand.to_s}"
     logger.debug "reason #{reason.to_s}"
     seppukku
   end
   
   def forbidden? demand
-    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
+#    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
     intent = case demand
       when :program
         :program
@@ -817,7 +823,7 @@ logger.debug column_names.length.to_yaml
 
   def intent_forbidden?    intent
     inherited_access = recursive_access
-   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
+#   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
     requirements = case inherited_access
       when "demo"
         demo_requirements    intent
@@ -838,74 +844,76 @@ logger.debug column_names.length.to_yaml
   end
 
   def permission_withheld? requirements
-    logger.debug(
-      "#{who}!" +
-      "Are ye at least #{requirements}" +
-      "for owner: #{owner.name if owner}'s" +
-      "#{self.reference_name}?")
+#    logger.debug(
+#      "#{who}!" +
+#      "Are ye at least #{requirements}" +
+#      "for owner: #{owner.name if owner}'s" +
+#      "#{self.reference_name}?")
     return false if on_automatic? || acting_user.administrator?
-   logger.debug "I can see yer not an administrator."
+#   logger.debug "I can see yer not an administrator."
     withheld = case requirements
     when :guest
-     logger.debug "this only needs a guest"
+#     logger.debug "this only needs a guest"
       false
     when :signed_up
-     logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
+#     logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
       !acting_user.signed_up?
     when :owner
-      inherited_owner = recursive_owner.inspect
-      logger.debug "You must be the owner! You #{acting_user == inherited_owner ? 'are': 'are NOT'}!"
-     logger.debug {"==> Checking against #{recursive_owner.inspect}"}
-      acting_user != inherited_owner
+#      logger.debug "You must be the owner!"
+#      logger.debug "You are #{acting_user.name}."
+#      logger.debug "The owner is #{recursive_owner.name}."
+#      logger.debug "You #{recursive_owner_is? acting_user ? 'ARE' : 'are NOT'} the owner!"
+      !recursive_owner_is? acting_user
     when :administrator
-      logger.debug "this needs an administrator"
+#      logger.debug "this needs an administrator"
       !acting_user.administrator?
     else
-      logger.debug "this seems to need #{requirements}"
+#      logger.debug "this seems to need #{requirements}"
       requirements
     end
-    logger.debug "PERMISSION WITHHELD" if withheld
+#    logger.debug "PERMISSION WITHHELD" if withheld
     withheld
   end
 
-  def acting_user_with_logging=(*args)
-    logger.debug {"==> acting_user=(#{args.inspect})"}
-    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
-    send("acting_user_without_logging=", *args)
-  end
+#  def acting_user_with_logging=(*args)
+#    logger.debug {"==> acting_user=(#{args.inspect})"}
+#    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
+#    send("acting_user_without_logging=", *args)
+#  end
 
 #  alias_method_chain :acting_user=, :logging
 
   def demo_requirements intent
-   logger.debug "So Cap'n can I #{intent} this shared booty?"
+#   logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_up if intent == :design
     return :guest     if intent == :use
     shared_requirements intent
   end
 
   def shared_requirements intent
-   logger.debug "So Cap'n can I #{intent} this shared booty?"
+#   logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_up if intent == :use
     public_requirements intent
   end
 
   def public_requirements intent
-   logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
+#   logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
     return :guest     if intent == :see
     private_requirements intent
   end
 
   def private_requirements intent
-   logger.debug "So Cap'n may I #{intent} the private doc?"
+#   logger.debug "So Cap'n may I #{intent} the private doc?"
     tightest_requirements intent
   end
 
   def tightest_requirements intent
-   logger.debug "So Cap'n may I #{intent} the private doc?"
+#   logger.debug "So Cap'n may I #{intent} the private doc?"
     case intent
     when :program, :manage
       :administrator
     when :author, :script, :design, :use, :see
+logger.debug "88888888888888888888888"
       :owner
     when :initiate
       :signed_up
