@@ -117,9 +117,8 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_kind
-    if kind
-      kind
-    elsif based_on
+    return kind if kind && kind.strip.blank?
+    if based_on
       based_on.recursive_kind
     end
   end
@@ -129,15 +128,14 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_owner_is? x
-    recursive_owned.owner_is? x
+    ctx = recursive_owner_context
+    ctx.owner_is? x
   end
 
-  def recursive_owned
-    if owner
-      self
-    elsif context
-      context.recursive_owned
-    end
+  def recursive_owner_context
+    return self                    if owner   && owner.name.strip
+    return context.recursive_owned if context
+           self
   end
 
   def recursive_access
@@ -425,8 +423,7 @@ def which_column contexts, names, deep
     row            = deep[:row]
     column         = []
     column[row]    = [self]
-    coded_kind     = 
-    wider_context  = wide_context + recursive_kind.to_s || "&nbsp;"
+    wider_context  = wide_context + recursive_kind.to_s || "Untitled"
     contexts       = wide_context.split(' - ')
     wider_context += ' - '
     column_number  = names.index(   wider_context)
@@ -549,8 +546,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     names        = deep[:columns][:names]
 logger.debug "names nnnnnnnnnnnnnnnnnnnnnnnnnnnn"
 logger.debug names.to_yaml
-logger.debug begin(names.length + 1000000).to_yaml end
-#asdasdasdasdasd
+logger.debug (names.length + 10000000000).to_yaml
     column_names = names.map do |column_name|
       column_name.split(" - ")
     end
@@ -875,7 +871,7 @@ logger.debug column_names.length.to_yaml
 #      logger.debug "You are #{acting_user.name}."
 #      logger.debug "The owner is #{recursive_owner.name}."
 #      logger.debug "You #{recursive_owner_is? acting_user ? 'ARE' : 'are NOT'} the owner!"
-      !recursive_owner_is? acting_user
+      !recursive_owner_is?(acting_user)
     when :administrator
 #      logger.debug "this needs an administrator"
       !acting_user.administrator?
