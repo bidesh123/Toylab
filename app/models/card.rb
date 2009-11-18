@@ -604,7 +604,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   
   def self.new_suite
     on_automatic do
-      new :body   => "aha" || default_body  ,
+      new :body   => default_body  ,
           :view   => default_view  ,
           :access => default_access
     end
