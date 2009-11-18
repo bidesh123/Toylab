@@ -763,7 +763,7 @@ Event.addBehavior({
          }
     },
 
-    // NOTE: Fixed the <br/>\n case (FB+FG)
+    // NOTE: Fixed the <br/>\n case (FB, then FG)
     // Else, JS would replace <br/>\n with \n\n, thereby doubling the number of lines
     '.text.in-place-edit, .markdown.in-place-edit, .textile.in-place-edit' : function (ev) {
         var ipe = Hobo._makeInPlaceEditor(this, {rows: 2})
