@@ -345,7 +345,7 @@ module Hobo
 
 
     def nl_to_br(s)
-      s.to_s.gsub("\n", "<br/>") if s
+      s.to_s.gsub("\n", "<br />") if s
     end
 
 

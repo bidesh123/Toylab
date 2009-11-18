@@ -53,7 +53,7 @@
   <div param="table-header">
     <p class="table-title">
       <h1>
-        <editor:kind blank-message="&nbsp;" />
+        <editor:kind blank-message="." />
         <editor:name blank-message="&this.blank_name" />
       </h1>
     </p>

@@ -204,7 +204,7 @@
 </def>
 
 <def tag="whole">
-  <tiny><view:name /> is the </tiny><editor:kind blank-message="kind" /><tiny> of </tiny><a:whole param="parent-link" />
+  <tiny><view:name /> is the </tiny><editor:kind blank-message="..." /><tiny> of </tiny><a:whole param="parent-link" />
 </def>
 
 <def tag="list">
@@ -292,11 +292,11 @@
   <table class="toy-header">
     <tr>
       <if test="&this.kind">
-        <th class="kind"            ><h1><editor:kind   blank-message="kind"   /></h1></th>
+        <th class="kind"            ><h1><editor:kind   blank-message="..."   /></h1></th>
       </if><else><if test="&this.list">
         <th class="number"          ><h1><editor:number blank-message="number" /></h1></th>
       </if><else>
-        <th class="empty-title-cell"    ><editor:kind   blank-message="kind"   /></th>
+        <th class="empty-title-cell"    ><editor:kind   blank-message="..."   /></th>
       </else></else>
     </tr>
     <tr>

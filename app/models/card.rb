@@ -10,7 +10,7 @@ class Card < ActiveRecord::Base
                              :page    , :slide   ,
                              :list    , :paper   , :tree,
                              :table   , :report  , :chart  )
-    access       enum_string(:access  , :private, :public, :shared  , :demo  ,
+    access       enum_string(:access  , :private, :public, :shared  , :open  ,
                              :auto                                            )
     theme        enum_string(:theme   ,
                              :pink    , :orange , :yellow, :green   , :purple,
@@ -28,7 +28,7 @@ class Card < ActiveRecord::Base
   #1
   belongs_to :list     , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true
   has_many   :items    , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true,
-                         :dependent  => :destroy, :order       => "list_position"
+                         :dependent  => :destroy, :order       =>  "list_position"
 
   #2
   belongs_to :whole    , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true
@@ -45,9 +45,9 @@ class Card < ActiveRecord::Base
   has_many   :instances, :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true,
                          :dependent  => :destroy
 
-  sortable :scope => :list_id,    :column => :list_position,  :list_name => :list
-  sortable :scope => :whole_id,   :column => :whole_position, :list_name => :whole
-  sortable :scope => :table_id,   :column => :table_position, :list_name => :table
+  sortable :scope => :list_id , :list_name => :list ,  :column =>  :list_position
+  sortable :scope => :whole_id, :list_name => :whole,  :column => :whole_position
+  sortable :scope => :table_id, :list_name => :table,  :column => :table_position
 
   named_scope :top_level                                                               ,
      :conditions => ["list_id IS ? AND whole_id IS ? AND table_id IS ?", nil, nil, nil],
@@ -77,12 +77,112 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def next_slide #bull
+  def self.it= val
+    @@it[Thread.current.object_id] = val
+  end
+
+  def self.its reference
+    case       reference.class.name
+    when "String"
+      sub      reference
+    when "Symbol"
+      field    reference
+    else
+      nil
+    end
+  end
+
+  def self.default_body
+    get toy("Toy Controls")
+    get its("Defaults")
+    get its("Suite")
+    its :body
+  end
+
+  def self.the reference
+    its reference
+  end
+
+  @@it = Hash.new {|h,k| h[k] = nil }
+
+  def self.field reference
+    case self.it.class.name
+    when "Card"
+      case reference
+      when 
+        it.send(reference)
+      when :id,
+           nil, :name, :theme, :view, :kind,
+           :aspects, :items, :columns, :based_on, :instances,
+           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+           :list_id      , :whole_id      , :table_id      ,
+           :list_position, :whole_position, :table_position,
+           :list         , :whole         , :table         , :owner,
+           :access       ,
+           :script       , :body
+        it.send reference
+      else
+        ""
+      end
+    else
+      ""
+    end
+  end
+
+  def self.set_field reference
+    case self.it.class.name
+    when "Card"
+      case reference
+      when :id           ,
+           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+           :list_id      , :whole_id      , :table_id      ,
+           :list_position, :whole_position, :table_position,
+           :list         , :whole         , :table         , :owner,
+           :script       ,
+           :access       ,
+           nil, :name, :body, :theme, :view, :kind,
+           :aspects, :items, :columns, :based_on, :instances
+        it.send("#{reference}=", val)
+      else
+        ""
+      end
+    else
+      ""
+    end
+  end
+
+  def self.sub reference
+    case self.it.class.name
+    when "Card"
+      relevant = self.it.aspects.select do |aspect|
+        aspect.recursive_kind ==  reference
+      end + Card.find(:all  , :conditions => [
+                 "list_id = ? and name         = ?" ,
+               self.it.id     ,   reference
+        ])
+      relevant[0] if relevant.length > 0
+    else
+      nil
+    end
+  end
+
+  def self.toy reference
+    Card.find(           :first, :conditions => [
+                  "owner_id = ? and name      = ?",
+      User.administrator_id     ,   reference
+    ])
+  end
+
+  def self.it
+    @@it[Thread.current.object_id]
+  end
+  
+  def next_slide #totlbull
     return first_item_down if first_item_down = (this.items || [nil])[0]
     this.higher_item(:list)
   end
 
-  def previous_slide #bull
+  def previous_slide #totlbull
      return previous_item if previous_item =  this.lower_item(:list)
      #if parent = this.list
      return first_item_down if first_item_down = (this.items || [nil])[0]
@@ -436,7 +536,7 @@ def which_column contexts, names, deep
     end
     peek = deep[:columns][:cells].transpose.map do |the_row|
       the_row.map do |cell_list|
-        (cell_list || []).join("<br />")
+        (cell_list || []).join("<br />\n")
       end.join "</td                     ><td class='debug'>"
     end.join   "</td></tr            ><tr><td class='debug'>"
     unless (aspect_depth += 1) >= max_aspect_depth
@@ -504,7 +604,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
   
   def self.new_suite
     on_automatic do
-      new :body   => new_suite_help ,
+      new :body   => default_body  ,
           :view   => default_view  ,
           :access => default_access
     end
@@ -515,11 +615,20 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     #any one but the author cannot see it
     #but the model level (here) don't know about ... (whatever is needed).... solve
       "Welcome to your new toy office web page.
-       If you have just created this suite, you may want to do a few things before you start.
-       1. Name your page. To do this, just click on the large title right above this text and type the new name, then click somewhere else.
-       2. If you want text where this one is, simply click in this text, replace it, then click somewhere else..
-       3. Or, if you just want to erase this text, click on it, press delete, then click somewhere else.
-       Notice that you always click elsewhere when you have entered your text. Try it! You can't break anything.      "
+       To get started
+
+      1. Learn how to change text.
+      a) Just click on a text. Try Untitled.
+      b) If it becomes yellow, you can replace it with your own words. Type in a title for your page.
+      c) Click outside the yellow box when you are done.
+
+      2. As for the title, change this text to what you want your page to say.
+
+      3. Optionally you can restrict access to your page. Just change the access from open to shared, public or or even completely private to yourself.
+
+      Hint: Don't forget to click outside the yellow box when you want your changes to be recorded. If you don't, your changes could be lost.
+
+      Try it! You can't break anything."
   end
 
   def on_automatic thread_name = "on automatic", &block
@@ -546,7 +655,7 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
     names        = deep[:columns][:names]
 logger.debug "names nnnnnnnnnnnnnnnnnnnnnnnnnnnn"
 logger.debug names.to_yaml
-logger.debug (names.length + 10000000000).to_yaml
+logger.debug( (names.length + 10000000000).to_yaml  )
     column_names = names.map do |column_name|
       column_name.split(" - ")
     end
@@ -613,11 +722,15 @@ logger.debug column_names.length.to_yaml
     kind.blank? ? Card.blank_name : "Empty #{kind}"
   end
 
-  def suite_reference_name
-    "#{recursive_access} #{recursive_view} #{card_reference_name}"
+  def long_reference_name
+    if suite?
+      "#{recursive_access} #{recursive_view} "
+    else
+      ""
+    end + reference_name
   end
 
-  def card_reference_name
+  def reference_name
     case
     when name.blank?
       blank_name
@@ -626,10 +739,6 @@ logger.debug column_names.length.to_yaml
     else
       name
     end
-  end
-
-  def reference_name
-    suite? ? suite_reference_name : card_reference_name
   end
 
   def deep_aspects
@@ -833,8 +942,8 @@ logger.debug column_names.length.to_yaml
     inherited_access = recursive_access
 #   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
     requirements = case inherited_access
-      when "demo"
-        demo_requirements    intent
+      when "open"
+        open_requirements    intent
       when "shared"
         shared_requirements  intent
       when "public"
@@ -891,7 +1000,7 @@ logger.debug column_names.length.to_yaml
 
 #  alias_method_chain :acting_user=, :logging
 
-  def demo_requirements intent
+  def open_requirements intent
 #   logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_up if intent == :design
     return :guest     if intent == :use
@@ -929,5 +1038,11 @@ logger.debug column_names.length.to_yaml
       "unknown_intent_#{intent.to_s}_error".to_sym
     end
   end
+
+  class << self
+    alias get it=
+    alias the its
+  end
+
 
 end

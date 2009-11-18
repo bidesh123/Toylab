@@ -14,6 +14,12 @@ class User < ActiveRecord::Base
   before_create { |user| user.administrator = true if RAILS_ENV != "test" && count == 0 }
   
   
+  def self.administrator_id
+    admin = User.find(:first, :conditions => [ "administrator = ?", true])
+    admin.id
+  end
+
+
   # --- Signup lifecycle --- #
 
   lifecycle do

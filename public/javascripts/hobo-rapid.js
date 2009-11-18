@@ -768,7 +768,7 @@ Event.addBehavior({
     '.text.in-place-edit, .markdown.in-place-edit, .textile.in-place-edit' : function (ev) {
         var ipe = Hobo._makeInPlaceEditor(this, {rows: 2})
         ipe.getText = function() {
-            return this.element.innerHTML.gsub(/<br\s*\/?>\n/, "\n").unescapeHTML()
+            return this.element.innerHTML.gsub(/\n/, "").gsub(/<br\s*\/?>/, "\n").unescapeHTML()
         }
     },
 

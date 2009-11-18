@@ -75,7 +75,7 @@
       <td class="core-add-item"><add-item /></td>
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
-      <td class="access"><editor:access     /></td>
+      <td class="access"><editor:access if="&can_edit? :access"/></td>
       <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
       <td class="core-body-toggle"><body-toggle/></td>
       <td class="core-trash"><trash/></td>
@@ -233,16 +233,14 @@
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-<%    is_a_numeric_pointer = (this =~ /^\d+=>$/)
-      the_column = if is_a_numeric_pointer
-          reference_string = this.delete '=>'
-          Card.find Integer(reference_string)
-         else
-          nil
-         end
-%>
+<%#    is_a_numeric_pointer = (this =~ /^\d+=>$/)
+  #    the_column = if is_a_numeric_pointer
+  #                   reference_string = this.delete '=>'
+  #                   Card.find Integer(reference_string)
+  #                 end
+%>#
       <if test="&the_column">
-        <editor:kind with="&the_column" blank-message="Untitled"/>
+        <editor:kind with="&the_column" blank-message="..."/>
       </if><else>
         <%= this %>
       </else>
@@ -354,7 +352,7 @@
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
-  <% tooltip = "Go see only #{this.reference_name}" %>
+  <% tooltip = "Leave this page to concentrate only on #{this.long_reference_name}" %>
   <a class="zoom-in" title="&tooltip"><%= "go" || image_tag("icons/zoom.png") %></a>
 </def>
 
@@ -387,8 +385,8 @@
 
 <def tag="add-item-to-list">
   <if test="&this">
-    <% number_of_items = this.items.count
-       if number_of_items > 0
+    <set number-of-items="&this.items.count" />
+    <% if number_of_items > 0
          tooltip = "Add another item within list #{this.reference_name}, below the following #{this.items.count}"
          label   = "Add inner row"
        else
@@ -398,7 +396,7 @@
        
       uri     = "#{request.request_uri}"
     %>
-    <form class="add-item" with="&Card.new(:list_id => this.id)">
+    <form if="&number_of_items == 0" class="add-item" with="&Card.new(:list_id => this.id)">
       <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
@@ -413,13 +411,12 @@
          tooltip = "Add another row within table #{this.reference_name}, below the following #{this.items.count}"
          label   = "Add inner row"
        else
-         tooltip = "Add a list or table below #{this.reference_name}"
-         label   = "Add inner table"
+         tooltip = "Add a rows and columns mechanism to table #{this.reference_name}"
+         label   = "Start table"
        end
-
-      uri     = "#{request.request_uri}"
+       uri       = "#{request.request_uri}"
     %>
-    <form class="add-item" with="&Card.new(:list_id => this.id)">
+    <form if="&number_of_items > 0" class="add-item" with="&Card.new(:list_id => this.id)">
       <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
@@ -428,12 +425,8 @@
 </def>
 
 <def tag="add-item">
-  <if test="&' page show '.include? controller.action_name">
-    <add-item-to-table />
-  </if>
-  <else>
-    <add-item-to-list />
-  </else>
+  <add-item-to-table if="&' page show '.include? controller.action_name"/>
+  <else><add-item-to-list /></else>
 </def>
 
 <def tag="spacer-cell">
