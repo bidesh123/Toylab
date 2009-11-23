@@ -161,30 +161,8 @@
   </table>
 </def>
 
-<def tag="card" for="Card"><!-- why non recursive ? -->
-  <!--
-  <div unless="&attributes['whole_off'] || attributes['header_off']" param="content-header">
-    <h4 param="heading"><toy-header /></h4>
-    <record-flags fields="" param/>
-  </div>
-  -->
-  <div param="aspects">
-    <aspects merge-attrs />
-  </div>
-  <div param="cells">
-    <cells merge-attrs />
-  </div>
-  <div param="controls">
-   <add-item-row />
-   <trash redir="true"/>
-  </div>
-  <div param="debug-toy" if="&false">
-    <%= scope.deep[:debug_log] %>
-  </div>
-  <div param="development" if="&false">
-    <div></div>
-    <development-stuff param="development"/>
-  </div>
+<def tag="card" for="Card">
+  <show-card />
 </def>
 
 <def tag="nav-item">

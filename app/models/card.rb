@@ -77,6 +77,237 @@ class Card < ActiveRecord::Base
     end
   end
 
+#use built-up columns
+  def column_name_rows deep
+    column_names = deep[:columns][:names]
+    number_of_name_rows = column_names.map { |c| c.length }.max
+    column_names.each do |el|
+      el[number_of_name_rows - 1] ||= nil
+    end
+    column             = -1
+    name_rows  = [        ]
+    column_names.each do |column_name|
+      column += 1
+      row              = -1
+      column_name.each do |column_name_cell|
+        name_rows[row += 1] ||= [      ]
+        name_rows[row     ]     [column] = column_name_cell
+      end
+    end
+    name_rows
+  end
+#use built-up columns
+
+# build up columns
+  def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
+    column             = []
+    column[deep[:row]] = [self]
+    wider_contexts = contexts << coded_heading
+    if no_columns_yet? deep
+      add_a_first_column                  wider_contexts, column, deep
+    elsif column_number = matching_column(wider_contexts        , deep)
+      fit_into_an_existing_column                                 deep, column_number
+    else
+      add_between_existing_columns        wider_contexts, column, deep
+    end
+    unless (aspect_depth += 1) >= max_aspect_depth
+      aspects.each do |aspect|
+        deep = aspect.look_wider          wider_contexts        , deep,
+          max_aspect_depth, aspect_depth
+      end
+    end
+    aspect_depth -= 1
+    deep
+  end
+# build up columns
+  def fit_into_an_existing_column deep, column_number
+    deep[:columns][:cells][column_number][deep[:row]] ||= []
+    deep[:columns][:cells][column_number][deep[:row]] << itself
+  end
+# build up columns
+  def add_a_first_column contexts, column, deep
+    deep[:columns][:cells] << column
+    deep[:columns][:names] << contexts
+  end
+# build up columns
+  def add_between_existing_columns contexts, column, deep
+    column_number = which_column_to_add_before contexts, deep
+    deep[:columns][:names].insert(column_number, contexts)
+    deep[:columns][:cells].insert(column_number, column  )
+  end
+# build up columns
+  def which_column_to_add_before contexts, deep
+    contxs = Array.new contexts
+    column_number = nil
+    until contxs.length == 0 || column_number
+      n = matching_column contxs, deep, :reverse
+      column_number = number_of_columns - n if n && n > 0
+      contxs.pop
+     end
+    column_number || -1
+  end
+# build up columns
+
+  def number_of_columns deep
+    deep[:columns][:names].length
+  end
+
+  def context_mark blank = false
+    self.class.heading_marker + if blank == :fake
+        "fake"
+      else
+        (based_on ? "column" : "aspect")
+      end + self.class.heading_marker
+  end
+
+  def fake_heading
+    "#{context_mark :fake}base: 0, #{context_mark :fake}kind: blank"
+  end
+
+  def coded_heading
+    { :type => based_on ? "column" : "aspect",
+      :base => based_on_id.to_s,
+      :kind => recursive_kind }
+  end
+
+  def decoded_heading coded
+    "#{context_mark coded[:type]}base: #{coded[:base]}, #{context_mark coded[:type]}kind: #{ coded[:kind]}"
+  end
+
+  def no_columns_yet? deep
+    deep[:columns][:names].length == 0
+  end
+
+  def smart_heading_match? desired, existing
+    if false && desired[:type] == 'column' && desired[:kind].blank?
+      strict_heading_match? desired, existing
+    else
+      grouping_heading_match? desired, existing
+    end
+  end
+ 
+  def strict_heading_match? desired, existing
+    partial_heading_match?( desired, existing, :type) &&
+    partial_heading_match?( desired, existing, :base) &&
+    partial_heading_match?( desired, existing, :kind)
+  end
+    
+  def partial_heading_match? desired, existing, part
+    existing[part]        == desired[part] ||
+    existing[part].blank? && desired[part].blank?
+  end
+    
+  def grouping_heading_match? desired, existing
+    partial_heading_match? desired, existing, :kind
+  end
+ 
+  def similar_heading? desired, existing, deep
+    case deep[:action]
+    when "report", "show"
+      smart_heading_match?  desired, existing
+    when "table"
+      strict_heading_match?  desired, existing
+    else
+      unsupported
+    end
+  end
+
+  def matching_column contexts, deep, mode = :normal
+    ctxs = contexts.map {|x| x }
+    column_count = -1
+    names = deep[:columns][:names]
+    names = names.reverse if mode == :reverse
+    names.detect do |existing_heading_in_context|
+        heading_line = -1
+        case ctxs.length <=> existing_heading_in_context.length
+        when -1
+          unless mode == :partial
+            ctxs[-1+ existing_heading_in_context.length] ||= nil
+            ctxs.map! { |ctx| ctx ||= fake_heading}
+          end
+        when 0
+        when 1
+          bug
+        end
+        ctxs.detect do |desired|
+          !similar_heading? desired, existing_heading_in_context[heading_line += 1], deep
+        column_count += 1
+      end
+    end
+    case column_count
+    when -1, 0
+      nil
+    else
+      column_count
+    end
+  end
+
+  def partial_matching_column contexts, deep
+    matching_column contexts, deep, :partial
+  end
+
+  def parsed_headings_not_needed_any_more contexts
+    #instead use contexts[row][:kind], contexts[row][:base], contexts[row][:type]
+    contexts.map do |c|
+        h = c.match /^=>(aspect|column)=>base: (\d+), =>(aspect|column)=>kind: (.+)$/
+        { :type => h[1],
+          :base => h[2].to_i > 0 ? h[2].to_i : nil,
+          :kind => h[4]
+        }
+      end
+  end
+
+  def self.heading_marker
+    "=>" ||
+    "5216731900414d06fc80654fbc27fcc88e6e9e4a"
+  end
+
+  def self.heading_delimiter
+    " - " ||
+    "06fb54c2e6e521897fcc886731900414d06fce4a"
+  end
+
+  def recursive_kind
+    if r = recursive_kind_base
+      r.kind
+    end
+  end
+
+  def recursive_kind_base
+    return self if kind && !kind.strip.blank?
+    if based_on
+      based_on.recursive_kind_base
+    end
+  end
+
+  def base #caching only
+    @base ||= self.class.find based_on_id
+  end
+
+  def bases
+    if based_on
+      based_on.bases
+    else
+      []
+    end + [self]
+  end
+
+  def old_recursive_base
+    if base
+      base
+    elsif based_on
+      based_on.recursive_kind
+    end
+  end
+
+  def new_recursive_base
+    if base
+      base.recursive_base
+    elsif based_on
+      based_on.recursive_kind
+    end
+  end
+
   def self.it= val
     @@it[Thread.current.object_id] = val
   end
@@ -204,23 +435,9 @@ class Card < ActiveRecord::Base
     "Untitled"
   end
 
-  def base
-    @base ||= self.class.find id
-  end
+  def field x = :name
+    return nil unless x && !x.blank?
 
-  def recursive_base
-    if base
-      base
-    elsif based_on
-      based_on.recursive_kind
-    end
-  end
-
-  def recursive_kind
-    return kind if kind && kind.strip.blank?
-    if based_on
-      based_on.recursive_kind
-    end
   end
 
   def recursive_owner
@@ -345,7 +562,7 @@ class Card < ActiveRecord::Base
      list_id ||  whole_id ||  table_id
   end
 
-#  def number
+#  def position
 #    case
 #    when whole_id; whole_position
 #    when table_id; table_position
@@ -353,7 +570,7 @@ class Card < ActiveRecord::Base
 #    end
 #  end
 #
-#  def number=(value)
+#  def position=(value)
 #    attr = case
 #      when whole_id; :whole_position
 #      when table_id; :table_position
@@ -399,7 +616,7 @@ class Card < ActiveRecord::Base
     return unless dest_items = this_table.items    
     if this_table.columns.length == 1 #special case for no pre-existing columns
       on_automatic do
-#       if (base = self.table.based_on) &&
+#       if (base base a changé = self.table.based_on) &&
 #          (cols = base.columns)        &&
 #          (col = cols[0])
 #         update_attributes :based_on_id => col.id  ,
@@ -444,33 +661,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-def which_column contexts, names, deep
-    column_number = 0
-    if base || !kind.blank?               # we need a vague column
-      until (finished = contexts.length == 0) || column_number
-        contexts.pop
-        if finished
-          column_number ||= -1                  # -1 is the rightmost position
-        else
-          context_string = contexts.join(d ||= ' - ') + d
-          if names.include? context_string
-            name_after_which_to_insert = names.reverse.detect do |c|
-              c.match "^#{context_string}"
-            end
-            column_number = names.index(name_after_which_to_insert)
-          end
-        end
-      end
-      if column_number
-        column_number += 1
-      else
-        column_number - 1
-      end
-      column_number ? column_number + 1 : column_number - 1
-    end
-    column_number
-  end
-
   def auto_view
     case self.view
     when "list", "paper", "slide", "table", "page", "report", "tree"
@@ -491,8 +681,8 @@ def which_column contexts, names, deep
   end
 
   def inherit_from_base
-    return false unless example = base
-   #inherit_by_example example
+    return false unless example = self
+    #inherit_by_example example
     true
   end
 
@@ -517,118 +707,48 @@ def which_column contexts, names, deep
     end
   end
 
-  def look_wider                 wide_context, deep, max_aspect_depth, aspect_depth
-    names          = deep[:columns][:names]
-    cells          = deep[:columns][:cells]
-    row            = deep[:row]
-    column         = []
-    column[row]    = [self]
-    wider_context  = wide_context + recursive_kind.to_s || "Untitled"
-    contexts       = wide_context.split(' - ')
-    wider_context += ' - '
-    column_number  = names.index(   wider_context)
-    if column_number
-      column_exists cells, column_number, row
-    elsif names.length == 0
-      column_number = no_column_yet              wider_context, column          , names, cells
-    else
-      column_number = there_are_existing_columns wider_context, column, contexts, names, cells, deep
-    end
-    peek = deep[:columns][:cells].transpose.map do |the_row|
-      the_row.map do |cell_list|
-        (cell_list || []).join("<br />\n")
-      end.join "</td                     ><td class='debug'>"
-    end.join   "</td></tr            ><tr><td class='debug'>"
-    unless (aspect_depth += 1) >= max_aspect_depth
-      aspects.each do |aspect|
-        deep = aspect.look_wider wider_context, deep, max_aspect_depth, aspect_depth
-      end
-    end
-    aspect_depth -= 1
-    deep
-  end
+  #def look_wide
+  #end
 
-#def look_wide
-#end
-
-def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect_depth = 9, item_depth = 0
+  def look_deeper               contexts, deep, max_item_depth = 9, max_aspect_depth = 9, item_depth = 0
     unless item_depth == 0
-      deep = look_wider       wide_context, deep, max_aspect_depth, 0
+      deep = look_wider         contexts, deep, max_aspect_depth, 0
       deep[:row] += 1
     end
     unless (item_depth += 1) >= max_item_depth
       items.each do |item|
-        deep = item.look_deeper wide_context, deep, max_item_depth, max_aspect_depth, item_depth
+        deep = item.look_deeper contexts, deep, max_item_depth, max_aspect_depth, item_depth
       end
     end
     item_depth -= 1
     deep
   end
 
-  def look_deep max_item_depth = 9, max_aspect_depth = 9
+  def look_deep action, max_item_depth = 9, max_aspect_depth = 9
+logger.debug "AAAAAAAAAAAAA"
     look_deeper \
-      ""                                    ,  #no context
+      []                                     , #no context yet
       {                                        #deep
-        :root                    => id   ,
-        :row                     => 0    ,
+        :root                    => id    ,
+        :row                     => 0     ,
         :columns                 => {
-            :column_ids => HtmlTable.new   ,
-            :names => HtmlTable.new   ,
-            :cells => HtmlTable.new
-        }                                ,
+            :names      => HtmlTable.new  ,
+            :cells      => HtmlTable.new
+        }                                 ,
+        :action                  => action,
         :debug_log               => ''
-      }                                     ,
-      max_item_depth                        ,  #optional
-      max_aspect_depth                      ,  #optional
-      0                                        #item_depth
+      }                                      ,
+      max_item_depth                         ,  #optional
+      max_aspect_depth                       ,  #optional
+      0                                         #item_depth
   end
 
-  def column_exists cells, column_number, row
-    cells[column_number][row] ||= []
-    cells[column_number][row] << itself # changes deep[:column][:cells]
-    column_number 
-  end
-  
-  def no_column_yet wider_context, column, names, cells
-    cells << column                  # changes deep[:column][:cells]
-    names << wider_context           # changes deep[:column][:names]
-    0
-  end
-  
-  def there_are_existing_columns wider_context, column, contexts, names, cells, deep
-    column_number = which_column contexts, names, deep
-    names.insert(column_number, wider_context) # changes deep[:column][:names]
-    cells.insert(column_number, column )       # changes deep[:column][:cells]
-    column_number
-  end
-  
   def self.new_suite
     on_automatic do
       new :body   => default_body  ,
           :view   => default_view  ,
           :access => default_access
     end
-  end
-
-  def self.new_suite_help
-    #you should not be a guest and be allowed see this,
-    #any one but the author cannot see it
-    #but the model level (here) don't know about ... (whatever is needed).... solve
-      "Welcome to your new toy office web page.
-       To get started
-
-      1. Learn how to change text.
-      a) Just click on a text. Try Untitled.
-      b) If it becomes yellow, you can replace it with your own words. Type in a title for your page.
-      c) Click outside the yellow box when you are done.
-
-      2. As for the title, change this text to what you want your page to say.
-
-      3. Optionally you can restrict access to your page. Just change the access from open to shared, public or or even completely private to yourself.
-
-      Hint: Don't forget to click outside the yellow box when you want your changes to be recorded. If you don't, your changes could be lost.
-
-      Try it! You can't break anything."
   end
 
   def on_automatic thread_name = "on automatic", &block
@@ -649,36 +769,6 @@ def look_deeper               wide_context, deep, max_item_depth = 9, max_aspect
 
   def      on_automatic? thread_name = "on automatic"
     self.class.on_automatic? thread_name
-  end
-
-  def column_name_rows deep
-    names        = deep[:columns][:names]
-logger.debug "names nnnnnnnnnnnnnnnnnnnnnnnnnnnn"
-logger.debug names.to_yaml
-logger.debug( (names.length + 10000000000).to_yaml  )
-    column_names = names.map do |column_name|
-      column_name.split(" - ")
-    end
-logger.debug "column_names 7777777777777"
-logger.debug column_names.to_yaml
-logger.debug column_names.length.to_yaml
-
-    number_of_name_rows = column_names.map { |c| c.length }.max
-
-    column_names.each do |el|
-      el[number_of_name_rows - 1] ||= nil
-    end
-    column             = -1
-    name_rows  = [        ]
-    column_names.each do |column_name|
-      column += 1
-      row              = -1
-      column_name.each do |column_name_cell|
-        name_rows[row += 1] ||= [      ]
-        name_rows[row     ]     [column] = column_name_cell
-      end
-    end
-    name_rows
   end
 
   def find_deep_aspects

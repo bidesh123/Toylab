@@ -4,7 +4,9 @@
 <!-- 1===================== tag definitions ================================ -->
 
 <def tag="toy-report" attrs="shallow">
-   <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
+  <set-scoped deep="&shallow ?
+                    @card.look_deep(params[:action],2,2) :
+                    @card.look_deep(params[:action])" >
    <show-page>
       <content-header:>
         <views />
@@ -186,30 +188,9 @@
 </def>
 
 <def tag="card" for="Card"><!-- why non recursive ? -->
-  <!--
-  <div unless="&attributes['whole_off'] || attributes['header_off']" param="content-header">
-    <h4 param="heading"><toy-header /></h4>
-    <record-flags fields="" param/>
-  </div>
-  -->
-  <div param="aspects">
-    <aspects merge-attrs />
-  </div>
-  <div param="cells">
-    <cells merge-attrs />
-  </div>
-  <div param="controls">
-   <add-item-row />
-   <trash redir="true"/>
-  </div>
-  <div param="debug-toy" if="&false">
-    <%= scope.deep[:debug_log] %>
-  </div>
-  <div param="development" if="&false">
-    <div></div>
-    <development-stuff param="development"/>
-  </div>
+  <report-card />
 </def>
+
 
 <def tag="nav-item">
   <% body = parameters.default

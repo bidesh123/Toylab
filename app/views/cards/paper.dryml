@@ -40,15 +40,10 @@
     </if>
     <core-bottom-controls-li />
   </ul>
-  </def>
+</def>
+
 <def tag="card" for="Card">
-  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
-  <ol class="card first-card drop-target" id="&list_dom_id" >
-    <core />
-    <li repeat="&this.items">
-      <recursive-card />
-    </li>
-  </ol>
+  <paper-card />
 </def>
 
 <def tag="recursive-card">

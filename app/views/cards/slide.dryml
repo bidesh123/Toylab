@@ -20,12 +20,7 @@
 </def>
 
 <def tag="card" for="Card">
-  <p><editor:name blank-message="&this.blank_name"/></p>
-  <ol class="point-form">
-    <li repeat="&this.items">
-      <editor:name blank-message="&this.blank_name"/>
-    </li>
-  </ol>
+  <slide-card />
 </def>
 
 <def tag="slide-view">

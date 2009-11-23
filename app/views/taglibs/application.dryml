@@ -6,6 +6,63 @@
 
 <!-- view-page -->
 
+<def tag="add-row">
+  <if test="&this && this.list">
+  <% element, collection =
+       mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+     tooltip, label =
+       ["Add a row below this one",
+        "Add row"]
+    %>
+    <add-item-or-row-form if="&this.items.count == 0"
+       element="&element"
+       label="&label"
+       tooltip="&tooltip"
+       collection-id="&this.list_id"
+     />
+  </if>
+</def>
+
+<def tag="add-item-or-row-form" >
+  <%  style = "add-#{attributes[:element]}" %>
+  <%  submit_style = "toy-nav tooltip #{style}"  %>
+  <form if="&this && this.items.count == 0"
+        class="&style"
+        with="&Card.new(:list_id => attributes[:collection_id])"
+        >
+    <submit label=                        "&attributes[:label]"
+            title="&attributes[:tooltip] || attributes[:label]"
+            class="&submit_style" />
+    <after-submit uri="#{request.request_uri}"/>
+  </form>
+</def>
+
+<def tag="add-item">
+  <% element, collection =
+       mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  %>
+  <if test="&this">
+    <% inner = this.id == @card.id ?  "" : "inner "
+       article = element == 'item' || inner > '' ? 'an' : 'a'
+       label, tooltip = if (number_of_items = this.items.count) > 0
+         ["Add #{article} #{inner}#{element}",
+         "Add another #{element} within #{collection} #{this.reference_name},
+          below the following #{this.items.count}"]
+       else
+         ["Start #{collection}",
+         "Add a first #{element} to #{collection} #{this.reference_name}"]
+       end
+    %>
+    <add-item-or-row-form if="&number_of_items == 0"
+       element="&element"
+       label="&label"
+       tooltip="&tooltip"
+       collection-id="&this.id"
+     />
+  </if>
+  <add-row if="&this.list"/>
+</def>
+
 <def tag="list-row">
   <tr class="list-row" if="&this.items">
     <td class="list-row" colspan="2">
@@ -54,7 +111,11 @@
 </def>
 
 <def tag="toy-show" attrs="shallow, whole-off">
-  <set-scoped deep="&shallow ? @card.look_deep(2,2) : @card.look_deep" >
+<% logger.debug "AAAAAAAAAAAAA1111111111111111111" %>
+  <set-scoped deep="&shallow                       ?
+              @card.look_deep(params[:action],2,2) :
+              @card.look_deep(params[:action])" >
+<% logger.debug "AAAAAAAAAAAAA2222222222222222222" %>
     <show-page>
       <content-header:>
         <views />
@@ -224,7 +285,7 @@
 <def tag="title-rows">
 <% table = this
    rows = table.column_name_rows scope.deep
-   if rows.length > 1 && rows[0][0]
+   if false && rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
      rows.delete_at 0
    end
@@ -233,14 +294,18 @@
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-<%#    is_a_numeric_pointer = (this =~ /^\d+=>$/)
-  #    the_column = if is_a_numeric_pointer
-  #                   reference_string = this.delete '=>'
-  #                   Card.find Integer(reference_string)
-  #                 end
-%>#
+<%    is_a_numeric_pointer = (this =~ /^\d+=>$/)
+      the_column = if is_a_numeric_pointer
+                     reference_string = this.delete '=>'
+                     Card.find Integer(reference_string)
+                   end
+%>
+<%    is_a_hash = (this.class.name == "Hash")
+      the_column = this[1]
+%>
       <if test="&the_column">
-        <editor:kind with="&the_column" blank-message="..."/>
+        <%=  the_column.to_yaml %>
+        <editor:kind if="&false" with="&the_column" blank-message="..."/>
       </if><else>
         <%= this %>
       </else>
@@ -370,65 +435,6 @@
   <td class="bottom-right-border-cell"><span param="default"></span></td>
 </def>
 
-<def tag="add-row">
-  <if test="&this && this.list">
-    <% tooltip = "Add a row below this one"
-       label   = "Add row"
-       uri     = "#{request.request_uri}"
-    %>
-    <form class="add-row" with="&Card.new(:list_id => this.list_id)">
-      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
-      <after-submit uri="#{request.request_uri}"/>
-    </form>
-  </if>
-</def>
-
-<def tag="add-item-to-list">
-  <if test="&this">
-    <set number-of-items="&this.items.count" />
-    <% if number_of_items > 0
-         tooltip = "Add another item within list #{this.reference_name}, below the following #{this.items.count}"
-         label   = "Add inner row"
-       else
-         tooltip = "Add a list below #{this.reference_name}"
-         label   = "Add inner list"
-       end
-       
-      uri     = "#{request.request_uri}"
-    %>
-    <form if="&number_of_items == 0" class="add-item" with="&Card.new(:list_id => this.id)">
-      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
-      <after-submit uri="#{request.request_uri}"/>
-    </form>
-    <add-row />
-  </if>
-</def>
-
-<def tag="add-item-to-table">
-  <if test="&this">
-    <% number_of_items = this.items.count
-       if number_of_items > 0
-         tooltip = "Add another row within table #{this.reference_name}, below the following #{this.items.count}"
-         label   = "Add inner row"
-       else
-         tooltip = "Add a rows and columns mechanism to table #{this.reference_name}"
-         label   = "Start table"
-       end
-       uri       = "#{request.request_uri}"
-    %>
-    <form if="&number_of_items > 0" class="add-item" with="&Card.new(:list_id => this.id)">
-      <submit label="&label" title="&tooltip" class="toy-nav add-item tooltip"/>
-      <after-submit uri="#{request.request_uri}"/>
-    </form>
-    <add-row />
-  </if>
-</def>
-
-<def tag="add-item">
-  <add-item-to-table if="&' page show '.include? controller.action_name"/>
-  <else><add-item-to-list /></else>
-</def>
-
 <def tag="spacer-cell">
   <td class="spacer">
   <%= image_tag "spacer.gif", {:width => "4px"} %>
@@ -503,9 +509,47 @@
     link_to_function(
     "Toggle #{attributes[:which] == "aspects" ? "Right" : "Below"}",
     "Effect.toggle('#{dom_id(this, attributes[:which])}')")
-%>
+  %>
 </def>
 
+<def tag="report-card">
+  <div param="aspects">
+    <aspects merge-attrs />
+  </div>
+  <div param="cells">
+    <cells merge-attrs />
+  </div>
+  <div param="controls">
+   <add-item-row />
+   <trash redir="true"/>
+  </div>
+  <div param="debug-toy" if="&false">
+    <%= scope.deep[:debug_log] %>
+  </div>
+  <div param="development" if="&false">
+    <div></div>
+    <development-stuff param="development"/>
+  </div>
+</def>
+
+<def tag="slide-card" for="Card">
+  <p><editor:name blank-message="&this.blank_name"/></p>
+  <ol class="point-form">
+    <li repeat="&this.items">
+      <editor:name blank-message="&this.blank_name"/>
+    </li>
+  </ol>
+</def>
+
+<def tag="paper-card" for="Card">
+  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
+  <ol class="card first-card drop-target" id="&list_dom_id" >
+    <core />
+    <li repeat="&this.items">
+      <recursive-card />
+    </li>
+  </ol>
+</def>
 
 <def tag="recursive-card">
   <table class="card inner drop-target">
@@ -515,6 +559,10 @@
 </def>
 
 <def tag="card" for="Card">
+  <hierarchical-card if="&mainly_tabular_view" />
+</def>
+
+<def tag="hierarchical-card">
   <table class="card first-card drop-target">
     <self-and-aspects-row />
     <list-row />
@@ -589,8 +637,6 @@
 </def>
 
 <def tag="content-rows">
-  <% #logger.debug "rows --------------------------" %>
-  <% #logger.debug scope.deep[:columns][:cells].transpose.to_yaml %>
   <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >
