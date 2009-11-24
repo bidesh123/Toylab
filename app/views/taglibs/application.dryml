@@ -26,7 +26,7 @@
 <def tag="add-item-or-row-form" >
   <%  style = "add-#{attributes[:element]}" %>
   <%  submit_style = "toy-nav tooltip #{style}"  %>
-  <form if="&this && this.items.count == 0"
+  <form if="&this && this.items.count == 0 || mainly_tabular_view"
         class="&style"
         with="&Card.new(:list_id => attributes[:collection_id])"
         >
@@ -34,6 +34,7 @@
             title="&attributes[:tooltip] || attributes[:label]"
             class="&submit_style" />
     <after-submit uri="#{request.request_uri}"/>
+    <div param="default"></div>
   </form>
 </def>
 
@@ -41,26 +42,28 @@
   <% element, collection =
        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
   %>
+
   <if test="&this">
-    <% inner = this.id == @card.id ?  "" : "inner "
+    <%
+       inner = this.id == @card.id ?  "" : "inner "
        article = element == 'item' || inner > '' ? 'an' : 'a'
        label, tooltip = if (number_of_items = this.items.count) > 0
          ["Add #{article} #{inner}#{element}",
-         "Add another #{element} within #{collection} #{this.reference_name},
+         "Add another #{element} to #{collection} #{this.reference_name},
           below the following #{this.items.count}"]
        else
          ["Start #{collection}",
          "Add a first #{element} to #{collection} #{this.reference_name}"]
        end
-    %>
-    <add-item-or-row-form if="&number_of_items == 0"
+     %>
+    <add-item-or-row-form if="&mainly_tabular_view || number_of_items == 0"
        element="&element"
        label="&label"
        tooltip="&tooltip"
        collection-id="&this.id"
      />
   </if>
-  <add-row if="&this.list"/>
+  <add-row if="&this.list && this.list_id != @card.list_id"/>
 </def>
 
 <def tag="list-row">
@@ -635,6 +638,9 @@
 </def>
 
 <def tag="content-rows">
+  <% logger.debug "ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ" %>
+  <% logger.debug "&scope.deep[:columns][:cells].class.name: #{scope.deep[:columns][:cells].class.name}" %>
+  <% logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
   <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >

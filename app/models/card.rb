@@ -65,12 +65,18 @@ class Card < ActiveRecord::Base
   #  super
   #end
 
-  class HtmlTable < Array
-    def rectangular! # changes are not destructive or cumulative
-      peak_rows = map { |column| column.length }.max
-      each { |el| el[peak_rows - 1] ||= nil } if peak_rows > 0
-      peak_rows = map { |column| column.length }.max
-      each { |el| el[peak_rows - 1] ||= nil } if peak_rows > 0
+  class RectangularArray < Array
+    def dimensions
+      return 0 if length == 0 rescue 0
+      return length if self[0].length == 0
+      return [length, self[0].length]
+    end
+    def lengths
+      map { |column| column.length }
+    end
+    def rectangular!
+      maxi = lengths.max
+      each { |el| el[maxi - 1] ||= nil } if maxi > 0
     end
     def transpose
       length == 0 ? [] : (Array.new rectangular!).transpose
@@ -97,11 +103,6 @@ class Card < ActiveRecord::Base
         name_rows[row     ]     [column] = column_name_cell
       end
     end
-    logger.debug "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
-    logger.debug "names.to_yaml#{names.to_yaml}"
-    logger.debug "names[0].class.name: #{names[0].class.name}"
-    logger.debug "names[1].class.name: #{names[1].class.name}"
-    logger.debug "name_rows.to_yaml#{name_rows.to_yaml}"
     name_rows
   end
 #use built-up columns
@@ -117,7 +118,7 @@ class Card < ActiveRecord::Base
       fit_into_an_existing_column                                 deep,
         column_number
     else
-      add_between_existing_columns        wider_contexts, column, deep
+      add_column_to_existing_ones         wider_contexts, column, deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
       aspects.each do |aspect|
@@ -135,11 +136,11 @@ class Card < ActiveRecord::Base
   end
 # build up columns
   def add_a_first_column contexts, column, deep
-    deep[:columns][:cells] = [column]
-    deep[:columns][:names] = [contexts]
+    deep[:columns][:cells] << column
+    deep[:columns][:names] << contexts
   end
 # build up columns
-  def add_between_existing_columns contexts, column, deep
+  def add_column_to_existing_ones contexts, column, deep
     column_number = which_column_to_add_before contexts, deep
     deep[:columns][:names].insert(column_number, contexts)
     deep[:columns][:cells].insert(column_number, column  )
@@ -207,7 +208,7 @@ class Card < ActiveRecord::Base
   end
  
   def similar_heading? desired, existing, deep
-    case deep[:action]
+    r=case deep[:action]
     when "report", "show"
       smart_heading_match?  desired, existing
     when "table"
@@ -215,6 +216,17 @@ class Card < ActiveRecord::Base
     else
       unsupported
     end
+    logger.debug "ssssssssssssssssssssss"
+    desired_base  = desired[ :base] ? desired[ :base].id.to_s : "no"
+    existing_base = existing[:base] ? existing[:base].id.to_s : "no"
+    logger.debug "desired: #{{:type => desired[:type],
+                              :base => desired_base,
+                              :kind => desired[:kind]}.to_yaml}"
+    logger.debug "existing: #{{:type => existing[:type],
+                              :base => existing_base,
+                              :kind => existing[:kind]}.to_yaml}"
+    logger.debug "similar_heading?: #{r.to_yaml}"
+    r
   end
 
   def matching_column contexts, deep, mode = :normal
@@ -232,15 +244,15 @@ class Card < ActiveRecord::Base
           end
         when 0 # perfect fit, nothing to prepare
         when 1 # more new contexts than existing contexts
-          return nil
+            return nil
         end
-        ctxs.detect do |desired|
-          !similar_heading? desired, existing_contexts[heading_line += 1], deep
         column_count += 1
+        !ctxs.detect do |desired|
+          !similar_heading? desired, existing_contexts[heading_line += 1], deep
       end
     end
     case column_count
-    when -1, 0
+    when -1, mode == :reverse ? -1 : 0
       nil
     else
       column_count
@@ -720,19 +732,19 @@ class Card < ActiveRecord::Base
 
   def look_deep action, max_item_depth = 9, max_aspect_depth = 9
     look_deeper \
-      []                                     , #no context yet
-      {                                        #deep
-        :root                    => id    ,
-        :row                     => 0     ,
+      []                                      , #no context yet
+      {                                         #deep
+        :root                    => id      ,
+        :row                     => 0       ,
         :columns                 => {
-            :names      => HtmlTable.new  ,
-            :cells      => HtmlTable.new
-        }                                 ,
-        :action                  => action,
+            :names => RectangularArray.new,
+            :cells => RectangularArray.new
+        }                                   ,
+        :action                  => action  ,
         :debug_log               => ''
-      }                                      ,
-      max_item_depth                         ,  #optional
-      max_aspect_depth                       ,  #optional
+      }                                       ,
+      max_item_depth                          ,  #optional
+      max_aspect_depth                        ,  #optional
       0                                         #item_depth
   end
 
