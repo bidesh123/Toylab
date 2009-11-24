@@ -79,14 +79,17 @@ class Card < ActiveRecord::Base
 
 #use built-up columns
   def column_name_rows deep
-    column_names = deep[:columns][:names]
-    number_of_name_rows = column_names.map { |c| c.length }.max
-    column_names.each do |el|
+    names = deep[:columns][:names]
+    number_of_name_rows = names.inject(-1) do |maxi,c|
+      logger.debug "#{maxi.class }"
+      maxi > c.length ? maxi : c.length
+    end
+    names.each do |el|
       el[number_of_name_rows - 1] ||= nil
     end
     column             = -1
     name_rows  = [        ]
-    column_names.each do |column_name|
+    names.each do |column_name|
       column += 1
       row              = -1
       column_name.each do |column_name_cell|
@@ -94,6 +97,11 @@ class Card < ActiveRecord::Base
         name_rows[row     ]     [column] = column_name_cell
       end
     end
+    logger.debug "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+    logger.debug "names.to_yaml#{names.to_yaml}"
+    logger.debug "names[0].class.name: #{names[0].class.name}"
+    logger.debug "names[1].class.name: #{names[1].class.name}"
+    logger.debug "name_rows.to_yaml#{name_rows.to_yaml}"
     name_rows
   end
 #use built-up columns
@@ -102,11 +110,12 @@ class Card < ActiveRecord::Base
   def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
     column             = []
     column[deep[:row]] = [self]
-    wider_contexts = contexts << coded_heading
+    wider_contexts = contexts + [coded_heading]
     if no_columns_yet? deep
       add_a_first_column                  wider_contexts, column, deep
     elsif column_number = matching_column(wider_contexts        , deep)
-      fit_into_an_existing_column                                 deep, column_number
+      fit_into_an_existing_column                                 deep,
+        column_number
     else
       add_between_existing_columns        wider_contexts, column, deep
     end
@@ -126,8 +135,8 @@ class Card < ActiveRecord::Base
   end
 # build up columns
   def add_a_first_column contexts, column, deep
-    deep[:columns][:cells] << column
-    deep[:columns][:names] << contexts
+    deep[:columns][:cells] = [column]
+    deep[:columns][:names] = [contexts]
   end
 # build up columns
   def add_between_existing_columns contexts, column, deep
@@ -166,12 +175,8 @@ class Card < ActiveRecord::Base
 
   def coded_heading
     { :type => based_on ? "column" : "aspect",
-      :base => based_on_id.to_s,
-      :kind => recursive_kind }
-  end
-
-  def decoded_heading coded
-    "#{context_mark coded[:type]}base: #{coded[:base]}, #{context_mark coded[:type]}kind: #{ coded[:kind]}"
+      :base => recursive_kind_base,
+      :kind => recursive_kind                  }
   end
 
   def no_columns_yet? deep
@@ -217,20 +222,20 @@ class Card < ActiveRecord::Base
     column_count = -1
     names = deep[:columns][:names]
     names = names.reverse if mode == :reverse
-    names.detect do |existing_heading_in_context|
+    names.detect do |existing_contexts|
         heading_line = -1
-        case ctxs.length <=> existing_heading_in_context.length
-        when -1
+        case ctxs.length <=> existing_contexts.length
+        when -1 # more existing contexts than new contexts
           unless mode == :partial
-            ctxs[-1+ existing_heading_in_context.length] ||= nil
+            ctxs[existing_contexts.length - 1] ||= nil
             ctxs.map! { |ctx| ctx ||= fake_heading}
           end
-        when 0
-        when 1
-          bug
+        when 0 # perfect fit, nothing to prepare
+        when 1 # more new contexts than existing contexts
+          return nil
         end
         ctxs.detect do |desired|
-          !similar_heading? desired, existing_heading_in_context[heading_line += 1], deep
+          !similar_heading? desired, existing_contexts[heading_line += 1], deep
         column_count += 1
       end
     end
@@ -244,17 +249,6 @@ class Card < ActiveRecord::Base
 
   def partial_matching_column contexts, deep
     matching_column contexts, deep, :partial
-  end
-
-  def parsed_headings_not_needed_any_more contexts
-    #instead use contexts[row][:kind], contexts[row][:base], contexts[row][:type]
-    contexts.map do |c|
-        h = c.match /^=>(aspect|column)=>base: (\d+), =>(aspect|column)=>kind: (.+)$/
-        { :type => h[1],
-          :base => h[2].to_i > 0 ? h[2].to_i : nil,
-          :kind => h[4]
-        }
-      end
   end
 
   def self.heading_marker
@@ -725,7 +719,6 @@ class Card < ActiveRecord::Base
   end
 
   def look_deep action, max_item_depth = 9, max_aspect_depth = 9
-logger.debug "AAAAAAAAAAAAA"
     look_deeper \
       []                                     , #no context yet
       {                                        #deep

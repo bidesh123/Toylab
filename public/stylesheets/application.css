@@ -1,3 +1,5 @@
+div.cells .card-kind, div.aspects .card-kind {font-size: .618em;}
+
 td.script-cell {background: #f9c;}
 
 .top-page-nav {margin-top: .618em;}

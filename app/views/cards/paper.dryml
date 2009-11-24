@@ -1,5 +1,15 @@
 <toy-paper />
 
+<def tag="paper-card">
+  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
+  <ol class="card first-card drop-target" id="&list_dom_id" >
+    <core />
+    <li repeat="&this.items">
+      <recursive-card />
+    </li>
+  </ol>
+</def>
+
 <def tag="core-bottom-controls-li">
   <li class="core-controls bottom-controls" style="display:none">
     <ul display-style="">

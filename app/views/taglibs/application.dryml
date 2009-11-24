@@ -263,17 +263,16 @@
 
 <def tag="add-column">
   <if test="&this">
-    <%
-      tooltip =
-        if    (m = this.columns.length) >  0
-          "Add another standard column"
-        elsif (n = this.items.length)   >  1
-          "Add a standard column to these #{n} items"
-        elsif  n                        == 1
-          "Add a standard column to " + this.reference_name
-        else
-          "Add a table below "        + this.reference_name
-        end
+    <% tooltip =
+         if    (m = this.columns.length) >  0
+           "Add another standard column"
+         elsif (n = this.items.length)   >  1
+           "Add a standard column to these #{n} items"
+         elsif  n                        == 1
+           "Add a standard column to " + this.reference_name
+         else
+           "Add a table below "        + this.reference_name
+         end
     %>
     <form class="add-column" with="&Card.new(:table_id => this.id)">
       <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
@@ -285,29 +284,35 @@
 <def tag="title-rows">
 <% table = this
    rows = table.column_name_rows scope.deep
-   if false && rows.length > 1 && rows[0][0]
+   if rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
      rows.delete_at 0
+     rows[0][0][:blank_message] = "rouuu"
    end
    first_time = true
 %>
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-<%    is_a_numeric_pointer = (this =~ /^\d+=>$/)
-      the_column = if is_a_numeric_pointer
-                     reference_string = this.delete '=>'
-                     Card.find Integer(reference_string)
-                   end
+<%    kind_to_display     , object_to_update       , blank_message = case this.class.name
+      when "NilClass"
+        [  "&nbsp;"       , nil                    , "Nil"]
+      when "Hash"
+        case this[:type]
+        when "column", "aspect"
+          [this[:kind]    , this[:base]            , this[:blank_message] || "..."]
+        else
+          ["catastrophy"  , nil                    , nil  ]
+        end
+      else
+        [  this.class.name, nil                    , this.class.name]
+      end
 %>
-<%    is_a_hash = (this.class.name == "Hash")
-      the_column = this[1]
-%>
-      <if test="&the_column">
-        <%=  the_column.to_yaml %>
-        <editor:kind if="&false" with="&the_column" blank-message="..."/>
+      <if test="&object_to_update">
+        <editor:kind with="&object_to_update"
+            blank-message="&blank_message"    />
       </if><else>
-        <%= this %>
+        <%= kind_to_display %>
       </else>
     </th>
     <td><add-column if="&first_time" with="&table" /></td>
@@ -417,7 +422,10 @@
 <def tag="nil-view">&nbsp;</def>
 
 <def tag="show-card-inline">
-  <% tooltip = "Leave this page to concentrate only on #{this.long_reference_name}" %>
+  <%
+
+
+  tooltip = "Leave this page to concentrate only on #{this.long_reference_name}" %>
   <a class="zoom-in" title="&tooltip"><%= "go" || image_tag("icons/zoom.png") %></a>
 </def>
 
@@ -541,16 +549,6 @@
   </ol>
 </def>
 
-<def tag="paper-card" for="Card">
-  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
-  <ol class="card first-card drop-target" id="&list_dom_id" >
-    <core />
-    <li repeat="&this.items">
-      <recursive-card />
-    </li>
-  </ol>
-</def>
-
 <def tag="recursive-card">
   <table class="card inner drop-target">
     <self-and-aspects-row />
@@ -559,7 +557,7 @@
 </def>
 
 <def tag="card" for="Card">
-  <hierarchical-card if="&mainly_tabular_view" />
+  <hierarchical-card />
 </def>
 
 <def tag="hierarchical-card">
