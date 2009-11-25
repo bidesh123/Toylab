@@ -83,11 +83,14 @@ class Card < ActiveRecord::Base
     end
   end
 
+#  def partial_matching_column contexts, deep
+#    matching_column contexts, deep, :partial
+#  end
+#
 #use built-up columns
   def column_name_rows deep
     names = deep[:columns][:names]
     number_of_name_rows = names.inject(-1) do |maxi,c|
-      logger.debug "#{maxi.class }"
       maxi > c.length ? maxi : c.length
     end
     names.each do |el|
@@ -105,19 +108,26 @@ class Card < ActiveRecord::Base
     end
     name_rows
   end
-#use built-up columns
+  #use built-up columns
 
-# build up columns
+  # build up columns
+  def full_reference
+    "=>#{id.to_s}: #{reference_name}"
+  end
+
   def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
     column             = []
     column[deep[:row]] = [self]
     wider_contexts = contexts + [coded_heading]
     if no_columns_yet? deep
+#      logger.debug "add_a_first_column #{full_reference}"
       add_a_first_column                  wider_contexts, column, deep
     elsif column_number = matching_column(wider_contexts        , deep)
+#      logger.debug "fit ##{full_reference}into_an_existing_column"
       fit_into_an_existing_column                                 deep,
         column_number
     else
+#      logger.debug "add_column #{full_reference}to_existing_ones"
       add_column_to_existing_ones         wider_contexts, column, deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
@@ -151,7 +161,7 @@ class Card < ActiveRecord::Base
     column_number = nil
     until contxs.length == 0 || column_number
       n = matching_column contxs, deep, :reverse
-      column_number = number_of_columns - n if n && n > 0
+      column_number = number_of_columns(deep) - n if n && n > 0
       contxs.pop
      end
     column_number || -1
@@ -162,16 +172,16 @@ class Card < ActiveRecord::Base
     deep[:columns][:names].length
   end
 
-  def context_mark blank = false
-    self.class.heading_marker + if blank == :fake
-        "fake"
+  def context_mark mode = :nil
+    self.class.heading_marker + if mode == :nil
+        ":blank"
       else
         (based_on ? "column" : "aspect")
       end + self.class.heading_marker
   end
 
-  def fake_heading
-    "#{context_mark :fake}base: 0, #{context_mark :fake}kind: blank"
+  def nil_heading
+    "#{context_mark :nil}base: 0, #{context_mark :nil}kind: nihil"
   end
 
   def coded_heading
@@ -207,60 +217,64 @@ class Card < ActiveRecord::Base
     partial_heading_match? desired, existing, :kind
   end
  
-  def similar_heading? desired, existing, deep
-    r=case deep[:action]
+  def different_heading? desired, existing, deep
+    r = case deep[:action]
     when "report", "show"
-      smart_heading_match?  desired, existing
+      !smart_heading_match?  desired, existing
     when "table"
-      strict_heading_match?  desired, existing
+      !strict_heading_match?  desired, existing
     else
       unsupported
     end
-    logger.debug "ssssssssssssssssssssss"
+    logger.debug "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     desired_base  = desired[ :base] ? desired[ :base].id.to_s : "no"
     existing_base = existing[:base] ? existing[:base].id.to_s : "no"
-    logger.debug "desired: #{{:type => desired[:type],
-                              :base => desired_base,
-                              :kind => desired[:kind]}.to_yaml}"
-    logger.debug "existing: #{{:type => existing[:type],
-                              :base => existing_base,
-                              :kind => existing[:kind]}.to_yaml}"
-    logger.debug "similar_heading?: #{r.to_yaml}"
+    logger.debug "type: :desired => #{desired[ :type]}, existing => #{existing[:type]}"
+    logger.debug ":base :desired => #{desired_base}, existing => #{existing_base}"
+    logger.debug ":kind :desired => #{desired[ :kind]}, existing => #{existing[:kind]}"
+    logger.debug "different_heading inside the function? #{r.to_yaml}"
     r
   end
 
   def matching_column contexts, deep, mode = :normal
-    ctxs = contexts.map {|x| x }
+    ctxs = Array.new contexts
     column_count = -1
     names = deep[:columns][:names]
     names = names.reverse if mode == :reverse
     names.detect do |existing_contexts|
-        heading_line = -1
-        case ctxs.length <=> existing_contexts.length
-        when -1 # more existing contexts than new contexts
-          unless mode == :partial
-            ctxs[existing_contexts.length - 1] ||= nil
-            ctxs.map! { |ctx| ctx ||= fake_heading}
-          end
-        when 0 # perfect fit, nothing to prepare
-        when 1 # more new contexts than existing contexts
-            return nil
+      e_ctxs = Array.new existing_contexts
+      column_count +=  1
+      case ctxs.length <=> e_ctxs.length
+      when -1 # more existing contexts than new contexts
+        unless mode == :partial
+          ctxs[e_ctxs.length - 1] ||= nil
+          ctxs.map! { |ctx| ctx ||= nil_heading}
         end
-        column_count += 1
-        !ctxs.detect do |desired|
-          !similar_heading? desired, existing_contexts[heading_line += 1], deep
+      when 0 # perfect fit, nothing to prepare
+      when 1 # more new contexts than existing contexts
+        unless mode == :partial
+          e_ctxs[ctxs.length - 1] ||= nil
+          e_ctxs.map! { |ctx| ctx ||= nil_heading}
+        end
+      end
+      heading_line  = -1
+      !ctxs.detect do |desired_heading|
+        existing_heading = e_ctxs[heading_line += 1] || nil_heading
+        logger.debug "aaaaaaaaaaaaaaaaaaaaaa"
+        logger.debug "heading_line: #{heading_line}"
+        r = different_heading?(desired_heading, existing_heading, deep)
+        logger.debug "cccccccccccccccccccccccccc"
+        logger.debug "different_heading after the function?: #{r}"
+        r
       end
     end
+    first = mode == :reverse ? 0 : names.length - 1
     case column_count
-    when -1, mode == :reverse ? -1 : 0
+    when -1, first
       nil
     else
       column_count
     end
-  end
-
-  def partial_matching_column contexts, deep
-    matching_column contexts, deep, :partial
   end
 
   def self.heading_marker
@@ -415,14 +429,14 @@ class Card < ActiveRecord::Base
   end
   
   def next_slide #totlbull
-    return first_item_down if first_item_down = (this.items || [nil])[0]
-    this.higher_item(:list)
+    return first_item_down if first_item_down = (items || [nil])[0]
+    higher_item(:list)
   end
 
   def previous_slide #totlbull
-     return previous_item if previous_item =  this.lower_item(:list)
-     #if parent = this.list
-     return first_item_down if first_item_down = (this.items || [nil])[0]
+     return previous_item if previous_item =  lower_item(:list)
+     #if parent = list
+     return first_item_down if first_item_down = (items || [nil])[0]
   end
   
   def itself

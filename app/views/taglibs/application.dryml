@@ -114,11 +114,11 @@
 </def>
 
 <def tag="toy-show" attrs="shallow, whole-off">
-<% logger.debug "AAAAAAAAAAAAA1111111111111111111" %>
+<% #logger.debug "AAAAAAAAAAAAA1111111111111111111" %>
   <set-scoped deep="&shallow                       ?
               @card.look_deep(params[:action],2,2) :
               @card.look_deep(params[:action])" >
-<% logger.debug "AAAAAAAAAAAAA2222222222222222222" %>
+<% #logger.debug "AAAAAAAAAAAAA2222222222222222222" %>
     <show-page>
       <content-header:>
         <views />
@@ -638,9 +638,9 @@
 </def>
 
 <def tag="content-rows">
-  <% logger.debug "ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ" %>
-  <% logger.debug "&scope.deep[:columns][:cells].class.name: #{scope.deep[:columns][:cells].class.name}" %>
-  <% logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
+  <% #logger.debug "ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ" %>
+  <% #logger.debug "&scope.deep[:columns][:cells].class.name: #{scope.deep[:columns][:cells].class.name}" %>
+  <% #logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
   <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >
