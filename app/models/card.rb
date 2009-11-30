@@ -61,12 +61,25 @@ class Card < ActiveRecord::Base
 # after_update :follow_up_on_update
 
   def follow_up_on_create
-    if    !table_id.blank? && this_table = Card.find(table_id)
-      generate_column_dependents this_table # new columns are inherited from in each row
-    elsif !list_id.blank?  && this_list  = Card.find(list_id )            # it can inherit from its list
+    if    table
+      if table.columns.length == 1 then #first column
+        example = table.items[0]
+        k = example.kind
+        self.kind = k
+        self.save
+        items.each do |item|
+          if item.kind == k
+            item.based_on = self
+          else
+            crash
+          end
+        end
+      end
+      generate_column_dependents table # new columns are inherited from in each row
+    elsif list            # inherit from list
       # why not from its whole? i need at least the script from the context to be active!!! to do fg
-      inherit_from_columns(this_list) || inherit_from_siblings(this_list) # it can inherit from the columns,or from its siblings
-      inherit_from_base               || inherit_from_kind                # it can inherit from its kind
+      inherit_from_columns(list) || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
+      inherit_from_base          || inherit_from_kind                # it can inherit from its kind
     end
   end
 
