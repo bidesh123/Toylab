@@ -6,15 +6,15 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
-    view         enum_string(:none    , :view    , :custom ,
-                             :page    , :slide   ,
-                             :list    , :paper   , :tree,
-                             :table   , :report  , :chart  )
-    access       enum_string(:access  , :private, :public, :shared  , :open  ,
-                             :auto                                            )
+    view         enum_string(:view    , :none    , :custom ,
+                             :page    , :slide  ,
+                             :list    , :paper  , :tree,
+                             :table   , :report , :chart  )
+    access       enum_string(:access  ,
+                             :private , :public , :shared  , :open  , :closed)
     theme        enum_string(:theme   ,
                              :pink    , :orange , :yellow, :green   , :purple,
-                             :none                                            )
+                             :none                                           )
     list_position  :integer
     whole_position :integer
     table_position :integer
@@ -60,39 +60,99 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
-  #caching
-  #def self.find
-  #  super
-  #end
-
-  class RectangularArray < Array
-    def dimensions
-      return 0 if length == 0 rescue 0
-      return length if self[0].length == 0
-      return [length, self[0].length]
-    end
-    def lengths
-      map { |column| column.length }
-    end
-    def rectangular!
-      maxi = lengths.max
-      each { |el| el[maxi - 1] ||= nil } if maxi > 0
-    end
-    def transpose
-      length == 0 ? [] : (Array.new rectangular!).transpose
+  def follow_up_on_create
+    if    !table_id.blank? && this_table = Card.find(table_id)
+      generate_column_dependents this_table # new columns are inherited from in each row
+    elsif !list_id.blank?  && this_list  = Card.find(list_id )            # it can inherit from its list
+      # why not from its whole? i need at least the script from the context to be active!!! to do fg
+      inherit_from_columns(this_list) || inherit_from_siblings(this_list) # it can inherit from the columns,or from its siblings
+      inherit_from_base               || inherit_from_kind                # it can inherit from its kind
     end
   end
 
-#  def partial_matching_column contexts, deep
-#    matching_column contexts, deep, :partial
-#  end
-#
-#use built-up columns
+  def same_heading_stack?  desired, existing, deep, mode = :normal
+    last_row = case mode
+      when :partial
+        desired.length - 1
+      else
+        [desired.length, existing.length].max
+      end
+    (0..last_row).each do |row|
+      return false if different_heading? desired[row], existing[row], deep
+    end
+    true
+  end
+
+  def find_name_stack mode, desired, deep
+    crash unless  deep[:columns][:names]
+    reserved = 1
+    name_stacks = deep[:columns][:names][reserved..-1]
+    case mode
+    when :match
+      return    unless name_stacks.length > 0
+      name_stacks.reverse.each_with_index do |existing, i|
+        found = same_heading_stack? desired, existing, deep
+        return i + 1                  if found
+      end
+      false
+    when :insertion_point
+      return -1 unless name_stacks.length > 0
+      name_stacks.reverse.each_with_index do |existing, i|
+        found = same_heading_stack? desired, existing, deep, :partial
+        return name_stacks.length - i if found
+      end
+      false
+    else
+      crash
+    end
+  end
+
+  def different_heading? desired, existing, deep
+    r = case deep[:action]
+    when "report", "show"
+      !smart_heading_match?  desired, existing
+    when "table"
+      !strict_heading_match? desired, existing
+    else
+      unsupported
+    end
+    r
+  end
+
+  def full_reference
+    "=>#{id.to_s}: #{reference_name}"
+  end
+
+  def display_coded_heading
+    h = coded_heading
+    n = name ||  " - "
+    c = h[:type] == "column" ?  "cell" : "aspect"
+    k = (h[:kind] ?  "#{h[:kind]}" : "vague") + " #{c} #{id} [#{name}]"
+    case h[:type]
+    when "column"
+      b = h[:base] ? "#{h[:base].id.to_s}" : "NO"
+      bk = h[:base].kind ? h[:kind].to_s : "vague"
+      "#{k} belonging to #{bk} column "
+    when "aspect"
+      "#{k}"
+    when "nil"
+     "nil heading"
+    else
+      crash
+    end
+  end
+
+  def coded_heading
+    b = based_on ? based_on : self
+    { :type => based_on ? "column" : "aspect",
+      :base => b.recursive_kind_base         ,
+      :kind => b.recursive_kind                }
+   end
+
+  #use built-up columns
   def column_name_rows deep
     names = deep[:columns][:names]
-    number_of_name_rows = names.inject(-1) do |maxi,c|
-      maxi > c.length ? maxi : c.length
-    end
+    number_of_name_rows = (names.map {|c| c.length}).max
     names.each do |el|
       el[number_of_name_rows - 1] ||= nil
     end
@@ -111,28 +171,30 @@ class Card < ActiveRecord::Base
   #use built-up columns
 
   # build up columns
-  def full_reference
-    "=>#{id.to_s}: #{reference_name}"
-  end
-
   def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
     column             = []
     column[deep[:row]] = [self]
     wider_contexts = contexts + [coded_heading]
+    logger.debug "000000000000000000000000000000000000000000000000000"
+    logger.debug "1 looking to place #{display_coded_heading}"
     if no_columns_yet? deep
-#      logger.debug "add_a_first_column #{full_reference}"
-      add_a_first_column                  wider_contexts, column, deep
-    elsif column_number = matching_column(wider_contexts        , deep)
-#      logger.debug "fit ##{full_reference}into_an_existing_column"
-      fit_into_an_existing_column                                 deep,
-        column_number
+      crash unless list
+      logger.debug "1.1 it is a list_item, no columns yet"
+      add_a_first_column                          wider_contexts, column, deep
+    elsif list
+      logger.debug "1.2 it is a list_item, fit it into existing column 0"
+      fit_into_existing_column                                   deep, 0
+    elsif column_number = find_name_stack(:match, wider_contexts        , deep)
+      crash unless column_number.is_a? Integer
+      logger.debug "1.3 it is not a list item, fit it into existing column #{column_number}"
+      fit_into_existing_column                                   deep, column_number
     else
-#      logger.debug "add_column #{full_reference}to_existing_ones"
-      add_column_to_existing_ones         wider_contexts, column, deep
+      logger.debug "1.4 add it to the existing columns"
+      add_column_to_existing_ones                 wider_contexts, column, deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
       aspects.each do |aspect|
-        deep = aspect.look_wider          wider_contexts        , deep,
+        deep = aspect.look_wider                  wider_contexts        , deep,
           max_aspect_depth, aspect_depth
       end
     end
@@ -140,7 +202,14 @@ class Card < ActiveRecord::Base
     deep
   end
 # build up columns
-  def fit_into_an_existing_column deep, column_number
+  def fit_into_existing_column deep, column_number
+    crash unless deep[:row].is_a? Integer
+    deep
+    deep[:columns]
+    deep[:columns][:cells]
+    deep[:columns][:cells][column_number]
+    deep[:columns][:cells][column_number][deep[:row]]
+    deep[:columns][:cells][column_number][deep[:row]] ||= []
     deep[:columns][:cells][column_number][deep[:row]] ||= []
     deep[:columns][:cells][column_number][deep[:row]] << itself
   end
@@ -150,21 +219,20 @@ class Card < ActiveRecord::Base
     deep[:columns][:names] << contexts
   end
 # build up columns
-  def add_column_to_existing_ones contexts, column, deep
-    column_number = which_column_to_add_before contexts, deep
-    deep[:columns][:names].insert(column_number, contexts)
+  def add_column_to_existing_ones name_stack, column, deep
+    column_number = where_to_insert name_stack, deep
+    deep[:columns][:names].insert(column_number, name_stack)
     deep[:columns][:cells].insert(column_number, column  )
   end
 # build up columns
-  def which_column_to_add_before contexts, deep
-    contxs = Array.new contexts
-    column_number = nil
-    until contxs.length == 0 || column_number
-      n = matching_column contxs, deep, :reverse
-      column_number = number_of_columns(deep) - n if n && n > 0
-      contxs.pop
+  def where_to_insert name_stack, deep
+    desired = Array.new name_stack
+    found = nil
+    until desired.length == 0 || found
+      break if (found = find_name_stack :insertion_point, desired, deep)
+      desired.pop
      end
-    column_number || -1
+    found
   end
 # build up columns
 
@@ -172,22 +240,10 @@ class Card < ActiveRecord::Base
     deep[:columns][:names].length
   end
 
-  def context_mark mode = :nil
-    self.class.heading_marker + if mode == :nil
-        ":blank"
-      else
-        (based_on ? "column" : "aspect")
-      end + self.class.heading_marker
-  end
-
   def nil_heading
-    "#{context_mark :nil}base: 0, #{context_mark :nil}kind: nihil"
-  end
-
-  def coded_heading
-    { :type => based_on ? "column" : "aspect",
-      :base => recursive_kind_base,
-      :kind => recursive_kind                  }
+    { :type => 'nil',
+      :base =>  nil,
+      :kind => 'nil' }
   end
 
   def no_columns_yet? deep
@@ -209,82 +265,53 @@ class Card < ActiveRecord::Base
   end
     
   def partial_heading_match? desired, existing, part
-    existing[part]        == desired[part] ||
-    existing[part].blank? && desired[part].blank?
+    no_e = !existing || existing[part].blank?
+    no_d = !desired  || desired[ part].blank?
+    return no_e ==  no_d if no_e || no_d
+    existing[part] == desired[part]
   end
     
   def grouping_heading_match? desired, existing
     partial_heading_match? desired, existing, :kind
   end
  
-  def different_heading? desired, existing, deep
-    r = case deep[:action]
-    when "report", "show"
-      !smart_heading_match?  desired, existing
-    when "table"
-      !strict_heading_match?  desired, existing
-    else
-      unsupported
-    end
-    logger.debug "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-    desired_base  = desired[ :base] ? desired[ :base].id.to_s : "no"
-    existing_base = existing[:base] ? existing[:base].id.to_s : "no"
-    logger.debug "type: :desired => #{desired[ :type]}, existing => #{existing[:type]}"
-    logger.debug ":base :desired => #{desired_base}, existing => #{existing_base}"
-    logger.debug ":kind :desired => #{desired[ :kind]}, existing => #{existing[:kind]}"
-    logger.debug "different_heading inside the function? #{r.to_yaml}"
-    r
-  end
-
-  def matching_column contexts, deep, mode = :normal
-    ctxs = Array.new contexts
-    column_count = -1
-    names = deep[:columns][:names]
-    names = names.reverse if mode == :reverse
-    names.detect do |existing_contexts|
-      e_ctxs = Array.new existing_contexts
-      column_count +=  1
-      case ctxs.length <=> e_ctxs.length
-      when -1 # more existing contexts than new contexts
-        unless mode == :partial
-          ctxs[e_ctxs.length - 1] ||= nil
-          ctxs.map! { |ctx| ctx ||= nil_heading}
-        end
-      when 0 # perfect fit, nothing to prepare
-      when 1 # more new contexts than existing contexts
-        unless mode == :partial
-          e_ctxs[ctxs.length - 1] ||= nil
-          e_ctxs.map! { |ctx| ctx ||= nil_heading}
-        end
-      end
-      heading_line  = -1
-      !ctxs.detect do |desired_heading|
-        existing_heading = e_ctxs[heading_line += 1] || nil_heading
-        logger.debug "aaaaaaaaaaaaaaaaaaaaaa"
-        logger.debug "heading_line: #{heading_line}"
-        r = different_heading?(desired_heading, existing_heading, deep)
-        logger.debug "cccccccccccccccccccccccccc"
-        logger.debug "different_heading after the function?: #{r}"
-        r
-      end
-    end
-    first = mode == :reverse ? 0 : names.length - 1
-    case column_count
-    when -1, first
-      nil
-    else
-      column_count
-    end
-  end
-
+#  def matching_column contexts, deep, mode = :normal
+#    names = deep[:columns][:names][1..-1]
+#    column_count, found = -1, nil
+#    n_contexts = Array.new contexts
+#    names.reverse! if mode == :reverse
+#    names.detect do |name_column|
+#      column_count +=  1
+#      existing = Array.new name_column
+#      smallest, largest, go = case n_length = n_contexts.length <=>
+#                                   e_length = existing.length
+#        when -1; [n_contexts, existing, true ] # more existing contexts
+#        when  1; [existing, n_contexts, true ] # more new contexts
+#        else   ; [nil       , nil     , false] ; end
+#      if go && mode != :partial &&
+#          smallest[largest.length - 1] ||= nil
+#          smallest.map! { |heading| heading ||= nil_heading}
+#      end
+#      contexts_considered = [n_contexts, existing]
+#      lengths = contexts_considered.map {|c| c.length}
+#      largest = lengths.max
+#      heading_line  = -1
+#      found = !n_contexts.detect do |n_context|
+#        different_heading?(n_context, existing[heading_line += 1], deep)
+#      end
+#    end
+#    return unless found
+#    crash unless column_count >= 0 && column_count < names.length
+#    if mode == :reverse
+#      names.length + 1 - column_count
+#    else
+#      column_count + 1
+#    end
+#  end
+#
   def self.heading_marker
     "=>" ||
     "5216731900414d06fc80654fbc27fcc88e6e9e4a"
-  end
-
-  def self.heading_delimiter
-    " - " ||
-    "06fb54c2e6e521897fcc886731900414d06fce4a"
   end
 
   def recursive_kind
@@ -294,10 +321,10 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_kind_base
-    return self if kind && !kind.strip.blank?
-    if based_on
-      based_on.recursive_kind_base
-    end
+    b = based_on ? based_on : self
+    k = b.kind
+    return b if k && !k.strip.blank? || !based_on
+    b.recursive_kind_base
   end
 
   def base #caching only
@@ -671,16 +698,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def follow_up_on_create # in toy an item, or AI BLOC can inherit from several sources
-    if    !table_id.blank? && this_table = Card.find(table_id)
-      generate_column_dependents this_table # new columns are inherited from in each row
-    elsif !list_id.blank?  && this_list  = Card.find(list_id )            # it can inherit from its list
-      # why not from its whole? i need at least the script from the context to be active!!! to do fg
-      inherit_from_columns(this_list) || inherit_from_siblings(this_list) # it can inherit from the columns,or from its siblings
-      inherit_from_base               || inherit_from_kind                # it can inherit from its kind
-    end
-  end
-
   def auto_view
     case self.view
     when "list", "paper", "slide", "table", "page", "report", "tree"
@@ -746,20 +763,20 @@ class Card < ActiveRecord::Base
 
   def look_deep action, max_item_depth = 9, max_aspect_depth = 9
     look_deeper \
-      []                                      , #no context yet
-      {                                         #deep
-        :root                    => id      ,
-        :row                     => 0       ,
+      []                                , #no context yet
+      {                                   #deep
+        :root                    => id,
+        :row                     => 0 ,
         :columns                 => {
-            :names => RectangularArray.new,
-            :cells => RectangularArray.new
-        }                                   ,
-        :action                  => action  ,
-        :debug_log               => ''
-      }                                       ,
-      max_item_depth                          ,  #optional
-      max_aspect_depth                        ,  #optional
-      0                                         #item_depth
+            :names => Array.new,
+            :cells => Array.new
+        }                             ,
+        :action       => action       ,
+        :debug_log    => ''
+      }                                 ,
+      max_item_depth                    ,  #optional
+      max_aspect_depth                  ,  #optional
+      0                                    #item_depth
   end
 
   def self.new_suite
@@ -1025,7 +1042,7 @@ class Card < ActiveRecord::Base
       when :manage, :delete_orphan
         :manage
       when :control_access
-        :author
+        :control
       when :script
         :script
       when :add_aspect, :delete_aspect,
@@ -1059,6 +1076,8 @@ class Card < ActiveRecord::Base
         public_requirements  intent
       when "private"
         private_requirements intent
+      when "closed"
+        closed_requirements  intent
       else
         shared_requirements  intent
       end
@@ -1075,7 +1094,8 @@ class Card < ActiveRecord::Base
 #      "Are ye at least #{requirements}" +
 #      "for owner: #{owner.name if owner}'s" +
 #      "#{self.reference_name}?")
-    return false if on_automatic? || acting_user.administrator?
+    return false if on_automatic?
+    admin = acting_user.administrator?
 #   logger.debug "I can see yer not an administrator."
     withheld = case requirements
     when :guest
@@ -1089,10 +1109,12 @@ class Card < ActiveRecord::Base
 #      logger.debug "You are #{acting_user.name}."
 #      logger.debug "The owner is #{recursive_owner.name}."
 #      logger.debug "You #{recursive_owner_is? acting_user ? 'ARE' : 'are NOT'} the owner!"
-      !recursive_owner_is?(acting_user)
+       !recursive_owner_is?(acting_user) && !admin
     when :administrator
 #      logger.debug "this needs an administrator"
-      !acting_user.administrator?
+      !admin
+    when :no_one
+      true
     else
 #      logger.debug "this seems to need #{requirements}"
       requirements
@@ -1133,17 +1155,34 @@ class Card < ActiveRecord::Base
     tightest_requirements intent
   end
 
-  def tightest_requirements intent
-#   logger.debug "So Cap'n may I #{intent} the private doc?"
+  def closed_requirements intent
+#   logger.debug "Great grand Cap'n when do I get to #{intent} the closed doc?"
     case intent
-    when :program, :manage
-      :administrator
-    when :author, :script, :design, :use, :see
-#logger.debug "88888888888888888888888"
+    when :program, :manage, :script
+      :no_one
+    when :control
+      :owner
+    when :design, :use
+      :no_one
+    when :see
       :owner
     when :initiate
       :signed_up
-    else # not :program, :manage, :author, :script, :design, :use, :initiate, :see
+    else
+      :no_one
+    end
+  end
+
+  def tightest_requirements intent
+#   logger.debug "So Cap'n can I #{intent} the private doc now?"
+    case intent
+    when :program, :manage
+      :administrator
+    when :control, :script, :design, :use, :see
+      :owner
+    when :initiate
+      :signed_up
+    else # not :program, :manage, :control, :script, :design, :use, :initiate, :see
       "unknown_intent_#{intent.to_s}_error".to_sym
     end
   end

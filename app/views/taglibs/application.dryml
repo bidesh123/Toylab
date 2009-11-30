@@ -114,11 +114,9 @@
 </def>
 
 <def tag="toy-show" attrs="shallow, whole-off">
-<% #logger.debug "AAAAAAAAAAAAA1111111111111111111" %>
   <set-scoped deep="&shallow                       ?
               @card.look_deep(params[:action],2,2) :
               @card.look_deep(params[:action])" >
-<% #logger.debug "AAAAAAAAAAAAA2222222222222222222" %>
     <show-page>
       <content-header:>
         <views />
@@ -288,35 +286,44 @@
 <% table = this
    rows = table.column_name_rows scope.deep
    if rows.length > 1 && rows[0][0]
-     rows[1][0] = rows[0][0]
-     rows.delete_at 0
-     rows[0][0][:blank_message] = "rouuu"
+     #rows[1][0] = rows[0][0]
+     #rows.delete_at 0
+#     rows[0][0][:blank_message] = "rouuu"
    end
    first_time = true
 %>
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-<%    kind_to_display     , object_to_update       , blank_message = case this.class.name
+<%    kind_to_display      , object_to_update, blank_message = case this.class.name
       when "NilClass"
-        [  "&nbsp;"       , nil                    , "Nil"]
+        [  "NilClass"      , nil             , "Nil"                                       ]
       when "Hash"
         case this[:type]
         when "column", "aspect"
-          [this[:kind]    , this[:base]            , this[:blank_message] || "..."]
+          [ this[:kind]    , this[:base]     , this[:kind] || this[:blank_message] || "..."]
         else
-          ["catastrophy"  , nil                    , nil  ]
+          ["catastrophy"   , nil             , nil                                         ]
         end
       else
-        [  this.class.name, nil                    , this.class.name]
+        [   this.class.name, nil             , this.class.name                             ]
       end
 %>
-      <if test="&object_to_update">
-        <editor:kind with="&object_to_update"
-            blank-message="&blank_message"    />
-      </if><else>
-        <%= kind_to_display %>
-      </else>
+      <if with="&object_to_update">
+        <kind-editor blank-message="&blank_message"  />
+      </if>
+      <else><%= kind_to_display %></else>
+      <if test="&false">
+        Table:    <%=
+          if b = this[:base]
+            b.table_id      ? table.full_reference : "nil"
+          else
+            'pouet'
+          end     %>
+        Colonne:  <%=
+          (b = this[:base]) ?     b.full_reference : 'nil'
+                  %>
+      </if>
     </th>
     <td><add-column if="&first_time" with="&table" /></td>
     <% first_time = false  %>
@@ -324,48 +331,48 @@
 </def>
 
 <def tag="kind-editor">
-  <if test="&this.kind "><editor:kind                   blank-message="." /></if>
-  <else                 ><editor:kind class="tiny-gray" blank-message="." /></else>
+  <%
+    b = attributes[:blank_message]
+
+  %>
+  <set b="&attributes[:blank_message]" />
+  <set m="& b.blank? ? '---' : b"         />
+  <if test="&this.kind "><editor:kind                   blank-message="&m" /></if>
+  <else                 ><editor:kind class="tiny-gray" blank-message="&m" /></else>
 </def>
 
 <def tag="trash" attrs="no-redirect" >
   <%
-    tooltip             = "Permanently erase #{this.reference_name}"
-    number_of_aspects   = this.aspects.length
-    number_of_items     = this.items.length
-    if number_of_aspects > 0
-      if number_of_items > 0
-        tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
-      else
-        tooltip += " and its #{number_of_aspects} items"
-      end
-    else # 0 aspects
-      if number_of_items > 0
-        tooltip += " and its #{number_of_items  } items"
-      end
-    end
-
-    redirect_uri = if @card.id == this.id then
-      if target = this.context then
-        url_for(:action => params[:action], :id => target)
-      else
-        cards_url
-      end
+  tooltip             = "Permanently erase #{this.reference_name}"
+  number_of_aspects   = this.aspects.length
+  number_of_items     = this.items.length
+  if number_of_aspects > 0
+    if number_of_items > 0
+      tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
     else
-      request.request_uri
+      tooltip += " and its #{number_of_aspects} items"
     end
-
-    #logger.debug "===#{no_redirect}---"
-    #no_redirect = nil
-    #logger.debug "---#{no_redirect}=== supposed to be nil"
-    #logger.debug "[[[#{attributes[:no_redirect]}]]]"
-    #logger.debug this.inspect
-    if attributes[:no_redirect] == "ggggg" then
-      redirect_uri = nil
-      attributes[:no_redirect] = nil
+  else # 0 aspects
+    if number_of_items > 0
+      tooltip += " and its #{number_of_items  } items"
     end
+  end
+  redirect_uri = if @card.id == this.id then
+    if target = this.context then
+      url_for(:action => params[:action], :id => target)
+    else
+      cards_url
+    end
+  else
+    request.request_uri
+  end
+  if attributes[:no_redirect] == "ggggg" then
+    redirect_uri = nil
+    attributes[:no_redirect] = nil
+  end
   %>
-  <!-- <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+  <!-- <delete-button
+                 with="&this" after-submit="&redirect_uri" title="#{tooltip}"
                  label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
   <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
                  label="Erase!" class="nav-button"                               />
@@ -458,7 +465,7 @@
       <page-view   />
       <list-view   />
       <tree-view   />
-      <paper-view   />
+      <paper-view  />
       <table-view  />
       <report-view />
       <slide-view  />
@@ -641,7 +648,7 @@
   <% #logger.debug "ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ" %>
   <% #logger.debug "&scope.deep[:columns][:cells].class.name: #{scope.deep[:columns][:cells].class.name}" %>
   <% #logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
-  <tr repeat="&rows=scope.deep[:columns][:cells].transpose">
+  <tr repeat="&rows=scope.deep[:columns][:cells].normalize_and_transpose">
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >
       <left-tool-cell with="&the_item_itself[0]"/>

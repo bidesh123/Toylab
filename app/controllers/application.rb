@@ -13,3 +13,24 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
 end
+class Array
+  def dimensions
+    return [0] if length == 0
+    return [length] unless sub = self[0].is_a?(Array)
+    [length] + sub.dimensions
+  end
+  def lengths
+    map { |el| (self[0].is_a? Array) ? el.length : 1 }
+  end
+  def rectangular!
+    maxi = lengths.max
+    each { |el| el[maxi - 1] ||= nil } if maxi > 0
+  end
+  def normalize_and_transpose
+    length == 0 ? [] : (Array.new rectangular!).transpose
+  end
+  def make_both_same_size! a
+    length == 0 ? [] : (Array.new rectangular!).transpose
+  end
+end
+
