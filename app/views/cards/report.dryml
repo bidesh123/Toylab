@@ -33,7 +33,7 @@
   <% css_class  = "aspect-kind-cell"
      css_class += " inner" if !attributes[:first] %>
   <th class="<%= css_class %>">
-    <editor:kind blank-message="..." />
+    <editor:kind blank-message="aspect kind cell blank" />
   </th>
 </def>
 
@@ -209,7 +209,7 @@
 </def>
 
 <def tag="whole">
-  <tiny><view:name /> is the </tiny><editor:kind blank-message="..." /><tiny> of </tiny><a:whole param="parent-link" />
+  <tiny><view:name /> is the </tiny><editor:kind blank-message="whole blank" /><tiny> of </tiny><a:whole param="parent-link" />
 </def>
 
 <def tag="list">
@@ -297,18 +297,18 @@
   <table class="toy-header">
     <tr>
       <if test="&this.kind">
-        <th class="kind"            ><h1><editor:kind   blank-message="..."   /></h1></th>
+        <th class="kind"            ><h1><editor:kind   blank-message="toy header blank" /></h1></th>
       </if><else><if test="&this.list">
-        <th class="number"          ><h1><editor:number blank-message="number" /></h1></th>
+        <th class="number"          ><h1><editor:number blank-message="number"           /></h1></th>
       </if><else>
-        <th class="empty-title-cell"    ><editor:kind   blank-message="..."   /></th>
+        <th class="empty-title-cell"    ><editor:kind   blank-message="toy header blank" /></th>
       </else></else>
     </tr>
     <tr>
-      <td   class="name"            ><h1><editor:name   blank-message="name" /></h1></td>
+      <td   class="name"            ><h1><editor:name   blank-message="name"             /></h1></td>
     </tr>
     <tr>
-      <td   class="body"            ><h3><editor:body   blank-message="name" /></h3></td>
+      <td   class="body"            ><h3><editor:body   blank-message="name"             /></h3></td>
     </tr>
   </table>
   <record-flags fields="" param/>

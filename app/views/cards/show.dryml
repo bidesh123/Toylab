@@ -7,7 +7,7 @@
   <% css_class  = "aspect-kind-cell"
      css_class += " inner" if !attributes[:first] %>
   <th class="<%= css_class %>">
-    <editor:kind blank-message="..." />
+    <editor:kind blank-message="aspect-kind-cell blank" />
   </th>
 </def>
 
@@ -182,7 +182,7 @@
 </def>
 
 <def tag="whole">
-  <tiny><view:name /> is the </tiny><editor:kind blank-message="..." /><tiny> of </tiny><a:whole param="parent-link" />
+  <tiny><view:name /> is the </tiny><editor:kind blank-message="whole blank" /><tiny> of </tiny><a:whole param="parent-link" />
 </def>
 
 <def tag="list">
@@ -262,54 +262,6 @@
 <def tag="trace-cell">
   <td>trace cell</td>
 </def>
-
-<!--
-<def tag="toy-header">
-  < %= attributes[:whole_off] %>
-  toy header is not used any more
-  <table class="toy-header">
-    <tr>
-      <if test="&this.kind">
-        <th class="kind"            ><h1><editor:kind   blank-message="..."   /></h1></th>
-      </if><else><if test="&this.list">
-        <th class="number"          ><h1><editor:number blank-message="number" /></h1></th>
-      </if><else>
-        <th class="empty-title-cell"    ><editor:kind   blank-message="..."   /></th>
-      </else></else>
-    </tr>
-    <tr>
-      <td   class="name"            ><h1><editor:name   blank-message="this.blank_name" /></h1></td>
-    </tr>
-    <tr>
-      <td   class="body"            ><h3><editor:body   blank-message="name" /></h3></td>
-    </tr>
-  </table>
-  <record-flags fields="" param/>
-</def>
-
-<report-page>
-  <content-header:>
-    <table>
-      <if test="&this.long_body?"><name-head-row /></if>
-      <else>                      <pair-head-row /></else>
-    </table>
-  </content-header:>
-  <content-aside:></content-aside:>
-  <content-body:>
-    <report-card>
-      <heading:></heading:>
-      <body:>
-        <div if="&this.long_body?">
-          <editor field="body"/>
-        </div>
-        <div>
-          <aspects/>
-        </div>
-      </body:>
-    </report-card>
-  </content-body:>
-</report-page>
--->
 
 <def tag="show-view">
   <li class="not-enabled view-link advanced"><%= link_to("report"  , url_for(:action => "auto", :disabled => true), :disabled => true  )  %></li>

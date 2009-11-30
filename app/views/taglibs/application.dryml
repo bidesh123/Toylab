@@ -28,8 +28,9 @@
   <%  submit_style = "toy-nav tooltip #{style}"  %>
   <form if="&this && this.items.count == 0 || mainly_tabular_view"
         class="&style"
-        with="&Card.new(:list_id => attributes[:collection_id])"
-        >
+        with="&Card.new(:list_id => attributes[:collection_id],
+                        :kind    => attributes[:item_kind] || ''
+      )">
     <submit label=                        "&attributes[:label]"
             title="&attributes[:tooltip] || attributes[:label]"
             class="&submit_style" />
@@ -61,6 +62,7 @@
        label="&label"
        tooltip="&tooltip"
        collection-id="&this.id"
+       item-kind="&(this.items.count == 0) ? element : ''"
      />
   </if>
   <add-row if="&this.list && this.list_id != @card.list_id"/>
@@ -284,11 +286,11 @@
 
 <def tag="title-rows">
 <% table = this
-   rows = table.column_name_rows scope.deep
+   rows = Array.new table.column_name_rows(scope.deep)
    if rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
      rows.delete_at 0
-     rows[0][0][:blank_message] = "rouuu"
+     rows[0][0]
    end
    first_time = true
 %>
@@ -297,11 +299,16 @@
     <th repeat>
 <%    kind_to_display      , object_to_update, blank_message = case this.class.name
       when "NilClass"
-        [  "NilClass"      , nil             , "Nil"                                       ]
+        [  ""              , nil             , "Nil"                                       ]
       when "Hash"
         case this[:type]
-        when "column", "aspect"
-          [ this[:kind]    , this[:base]     , this[:kind] || this[:blank_message] || "..."]
+        when "aspect"
+          nbsp = "\xC2\xA0"
+          blank_message = first_time ? "    " :  nil
+          [ this[:kind]    , this[:base]     , (blank_message  || "aspect blank")]
+        when "column"
+          blank_message = if first_time; "corner column blank" ; end
+          [ this[:kind]    , this[:base]     , (blank_message  || "column blank")]
         else
           ["catastrophy"   , nil             , nil                                         ]
         end
@@ -324,19 +331,15 @@
           (b = this[:base]) ?     b.full_reference : 'nil'
                   %>
       </if>
-    </th>
+       </th>
     <td><add-column if="&first_time" with="&table" /></td>
-    <% first_time = false  %>
+    <% first_time = false if first_time %>
   </tr>
 </def>
 
 <def tag="kind-editor">
-  <%
-    b = attributes[:blank_message]
-
-  %>
-  <set b="&attributes[:blank_message]" />
-  <set m="& b.blank? ? '---' : b"         />
+  <% b = attributes[:blank_message]
+     m = b ? b : "kind editor blank" %>
   <if test="&this.kind "><editor:kind                   blank-message="&m" /></if>
   <else                 ><editor:kind class="tiny-gray" blank-message="&m" /></else>
 </def>

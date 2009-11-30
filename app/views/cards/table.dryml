@@ -53,27 +53,7 @@
   <div param="table-header">
     <p class="table-title">
       <h1>
-        <editor:kind blank-message="." />
-        <editor:name blank-message="&this.blank_name" />
-      </h1>
-    </p>
-  </div>
-  <div param="cells">
-    <cells merge-attrs />
-  </div>
-  <div param="controls">
-    <table class="controls" ><tr class="controls">
-      <td                      ><add-item            /></td>
-      <td class="delete-button"><trash redir="true"  /></td>
-    </tr></table>
-  </div>
-</def>
-
-<def tag="card" for="Card">
-  <div param="table-header">
-    <p class="table-title">
-      <h1>
-        <editor:kind blank-message="." />
+        <editor:kind if="&this.kind" blank-message="card blank"       />
         <editor:name blank-message="&this.blank_name" />
       </h1>
     </p>
