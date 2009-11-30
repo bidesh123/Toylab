@@ -286,9 +286,9 @@
 <% table = this
    rows = table.column_name_rows scope.deep
    if rows.length > 1 && rows[0][0]
-     #rows[1][0] = rows[0][0]
-     #rows.delete_at 0
-#     rows[0][0][:blank_message] = "rouuu"
+     rows[1][0] = rows[0][0]
+     rows.delete_at 0
+     rows[0][0][:blank_message] = "rouuu"
    end
    first_time = true
 %>

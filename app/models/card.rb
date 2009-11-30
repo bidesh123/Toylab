@@ -107,17 +107,14 @@ class Card < ActiveRecord::Base
         found = same_heading_stack? desired, existing, deep
         return i + 1                  if found
       end
-      false
     when :insertion_point
       return -1 unless name_stacks.length > 0
       name_stacks.reverse.each_with_index do |existing, i|
         found = same_heading_stack? desired, existing, deep, :partial
-        return name_stacks.length - i if found
+        return name_stacks.length - i + 1 if found
       end
-      false
-    else
-      crash
     end
+    nil
   end
 
   def different_heading? desired, existing, deep
@@ -216,15 +213,9 @@ class Card < ActiveRecord::Base
   end
 # build up columns
   def fit_into_existing_column deep, column_number
-    crash unless deep[:row].is_a? Integer
-    deep
-    deep[:columns]
-    deep[:columns][:cells]
-    deep[:columns][:cells][column_number]
-    deep[:columns][:cells][column_number][deep[:row]]
-    deep[:columns][:cells][column_number][deep[:row]] ||= []
-    deep[:columns][:cells][column_number][deep[:row]] ||= []
-    deep[:columns][:cells][column_number][deep[:row]] << itself
+    row, column = deep[:row], deep[:columns][:cells][column_number]
+    column[row] ||= []
+    column[row]  << self
   end
 # build up columns
   def add_a_first_column contexts, column, deep
@@ -241,8 +232,9 @@ class Card < ActiveRecord::Base
   def where_to_insert name_stack, deep
     desired = Array.new name_stack
     found = nil
-    until desired.length == 0 || found
-      break if (found = find_name_stack :insertion_point, desired, deep)
+    until desired.length == 0
+      found = find_name_stack :insertion_point, desired, deep
+      return found if found
       desired.pop
      end
     found
@@ -288,40 +280,6 @@ class Card < ActiveRecord::Base
     partial_heading_match? desired, existing, :kind
   end
  
-#  def matching_column contexts, deep, mode = :normal
-#    names = deep[:columns][:names][1..-1]
-#    column_count, found = -1, nil
-#    n_contexts = Array.new contexts
-#    names.reverse! if mode == :reverse
-#    names.detect do |name_column|
-#      column_count +=  1
-#      existing = Array.new name_column
-#      smallest, largest, go = case n_length = n_contexts.length <=>
-#                                   e_length = existing.length
-#        when -1; [n_contexts, existing, true ] # more existing contexts
-#        when  1; [existing, n_contexts, true ] # more new contexts
-#        else   ; [nil       , nil     , false] ; end
-#      if go && mode != :partial &&
-#          smallest[largest.length - 1] ||= nil
-#          smallest.map! { |heading| heading ||= nil_heading}
-#      end
-#      contexts_considered = [n_contexts, existing]
-#      lengths = contexts_considered.map {|c| c.length}
-#      largest = lengths.max
-#      heading_line  = -1
-#      found = !n_contexts.detect do |n_context|
-#        different_heading?(n_context, existing[heading_line += 1], deep)
-#      end
-#    end
-#    return unless found
-#    crash unless column_count >= 0 && column_count < names.length
-#    if mode == :reverse
-#      names.length + 1 - column_count
-#    else
-#      column_count + 1
-#    end
-#  end
-#
   def self.heading_marker
     "=>" ||
     "5216731900414d06fc80654fbc27fcc88e6e9e4a"
@@ -479,10 +437,10 @@ class Card < ActiveRecord::Base
      return first_item_down if first_item_down = (items || [nil])[0]
   end
   
-  def itself
-    @itself ||= self.class.find id
-  end
-
+#  def itself
+#    @itself ||= self.class.find id
+#  end
+#
   def self.default_access
     "shared"
   end
