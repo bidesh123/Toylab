@@ -79,7 +79,7 @@ class Card < ActiveRecord::Base
     elsif list            # inherit from list
       # why not from its whole? i need at least the script from the context to be active!!! to do fg
       inherit_from_columns(list) || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
-      inherit_from_base          || inherit_from_kind                # it can inherit from its kind
+      inherit_from_base          || inherit_from_kind           # it can inherit from its kind
     end
   end
 
@@ -103,9 +103,9 @@ class Card < ActiveRecord::Base
     case mode
     when :match
       return    unless name_stacks.length > 0
-      name_stacks.reverse.each_with_index do |existing, i|
+      name_stacks.each_with_index do |existing, i|
         found = same_heading_stack? desired, existing, deep
-        return i + 1                  if found
+        return i + 1                      if found
       end
     when :insertion_point
       return -1 unless name_stacks.length > 0
