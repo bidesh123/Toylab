@@ -293,6 +293,7 @@
      rows[0][0]
    end
    first_time = true
+   first_kind = true
 %>
   <tr repeat="&rows">
     <empty-cell />
@@ -304,7 +305,7 @@
         case this[:type]
         when "aspect"
           nbsp = "\xC2\xA0"
-          blank_message = first_time ? "    " :  nil
+          blank_message = first_kind ? "    " :  nil
           [ this[:kind]    , this[:base]     , (blank_message  || "aspect blank")]
         when "column"
           blank_message = if first_time; "corner column blank" ; end
@@ -331,9 +332,9 @@
           (b = this[:base]) ?     b.full_reference : 'nil'
                   %>
       </if>
+    <% first_kind = false if first_time %>
        </th>
-    <td><add-column if="&first_time" with="&table" /></td>
-    <% first_time = false if first_time %>
+    <td><add-column with="&table" /></td>
   </tr>
 </def>
 
