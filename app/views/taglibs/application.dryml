@@ -292,7 +292,6 @@
      rows.delete_at 0
      rows[0][0]
    end
-   first_time = true
    first_kind = true
 %>
   <tr repeat="&rows">
@@ -300,22 +299,23 @@
     <th repeat>
 <%    kind_to_display      , object_to_update, blank_message = case this.class.name
       when "NilClass"
-        [  ""              , nil             , "Nil"                                       ]
+        [  ""              , nil             ,        "Nil"          ]
       when "Hash"
         case this[:type]
         when "aspect"
           nbsp = "\xC2\xA0"
-          blank_message = first_kind ? "    " :  nil
-          [ this[:kind]    , this[:base]     , (blank_message  || "aspect blank")]
+          b = if first_kind; first_kind = false ;     nbsp ; end
+          [ this[:kind]    , this[:base]     ,        "..." ]
         when "column"
-          blank_message = if first_time; "corner column blank" ; end
-          [ this[:kind]    , this[:base]     , (blank_message  || "column blank")]
+          b = if first_kind; first_kind = false ;     nbsp ; end
+          [ this[:kind]    , this[:base]     , (b  || ":::::")]
         else
-          ["catastrophy"   , nil             , nil                                         ]
+          ["catastrophe"   , nil             , nil                   ]
         end
       else
-        [   this.class.name, nil             , this.class.name                             ]
+        [   this.class.name, nil             ,        "cataclysm"    ]
       end
+      first_kind = false
 %>
       <if with="&object_to_update">
         <kind-editor blank-message="&blank_message"  />
@@ -332,7 +332,6 @@
           (b = this[:base]) ?     b.full_reference : 'nil'
                   %>
       </if>
-    <% first_kind = false if first_time %>
        </th>
     <td><add-column with="&table" /></td>
   </tr>
@@ -340,7 +339,7 @@
 
 <def tag="kind-editor">
   <% b = attributes[:blank_message]
-     m = b ? b : "kind editor blank" %>
+     m = b ? b : "::::" %>
   <if test="&this.kind "><editor:kind                   blank-message="&m" /></if>
   <else                 ><editor:kind class="tiny-gray" blank-message="&m" /></else>
 </def>
