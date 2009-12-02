@@ -553,7 +553,7 @@
   </div>
 </def>
 
-<def tag="slide-card" for="Card">
+<def tag="slide-card">
   <p><editor:name blank-message="&this.blank_name"/></p>
   <ol class="point-form">
     <li repeat="&this.items">

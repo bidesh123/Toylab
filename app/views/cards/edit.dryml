@@ -79,16 +79,16 @@
 
 
 <def tag="context-editors">
-  <editor:whole />
-  <editor:table />
-  <editor:list  />
+  <editor:whole limit="3"/>
+  <editor:table limit="3" />
+  <editor:list limit="3"  />
 </def>
 
 
 <def tag="card-id" >
-  <div class="tool" if="&current_user.administrator?">Card <%= this.id  %></div>
+  <div class="tool" if="&current_user.administrator?">Card <%= this.id   %></div>
   <div class="tool" if="&current_user.administrator?"><card-number-editor/></div>
-  <div class="tool" if="&current_user.administrator?"><context-editors/></div>
+  <div class="tool" if="&current_user.administrator?"><context-editors   /></div>
 </def>
 
 <def tag="core-main-row">

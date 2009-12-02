@@ -63,15 +63,17 @@ class Card < ActiveRecord::Base
   def follow_up_on_create
     if    table
       if table.columns.length == 1 then #first column
-        example = table.items[0]
-        k = example.kind
-        self.kind = k
-        self.save
-        items.each do |item|
-          if item.kind == k
-            item.based_on = self
-          else
-            crash
+        on_automatic do
+          example = table.items[0]
+          k = example.kind
+          self.kind = k
+          self.save
+          items.each do |item|
+            if item.kind == k
+              item.based_on = self
+            else
+              crash
+            end
           end
         end
       end
@@ -130,7 +132,7 @@ class Card < ActiveRecord::Base
   end
 
   def full_reference
-    "=>#{id.to_s}: #{reference_name}"
+    "#{self.class.to_s} id #{id}: #{reference_name}"
   end
 
   def display_coded_heading
@@ -185,21 +187,21 @@ class Card < ActiveRecord::Base
     column             = []
     column[deep[:row]] = [self]
     wider_contexts = contexts + [coded_heading]
-    logger.debug "000000000000000000000000000000000000000000000000000"
-    logger.debug "1 looking to place #{display_coded_heading}"
+#    logger.debug "000000000000000000000000000000000000000000000000000"
+#    logger.debug "1 looking to place #{display_coded_heading}"
     if no_columns_yet? deep
       crash unless list
-      logger.debug "1.1 it is a list_item, no columns yet"
+#      logger.debug "1.1 it is a list_item, no columns yet"
       add_a_first_column                          wider_contexts, column, deep
     elsif list
-      logger.debug "1.2 it is a list_item, fit it into existing column 0"
+#      logger.debug "1.2 it is a list_item, fit it into existing column 0"
       fit_into_existing_column                                   deep, 0
     elsif column_number = find_name_stack(:match, wider_contexts        , deep)
       crash unless column_number.is_a? Integer
-      logger.debug "1.3 it is not a list item, fit it into existing column #{column_number}"
+#      logger.debug "1.3 it is not a list item, fit it into existing column #{column_number}"
       fit_into_existing_column                                   deep, column_number
     else
-      logger.debug "1.4 add it to the existing columns"
+#      logger.debug "1.4 add it to the existing columns"
       add_column_to_existing_ones                 wider_contexts, column, deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
@@ -358,8 +360,6 @@ class Card < ActiveRecord::Base
     case self.it.class.name
     when "Card"
       case reference
-      when 
-        it.send(reference)
       when :id,
            nil, :name, :theme, :view, :kind,
            :aspects, :items, :columns, :based_on, :instances,
@@ -617,8 +617,8 @@ class Card < ActiveRecord::Base
     #self is new item
     cols = this_list.columns
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
-    update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
     on_automatic do
+      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
       cols.each do |col|
         this_new_aspect = self.aspects.create!(
           :based_on_id => col.id,
@@ -950,6 +950,11 @@ class Card < ActiveRecord::Base
                         :created_at    , :updated_at   ,
                         :based_on_id   , :owner_id     , :owner         ,
                         :whole_id      , :list_id      , :table_id      )
+        :manage
+      when any_changed?(:id,
+                        :created_at    , :updated_at   ,
+                        :based_on_id   , :owner_id     , :owner         ,
+                        :whole_id      , :list_id      , :table_id      )
         :program
       when any_changed?(:whole_position, :list_position, :table_position)
         :manage
@@ -1038,6 +1043,7 @@ class Card < ActiveRecord::Base
   def intent_forbidden?    intent
     inherited_access = recursive_access
 #   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
+#   logger.debug "I be talkin about #{self.full_reference}"
     requirements = case inherited_access
       when "open"
         open_requirements    intent
@@ -1062,12 +1068,12 @@ class Card < ActiveRecord::Base
   def permission_withheld? requirements
 #    logger.debug(
 #      "#{who}!" +
-#      "Are ye at least #{requirements}" +
-#      "for owner: #{owner.name if owner}'s" +
+#      "Are ye at least #{requirements} " +
+#      "for owner: #{owner.name if owner}'s " +
 #      "#{self.reference_name}?")
     return false if on_automatic?
     admin = acting_user.administrator?
-#   logger.debug "I can see yer not an administrator."
+#    logger.debug "I can see yer #{admin ? 'an' : 'not an' } administrator 9999999999999999999999999 #{acting_user.name}"
     withheld = case requirements
     when :guest
 #     logger.debug "this only needs a guest"
@@ -1090,6 +1096,8 @@ class Card < ActiveRecord::Base
 #      logger.debug "this seems to need #{requirements}"
       requirements
     end
+#    logger.debug "requirements #{requirements}" if withheld
+#    logger.debug "full reference: #{full_reference}" if withheld
 #    logger.debug "PERMISSION WITHHELD" if withheld
     withheld
   end
