@@ -79,9 +79,9 @@
 
 
 <def tag="context-editors">
-  <editor:whole limit="3"/>
-  <editor:table limit="3" />
-  <editor:list limit="3"  />
+  <editor:whole />
+  <editor:table />
+  <editor:list  />
 </def>
 
 
