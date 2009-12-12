@@ -60,6 +60,22 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  def self.paper_numbering_reset
+    Thread.current[:numbering] = []
+  end
+
+  def self.paper_numbering_push
+    Thread.current[:numbering].push 0
+  end
+
+  def self.paper_numbering_pop
+    Thread.current[:numbering].pop
+  end
+
+  def self.paper_numbering_increment
+    Thread.current[:numbering][-1] += 1
+  end
+
   def follow_up_on_create
     if    table
       if table.columns.length == 1 then #first column
@@ -183,26 +199,33 @@ class Card < ActiveRecord::Base
   #use built-up columns
 
   # build up columns
-  def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
-    column             = []
-    column[deep[:row]] = [self]
+def report? deep
+  ["report", "show"].include? deep[:action]
+end
+
+def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
     wider_contexts = contexts + [coded_heading]
-#    logger.debug "000000000000000000000000000000000000000000000000000"
-#    logger.debug "1 looking to place #{display_coded_heading}"
-    if no_columns_yet? deep
-      crash unless list
-#      logger.debug "1.1 it is a list_item, no columns yet"
-      add_a_first_column                          wider_contexts, column, deep
-    elsif list
-#      logger.debug "1.2 it is a list_item, fit it into existing column 0"
-      fit_into_existing_column                                   deep, 0
-    elsif column_number = find_name_stack(:match, wider_contexts        , deep)
-      crash unless column_number.is_a? Integer
-#      logger.debug "1.3 it is not a list item, fit it into existing column #{column_number}"
-      fit_into_existing_column                                   deep, column_number
-    else
-#      logger.debug "1.4 add it to the existing columns"
-      add_column_to_existing_ones                 wider_contexts, column, deep
+    no_name = !self.name || self.name.strip.blank?
+    logger.debug "4444444444444444444444444444444444"
+    logger.debug "name #{self.name.to_yaml}"
+    logger.debug "no_columns_yet?(deep) #{no_columns_yet?(deep).to_yaml}"
+    logger.debug "report? deep #{report? deep}"
+    logger.debug "no_name #{no_name.to_yaml}"
+    logger.debug "list.name #{list.name.to_yaml}" if list
+    unless list || report?(deep) && no_name
+#    unless (true || ["report", "show"].include?(deep[:action]) )&& (!self.name || self.name.strip.blank?)
+      column             = []
+      column[deep[:row]] = [self]
+      if no_columns_yet? deep
+        add_a_first_column(                         wider_contexts, column, deep) #if list
+      elsif list
+        fit_into_existing_column                                   deep, 0
+      elsif column_number = find_name_stack(:match, wider_contexts        , deep)
+        crash unless column_number.is_a? Integer
+        fit_into_existing_column                                   deep, column_number
+      else
+        add_column_to_existing_ones                 wider_contexts, column, deep
+      end
     end
     unless (aspect_depth += 1) >= max_aspect_depth
       aspects.each do |aspect|

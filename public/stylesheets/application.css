@@ -1,3 +1,30 @@
+.paper-core .card-body {font-size: 12pt;}
+
+.paper-core .bottom-controls {font-size: 12pt;}
+
+table.indented {margin-left:10em;}
+
+table.paper-core, table.paper-heading {border-collapse:collapse;}
+
+.multiple-cell  {border:1px 0px solid #eee;}
+
+/* ol { counter-reset: section;
+     list-style-type: none;
+}
+
+ol.paper .card-body {
+    background: #ccc; margin-top: 0;
+}
+
+*/
+li.paper-item:before {
+    counter-increment: section;
+    content: counters(section, ".") " ";   /* Adds the value of all instances
+                                              of the section counter separated
+                                              by a ".". */
+  }
+
+
 div.cells .card-kind, div.aspects .card-kind {font-size: .618em;}
 
 div.cells td {vertical-align:top;}
@@ -5,8 +32,13 @@ div.cells td {vertical-align:top;}
 td.script-cell {background: #f9c;}
 
 .top-page-nav {margin-top: .618em;}
+
 ul, ol, li, ul.collection.cards, ul.collection.cards li {
     list-style-type: none;
+}
+
+td.aspect-body-cell {
+  font-size: .618em;
 }
 
 .kind-cell .tiny-gray, .body-cell .tiny-gray, td.aspect-body-cell .tiny-gray {
@@ -184,7 +216,7 @@ td.aspect-body-cell {font-size:162%;}
 */
 
 /* td.inner.aspect-name-cell { font-size:100%;} */
-.inner {font-size:62.5%;}
+.inner {font-size:78.6%;}
 
 
 

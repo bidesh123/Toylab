@@ -1,5 +1,9 @@
 <toy-edit />
 
+<def tag="card" for="Card">
+  <hierarchical-card />
+</def>
+
 <def tag="core-right-controls-td">
   <td class="right-controls" rowspan="3" style="display:none">
     <reveal-aspect-or-item which="aspects"/>
@@ -18,6 +22,7 @@
       </content-header:>
       <content-body:>
         <rails-authenticity-token />
+<%      Card.paper_numbering_reset %>
         <card first />
       </content-body:  >
       <aside:          >
@@ -25,30 +30,6 @@
       </aside:         >
     </show-page>
   </set-scoped>
-</def>
-
-<def tag="self-and-aspects-row">
-  <tr class="self-and-aspects-row">
-    <td class="core">
-      <%#logger.debug :this
-        #logger.debug this.to_yaml %>
-        <core />
-    </td>
-    <td class="aspects-table" if="&this.aspects" id="<%= dom_id(this, 'aspects') %>">
-      <aspects-table />
-    </td>
-  </tr>
-</def>
-
-<def tag="self-and-aspects-row-edit">
-  <tr class="self-and-aspects-row">
-    <td class="core">
-        <core />
-    </td>
-    <td class="aspects-table" if="&this.aspects" id="<%= dom_id(this, 'aspects') %>">
-      <aspects-table />
-    </td>
-  </tr>
 </def>
 
 <def tag="aspects-table">
@@ -89,16 +70,6 @@
   <div class="tool" if="&current_user.administrator?">Card <%= this.id   %></div>
   <div class="tool" if="&current_user.administrator?"><card-number-editor/></div>
   <div class="tool" if="&current_user.administrator?"><context-editors   /></div>
-</def>
-
-<def tag="core-main-row">
-    <tr class="core-main-row"   >
-      <%  kind_style="kind-cell #{this.theme_class}" %>
-      <th class="#{kind_style}"                  >
-        <kind-editor />
-      </th>
-      <core-right-controls-td />
-    </tr>
 </def>
 
 <def tag="aspect-cell">

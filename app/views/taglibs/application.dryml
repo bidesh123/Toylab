@@ -4,25 +4,44 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
-<def tag="select-one-editor" attrs="include-none, blank-message, sort, update, options"><%
-  raise HoboError.new("Not allowed to edit") unless can_edit?
-  blank_message ||= "(No #{this_type.name.to_s.titleize})"
-  options ||= this_field_reflection.klass.recent(63).select {|x| can_view?(x) && !x.name.blank?}.map {|x|
-            [ name(:with => x, :no_wrapper => true), x.id ]
-          }[0..31]
-   options = options.sort if sort
-   options.insert(0, [blank_message, ""]) if this.nil? || include_none
-   f = ajax_updater(object_url(this_parent, :method => :put),
-                    update,
-                    :method => "put",
-                    :params => { this_parent.class.name.underscore => {
-                        this_field_reflection.primary_key_name => Hobo.raw_js('this.value')
-                      } })
-    %>
-  <select onchange="#{f}" merge-attrs>
-     <%= options_for_select(options, this ? this.id : "") %>
-  </select>
+<def tag="paper-numbering">
+  <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>
 </def>
+
+<def tag="core-main-row">
+    <tr class="core-main-row"   >
+      <%  kind_style="kind-cell #{this.theme_class}"%>
+      <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
+        <kind-editor />
+      </th>
+      <else><empty-cell /></else>
+      <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
+      <else><td rowspan="3"></td></else>
+    </tr>
+</def>
+
+<def tag="self-and-aspects-row">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+        <core />
+    </td>
+    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
+      <aspects-table />
+    </td>
+  </tr>
+</def>
+
+<def tag="self-and-aspects-row-edit">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+        <core />
+    </td>
+    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
+      <aspects-table />
+    </td>
+  </tr>
+</def>
+
 
 <!-- view-page -->
 
@@ -90,14 +109,17 @@
 
 <def tag="list-row">
   <tr class="list-row" if="&this.items">
+<%        Card.paper_numbering_push      %>
     <td class="list-row" colspan="2">
       <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
       <table class="list-rows" id="&table_dom_id" if="&this.items">
         <repeat with="&this.items">
+<%        Card.paper_numbering_increment %>
           <item-row />
         </repeat>
       </table>
     </td>
+<%        Card.paper_numbering_pop       %>
   </tr>
 </def>
 
@@ -309,7 +331,7 @@
    rows = Array.new table.column_name_rows(scope.deep)
    if rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
-     rows.delete_at 0
+     rows[0].map!{{:kind =>'delete', :base => nil, :type => 'control'}}
      rows[0][0]
    end
    first_kind = true
@@ -329,6 +351,8 @@
         when "column"
           b = if first_kind; first_kind = false ;     nbsp ; end
           [ this[:kind]    , this[:base]     , (b  || ":::::")]
+        when "controls"
+          [ "controls"     , nil             , nil]
         else
           ["catastrophe"   , nil             , nil                   ]
         end
@@ -487,8 +511,8 @@
     <ul class="view-nav">View as
       <page-view   />
       <list-view   />
-      <tree-view   />
       <paper-view  />
+      <tree-view   />
       <table-view  />
       <report-view />
       <slide-view  />
@@ -497,7 +521,7 @@
 </def>
 
 <def tag="page-view" attrs="off">
-  <li class="view-link advanced"><%= link_to("page", url_for(:action => "page" ), :disabled => false  )  %></li>
+  <li class="view-link advanced"><%= link_to("text", url_for(:action => "page" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="paper-view" attrs="off">
@@ -590,6 +614,7 @@
 </def>
 
 <def tag="card" for="Card">
+  <%  Card.paper_numbering_reset %>
   <hierarchical-card />
 </def>
 
@@ -609,41 +634,53 @@
   </tr>
 </def>
 
-<def tag="core">
-  <table id="#{dom_id(this)}" class="core core-unit">
-    <core-main-row />
-    <tr class="name">
-      <%  name_style="name-cell #{this.theme_class}" %>
-      <td class="#{name_style}">
-        <editor:name blank-message="&this.blank_name"/>
-      </td>
-    </tr>
-    <tr class="body">
-      <%  body_style = "body-cell #{this.theme_class}"
-          display_style = this.body ? "inherit" : "none"  %>
-      <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
-        <if test="&this.body ">
-          <editor:body                   blank-message="A" />
+<def tag="core-name-row">
+  <tr class="name">
+    <%  name_style="name-cell #{this.theme_class}" %>
+    <td class="#{name_style}">
+      <paper-numbering />&nbsp<editor:name blank-message="&this.blank_name"/>
+    </td>
+    <empty-cell if="&!scope.deep[:no_aspects]" />
+  </tr>
+</def>
+
+<def tag="core-body-row">
+  <tr class="body">
+    <%  body_style = "body-cell #{this.theme_class}"
+        display_style = this.body ? "inherit" : "none"  %>
+    <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
+      <if test="&this.body ">
+        <editor:body                   blank-message="A" />
+      </if>
+      <else>
+        <editor:body class="tiny-gray" blank-message="A" />
+      </else>
+    </td>
+    <empty-cell if="&!scope.deep[:no_aspects]" />
+  </tr>
+</def>
+
+<def tag="core-script-row">
+  <tr class="script">
+    <td class="script-cell">
+      <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
+        <if test="&this.script">
+          <editor:script                   blank-message="....." />
         </if>
         <else>
-          <editor:body class="tiny-gray" blank-message="A" />
+          <editor:script class="tiny-gray" blank-message="....." />
         </else>
-      </td>
-    </tr>
-    <if test="&this.viewable_by?(current_user, :script)">
-      <tr class="script">
-        <td class="script-cell">
-          <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
-            <if test="&this.script">
-              <editor:script                   blank-message="....." />
-            </if>
-            <else>
-              <editor:script class="tiny-gray" blank-message="....." />
-            </else>
-          </div>
-        </td>
-      </tr>
-    </if>
+      </div>
+    </td>
+  </tr>
+</def>
+
+<def tag="core">
+  <table id="#{dom_id(this)}" class="core core-unit">
+    <core-main-row if="&!scope.deep[:no_aspects]" />
+    <core-name-row />
+    <core-body-row if="&!scope.deep[:no_bodies ]"/>
+    <core-script-row if test="&this.viewable_by?(current_user, :script)" />
     <core-bottom-controls-tr />
   </table>
 </def>
@@ -697,8 +734,10 @@
             <else>
               <td class="multiple-cell"    ><table>
                 <tr class="sub-cell" repeat="&this">
-                  <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
-                  <else                    ><td class="cell"        ><cell /></td></else>
+                  <!-- <if test="&true || this.name && !this.name.strip.blank?"> -->
+                    <if test="&this.numeric?"><td class="numeric cell"><cell /></td></if>
+                    <else                    ><td class="cell"        ><cell /></td></else>
+                  <!-- </if> -->
                 </tr>
               </table></td>
             </else>
@@ -716,7 +755,7 @@
       <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]"/>
     </if>
     <else>
-      <editor:name blank-message="..." />
+      <editor:name blank-message=".a.." />
     </else>
     </if><else>
     &nbsp; <!-- to do: create button for first level aspects -->
@@ -725,5 +764,25 @@
 
 <def tag="empty-title">
   <th class="empty-title-cell">&nbsp;</th>
+</def>
+
+<def tag="select-one-editor" attrs="include-none, blank-message, sort, update, options"><%
+  raise HoboError.new("Not allowed to edit") unless can_edit?
+  blank_message ||= "(No #{this_type.name.to_s.titleize})"
+  options ||= this_field_reflection.klass.recent(63).select {|x| can_view?(x) && !x.name.blank?}.map {|x|
+            [ name(:with => x, :no_wrapper => true), x.id ]
+          }[0..31]
+   options = options.sort if sort
+   options.insert(0, [blank_message, ""]) if this.nil? || include_none
+   f = ajax_updater(object_url(this_parent, :method => :put),
+                    update,
+                    :method => "put",
+                    :params => { this_parent.class.name.underscore => {
+                        this_field_reflection.primary_key_name => Hobo.raw_js('this.value')
+                      } })
+    %>
+  <select onchange="#{f}" merge-attrs>
+     <%= options_for_select(options, this ? this.id : "") %>
+  </select>
 </def>
 

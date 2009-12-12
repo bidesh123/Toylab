@@ -5,7 +5,7 @@
 
 <def tag="toy-report" attrs="shallow">
   <set-scoped deep="&shallow ?
-                    @card.look_deep(params[:action],2,2) :
+                    @card.glook_deep(params[:action],2,2) :
                     @card.look_deep(params[:action])" >
    <show-page>
       <content-header:>

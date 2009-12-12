@@ -30,7 +30,7 @@
 </def>
 
 <def tag="page-view">
-  <li class="not-enabled view-link"><%= link_to("page"  , url_for(:action => "page", :disabled => true), :disabled => true  )  %></li>
+  <li class="not-enabled view-link"><%= link_to("text"  , url_for(:action => "page", :disabled => true), :disabled => true  )  %></li>
 </def>
 
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

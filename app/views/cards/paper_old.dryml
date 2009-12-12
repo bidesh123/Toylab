@@ -1,0 +1,201 @@
+<toy-paper />
+
+<def tag="toy-paper">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header: >
+        <views                                />
+        <context                              />
+      </content-header:>
+      <content-body:   >
+        <rails-authenticity-token/>
+        <paper-card first                     />
+      </content-body:  >
+      <aside:          ><google               /></aside: >
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="paper-core">
+  <table id="#{dom_id(this)}" class="core paper-core">
+    <%  name_style = "name name-cell #{this.theme_class}" %>
+    <tr class="<%=name_style%>">
+      <td>
+        <table class="paper-heading">
+          <tr  class="paper-heading">
+            <th class="paper-numbering"><paper-numbering /></th>
+            <th><editor:name blank-message="&this.blank_name"/></th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <%  body_style = "body body-cell #{this.theme_class}" %>
+    <tr class="<%=  body_style%>" id="<%= dom_id(this, :body_cell)%>">
+      <td>
+        <if test="this.body" >
+          <editor:body                   blank-message="A" />
+        </if>
+        <else>
+          <editor:body class="tiny-gray" blank-message="A" />
+        </else>
+      </td>
+    </tr>
+    <core-bottom-controls-tr />
+  </table>
+</def>
+
+<def tag="paper-card">
+  <%  Card.paper_numbering_reset %>
+  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
+  <table class="card first-card drop-target paper" id="&list_dom_id">
+    <tr class="paper-core"><td><paper-core /></td></tr>
+    <tr class="items paper-items" if="&this.items.count>0" >
+      <td>
+        <table class="indented">
+          <%  Card.paper_numbering_push %>
+          <tr repeat="&this.items">
+            <%  Card.paper_numbering_increment %>
+            <td><recursive-paper-card /></td>
+          </tr>
+          <%  Card.paper_numbering_pop %>
+        </table>
+      </td>
+    </tr>
+  </table>
+</def>
+
+<def tag="recursive-paper-card">
+  <%  Card.paper_numbering_reset %>
+  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
+  <table class="card inner drop-target paper" id="&list_dom_id">
+    <tr class="paper-core"><td><paper-core /></td></tr>
+    <tr class="items paper-items" if="&this.items.count>0" >
+      <td>
+        <table class="indented">
+          <%  Card.paper_numbering_push %>
+          <tr repeat="&this.items">
+            <%  Card.paper_numbering_increment %>
+            <td><recursive-paper-card /></td>
+          </tr>
+          <%  Card.paper_numbering_pop %>
+        </table>
+      </td>
+    </tr>
+  </table>
+</def>
+
+<def tag="core-bottom-controls-tr">
+  <tr class="core-controls bottom-controls" style="display:none">
+    <!--ul display-style=""-->
+      <tr class="bottom-controls"><bottom-controls /></tr>
+      <tr class="corner-controls"><corner-controls /></tr>
+    <!--/ul-->
+  </tr>
+</def>
+
+<def tag="first-try-core">
+  <table id="#{dom_id(this)}" class="core core-unit">
+    <core-main-row />
+    <tr class="name">
+      <%  name_style="name-cell #{this.theme_class}" %>
+      <td class="#{name_style}">
+        <editor:name blank-message="&this.blank_name"/>
+      </td>
+    </tr>
+    <tr class="body">
+      <%  body_style = "body-cell #{this.theme_class}"
+          display_style = this.body ? "inherit" : "none"  %>
+      <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
+        <if test="&this.body ">
+          <editor:body                   blank-message="A" />
+        </if>
+        <else>
+          <editor:body class="tiny-gray" blank-message="A" />
+        </else>
+      </td>
+    </tr>
+    <core-bottom-controls-tr />
+  </table>
+</def>
+
+<def tag="card" for="Card">
+  <paper-card />
+</def>
+
+<def tag="paper-card">
+  <%  Card.paper_numbering_reset %>
+  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
+  <table class="card first-card drop-target paper" id="&list_dom_id">
+    <tr class="paper-core"><td><paper-core /></td></tr>
+    <tr class="items paper-items" if="&this.items.count>0" >
+      <td>
+        <table class="indented">
+          <%  Card.paper_numbering_push %>
+          <tr repeat="&this.items">
+            <%  Card.paper_numbering_increment %>
+            <td><recursive-paper-card /></td>
+          </tr>
+          <%  Card.paper_numbering_pop %>
+        </table>
+      </td>
+    </tr>
+  </table>
+</def>
+
+<def tag="recursive-paper-card">
+  <set list-dom-id="&dom_id(this, &quot;items&quot;)" />
+  <table class="card inner drop-target paper" id="&list_dom_id">
+    <tr class="paper-core"><td><paper-core /></td></tr>
+    <tr class="items paper-items" if="&this.items.count>0" >
+      <td>
+        <table class="indented">
+          <paper-numbering-push />
+          <tr repeat="&this.items">
+            <paper-numbering-increment />
+            <td><recursive-paper-card /></td>
+          </tr>
+          <paper-numbering-pop  />
+        </table>
+      </td>
+    </tr>
+  </table>
+</def>
+
+<def tag="toy-paper">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header: >
+        <views                                />
+        <context                              />
+      </content-header:>
+      <content-body:   >
+        <rails-authenticity-token/>
+        <paper-card first                           />
+      </content-body:  >
+      <aside:          ><google               /></aside: >
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="core-main-row"></def>
+
+<def tag="aspect-cell">
+  <% @model_id = "aspect-cell model::card:#{this.id}" %>
+ <td class="<%= @model_id %>">
+    <recursive-card which="aspect"/>
+  </td>
+</def>
+
+<def tag="item-row">
+  <tr class="item-row in-list-view model::card:#{this.id}">
+    <td class="item-cell">
+      <recursive-card which="item"/>
+    </td>
+  </tr>
+</def>
+
+<def tag="paper-view">
+  <li class="not-enabled view-link"><%= link_to("paper"  , url_for(:action => "paper", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>
