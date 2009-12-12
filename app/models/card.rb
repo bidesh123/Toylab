@@ -212,8 +212,7 @@ def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
     logger.debug "report? deep #{report? deep}"
     logger.debug "no_name #{no_name.to_yaml}"
     logger.debug "list.name #{list.name.to_yaml}" if list
-    unless list || report?(deep) && no_name
-#    unless (true || ["report", "show"].include?(deep[:action]) )&& (!self.name || self.name.strip.blank?)
+    if list || report?(deep) && !no_name
       column             = []
       column[deep[:row]] = [self]
       if no_columns_yet? deep

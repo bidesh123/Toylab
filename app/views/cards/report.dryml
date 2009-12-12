@@ -178,7 +178,7 @@
    <aspects-kinds-row   merge-attrs />
    <aspects-names-row   merge-attrs />
    <aspects-bodies-row  merge-attrs />
-   <bottoms-borders-row merge-attrs  />
+   <bottoms-borders-row merge-attrs />
 </def>
 
 <def tag="aspects">
