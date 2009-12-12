@@ -262,7 +262,7 @@ def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
       return found if found
       desired.pop
      end
-    found
+    found || -1
   end
 # build up columns
 

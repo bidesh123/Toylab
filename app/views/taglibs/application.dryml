@@ -680,7 +680,7 @@
     <core-main-row if="&!scope.deep[:no_aspects]" />
     <core-name-row />
     <core-body-row if="&!scope.deep[:no_bodies ]"/>
-    <core-script-row if test="&this.viewable_by?(current_user, :script)" />
+    <core-script-row if="&this.viewable_by?(current_user, :script)" />
     <core-bottom-controls-tr />
   </table>
 </def>
