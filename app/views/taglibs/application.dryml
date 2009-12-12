@@ -339,25 +339,25 @@
   <tr repeat="&rows">
     <empty-cell />
     <th repeat>
-<%    kind_to_display      , object_to_update, blank_message = case this.class.name
+<%    kind_to_display        , object_to_update, blank_message = case this.class.name
       when "NilClass"
-        [  ""              , nil             ,        "Nil"          ]
+        [  ""                , nil             ,        "Nil"          ]
       when "Hash"
+         nbsp = "\xC2\xA0"
         case this[:type]
         when "aspect"
-          nbsp = "\xC2\xA0"
-          b = if first_kind; first_kind = false ;     nbsp ; end
-          [ this[:kind]    , this[:base]     ,        "..." ]
+          b = if first_kind; first_kind = false ; nbsp ; end
+          [ this[:kind]      , this[:base]     ,        "..." ]
         when "column"
-          b = if first_kind; first_kind = false ;     nbsp ; end
-          [ this[:kind]    , this[:base]     , (b  || ":::::")]
-        when "controls"
-          [ "controls"     , nil             , nil]
+          b = if first_kind; first_kind = false ; nbsp ; end
+          [ this[:kind]      , this[:base]     , (b  || ":::::")]
+        when "control"
+          [ "delete"       , nil             , nil]
         else
-          ["catastrophe"   , nil             , nil                   ]
+          [ "#{this[:type]}?", nil             , nil                   ]
         end
       else
-        [   this.class.name, nil             ,        "cataclysm"    ]
+        [   this.class.name  , nil             ,        "cataclysm"    ]
       end
       first_kind = false
 %>
