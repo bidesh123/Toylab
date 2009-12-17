@@ -8,7 +8,7 @@
     <% scope.deep[:action    ] = params[:action] %>
     <show-page>
       <content-header:>
-        <views />
+        <views   />
         <context />
       </content-header:>
       <content-body:>

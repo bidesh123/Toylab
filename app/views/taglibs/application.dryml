@@ -4,6 +4,22 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="out-slide">
+  <% the_item = this.list %>
+  <a with="&the_item" if="&the_item" class="slide-nav">context</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+<def tag="next-slide">
+  <% the_item = this.higher_item %>
+  <a with="&the_item" if="&the_item" class="slide-nav">next</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+<def tag="prev-slide">
+  <% the_item = this.lower_item %>
+  <a with="&the_item" if="&the_item" class="slide-nav">prev</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+
 <def tag="paper-numbering">
   <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>
 </def>
@@ -606,9 +622,16 @@
   <p><editor:name blank-message="&this.blank_name"/></p>
   <ol class="point-form">
     <li repeat="&this.items">
-      <editor:name blank-message="&this.blank_name"/>
+      <a if="&this.items.count>0" />
+      <else>
+        <view:name if="&!this.name.blank?" />
+        <else>
+          <%= this.blank_name %>
+        </else>
+      </else>
     </li>
   </ol>
+  <p><prev-slide/><out-slide/><next-slide/></p>
 </def>
 
 <def tag="recursive-card">

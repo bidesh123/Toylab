@@ -1,3 +1,5 @@
+.slide .slide-nav {font-size: 12pt;}
+
 .paper-core .card-body {font-size: 12pt;}
 
 .paper-core .bottom-controls {font-size: 12pt;}
@@ -48,7 +50,7 @@ td.aspect-body-cell {
   color: #eee;
 }
 
-.hilite, .logo, a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
+.hilite, .logo, ul a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
 .hilite input, th input, h1 input, div.table-header, td.name-cell,
   td.aspect-name-cell,
     div.slide.kind-cell .tiny-gray,
@@ -233,6 +235,8 @@ div.aspects {margin-top:.62em;}
 
 a {
   text-decoration:none;
+}
+ul a {
   color: #69f;
 }
 ul.sub-pitch, ul.cards,

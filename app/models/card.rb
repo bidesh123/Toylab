@@ -60,6 +60,22 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  # Return the next higher item in the list.
+  def higher_item
+    return nil unless list_id
+    Card.find :first,
+      :conditions => "list_id = #{list_id} AND list_position > #{list_position}",
+      :order => "list_position"
+  end
+
+  # Return the next lower item in the list.
+  def lower_item
+    return nil unless list_id
+    Card.find :first,
+      :conditions => "list_id = #{list_id} AND list_position < #{list_position}",
+      :order => "list_position DESC"
+  end
+
   def self.paper_numbering_reset
     Thread.current[:numbering] = []
   end
