@@ -5,6 +5,7 @@
   <set-scoped deep="&@card.edit_deep" >
     <% scope.deep[:no_aspects] = true %>
     <% scope.deep[:no_bodies ] = true %>
+    <% scope.deep[:action    ] = params[:action] %>
     <show-page>
       <content-header:>
         <views />

@@ -183,7 +183,7 @@
       <td class="theme"><editor:theme     /></td>
       <td class="access"><editor:access if="&can_edit? :access"/></td>
       <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
-      <td class="core-body-toggle"><body-toggle/></td>
+      <td class="core-body-toggle" if="&scope.deep[:action] != 'list'"><body-toggle/></td>
       <td class="core-trash"><trash/></td>
     </tr>
   </table>
