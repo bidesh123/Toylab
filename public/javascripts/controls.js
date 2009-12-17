@@ -650,7 +650,7 @@ Ajax.InPlaceEditor = Class.create({
     this.element.removeClassName('tiny-gray');
     var blank_message = this.element.getAttribute("hobo-blank-message");
     if (this.element.innerHTML == blank_message)
-      this.element.addClassName('tiny-gray');
+      /*this.element.addClassName('tiny-gray')*/;
     this.removeForm();
     this.leaveHover();
     this.element.style.backgroundColor = this._originalBackground;

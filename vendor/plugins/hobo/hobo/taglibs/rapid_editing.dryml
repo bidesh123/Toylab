@@ -11,7 +11,7 @@ This area of Hobo has had less attention that the non-ajax forms of late, so it'
     view(attributes)
   else
     if this.blank?
-      attrs = add_classes(attributes, type_id, type_and_field, "editor", "tiny-gray")
+      attrs = add_classes(attributes, type_id, type_and_field, "editor", "stiny-gray")
     else
       attrs = add_classes(attributes, type_id, type_and_field, "editor"             )
     end

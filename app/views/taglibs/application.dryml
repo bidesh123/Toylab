@@ -335,6 +335,8 @@
      rows[0][0]
    end
    first_kind = true
+   row_count = 0
+   rows.delete_at 0 # temporarily no control row
 %>
   <tr repeat="&rows">
     <empty-cell />
@@ -377,7 +379,10 @@
                   %>
       </if>
        </th>
-    <td><add-column with="&table" /></td>
+    <td>
+      <add-column with="&table" if="&scope.deep[:action] == 'table' && (row_count += 1) == 1" />
+      <else><empty-cell /></else>
+    </td>
   </tr>
 </def>
 
@@ -585,7 +590,7 @@
     <cells merge-attrs />
   </div>
   <div param="controls">
-   <add-item-row />
+   <add-item-row if="&false" />
    <trash redir="true"/>
   </div>
   <div param="debug-toy" if="&false">
@@ -653,7 +658,7 @@
         <editor:body                   blank-message="A" />
       </if>
       <else>
-        <editor:body class="tiny-gray" blank-message="A" />
+        <editor:body class="ssssssstiny-gray" blank-message="A" />
       </else>
     </td>
     <empty-cell if="&!scope.deep[:no_aspects]" />
