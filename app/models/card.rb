@@ -199,32 +199,23 @@ class Card < ActiveRecord::Base
   #use built-up columns
 
   # build up columns
-def report? deep
-  ["report", "show"].include? deep[:action]
-end
+  def report? deep
+    ["report", "show"].include? deep[:action]
+  end
 
-def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
+  def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
     wider_contexts = contexts + [coded_heading]
-    no_name = !self.name || self.name.strip.blank?
-    logger.debug "4444444444444444444444444444444444"
-    logger.debug "name #{self.name.to_yaml}"
-    logger.debug "no_columns_yet?(deep) #{no_columns_yet?(deep).to_yaml}"
-    logger.debug "report? deep #{report? deep}"
-    logger.debug "no_name #{no_name.to_yaml}"
-    logger.debug "list.name #{list.name.to_yaml}" if list
-    if list || report?(deep) && !no_name
-      column             = []
-      column[deep[:row]] = [self]
-      if no_columns_yet? deep
-        add_a_first_column(                         wider_contexts, column, deep) #if list
-      elsif list
-        fit_into_existing_column                                   deep, 0
-      elsif column_number = find_name_stack(:match, wider_contexts        , deep)
-        crash unless column_number.is_a? Integer
-        fit_into_existing_column                                   deep, column_number
-      else
-        add_column_to_existing_ones                 wider_contexts, column, deep
-      end
+    column             = []
+    column[deep[:row]] = [self]
+    if no_columns_yet? deep
+      add_a_first_column(                         wider_contexts, column, deep) #if list
+    elsif list
+      fit_into_existing_column                                   deep, 0
+    elsif column_number = find_name_stack(:match, wider_contexts        , deep)
+      crash unless column_number.is_a? Integer
+      fit_into_existing_column                                   deep, column_number
+    else
+      add_column_to_existing_ones                 wider_contexts, column, deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
       aspects.each do |aspect|
@@ -237,9 +228,12 @@ def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
   end
 # build up columns
   def fit_into_existing_column deep, column_number
+    cell_has_a_value = self.name && !self.name.strip.blank?
     row, column = deep[:row], deep[:columns][:cells][column_number]
-    column[row] ||= []
-    column[row]  << self
+    if list || !report?(deep) || cell_has_a_value || !column[row]
+      column[row] ||= []
+      column[row]  << self
+    end
   end
 # build up columns
   def add_a_first_column contexts, column, deep
