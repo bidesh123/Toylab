@@ -61,6 +61,49 @@ class Card < ActiveRecord::Base
 # after_update :follow_up_on_update
 
   # Return the next higher item in the list.
+  def follow_up_on_create
+#    if    table
+#      if table.columns.length == 1 then #first column
+#        on_automatic do
+#          example = table.items[0]
+#          k = example.kind
+#          self.kind = k
+#          self.save
+#          items.each do |item|
+#            if item.kind == k
+#              item.based_on = self
+#            else
+#              crash
+#            end
+#          end
+#        end
+#      end
+#      generate_column_dependents table # new columns are inherited from in each row
+#    end
+    if    table
+      if table.columns.length == 1 then #first column
+        on_automatic do
+          example = table.items[0]
+          k = example.kind
+          self.kind = k
+          self.save
+          items.each do |item|
+            if item.kind == k
+              item.based_on = self
+            else
+              crash
+            end
+          end
+        end
+      end
+      generate_column_dependents table # new columns are inherited from in each row
+    elsif list            # inherit from list
+      # why not from its whole? i need at least the script from the context to be active!!! to do fg
+      inherit_from_columns(list) || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
+      inherit_from_base          || inherit_from_kind           # it can inherit from its kind
+    end
+  end
+
   def higher_item
     return nil unless list_id
     Card.find :first,
@@ -90,31 +133,6 @@ class Card < ActiveRecord::Base
 
   def self.paper_numbering_increment
     Thread.current[:numbering][-1] += 1
-  end
-
-  def follow_up_on_create
-    if    table
-      if table.columns.length == 1 then #first column
-        on_automatic do
-          example = table.items[0]
-          k = example.kind
-          self.kind = k
-          self.save
-          items.each do |item|
-            if item.kind == k
-              item.based_on = self
-            else
-              crash
-            end
-          end
-        end
-      end
-      generate_column_dependents table # new columns are inherited from in each row
-    elsif list            # inherit from list
-      # why not from its whole? i need at least the script from the context to be active!!! to do fg
-      inherit_from_columns(list) || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
-      inherit_from_base          || inherit_from_kind           # it can inherit from its kind
-    end
   end
 
   def same_heading_stack?  desired, existing, deep, mode = :normal

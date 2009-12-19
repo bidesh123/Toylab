@@ -352,7 +352,7 @@
    end
    first_kind = true
    row_count = 0
-   rows.delete_at 0 # temporarily no control row
+#   rows.delete_at 0 # temporarily no control row
 %>
   <tr repeat="&rows">
     <empty-cell />
@@ -620,9 +620,10 @@
 
 <def tag="slide-card">
   <p><editor:name blank-message="&this.blank_name"/></p>
+  <p><editor:body blank-message="A" /></p>
   <ol class="point-form">
     <li repeat="&this.items">
-      <a if="&this.items.count>0" />
+      <a if="&this.items.count>0 || !this.body.blank?" />
       <else>
         <view:name if="&!this.name.blank?" />
         <else>
