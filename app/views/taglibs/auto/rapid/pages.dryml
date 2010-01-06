@@ -74,7 +74,7 @@
             <a:table param="parent-link">&laquo; <name/></a:table>
             <h2 param="heading"><name/></h2>
 
-            <record-flags fields="" param/>
+            <record-flags fields="pad" param/>
 
             <a:owner param="creator-link"/>
 

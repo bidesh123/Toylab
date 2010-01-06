@@ -194,13 +194,22 @@
 <def tag="bottom-controls">
   <table class="bottom-controls">
     <tr  class="bottom-controls">
-      <td class="core-add-item"><add-item /></td>
-      <td class="go"   ><show-card-inline /><trash/></td>
-      <td class="theme"><editor:access if="&can_edit? :access"/><editor:theme/><editor:pad/></td>
-      <!--td class="access"></td-->
-      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/><body-toggle if="&scope.deep[:action] != 'list'"/></td>
-      <!--td class="core-body-toggle"></td-->
-      <!--td class="core-trash"></td-->
+      <td class="bottom-controls"
+           ><add-item
+          /><show-card-inline
+          /><editor:theme
+          /><if test="&can_edit? :pad"><editor:pad/>Pad</if
+           ><editor:access if="&can_edit? :access"
+          /><body-toggle   if="&scope.deep[:action] != 'list'"
+          /><trash
+          /></td>
+      <!--td class="core-add-item"><add-item /></td>
+      <td class="go"   ><show-card-inline /></td>
+      <td class="theme"><editor:theme     /></td>
+      <td class="access"><editor:access if="&can_edit? :access"/></td>
+      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
+      <td class="core-body-toggle"><body-toggle  if="&scope.deep[:action] != 'list'"/></td>
+      <td class="core-trash"><trash/></td-->
     </tr>
   </table>
 </def>

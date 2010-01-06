@@ -59,11 +59,45 @@ class Card < ActiveRecord::Base
 
 # before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :follow_up_on_create
-  after_update :follow_up_on_update
+# after_update :follow_up_on_update
 
-  def follow_up_on_update
-    #what has changed???
+  def generate_items_recursively source_item
+    #none of this is used, so bullshit alert is at max
+#    dest_item = self
+#    dest_item.kind = source_item.kind if source_item.kind
+#    source_item.aspects.each do |source_aspect|
+#      dest_aspect = self.aspects.create!(
+#        :based_on_id => source_aspect.id,
+#        :kind        => source_aspect.kind
+#      )
+#      dest_aspect.generate_aspects_recursively source_aspect
+#      dest_aspect.generate_items_recursively   source_item
+#    end
   end
+
+  def generate_aspects_recursively source_item
+    dest_item = self
+    dest_item.kind = source_item.kind if source_item.kind
+    source_item.aspects.each do |source_aspect|
+      dest_aspect = self.aspects.create!(
+        :based_on_id => source_aspect.id,
+        :kind        => source_aspect.kind
+      )
+      dest_aspect.generate_aspects_recursively source_aspect
+    end
+  end
+
+  def inherit_by_example example
+    return false if already_inherited(example)
+    on_automatic do
+      generate_aspects_recursively example
+      generate_items_recursively  example
+    end
+  end
+
+# def follow_up_on_update
+#   what has changed???
+# end
 
   def inherit_from_siblings this_list
     return #disabled
@@ -722,18 +756,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def generate_aspects_recursively source_item
-    dest_item = self
-    dest_item.kind = source_item.kind if source_item.kind
-    source_item.aspects.each do |source_aspect|
-      dest_aspect = self.aspects.create!(
-        :based_on_id => source_aspect.id,
-        :kind        => source_aspect.kind
-      )
-      dest_aspect.generate_aspects_recursively source_aspect
-    end
-  end
-
   def auto_view
     case self.view
     when "list", "paper", "slide", "table", "page", "report", "tree"
@@ -756,13 +778,6 @@ class Card < ActiveRecord::Base
       ac if asp.based_on_id == [prototype.id, prototype.based_on_id]
     end
     false
-  end
-
-  def inherit_by_example example
-    return false if already_inherited(example)
-    on_automatic do
-      generate_aspects_recursively example
-    end
   end
 
   #def look_wide
@@ -976,7 +991,7 @@ class Card < ActiveRecord::Base
         :script
       when              :access
         :control_access
-      when              :kind, :view   , :based_on      ,
+      when              :kind, :view   , :based_on      , :pad  ,
                         :whole         , :list          , :table
 
         :edit_structure
@@ -1012,7 +1027,7 @@ class Card < ActiveRecord::Base
         :script
       when any_changed?(:access                                         )
         :control_access
-      when any_changed?(:kind, :view, :whole, :table                    )
+      when any_changed?(:kind, :view, :whole, :table, :pad              )
         :edit_structure
       when any_changed?(:name, :body, :theme, :list                     )
         :edit_data
@@ -1038,7 +1053,7 @@ class Card < ActiveRecord::Base
         :script
       when :access
         :control_access
-      when nil, :name, :body, :theme, :view, :kind,
+      when nil, :name, :body, :theme, :view, :kind, :pad,
                 :aspects, :items, :columns, :based_on, :instances
         :see
       else
