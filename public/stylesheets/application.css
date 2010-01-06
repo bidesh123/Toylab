@@ -2,13 +2,13 @@
 
 .slide .slide-nav {font-size: 12pt;}
 
-.paper-core .card-body {font-size: 12pt;}
+.outline-core .card-body {font-size: 12pt;}
 
-.paper-core .bottom-controls {font-size: 12pt;}
+.outline-core .bottom-controls {font-size: 12pt;}
 
 table.indented {margin-left:10em;}
 
-table.paper-core, table.paper-heading {border-collapse:collapse;}
+table.outline-core, table.outline-heading {border-collapse:collapse;}
 
 td.multiple-cell  {border:0px solid green;}
 table.multiple-cell  {margin-top:.191em; margin-bottom:.191em;}
@@ -17,12 +17,12 @@ table.multiple-cell  {margin-top:.191em; margin-bottom:.191em;}
      list-style-type: none;
 }
 
-ol.paper .card-body {
+ol.outline .card-body {
     background: #ccc; margin-top: 0;
 }
 
 */
-li.paper-item:before {
+li.outline-item:before {
     counter-increment: section;
     content: counters(section, ".") " ";   /* Adds the value of all instances
                                               of the section counter separated
@@ -190,7 +190,7 @@ th.kind-cell{font-size:38.2%;}
 ul.sub-pitch    {font-size:162% ;}
 ul.sub-pitch li {font-size:62%;}
 /* Suites */
-/* list, paper, tree */
+/* list, outline, tree */
 td.body-cell {font-size:61.8%;}
 div.slide, div.card-body{margin-top:.62em;}
 td.right-controls, tr.core-controls{font-size:12pt;background: #9cf}
@@ -207,13 +207,13 @@ h2 {font-size:200%;}
 body.user h2 { margin-bottom:.62em;}
 
 :focus {
-	moz-outline-radius:2.62em;
-	outline:none;
+	moz-paper-radius:2.62em;
+	paper:none;
         background:#ffc;
         font-size:inherit;
         font-weight:inherit;
         color:inherit;
-        outline-offset:0px;
+        paper-offset:0px;
         border:0;margin:0;
 }
 

@@ -12,7 +12,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	outline: 0;
+	paper: 0;
 	font-weight: inherit;
 	font-style: inherit;
 	font-size: 100%;
@@ -24,7 +24,7 @@ code {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	outline: 0;
+	paper: 0;
 	font-weight: inherit;
 	font-style: inherit;
 	font-size: 100%;
@@ -35,7 +35,7 @@ em {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	outline: 0;
+	paper: 0;
 	font-weight: inherit;
 	font-size: 100%;
 	font-family: inherit;
@@ -46,7 +46,7 @@ strong {
     margin: 0;
 	padding: 0;
 	border: 0;
-	outline: 0;
+	paper: 0;
 	font-style: inherit;
 	font-size: 100%;
 	font-family: inherit;
@@ -55,7 +55,7 @@ strong {
 
 /* Remember to define focus styles! */
 :focus {
-	outline: 0;
+	paper: 0;
 }
 body {
 	line-height: 1;

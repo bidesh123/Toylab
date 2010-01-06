@@ -6,6 +6,7 @@ class Card < ActiveRecord::Base
     body         :text
     kind         :string
     script       :text
+    pad          :boolean
     view         enum_string(:view    , :none    , :custom ,
                              :page    , :slide  ,
                              :list    , :paper  , :tree,
@@ -56,31 +57,44 @@ class Card < ActiveRecord::Base
 #    {:conditions => ["kind    IS ? AND owner_id IS ?", kind, acting_user.id]}
 #  }
 
-  #before_save do |c| c.context_id = c.whole_id || c.list_id end
+# before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :follow_up_on_create
-# after_update :follow_up_on_update
+  after_update :follow_up_on_update
 
-  # Return the next higher item in the list.
+  def follow_up_on_update
+    #what has changed???
+  end
+
+  def inherit_from_siblings this_list
+    return #disabled
+    siblings = this_list.items(:order => "updated_at DESC", :limit => 1)
+    if this_sibling = siblings[0] # last one modified
+      inherit_by_example this_sibling
+    end
+  end
+
+  def inherit_from_kind
+    return #disabled
+    return false unless this_kind = kind && example =
+    Item.find_by_kind(this_kind, :order => "updated_at DESC", :limit => 1)
+   #inherit_by_example example
+    true
+  end
+
+  def inherit_from_pad
+    return false unless this_kind = kind && pad =
+      Item.find_by_kind(
+        this_kind                        ,
+        :order      => "updated_at DESC" ,
+        :limit      => 1                 ,
+        :conditions => ["pad IS ?", true]
+      )
+   #inherit_by_example pad
+    true
+  end
+
   def follow_up_on_create
-#    if    table
-#      if table.columns.length == 1 then #first column
-#        on_automatic do
-#          example = table.items[0]
-#          k = example.kind
-#          self.kind = k
-#          self.save
-#          items.each do |item|
-#            if item.kind == k
-#              item.based_on = self
-#            else
-#              crash
-#            end
-#          end
-#        end
-#      end
-#      generate_column_dependents table # new columns are inherited from in each row
-#    end
-    if    table
+    if    table #new column: an aspect is inserted in each item of the table
       if table.columns.length == 1 then #first column
         on_automatic do
           example = table.items[0]
@@ -97,13 +111,14 @@ class Card < ActiveRecord::Base
         end
       end
       generate_column_dependents table # new columns are inherited from in each row
-    elsif list            # inherit from list
+    elsif list            # new row inherits from list
       # why not from its whole? i need at least the script from the context to be active!!! to do fg
       inherit_from_columns(list) || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
-      inherit_from_base          || inherit_from_kind           # it can inherit from its kind
+      inherit_from_pad           || inherit_from_kind           # it can inherit from its kind
     end
   end
 
+# Return the next higher item in the list.
   def higher_item
     return nil unless list_id
     Card.find :first,
@@ -730,24 +745,9 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def inherit_from_siblings this_list
-    siblings = this_list.items(:order => "updated_at DESC", :limit => 1)
-    if this_sibling = siblings[0] # last one modified
-     #inherit_by_example this_sibling
-      true
-    end
-  end
-
   def inherit_from_base
     return false unless example = self
     #inherit_by_example example
-    true
-  end
-
-  def inherit_from_kind
-    return false unless this_kind = kind && example =
-      Item.find_by_kind(this_kind, :order => "updated_at DESC", :limit => 1)
-   #inherit_by_example example
     true
   end
 

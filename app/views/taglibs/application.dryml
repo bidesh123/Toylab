@@ -6,17 +6,17 @@
 
 <def tag="out-slide">
   <% the_item = this.list %>
-  <a with="&the_item" if="&the_item" class="slide-nav">context</a>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">context</a>
   <else>&nbsp;&nbsp;&nbsp;</else>
 </def>
 <def tag="next-slide">
   <% the_item = this.higher_item %>
-  <a with="&the_item" if="&the_item" class="slide-nav">next</a>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">next</a>
   <else>&nbsp;&nbsp;&nbsp;</else>
 </def>
 <def tag="prev-slide">
   <% the_item = this.lower_item %>
-  <a with="&the_item" if="&the_item" class="slide-nav">prev</a>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">prev</a>
   <else>&nbsp;&nbsp;&nbsp;</else>
 </def>
 
@@ -195,12 +195,12 @@
   <table class="bottom-controls">
     <tr  class="bottom-controls">
       <td class="core-add-item"><add-item /></td>
-      <td class="go"   ><show-card-inline /></td>
-      <td class="theme"><editor:theme     /></td>
-      <td class="access"><editor:access if="&can_edit? :access"/></td>
-      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
-      <td class="core-body-toggle" if="&scope.deep[:action] != 'list'"><body-toggle/></td>
-      <td class="core-trash"><trash/></td>
+      <td class="go"   ><show-card-inline /><trash/></td>
+      <td class="theme"><editor:access if="&can_edit? :access"/><editor:theme/><editor:pad/></td>
+      <!--td class="access"></td-->
+      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/><body-toggle if="&scope.deep[:action] != 'list'"/></td>
+      <!--td class="core-body-toggle"></td-->
+      <!--td class="core-trash"></td-->
     </tr>
   </table>
 </def>
@@ -623,7 +623,7 @@
   <p><editor:body blank-message="A" /></p>
   <ol class="point-form">
     <li repeat="&this.items">
-      <a if="&this.items.count>0 || !this.body.blank?" />
+      <a action="slide" if="&this.items.count>0 || !this.body.blank?" />
       <else>
         <view:name if="&!this.name.blank?" />
         <else>

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091028083453) do
+ActiveRecord::Schema.define(:version => 20100106034214) do
 
   create_table "cards", :force => true do |t|
     t.string   "kind"
@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(:version => 20091028083453) do
     t.datetime "updated_at"
     t.integer  "whole_id"
     t.text     "body"
-    t.integer  "number"
     t.integer  "list_id"
     t.integer  "based_on_id"
     t.string   "theme"
@@ -30,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20091028083453) do
     t.integer  "list_position"
     t.integer  "whole_position"
     t.integer  "table_position"
+    t.boolean  "pad"
   end
 
   create_table "users", :force => true do |t|
