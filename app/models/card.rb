@@ -61,47 +61,29 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
-  def inherit_from_pad
-    return false unless the_pad = find_pad
-    inherit_by_example the_pad
-    true
-  end
-
-  def find_pad
-    return false unless kind
-    Card.find_by_kind(
-      kind                             ,
-      :order      => "updated_at DESC" ,
-      :limit      => 1                 ,
-      :conditions => ["pad IS ?", true]
-    ) || default_pad_item
-  end
-
   def inherit_by_example example
-    return false if already_inherited(example)
+    return unless example
     on_automatic do
       generate_aspects_recursively example
-      generate_items_recursively  example
+      generate_columns             example
+      generate_items_recursively   example
     end
   end
 
-  def generate_sub_items
-    #self is new item in its list
-    return false unless example = find_pad
-    on_automatic do
-      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
-      cols.each do |col|
-        this_new_aspect = self.aspects.create!(
-          :based_on_id => col.id,
-          :kind        => col.kind
-        )
-        this_new_aspect.generate_aspects_recursively col
-      end
+  def follow_up_on_create
+    if   table
+      base_existing_items_on_this_column if table.columns.length == 1 #first column
+      generate_column_cells table # new columns are inherited from in each row
+    elsif list # new row inherits from list
+      # why not from its whole? i need at least the script from the context to be active!!! to do fg
+      generate_row_cells # it can inherit from the columns
+      generate_columns   # it can inherit columns from a pad of its kind
+      generate_sub_items # it can inherit items   from a pad of its kind
     end
   end
 
   def generate_row_cells
-    #self is new item in its list
+    #self is a new item in a list
     cols = list.columns
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
     on_automatic do
@@ -114,6 +96,66 @@ class Card < ActiveRecord::Base
         this_new_aspect.generate_aspects_recursively col
       end
     end
+  end
+
+  def generate_aspects_recursively source
+    self.kind = source.kind if source.kind
+    source.aspects.each do |source_aspect|
+      sub_aspect = self.aspects.create!(
+        :based_on_id => source_aspect.id,
+        :kind        => source_aspect.kind
+      )
+      sub_aspect.generate_aspects_recursively source_aspect
+    end
+  end
+
+  def inherit_from_kind
+    return unless example = find_pad
+    inherit_by_example example
+  end
+
+  def generate_columns source #called directly after create
+    #self is new item in a list
+    return unless example = find_pad
+    cols = example.cols
+    return unless cols && cols.length > 0
+    self.kind ||= source.kind if source.kind
+    source.columns.each do |source_column|
+      self.columns.create!(
+        :based_on_id => source_column.based_on_id  ,
+        :kind        => source_column.kind
+      )
+    end
+  end
+
+  def generate_items_recursively source
+     self.kind ||= source.kind if source.kind
+     source.items.each do |source_item|
+       new_item = self.items.create!(
+          :based_on_id => source_item.id  , #but this is already set to the column is it not?
+          :kind        => source_item.kind
+        )
+      new_item.generate_aspects_recursively source_item
+      new_item.generate_items_recursively   source_item
+    end
+  end
+
+  def generate_sub_items #called directly after create
+    #self is new item in its list
+    return unless example = find_pad
+    itms = example.items
+    return unless itms && itms.length > 0
+    generate_items_recursively example
+  end
+
+  def find_pad
+    return false unless kind
+    Card.find_by_kind(
+      kind                             ,
+      :order      => "updated_at DESC" ,
+      :limit      => 1                 ,
+      :conditions => ["pad IS ?", true]
+    ) || default_pad_item
   end
 
   def default_pad
@@ -165,44 +207,6 @@ class Card < ActiveRecord::Base
     end
   end
   
-  def follow_up_on_create
-    if   table
-      base_existing_items_on_this_column if table.columns.length == 1 #first column
-      generate_column_cells table # new columns are inherited from in each row
-    elsif list # new row inherits from list
-      # why not from its whole? i need at least the script from the context to be active!!! to do fg
-      generate_row_cells || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
-      generate_sub_items || inherit_from_kind           # it can inherit from its pad or its kind
-    end
-  end
-
-
-  def generate_items_recursively source_item
-    #none of this is used, so bullshit alert is at max
-#    dest_item = self
-#    dest_item.kind = source_item.kind if source_item.kind
-#    source_item.aspects.each do |source_aspect|
-#      dest_aspect = self.aspects.create!(
-#        :based_on_id => source_aspect.id,
-#        :kind        => source_aspect.kind
-#      )
-#      dest_aspect.generate_aspects_recursively source_aspect
-#      dest_aspect.generate_items_recursively   source_item
-#    end
-  end
-
-  def generate_aspects_recursively source_item
-    dest_item = self
-    dest_item.kind = source_item.kind if source_item.kind
-    source_item.aspects.each do |source_aspect|
-      dest_aspect = self.aspects.create!(
-        :based_on_id => source_aspect.id,
-        :kind        => source_aspect.kind
-      )
-      dest_aspect.generate_aspects_recursively source_aspect
-    end
-  end
-
 # def follow_up_on_update
 #   what has changed???
 # end
@@ -213,14 +217,6 @@ class Card < ActiveRecord::Base
     if this_sibling = siblings[0] # last one modified
       inherit_by_example this_sibling
     end
-  end
-
-  def inherit_from_kind
-    return #disabled
-    return false unless this_kind = kind && example =
-    Item.find_by_kind(this_kind, :order => "updated_at DESC", :limit => 1)
-   #inherit_by_example example
-    true
   end
 
 # Return the next higher item in the list.
@@ -798,13 +794,6 @@ class Card < ActiveRecord::Base
     return false unless example = self
     #inherit_by_example example
     true
-  end
-
-  def already_inherited prototype
-    self.aspects.each do |asp|
-      ac if asp.based_on_id == [prototype.id, prototype.based_on_id]
-    end
-    false
   end
 
   #def look_wide
