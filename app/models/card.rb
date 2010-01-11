@@ -61,6 +61,122 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  def inherit_from_pad
+    return false unless the_pad = find_pad
+    inherit_by_example the_pad
+    true
+  end
+
+  def find_pad
+    return false unless kind
+    Card.find_by_kind(
+      kind                             ,
+      :order      => "updated_at DESC" ,
+      :limit      => 1                 ,
+      :conditions => ["pad IS ?", true]
+    ) || default_pad_item
+  end
+
+  def inherit_by_example example
+    return false if already_inherited(example)
+    on_automatic do
+      generate_aspects_recursively example
+      generate_items_recursively  example
+    end
+  end
+
+  def generate_sub_items
+    #self is new item in its list
+    return false unless example = find_pad
+    on_automatic do
+      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
+      cols.each do |col|
+        this_new_aspect = self.aspects.create!(
+          :based_on_id => col.id,
+          :kind        => col.kind
+        )
+        this_new_aspect.generate_aspects_recursively col
+      end
+    end
+  end
+
+  def generate_row_cells
+    #self is new item in its list
+    cols = list.columns
+    return false unless cols && cols.length > 0 && (first_column = cols.shift)
+    on_automatic do
+      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
+      cols.each do |col|
+        this_new_aspect = self.aspects.create!(
+          :based_on_id => col.id,
+          :kind        => col.kind
+        )
+        this_new_aspect.generate_aspects_recursively col
+      end
+    end
+  end
+
+  def default_pad
+    nil # items[0]
+  end
+
+  def generate_column_cells this_table
+    # self is a new column
+    return unless dest_items = this_table.items    
+    if this_table.columns.length == 1 #special case for no pre-existing columns
+      on_automatic do
+#       if (base = self.table.based_on) &&
+#          (cols = base.columns)        &&
+#          (col = cols[0])
+#         update_attributes :based_on_id => col.id  ,
+#                           :kind        => col.kind
+        dest_items.each do |dest_item|
+          dest_item.update_attributes(:based_on_id => id  ,
+                                      :kind        => kind) if dest_item
+        end
+        this_table.columns.create! #1st column used for items, so introduce another
+      end
+    else
+      on_automatic do
+        dest_items.each do |dest_item|
+          dest_item.aspects.create!(
+            :based_on_id => self.id,
+            :kind        => self.kind
+          ) if dest_item
+        end
+      end
+    end
+  end
+
+  def base_existing_items_on_this_column #first column
+    # default dependence on the column at creation
+    # items can be made independent later
+    on_automatic do
+      return unless first_item = table.item[0]
+      return unless the_kind   = first_item.kind
+      write_attribute(kind, the_kind)
+      items.each do |item|
+        if item.kind == the_kind
+          item.based_on = self
+        else
+          unforeseen kind of item
+        end
+      end
+    end
+  end
+  
+  def follow_up_on_create
+    if   table
+      base_existing_items_on_this_column if table.columns.length == 1 #first column
+      generate_column_cells table # new columns are inherited from in each row
+    elsif list # new row inherits from list
+      # why not from its whole? i need at least the script from the context to be active!!! to do fg
+      generate_row_cells || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
+      generate_sub_items || inherit_from_kind           # it can inherit from its pad or its kind
+    end
+  end
+
+
   def generate_items_recursively source_item
     #none of this is used, so bullshit alert is at max
 #    dest_item = self
@@ -87,14 +203,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def inherit_by_example example
-    return false if already_inherited(example)
-    on_automatic do
-      generate_aspects_recursively example
-      generate_items_recursively  example
-    end
-  end
-
 # def follow_up_on_update
 #   what has changed???
 # end
@@ -113,43 +221,6 @@ class Card < ActiveRecord::Base
     Item.find_by_kind(this_kind, :order => "updated_at DESC", :limit => 1)
    #inherit_by_example example
     true
-  end
-
-  def inherit_from_pad
-    return false unless this_kind = kind && pad =
-      Item.find_by_kind(
-        this_kind                        ,
-        :order      => "updated_at DESC" ,
-        :limit      => 1                 ,
-        :conditions => ["pad IS ?", true]
-      )
-   #inherit_by_example pad
-    true
-  end
-
-  def follow_up_on_create
-    if    table #new column: an aspect is inserted in each item of the table
-      if table.columns.length == 1 then #first column
-        on_automatic do
-          example = table.items[0]
-          k = example.kind
-          self.kind = k
-          self.save
-          items.each do |item|
-            if item.kind == k
-              item.based_on = self
-            else
-              crash
-            end
-          end
-        end
-      end
-      generate_column_dependents table # new columns are inherited from in each row
-    elsif list            # new row inherits from list
-      # why not from its whole? i need at least the script from the context to be active!!! to do fg
-      inherit_from_columns(list) || inherit_from_siblings(list) # it can inherit from the columns,or from its siblings
-      inherit_from_pad           || inherit_from_kind           # it can inherit from its kind
-    end
   end
 
 # Return the next higher item in the list.
@@ -712,50 +783,6 @@ class Card < ActiveRecord::Base
     context_id || id
   end
 
-  def inherit_from_columns this_list
-    #self is new item
-    cols = this_list.columns
-    return false unless cols && cols.length > 0 && (first_column = cols.shift)
-    on_automatic do
-      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
-      cols.each do |col|
-        this_new_aspect = self.aspects.create!(
-          :based_on_id => col.id,
-          :kind        => col.kind
-        )
-        this_new_aspect.generate_aspects_recursively col
-      end
-    end
-  end
-
-  def generate_column_dependents this_table
-    # self is a new column
-    return unless dest_items = this_table.items    
-    if this_table.columns.length == 1 #special case for no pre-existing columns
-      on_automatic do
-#       if (base base a changé = self.table.based_on) &&
-#          (cols = base.columns)        &&
-#          (col = cols[0])
-#         update_attributes :based_on_id => col.id  ,
-#                           :kind        => col.kind
-        dest_items.each do |dest_item|
-          dest_item.update_attributes(:based_on_id => id  ,
-                                      :kind        => kind) if dest_item
-        end
-        generic_row = this_table.columns.create!
-      end
-    else
-      on_automatic do
-        dest_items.each do |dest_item|
-          dest_item.aspects.create!(
-            :based_on_id => self.id,
-            :kind        => self.kind
-          ) if dest_item
-        end
-      end
-    end
-  end
-
   def auto_view
     case self.view
     when "list", "paper", "slide", "table", "page", "report", "tree"
@@ -823,24 +850,24 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def on_automatic thread_name = "on automatic", &block
-    self.class.on_automatic thread_name, &block
-  end
-
-  def self.on_automatic thread_name = "on automatic"
-    raise "Must pass block to yield to" unless block_given?
-    Thread.current[thread_name] = true
-    yield
-  ensure
-    Thread.current[thread_name] = false
+  def      on_automatic? thread_name = "on automatic"
+    self.class.on_automatic? thread_name
   end
 
   def self.on_automatic? thread_name = "on automatic"
     Thread.current[thread_name]
   end
 
-  def      on_automatic? thread_name = "on automatic"
-    self.class.on_automatic? thread_name
+  def      on_automatic  thread_name = "on automatic", &block
+    self.class.on_automatic thread_name, &block
+  end
+
+  def self.on_automatic  thread_name = "on automatic"
+    raise "Must pass block to yield to" unless block_given?
+    Thread.current[thread_name] = true
+    yield
+  ensure
+    Thread.current[thread_name] = false
   end
 
   def find_deep_aspects
