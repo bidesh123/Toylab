@@ -31,12 +31,6 @@
   </table>
 </def>
 
-<def tag="script-editor-toggle">
-  <div class="tool" if="&can_edit?(:script)">
-    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
-  </div>
-</def>
-
 <def tag="card-number-editor">
   <if test="&this.context_id">
     <if       test="&this.whole_id"><editor:whole_position /></if>

@@ -1,3 +1,40 @@
+td.aspect-cell {
+  border-top:    0px solid blue;
+  border-right:  0px solid blue;
+  border-bottom: 0px solid blue;
+  border-left:   0px solid blue;
+  padding-top:   0px;
+  vertical-align:top;
+}
+
+td.core {
+    border-top:    0px solid orange;
+    border-bottom: 1px solid #eee;
+    border-left:   0px solid orange;
+    border-right:  0px solid orange;
+}
+
+.aspects-row td.core {
+    border-top:    0px solid fuchsia;
+    border-bottom: 1px solid #eee;
+    border-left:   0px solid fuchsia;
+    border-right:  0px solid fuchsia;
+}
+
+td.item-cell {
+  border-left: 1.62em solid white;
+  padding-left: 0px;
+  padding-top: 12px;
+}
+
+table.card.inner {
+    border-top:    0px solid red;
+    border-bottom: 0px solid red;
+    border-left:   0px solid red;
+    border-right:  0px solid red;
+    padding-left:  0px;
+}
+
 .slide .card-body {font-size: .618em;}
 
 .slide .slide-nav {font-size: 12pt;}
@@ -125,28 +162,16 @@ td.item-cell.theme-green  table, td.aspect-cell.theme-green  td.core{background-
 td.item-cell.theme-purple table, td.aspect-cell.theme-purple td.core{background-color:#c9f;}
 
 
-td.body-cell div.card-body           { padding-top:.426em }
-td.body-cell div.card-body tiny-gray { padding-top:0 }
+td.body-cell div.card-body           { padding-top:.236em; }
+td.body-cell div.card-body tiny-gray { padding-top:0; }
 
 
 
 .kind-cell .tiny-gray:hover, .body-cell .tiny-gray:hover {
   color: #9cf;
 }
-table.core  {border:1px solid white;}
 
-table.card {border:1px 1px 1px 1px solid transparent;}
-
-td.aspect-cell {
-  border-top: .382em solid #eee;padding-top: .236em;
-}
-td.aspect-cell{vertical-align:top;}
-
-td.item-cell {
-  border-left: .382em solid #eee;
-  padding-left: .382em;
-  padding-top: .618em;
-}
+table.card {border:1px 1px 1px 1px solid transparent; }
 
 body.show-page input.add-aspect {margin-left:1.617em;}
 body.show-page .inner {font-size:1em;}
@@ -192,7 +217,8 @@ ul.sub-pitch li {font-size:62%;}
 /* Suites */
 /* list, outline, tree */
 td.body-cell {font-size:61.8%;}
-div.slide, div.card-body{margin-top:.62em;}
+div.slide {margin-top:.618em;}
+div.card-body{margin-top:.00em;}
 td.right-controls, tr.core-controls{font-size:12pt;background: #9cf}
 td.right-controls a, tr.core-controls a, .drag-handle {color:white;}
 td.right-controls a:hover, tr.core-controls a:hover, .drag-handle:hover{color:#f9c;}

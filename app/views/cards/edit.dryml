@@ -7,9 +7,9 @@
 <def tag="core-right-controls-td">
   <td class="right-controls" rowspan="3" style="display:none">
     <reveal-aspect-or-item which="aspects"/>
-    <script-editor-toggle/>
-    <add-aspect />
+    <script-editor-toggle />
     <card-id />
+    <add-aspect />
   </td>
 </def>
 
@@ -41,12 +41,6 @@
       <spacer-cell />
     </tr>
   </table>
-</def>
-
-<def tag="script-editor-toggle">
-  <div class="tool" if="&can_edit?(:script)">
-    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
-  </div>
 </def>
 
 <def tag="card-number-editor">

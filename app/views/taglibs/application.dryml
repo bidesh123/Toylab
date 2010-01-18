@@ -4,6 +4,12 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="script-editor-toggle">
+  <span class="tool" if="&can_edit?(:script)">
+    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
+  </span>
+</def>
+
 <def tag="out-slide">
   <% the_item = this.list %>
   <a action="slide" with="&the_item" if="&the_item" class="slide-nav">context</a>
@@ -21,7 +27,11 @@
 </def>
 
 <def tag="paper-numbering">
-  <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>
+  <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>&nbsp;
+</def>
+
+<def tag="simple-numbering">
+  <%= Thread.current[:numbering][-1].to_s %>&nbsp;
 </def>
 
 <def tag="core-main-row">
@@ -69,7 +79,7 @@
        ["Add a row below this one",
         "Add row"]
     %>
-    <add-item-or-row-form if="&this.items.count == 0"
+    <add-item-or-row-form if="&this.list.items.count == this.list_position"
        element="&element"
        label="&label"
        tooltip="&tooltip"
@@ -81,7 +91,7 @@
 <def tag="add-item-or-row-form" >
   <%  style = "add-#{attributes[:element]}" %>
   <%  submit_style = "toy-nav tooltip #{style}"  %>
-  <form if="&this && this.items.count == 0 || mainly_tabular_view"
+  <form
         class="&style"
         with="&Card.new(:list_id => attributes[:collection_id],
                         :kind    => attributes[:item_kind] || ''
@@ -200,6 +210,7 @@
           /><editor:theme
           /><if test="&can_edit? :pad"><editor:pad/>Pad</if
            ><editor:access if="&can_edit? :access"
+          /><reveal-aspect-or-item which="items" with="&this"
           /><body-toggle   if="&scope.deep[:action] != 'list'"
           /><trash
           /></td>
@@ -580,7 +591,7 @@
 
 <def tag="body-toggle">
   <div class="tool">
-    <%= cid = dom_id(this, :body_cell); link_to_function("Toggle Body", "$(#{cid.to_json}).toggle()") %>
+    <%= cid = dom_id(this, :body_row); link_to_function("Toggle Body", "$(#{cid.to_json}).toggle()") %>
   </div>
 </def>
 
@@ -676,17 +687,23 @@
   <tr class="name">
     <%  name_style="name-cell #{this.theme_class}" %>
     <td class="#{name_style}">
-      <paper-numbering />&nbsp<editor:name blank-message="&this.blank_name"/>
+      <if test="&params[:action] == 'paper'">
+          <paper-numbering if="&this.list"/>
+      </if>
+      <if test="&params[:action] == 'list'">
+          <simple-numbering if="&this.list"/>
+      </if>
+      <editor:name blank-message="&this.blank_name"/>
     </td>
     <empty-cell if="&!scope.deep[:no_aspects]" />
   </tr>
 </def>
 
 <def tag="core-body-row">
-  <tr class="body">
-    <%  body_style = "body-cell #{this.theme_class}"
-        display_style = this.body ? "inherit" : "none"  %>
-    <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>" style="display:<%=display_style%>">
+  <%  body_style = "body-cell #{this.theme_class}"
+      display_style = this.body ? "inherit" : "none" %>
+  <tr   class="body body-row" id="<%= dom_id(this, :body_row ) %>" style="display:<%=display_style%>" >
+    <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>">
       <if test="&this.body ">
         <editor:body                   blank-message="A" />
       </if>

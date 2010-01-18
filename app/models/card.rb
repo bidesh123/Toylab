@@ -114,10 +114,10 @@ class Card < ActiveRecord::Base
     inherit_by_example example
   end
 
-  def generate_columns source #called directly after create
+  def generate_columns #called directly after create
     #self is new item in a list
-    return unless example = find_pad
-    cols = example.cols
+    return unless source = find_pad
+    cols = source.columns
     return unless cols && cols.length > 0
     self.kind ||= source.kind if source.kind
     source.columns.each do |source_column|
@@ -154,8 +154,8 @@ class Card < ActiveRecord::Base
       kind                             ,
       :order      => "updated_at DESC" ,
       :limit      => 1                 ,
-      :conditions => ["pad IS ?", true]
-    ) || default_pad_item
+      :conditions => ["pad = ? AND (kind = '#{kind}' OR kind = '' OR kind = NULL)", true]
+    ) || default_pad
   end
 
   def default_pad
@@ -194,7 +194,7 @@ class Card < ActiveRecord::Base
     # default dependence on the column at creation
     # items can be made independent later
     on_automatic do
-      return unless first_item = table.item[0]
+      return unless first_item = table.items[0]
       return unless the_kind   = first_item.kind
       write_attribute(kind, the_kind)
       items.each do |item|
@@ -897,7 +897,7 @@ class Card < ActiveRecord::Base
   end
 
   def blank_name
-    kind.blank? ? Card.blank_name : "Empty #{kind}"
+    kind.blank? ? Card.blank_name : "..." || "Empty #{kind}"
   end
 
   def long_reference_name
