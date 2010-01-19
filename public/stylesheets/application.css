@@ -9,11 +9,11 @@ td.aspect-cell {
 }
 
 td.item-cell {
-  border-left: .618em solid #f7f7f7;
-  padding-left: 2px;
+  border-left: 2.6em solid transparent;
+  padding-left: .236em;
   border-bottom: 1px solid #fc9;
-  padding-top: .236em;
-  padding-bottom: .382em;
+  padding-top: .382em;
+  padding-bottom: .618em;
 }
 
 table.card.inner tr.self-and-aspects-row td.coreooooooo{
