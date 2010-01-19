@@ -1,38 +1,59 @@
 td.aspect-cell {
-  border-top:    0px solid blue;
-  border-right:  0px solid blue;
+  border-top:    .618em solid #f7f7f7;
+  border-right : 0px solid blue;
   border-bottom: 0px solid blue;
-  border-left:   0px solid blue;
+  border-left:   1px solid #ccc;
+  padding-left:   1px;
   padding-top:   0px;
   vertical-align:top;
 }
 
-td.core {
-    border-top:    0px solid orange;
-    border-bottom: 1px solid #eee;
-    border-left:   0px solid orange;
-    border-right:  0px solid orange;
-}
-
-.aspects-row td.core {
-    border-top:    0px solid fuchsia;
-    border-bottom: 1px solid #eee;
-    border-left:   0px solid fuchsia;
-    border-right:  0px solid fuchsia;
-}
-
 td.item-cell {
-  border-left: 1.62em solid white;
-  padding-left: 0px;
-  padding-top: 12px;
+  border-left: .618em solid #f7f7f7;
+  padding-left: 2px;
+  border-bottom: 1px solid #fc9;
+  padding-top: .236em;
+  padding-bottom: .382em;
 }
 
-table.card.inner {
+table.card.inner tr.self-and-aspects-row td.coreooooooo{
+    border-left: 0em solid #fc9;
+}
+
+table.card.inner tr.self-and-aspects-row td.coreoooo{
+    border-left: 0em solid #fc9;
+}
+
+table.card.inneroooo {
     border-top:    0px solid red;
+    margin-top:    0px;
     border-bottom: 0px solid red;
     border-left:   0px solid red;
     border-right:  0px solid red;
     padding-left:  0px;
+}
+
+.aspects-row table.card.inneroooo {
+    border-top:    0px solid blue;
+    margin-top:    0px;
+    border-bottom: 0px solid blue;
+    border-left:   0px solid blue;
+    border-right:  0px solid blue;
+    padding-left:  0px;
+}
+
+td.coreoooo {
+    border-top:    0px solid orange;
+    border-bottom: 0px solid orange;
+    border-left:   0px solid orange;
+    border-right:  0px solid orange;
+}
+
+.aspects-row td.coreoooo {
+    border-top:    0px solid fuchsia;
+    border-bottom: 0px solid #eee;
+    border-left:   0px solid fuchsia;
+    border-right:  0px solid fuchsia;
 }
 
 .slide .card-body {font-size: .618em;}
