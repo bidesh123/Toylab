@@ -1,7 +1,7 @@
 <toy-edit />
 
 <def tag="card" for="Card">
-  <hierarchical-card />
+  <hierarchical-card tree-view/>
 </def>
 
 <def tag="core-right-controls-td">
@@ -22,8 +22,8 @@
       </content-header:>
       <content-body:>
         <rails-authenticity-token />
-<%      Card.paper_numbering_reset %>
-        <card first />
+<%      Card.paper_numbering_reset %>reset in toy edit
+        <card first tree-view />
       </content-body:  >
       <aside:          >
         <google />

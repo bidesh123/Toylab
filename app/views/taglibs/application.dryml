@@ -4,6 +4,28 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="card" for="Card">
+  reset in card
+  <%  Card.paper_numbering_reset %>
+  <hierarchical-card />
+</def>
+
+<def tag="list-row">
+  <tr class="list-row" if="&this.items">
+<%        Card.paper_numbering_push      %>
+    <td class="list-row" colspan="2">
+      <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="list-rows" id="&table_dom_id" if="&this.items">
+        <repeat with="&this.items">
+<%        Card.paper_numbering_increment %>
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+<%        Card.paper_numbering_pop       %>
+  </tr>
+</def>
+
 <def tag="script-editor-toggle">
   <span class="tool" if="&can_edit?(:script)">
     <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
@@ -105,48 +127,34 @@
 </def>
 
 <def tag="add-item">
-  <% element, collection =
-       mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-  %>
-
   <if test="&this">
-    <%
-       inner = this.id == @card.id ?  "" : "inner "
-       article = element == 'item' || inner > '' ? 'an' : 'a'
-       label, tooltip = if (number_of_items = this.items.count) > 0
-         ["Add #{article} #{inner}#{element}",
-         "Add another #{element} to #{collection} #{this.reference_name},
-          below the following #{this.items.count}"]
-       else
-         ["Start #{collection}",
-         "Add a first #{element} to #{collection} #{this.reference_name}"]
-       end
-     %>
-    <add-item-or-row-form if="&mainly_tabular_view || number_of_items == 0"
-       element="&element"
-       label="&label"
-       tooltip="&tooltip"
-       collection-id="&this.id"
-       item-kind="&(this.items.count == 0) ? element : ''"
-     />
+<%  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    inner = this.id == @card.id ?  "" : "inner "
+    article = element == 'item' || inner > '' ? 'an' : 'a'
+%>
+    <if test="&(number_of_items = this.items.count) == 0">
+ <%   label, tooltip =
+      ["Start #{collection}",
+       "Add a first #{element} to #{collection} #{this.reference_name}"]
+ %>
+      <add-item-or-row-form if="&mainly_tabular_view"
+        element="&element"
+        label="&label"
+        tooltip="&tooltip"
+        collection-id="&this.id"
+        item-kind="&(this.items.count == 0) ? element : ''"
+      />
+    </if>
+    <else>
+ <%   label, tooltip =
+        ["Add #{article} #{inner}#{element}",
+        "Add another #{element} to #{collection} #{this.reference_name},
+         below the following #{this.items.count}"]
+ %>
+    </else>
+    <add-row if="&this.list && this.list_id != @card.list_id"/>
   </if>
-  <add-row if="&this.list && this.list_id != @card.list_id"/>
-</def>
-
-<def tag="list-row">
-  <tr class="list-row" if="&this.items">
-<%        Card.paper_numbering_push      %>
-    <td class="list-row" colspan="2">
-      <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
-      <table class="list-rows" id="&table_dom_id" if="&this.items">
-        <repeat with="&this.items">
-<%        Card.paper_numbering_increment %>
-          <item-row />
-        </repeat>
-      </table>
-    </td>
-<%        Card.paper_numbering_pop       %>
-  </tr>
 </def>
 
 <def tag="drag-handle">
@@ -662,13 +670,8 @@
   </table>
 </def>
 
-<def tag="card" for="Card">
-  <%  Card.paper_numbering_reset %>
-  <hierarchical-card />
-</def>
-
 <def tag="hierarchical-card">
-  <table class="card first-card drop-target">
+  <table class="card first-card drop-target" merge-attrs>
     <self-and-aspects-row />
     <list-row />
   </table>
