@@ -155,6 +155,7 @@
     </else>
     <add-row if="&this.list && this.list_id != @card.list_id"/>
   </if>
+  <else>nothin to add an item to</else>
 </def>
 
 <def tag="drag-handle">
@@ -567,6 +568,33 @@
       <slide-view  />
     </ul>
   </div>
+</def>
+
+<def tag="pads">
+  <div class="pads">
+    <ul class="pad-nav">Current pad
+ <%= $CURRENT_PAD %>
+      <no-pad />
+      <repeat with="&this.all_pads">
+        <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
+        <li class="<%=li_style%>"><%=
+          link_to(
+            this.kind,
+            url_for(:action => "set_pad", :id => this.id )
+            )
+        %></li>
+        <%= this.id %>
+      </repeat>
+    </ul>
+  </div>
+</def>
+
+<def tag="no-pad">
+  <li class="pad-link"><%= link_to "none", url_for(:action => "set_pad")  %></li>
+</def>
+
+<def tag="page-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("text", url_for(:action => "page" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="page-view" attrs="off">

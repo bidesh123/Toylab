@@ -10,10 +10,16 @@ class CardsController < ApplicationController
   show_action :tree
   show_action :paper
   show_action :slide
+  show_action :new_pad
   show_action :list
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
+
+  def set_pad    
+    $CURRENT_PAD = params[:new_pad]
+    redirect_to :back
+  end
 
   def show
     hobo_show do
@@ -97,7 +103,7 @@ class CardsController < ApplicationController
     end
   end
 
-  def auto_kind
+  def auto_kind #???
     # NOTE: To remove LOWER(name), remove the SQL condition and the 2nd Array element ====================================
     @cards = Card.all(:conditions => [
                       "LOWER(kind) LIKE ? AND LOWER(name) = ?",
@@ -106,7 +112,7 @@ class CardsController < ApplicationController
     render :action => :auto
   end
 
-  def auto_name
+  def auto_name #???
     @cards = Card.all(:conditions => [
                       "LOWER(name) LIKE ? AND LOWER(kind) = ?",
                       "%#{params[:q].to_s.downcase}%",

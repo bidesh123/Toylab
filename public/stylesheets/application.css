@@ -128,7 +128,7 @@ html.page-view div.controls {
 div.context ul, ul.view-nav {
     padding-top:.618em;
 }
-div.views {
+div.views, div.pads {
     padding-bottom:.618em;
 }
 
@@ -385,7 +385,7 @@ ul.account-nav, div.search {
     float:right;
 }
 
-ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.context li, ul.account-nav li {
+ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.pads li, div.context li, ul.account-nav li {
     display:inline;
 }
 
@@ -393,7 +393,7 @@ li.nav-item, ul.main-nav li, li.dev-user-changer, div.search {
     margin-right: 1em;
 }
 
-div.views li, div.context li {
+div.views li, div.pads li, div.context li {
     margin-left: 1em;
 }
 

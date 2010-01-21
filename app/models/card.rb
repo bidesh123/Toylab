@@ -61,6 +61,10 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  def current_pad
+    $CURRENT_PAD || "none"
+  end
+
   def inherit_by_example example
     return unless example
     on_automatic do
@@ -148,10 +152,27 @@ class Card < ActiveRecord::Base
     generate_items_recursively example
   end
 
-  def find_pad
+  def all_pads
+    self.class.all_pads
+  end
+
+  def self.all_pads
+    pad_cards = self.find_all_by_pad(true,
+      :order => "updated_at DESC",
+      :conditions => ["kind > ?", "''"]) || []
+    pad_cards.map!{|pad_card| pad_card.kind}
+    pad_cards.uniq.sort.map{ |kind| self.find_pad kind}
+  end
+
+def find_pad
     return false unless kind
-    Card.find_by_kind(
-      kind                             ,
+    self.class.find_pad kind
+  end
+
+  def self.find_pad kind
+    return false unless kind
+    self.find_by_kind(
+      kind                                ,
       :order      => "updated_at DESC" ,
       :limit      => 1                 ,
       :conditions => ["pad = ? AND (kind = '#{kind}' OR kind = '' OR kind = NULL)", true]
@@ -582,7 +603,7 @@ class Card < ActiveRecord::Base
   end
 
   def self.toy reference
-    Card.find(           :first, :conditions => [
+    Card.find(        :first, :conditions => [
                   "owner_id = ? and name      = ?",
       User.administrator_id     ,   reference
     ])

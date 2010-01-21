@@ -18,11 +18,12 @@
     <show-page>
       <content-header:>
         <views />
+        <pads />
         <context />
       </content-header:>
       <content-body:>
         <rails-authenticity-token />
-<%      Card.paper_numbering_reset %>reset in toy edit
+<%      Card.paper_numbering_reset #tree only%>
         <card first tree-view />
       </content-body:  >
       <aside:          >
