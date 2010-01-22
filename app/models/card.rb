@@ -61,8 +61,18 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
-  def current_pad
-    $CURRENT_PAD || "none"
+  def local_pads
+    return [] unless list
+    list.items.map{|item| item.recursive_kind}.uniq
+  end
+      
+  def pertinent_pads
+    [self.class.current_pad].concat local_pads
+  end
+      
+  def self.current_pad
+    return unless $CURRENT_PAD && current = self.find($CURRENT_PAD)
+    current.kind unless (["", "none"].include? current.kind)
   end
 
   def inherit_by_example example
@@ -179,7 +189,7 @@ def find_pad
     ) || default_pad
   end
 
-  def default_pad
+  def self.default_pad
     nil # items[0]
   end
 
