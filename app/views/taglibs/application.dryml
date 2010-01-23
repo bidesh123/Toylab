@@ -126,9 +126,7 @@
     list_id = this.list.id
     the_kind = this.kind
     the_pad = this.class.current_pad%>
-    pertinent_pads* <%= this.pertinent_pads.join '-'%><br /><br />
     <repeat with="&this.pertinent_pads">
-    this: <%= this.to_s%><br />
 <%    tooltip, label = [
         "Add a #{this} row below this one",
         "Add #{this} row"]
