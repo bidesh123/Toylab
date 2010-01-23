@@ -60,7 +60,12 @@
   <tr class="core-main-row"   >
     <%  kind_style="kind-cell #{this.theme_class}"%>
     <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
-      <kind-editor />
+      <if test="&this.id == (base = this.recursive_kind_base).id">
+        <kind-editor/>
+      </if>
+      <else>
+        <a kind with="&base"><view field="kind" /></a>
+      </else>
     </th>
     <else><empty-cell /></else>
     <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
@@ -111,38 +116,52 @@
 </def>
 
 <def tag="add-pad-row-buttons">
-  <if test="&this && list_id = this.list">
-<%  element, collection =
+  <if test="&this && this.list">
+<%  list_id = this.list
+    element, collection =
       mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    element = "#{this.class.current_pad} #{element}"
+    target_item = this
     last_item = this.list.items.count == this.list_position
-    list_id = this.list.id %>
+    list_id = this.list.id
+    the_kind = this.kind
+    the_pad = this.class.current_pad%>
+    pertinent_pads* <%= this.pertinent_pads.join '-'%><br /><br />
     <repeat with="&this.pertinent_pads">
+    this: <%= this.to_s%><br />
 <%    tooltip, label = [
         "Add a #{this} row below this one",
-        "Add #{this} row"] %>
-      <add-item-or-row-form if="&last_item"
-                            element="&element"
-                            label="&label"
-                            tooltip="&tooltip"
-                            collection-id="&list_id"
-                            pad="&this"
-                            item-kind="&element"
+        "Add #{this} row"]
+      no_pad  = ['', nil].include? this
+      no_kind = ['', 'item'].include? the_kind %>
+      <add-item-or-row-form with="&target_item"
+        unless="&no_kind && no_pad"
+        element="&element"
+        label="&label"
+        tooltip="&tooltip"
+        collection-id="&list_id"
+        pad="&this"
+        item-kind=""
       />
+      <br />
     </repeat>
   </if>
 </def>
 
 <def tag="add-item-or-row-form">
-<%    style = "add-#{attributes[:element]}"
-      submit_style = "toy-nav tooltip #{style}"  %>
-      <form
-        class="&style"
-        with="&Card.new(:list_id => attributes[:collection_id],
-                        :kind    => attributes[:item_kind] || ''
-      )">
+<%style = "add-#{attributes[:element]}"
+  submit_style = "toy-nav tooltip #{style}"  %>
+<% new_card = this.class.new(
+             :list_id  => attributes[:collection_id]      ,
+             :kind     => attributes[:item_kind]     || '')
+   if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
+     new_card.based_on =  pad_card
+   end
+%>
+  <form class="&style" with="&new_card">
     <submit label=                        "&attributes[:label]"
-            title="&attributes[:tooltip] || attributes[:label]"
-            class="&submit_style" />
+        title="&attributes[:tooltip] || attributes[:label]"
+        class="&submit_style" />
     <after-submit uri="#{request.request_uri}"/>
   </form>
 </def>
@@ -161,7 +180,7 @@
         tooltip="&tooltip"
         collection-id="&this.id"
         item-kind="&element"
-      />
+    />
   </if>
   <else>nothin to add an item to</else>
 </def>
@@ -808,7 +827,7 @@
     <core-name-row />
     <core-body-row if="&!scope.deep[:no_bodies ]"/>
     <core-script-row if="&this.viewable_by?(current_user, :script)" />
-    <core-bottom-controls-tr />
+    <core-bottom-controls-tr if="&false"/>
   </table>
 </def>
 

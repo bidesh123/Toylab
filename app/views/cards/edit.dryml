@@ -55,15 +55,16 @@
 
 
 <def tag="context-editors">
-  <editor:whole />
-  <editor:table />
-  <editor:list  />
+  aspect of <editor:whole />
+  column of <editor:table />
+  belongs to list <editor:list />
+  based on <a with="&this.based_on" if="&this.based_on"><view:kind /></a>
 </def>
 
 
 <def tag="card-id" >
   <div class="tool" if="&current_user.administrator?">Card <%= this.id   %></div>
-  <div class="tool" if="&current_user.administrator?"><card-number-editor/></div>
+  <div class="tool" if="&current_user.administrator?">Number <card-number-editor/></div>
   <div class="tool" if="&current_user.administrator?"><context-editors   /></div>
 </def>
 

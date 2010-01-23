@@ -63,7 +63,9 @@ class Card < ActiveRecord::Base
 
   def local_pads
     return [] unless list
-    list.items.map{|item| item.recursive_kind}.uniq
+    pads = list.items.map{|item| item.recursive_kind}.uniq
+    pads.delete 'item'
+    pads
   end
       
   def pertinent_pads
@@ -76,7 +78,7 @@ class Card < ActiveRecord::Base
   end
 
   def inherit_by_example example
-    return unless example
+    adadad; return unless example
     on_automatic do
       generate_aspects_recursively example
       generate_columns             example
@@ -84,12 +86,35 @@ class Card < ActiveRecord::Base
     end
   end
 
+  def inherit_dependents_from example
+    adadad; return unless example
+    on_automatic do
+      generate_dependents_recursively example
+    end
+  end
+
+  def generate_dependents source
+    return
+    source.aspects.each do |sub_source|
+      sub = self.aspects.create! :based_on_id => sub_source.id
+    end
+#   source.columns.each do |sub_source|
+#     sub = self.columns.create! :based_on_id => sub_source.id
+#   end
+    source.items.each do |sub_source|
+      sub = self.items.create! :based_on_id => sub_source.id
+    end
+    # sub.generate_dependents sub_source
+  end
+
   def follow_up_on_create
-    if   table
+    return
+    generate_dependents based_on if based_on
+ adadad;    if table
       base_existing_items_on_this_column if table.columns.length == 1 #first column
       generate_column_cells table # new columns are inherited from in each row
     elsif list # new row inherits from list
-      # why not from its whole? i need at least the script from the context to be active!!! to do fg
+      return
       generate_row_cells # it can inherit from the columns
       generate_columns   # it can inherit columns from a pad of its kind
       generate_sub_items # it can inherit items   from a pad of its kind
@@ -97,7 +122,7 @@ class Card < ActiveRecord::Base
   end
 
   def generate_row_cells
-    #self is a new item in a list
+    adadad;#self is a new item in a list
     cols = list.columns
     return false unless cols && cols.length > 0 && (first_column = cols.shift)
     on_automatic do
@@ -113,7 +138,7 @@ class Card < ActiveRecord::Base
   end
 
   def generate_aspects_recursively source
-    self.kind = source.kind if source.kind
+    adadadad; self.kind = source.kind if source.kind
     source.aspects.each do |source_aspect|
       sub_aspect = self.aspects.create!(
         :based_on_id => source_aspect.id,
@@ -124,13 +149,13 @@ class Card < ActiveRecord::Base
   end
 
   def inherit_from_kind
-    return unless example = find_pad
+    adadad; return unless example = find_pad
     inherit_by_example example
   end
 
   def generate_columns #called directly after create
     #self is new item in a list
-    return unless source = find_pad
+    adadad; return unless source = find_pad
     cols = source.columns
     return unless cols && cols.length > 0
     self.kind ||= source.kind if source.kind
@@ -143,7 +168,7 @@ class Card < ActiveRecord::Base
   end
 
   def generate_items_recursively source
-     self.kind ||= source.kind if source.kind
+     adadad; self.kind ||= source.kind if source.kind
      source.items.each do |source_item|
        new_item = self.items.create!(
           :based_on_id => source_item.id  , #but this is already set to the column is it not?
@@ -156,7 +181,7 @@ class Card < ActiveRecord::Base
 
   def generate_sub_items #called directly after create
     #self is new item in its list
-    return unless example = find_pad
+    adadad; return unless example = find_pad
     itms = example.items
     return unless itms && itms.length > 0
     generate_items_recursively example
@@ -174,7 +199,7 @@ class Card < ActiveRecord::Base
     pad_cards.uniq.sort.map{ |kind| self.find_pad kind}
   end
 
-def find_pad
+  def find_pad
     return false unless kind
     self.class.find_pad kind
   end
@@ -225,7 +250,7 @@ def find_pad
     # default dependence on the column at creation
     # items can be made independent later
     on_automatic do
-      return unless first_item = table.items[0]
+      adada ; return unless first_item = table.items[0]
       return unless the_kind   = first_item.kind
       write_attribute(kind, the_kind)
       items.each do |item|
@@ -491,9 +516,8 @@ def find_pad
   end
 
   def recursive_kind_base
-    b = based_on ? based_on : self
-    k = b.kind
-    return b if k && !k.strip.blank? || !based_on
+    return self if kind && !kind.strip.blank?
+    return self unless b = based_on
     b.recursive_kind_base
   end
 
