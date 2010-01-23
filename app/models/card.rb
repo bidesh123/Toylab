@@ -94,22 +94,27 @@ class Card < ActiveRecord::Base
   end
 
   def generate_dependents source
-    return
     source.aspects.each do |sub_source|
-      sub = self.aspects.create! :based_on_id => sub_source.id
+      source_base = if sub_source.kind then self.class.find_pad sub_source.kind end
+      source_base ||= sub_source.recursive_kind_base
+      sub = self.aspects.create! :based_on_id => source_base.id
+ #     sub.generate_dependents sub_source
     end
 #   source.columns.each do |sub_source|
 #     sub = self.columns.create! :based_on_id => sub_source.id
+#     sub.generate_dependents based_on sub_source
 #   end
     source.items.each do |sub_source|
-      sub = self.items.create! :based_on_id => sub_source.id
+      source_base = if sub_source.kind then self.class.find_pad sub_source.kind end
+      source_base ||= sub_source.recursive_kind_base
+      sub = self.items.create! :based_on_id => source_base.id
+ #     sub.generate_dependents sub_source
     end
-    # sub.generate_dependents sub_source
   end
 
   def follow_up_on_create
-    return
     generate_dependents based_on if based_on
+    return
  adadad;    if table
       base_existing_items_on_this_column if table.columns.length == 1 #first column
       generate_column_cells table # new columns are inherited from in each row
