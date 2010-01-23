@@ -132,16 +132,13 @@
         "Add #{this} row"]
       no_pad  = ['', nil].include? this
       no_kind = ['', 'item'].include? the_kind %>
-      <add-item-or-row-form with="&target_item"
-        unless="&no_kind && no_pad"
+      <add-item-or-row-form with="&target_item" unless="&no_kind && no_pad"
         element="&element"
         label="&label"
         tooltip="&tooltip"
         collection-id="&list_id"
         pad="&this"
-        item-kind=""
       />
-      <br />
     </repeat>
   </if>
 </def>
@@ -177,7 +174,6 @@
         label="&label"
         tooltip="&tooltip"
         collection-id="&this.id"
-        item-kind="&element"
     />
   </if>
   <else>nothin to add an item to</else>
@@ -187,18 +183,18 @@
   <if test="&this && selected_pad = this.class.current_pad">
 <%  element, collection =
       mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-    element = "#{selected_pad} #{element}"
     tooltip, label = [
-      "Start list with #{element.indefinite}",
-      "Start list with #{selected_pad.indefinite}"] %>
-    <add-item-or-row-form
+      "Start list with #{selected_pad.indefinite} #{element}",
+      "Start list with #{selected_pad}"]
+    no_pad = selected_pad.blank? %>
+    <add-item-or-row-form unless="&no_pad"
       element="&element"
       label="&label"
       tooltip="&tooltip"
       collection-id="&this.id"
-      item-kind="&selected_pad"
+      pad="&selected_pad"
     />
-  </if>
+</if>
 </def>
 
 <def tag="add-item">

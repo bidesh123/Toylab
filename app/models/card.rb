@@ -61,13 +61,32 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  def source_base source
+    r = if source.kind then self.class.find_pad source.kind end
+    r ||= source.recursive_kind_base
+    self.aspects.create! :based_on_id => r.id
+   end
+
+  def generate_dependents source
+    source.aspects.each do |sub_source|
+      self.aspects.create! :based_on_id => source_base(sub_source).id
+    end
+    source.items.each   do |sub_source|
+      self.items.create!   :based_on_id => source_base(sub_source).id
+    end
+  end
+
+  def follow_up_on_create
+    generate_dependents based_on if based_on
+  end
+
   def local_pads
     return [] unless list
     pads = list.items.map{|item| item.recursive_kind}.uniq
     pads.delete 'item'
     pads
   end
-      
+
   def pertinent_pads
     [self.class.current_pad].concat local_pads
   end
@@ -75,121 +94,6 @@ class Card < ActiveRecord::Base
   def self.current_pad
     return unless $CURRENT_PAD && current = self.find($CURRENT_PAD)
     current.kind unless (["", "none"].include? current.kind)
-  end
-
-  def inherit_by_example example
-    adadad; return unless example
-    on_automatic do
-      generate_aspects_recursively example
-      generate_columns             example
-      generate_items_recursively   example
-    end
-  end
-
-  def inherit_dependents_from example
-    adadad; return unless example
-    on_automatic do
-      generate_dependents_recursively example
-    end
-  end
-
-  def generate_dependents source
-    source.aspects.each do |sub_source|
-      source_base = if sub_source.kind then self.class.find_pad sub_source.kind end
-      source_base ||= sub_source.recursive_kind_base
-      sub = self.aspects.create! :based_on_id => source_base.id
- #     sub.generate_dependents sub_source
-    end
-#   source.columns.each do |sub_source|
-#     sub = self.columns.create! :based_on_id => sub_source.id
-#     sub.generate_dependents based_on sub_source
-#   end
-    source.items.each do |sub_source|
-      source_base = if sub_source.kind then self.class.find_pad sub_source.kind end
-      source_base ||= sub_source.recursive_kind_base
-      sub = self.items.create! :based_on_id => source_base.id
- #     sub.generate_dependents sub_source
-    end
-  end
-
-  def follow_up_on_create
-    generate_dependents based_on if based_on
-    return
- adadad;    if table
-      base_existing_items_on_this_column if table.columns.length == 1 #first column
-      generate_column_cells table # new columns are inherited from in each row
-    elsif list # new row inherits from list
-      return
-      generate_row_cells # it can inherit from the columns
-      generate_columns   # it can inherit columns from a pad of its kind
-      generate_sub_items # it can inherit items   from a pad of its kind
-    end
-  end
-
-  def generate_row_cells
-    adadad;#self is a new item in a list
-    cols = list.columns
-    return false unless cols && cols.length > 0 && (first_column = cols.shift)
-    on_automatic do
-      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
-      cols.each do |col|
-        this_new_aspect = self.aspects.create!(
-          :based_on_id => col.id,
-          :kind        => col.kind
-        )
-        this_new_aspect.generate_aspects_recursively col
-      end
-    end
-  end
-
-  def generate_aspects_recursively source
-    adadadad; self.kind = source.kind if source.kind
-    source.aspects.each do |source_aspect|
-      sub_aspect = self.aspects.create!(
-        :based_on_id => source_aspect.id,
-        :kind        => source_aspect.kind
-      )
-      sub_aspect.generate_aspects_recursively source_aspect
-    end
-  end
-
-  def inherit_from_kind
-    adadad; return unless example = find_pad
-    inherit_by_example example
-  end
-
-  def generate_columns #called directly after create
-    #self is new item in a list
-    adadad; return unless source = find_pad
-    cols = source.columns
-    return unless cols && cols.length > 0
-    self.kind ||= source.kind if source.kind
-    source.columns.each do |source_column|
-      self.columns.create!(
-        :based_on_id => source_column.based_on_id  ,
-        :kind        => source_column.kind
-      )
-    end
-  end
-
-  def generate_items_recursively source
-     adadad; self.kind ||= source.kind if source.kind
-     source.items.each do |source_item|
-       new_item = self.items.create!(
-          :based_on_id => source_item.id  , #but this is already set to the column is it not?
-          :kind        => source_item.kind
-        )
-      new_item.generate_aspects_recursively source_item
-      new_item.generate_items_recursively   source_item
-    end
-  end
-
-  def generate_sub_items #called directly after create
-    #self is new item in its list
-    adadad; return unless example = find_pad
-    itms = example.items
-    return unless itms && itms.length > 0
-    generate_items_recursively example
   end
 
   def all_pads
@@ -663,10 +567,6 @@ class Card < ActiveRecord::Base
      return first_item_down if first_item_down = (items || [nil])[0]
   end
   
-#  def itself
-#    @itself ||= self.class.find id
-#  end
-#
   def self.default_access
     "shared"
   end
@@ -676,7 +576,7 @@ class Card < ActiveRecord::Base
   end
 
   def self.blank_name
-    "Untitled"
+    "...."
   end
 
   def field x = :name
@@ -1312,5 +1212,106 @@ class Card < ActiveRecord::Base
     alias the its
   end
 
+
+#  def itself
+#    @itself ||= self.class.find id
+#  end
+#
+#    def follow_up_on_create
+# adadad;    if table
+#      base_existing_items_on_this_column if table.columns.length == 1 #first column
+#      generate_column_cells table # new columns are inherited from in each row
+#    elsif list # new row inherits from list
+#      return
+#      generate_row_cells # it can inherit from the columns
+#      generate_columns   # it can inherit columns from a pad of its kind
+#      generate_sub_items # it can inherit items   from a pad of its kind
+#    end
+#  end
+#
+#  def generate_row_cells
+#    adadad;#self is a new item in a list
+#    cols = list.columns
+#    return false unless cols && cols.length > 0 && (first_column = cols.shift)
+#    on_automatic do
+#      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
+#      cols.each do |col|
+#        this_new_aspect = self.aspects.create!(
+#          :based_on_id => col.id,
+#          :kind        => col.kind
+#        )
+#        this_new_aspect.generate_aspects_recursively col
+#      end
+#    end
+#  end
+#
+#  def generate_aspects_recursively source
+#    adadadad; self.kind = source.kind if source.kind
+#    source.aspects.each do |source_aspect|
+#      sub_aspect = self.aspects.create!(
+#        :based_on_id => source_aspect.id,
+#        :kind        => source_aspect.kind
+#      )
+#      sub_aspect.generate_aspects_recursively source_aspect
+#    end
+#  end
+#
+#  def inherit_from_kind
+#    adadad; return unless example = find_pad
+#    inherit_by_example example
+#  end
+#
+#  def generate_columns #called directly after create
+#    #self is new item in a list
+#    adadad; return unless source = find_pad
+#    cols = source.columns
+#    return unless cols && cols.length > 0
+#    self.kind ||= source.kind if source.kind
+#    source.columns.each do |source_column|
+#      self.columns.create!(
+#        :based_on_id => source_column.based_on_id  ,
+#        :kind        => source_column.kind
+#      )
+#    end
+#  end
+#
+#  def generate_items_recursively source
+#     adadad; self.kind ||= source.kind if source.kind
+#     source.items.each do |source_item|
+#       new_item = self.items.create!(
+#          :based_on_id => source_item.id  , #but this is already set to the column is it not?
+#          :kind        => source_item.kind
+#        )
+#      new_item.generate_aspects_recursively source_item
+#      new_item.generate_items_recursively   source_item
+#    end
+#  end
+#
+#  def generate_sub_items #called directly after create
+#    #self is new item in its list
+#    adadad; return unless example = find_pad
+#    itms = example.items
+#    return unless itms && itms.length > 0
+#    generate_items_recursively example
+#  end
+#
+#
+#
+#  def inherit_by_example example
+#    adadad; return unless example
+#    on_automatic do
+#      generate_aspects_recursively example
+#      generate_columns             example
+#      generate_items_recursively   example
+#    end
+#  end
+#
+#  def inherit_dependents_from example
+#    adadad; return unless example
+#    on_automatic do
+#      generate_dependents_recursively example
+#    end
+#  end
+#
 
 end

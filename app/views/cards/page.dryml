@@ -9,7 +9,7 @@
       <content-body: >
         <rails-authenticity-token/>
         <h1>
-          <editor:name blank-message="Untitled" />
+          <editor:name blank-message="Ontitled" />
         </h1>
         <p ><editor:body blank-message="Click for optional text here"/></p>
         <div param="controls">
