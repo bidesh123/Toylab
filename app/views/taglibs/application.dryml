@@ -827,7 +827,7 @@
     <core-name-row />
     <core-body-row if="&!scope.deep[:no_bodies ]"/>
     <core-script-row if="&this.viewable_by?(current_user, :script)" />
-    <core-bottom-controls-tr if="&false"/>
+    <core-bottom-controls-tr />
   </table>
 </def>
 
