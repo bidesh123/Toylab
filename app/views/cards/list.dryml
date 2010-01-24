@@ -34,20 +34,6 @@
   </if>
 </def>
 
-
-<def tag="context-editors">
-  <editor:whole />
-  <editor:table />
-  <editor:list  />
-</def>
-
-
-<def tag="card-id" >
-  <div class="tool" if="&current_user.administrator?">Card <%= this.id   %></div>
-  <div class="tool" if="&current_user.administrator?"><card-number-editor/></div>
-  <div class="tool" if="&current_user.administrator?"><context-editors   /></div>
-</def>
-
 <def tag="aspect-cell">
   <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
   <td class="#{klass}">

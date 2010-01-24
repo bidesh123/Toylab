@@ -64,7 +64,6 @@ class Card < ActiveRecord::Base
   def source_base source
     r = if source.kind then self.class.find_pad source.kind end
     r ||= source.recursive_kind_base
-    self.aspects.create! :based_on_id => r.id
    end
 
   def generate_dependents source

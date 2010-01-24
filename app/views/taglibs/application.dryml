@@ -4,99 +4,18 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
-<def tag="card" for="Card">
-  reset in card
-  <%  Card.paper_numbering_reset %>
-  <hierarchical-card />
+<def tag="card-id" >
+  <div class="tool" if="&current_user.administrator?"         >Card <%= this.id           %></div>
+  <div class="tool" if="&current_user.administrator?"         >Number <card-number-editor /></div>
+  <div class="tool" if="&false && current_user.administrator?"><context-editors           /></div>
 </def>
 
-<def tag="list-row">
-  <tr class="list-row" if="&this.items">
-<%        Card.paper_numbering_push      %>
-    <td class="list-row" colspan="2">
-      <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
-      <table class="list-rows" id="&table_dom_id" if="&this.items">
-        <repeat with="&this.items">
-<%        Card.paper_numbering_increment %>
-          <item-row />
-        </repeat>
-      </table>
-    </td>
-<%        Card.paper_numbering_pop       %>
-  </tr>
+<def tag="context-editors">
+  aspect of <editor:whole />
+  column of <editor:table />
+  belongs to list <editor:list />
+  based on <a with="&this.based_on" if="&this.based_on"><view:kind /></a>
 </def>
-
-<def tag="script-editor-toggle">
-  <span class="tool" if="&can_edit?(:script)">
-    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
-  </span>
-</def>
-
-<def tag="out-slide">
-  <% the_item = this.list %>
-  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">context</a>
-  <else>&nbsp;&nbsp;&nbsp;</else>
-</def>
-<def tag="next-slide">
-  <% the_item = this.higher_item %>
-  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">next</a>
-  <else>&nbsp;&nbsp;&nbsp;</else>
-</def>
-<def tag="prev-slide">
-  <% the_item = this.lower_item %>
-  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">prev</a>
-  <else>&nbsp;&nbsp;&nbsp;</else>
-</def>
-
-<def tag="paper-numbering">
-  <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>&nbsp;
-</def>
-
-<def tag="simple-numbering">
-  <%= Thread.current[:numbering][-1].to_s %>&nbsp;
-</def>
-
-<def tag="core-main-row">
-  <tr class="core-main-row"   >
-    <%  kind_style="kind-cell #{this.theme_class}"%>
-    <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
-      <if test="&this.id == (base = this.recursive_kind_base).id">
-        <kind-editor/>
-      </if>
-      <else>
-        <a kind with="&base"><view field="kind" /></a>
-      </else>
-    </th>
-    <else><empty-cell /></else>
-    <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
-    <else><td rowspan="3"></td></else>
-  </tr>
-</def>
-
-<def tag="self-and-aspects-row">
-  <tr class="self-and-aspects-row">
-    <td class="core">
-        <core />
-    </td>
-    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
-      <aspects-table />
-    </td>
-  </tr>
-</def>
-
-<def tag="self-and-aspects-row-edit">
-  <tr class="self-and-aspects-row">
-    <td class="core">
-        <core />
-    </td>
-    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
-      <aspects-table />
-    </td>
-  </tr>
-</def>
-
-
-<!-- view-page -->
 
 <def tag="add-row">
   <if test="&this && this.list">
@@ -213,6 +132,100 @@
     </if>
   </if>
 </def>
+
+<def tag="card" for="Card">
+  reset in card
+  <%  Card.paper_numbering_reset %>
+  <hierarchical-card />
+</def>
+
+<def tag="list-row">
+  <tr class="list-row" if="&this.items">
+<%        Card.paper_numbering_push      %>
+    <td class="list-row" colspan="2">
+      <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
+      <table class="list-rows" id="&table_dom_id" if="&this.items">
+        <repeat with="&this.items">
+<%        Card.paper_numbering_increment %>
+          <item-row />
+        </repeat>
+      </table>
+    </td>
+<%        Card.paper_numbering_pop       %>
+  </tr>
+</def>
+
+<def tag="script-editor-toggle">
+  <span class="tool" if="&can_edit?(:script)">
+    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
+  </span>
+</def>
+
+<def tag="out-slide">
+  <% the_item = this.list %>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">context</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+<def tag="next-slide">
+  <% the_item = this.higher_item %>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">next</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+<def tag="prev-slide">
+  <% the_item = this.lower_item %>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">prev</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+
+<def tag="paper-numbering">
+  <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>&nbsp;
+</def>
+
+<def tag="simple-numbering">
+  <%= Thread.current[:numbering][-1].to_s %>&nbsp;
+</def>
+
+<def tag="core-main-row">
+  <tr class="core-main-row"   >
+    <%  kind_style="kind-cell #{this.theme_class}"%>
+    <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
+      <if test="&this.id == (base = this.recursive_kind_base).id">
+        <kind-editor/>
+      </if>
+      <else>
+        <a kind with="&base"><view field="kind" /></a>
+      </else>
+    </th>
+    <else><empty-cell /></else>
+    <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
+    <else><td rowspan="3"></td></else>
+  </tr>
+</def>
+
+<def tag="self-and-aspects-row">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+        <core />
+    </td>
+    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
+      <aspects-table />
+    </td>
+  </tr>
+</def>
+
+<def tag="self-and-aspects-row-edit">
+  <tr class="self-and-aspects-row">
+    <td class="core">
+        <core />
+    </td>
+    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
+      <aspects-table />
+    </td>
+  </tr>
+</def>
+
+
+<!-- view-page -->
 
 <def tag="drag-handle">
   <% can_drag = can_edit?(this.horizontal? ? :kind : :name) %>
