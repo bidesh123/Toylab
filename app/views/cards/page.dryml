@@ -1,26 +1,26 @@
 <toy-page />
 
 <def tag="toy-page">
-    <show-page class="page-view">
-      <content-header:>
-        <views />
-        <context />
-      </content-header:>
-      <content-body: >
-        <rails-authenticity-token/>
-        <h1>
-          <editor:name blank-message="Ontitled" />
-        </h1>
-        <p ><editor:body blank-message="Click for optional text here"/></p>
-        <div param="controls">
-          <editor:access if="&can_edit? :access"/>
-          <trash redir="true"/>
-        </div>
-      </content-body:>
-     <aside:         >
-        <google                               />
-      </aside:         >
-    </show-page>
+  <show-page class="page-view">
+    <content-header:>
+      <views />
+      <context />
+    </content-header:>
+    <content-body:   >
+      <rails-authenticity-token         />
+      <h1>
+        <editor:name />
+      </h1>
+      <p><editor:body blank-message="A" /></p>
+      <div param="controls">
+        <editor:access if="&can_edit? :access" />
+        <trash redir="true" />
+      </div>
+    </content-body:>
+   <aside:            >
+      <google                           />
+    </aside:       >
+  </show-page>
 </def>
 
 <def tag="recursive-card">

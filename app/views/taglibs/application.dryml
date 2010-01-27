@@ -403,17 +403,20 @@
     <set-scoped flash-rendered="&false">
         <ajax-progress param/>
         <header class="page-header" param>
-          <div class="top-line">
+          <div class="top-line" if="&params[:more] != 'bare'">
             <main-nav current="&title" param/>
-            <account-nav if="&login_url(Hobo::User.default_user_model)" param/>
+            <account-nav if="&login_url(Hobo::User.default_user_model)" param />
           </div>
-          <div>
+          <div if="&params[:more] != 'bare'">
             <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
             <!-- <live-search param if="&defined_route? :site_search"/>-->
           </div>
         </header>
         <section with-flash-messages param="content"/>
-        <footer class="page-footer" param/>
+        <footer class="page-footer" param >
+                      <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
+
+        </footer>
         <page-scripts param/>
       </set-scoped>
     </body>
@@ -626,7 +629,7 @@
 </def>
 
 <def tag="views">
-  <div class="views">
+  <div class="views" if="&params[:more] != 'bare'"    >
     <ul class="view-nav">View as
       <page-view   />
       <list-view   />
@@ -640,7 +643,7 @@
 </def>
 
 <def tag="pads">
-  <div class="pads">
+  <div class="pads" if="&params[:more] != 'bare'" >
     <ul class="pad-nav">Current pad
       <no-pad />
       <repeat with="&this.all_pads">
