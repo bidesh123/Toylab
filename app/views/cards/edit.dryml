@@ -25,6 +25,12 @@
         <rails-authenticity-token />
 <%      Card.paper_numbering_reset #tree only %>
         <card first tree-view />
+          You use javascript buildLinks() to effectively create the following p
+          <!-- <p>
+          <a href="google.com"  class="c" target="tgt_frame" onClick="editpage()">google</a><br/>
+          <a href="yahoo.com"  class="c" target="tgt_frame" onClick="editpage()">yahoo</a><br/>
+          </p>
+          <iframe src="" height="150px" name="tgt_frame"></iframe> -->
       </content-body:  >
       <aside:          >
         <google />

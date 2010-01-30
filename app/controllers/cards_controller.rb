@@ -12,6 +12,7 @@ class CardsController < ApplicationController
   show_action :slide
   show_action :new_pad
   show_action :list
+  show_action :custom
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)

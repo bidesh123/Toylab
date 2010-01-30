@@ -11,7 +11,13 @@ class ApplicationController < ActionController::Base
   # See ActionController::Base for details 
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password"). 
-  # filter_parameter_logging :password
+  filter_parameter_logging :password
+end
+
+class String
+  def indefinite
+    (self =~ /^[aeiou]/i ? "an " : "a ") + self
+  end
 end
 
 class Array
@@ -35,21 +41,3 @@ class Array
   end
 end
 
-class String
-  def indefinite
-    (self =~ /^[aeiou]/i ? "an " : "a ") + self
-  end
-  def lengths
-    map { |el| (self[0].is_a? Array) ? el.length : 1 }
-  end
-  def rectangular!
-    maxi = lengths.max
-    each { |el| el[maxi - 1] ||= nil } if maxi > 0
-  end
-  def normalize_and_transpose
-    length == 0 ? [] : (Array.new rectangular!).transpose
-  end
-  def make_both_same_size! a
-    length == 0 ? [] : (Array.new rectangular!).transpose
-  end
-end
