@@ -84,7 +84,7 @@ class CardsController < ApplicationController
   def create
     hobo_create do
       if valid? then
-        if @card.list && @card.list.owner_is?(current_user)
+        if true || @card.list && @card.list.owner_is?(current_user)
         else
           if params[:after_submit].present? then
             uri = params[:after_submit]

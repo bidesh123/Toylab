@@ -10,7 +10,7 @@ class Card < ActiveRecord::Base
     view         enum_string(:view    , :none    , :custom ,
                              :page    , :slide  ,
                              :list    , :paper  , :tree,
-                             :table   , :report , :chart  )
+                             :table   , :report , :chart                     )
     access       enum_string(:access  ,
                              :private , :public , :shared  , :open  , :closed)
     theme        enum_string(:theme   ,
@@ -61,12 +61,17 @@ class Card < ActiveRecord::Base
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
 
+  def nature
+
+  end
+
   def source_base source
     r = if source.kind then self.class.find_pad source.kind end
     r ||= source.recursive_kind_base
    end
 
   def generate_dependents source
+    return unless source.is_a? Card
     source.aspects.each do |sub_source|
       self.aspects.create! :based_on_id => source_base(sub_source).id
     end
@@ -76,7 +81,7 @@ class Card < ActiveRecord::Base
   end
 
   def follow_up_on_create
-    generate_dependents based_on if based_on
+    generate_dependents based_on if based_on || nature
   end
 
   def local_pads
@@ -215,6 +220,14 @@ class Card < ActiveRecord::Base
     Thread.current[:numbering][-1] += 1
   end
 
+  def self.paper_numbering_list
+    Thread.current[:numbering]
+  end
+
+  def self.paper_numbering
+    Thread.current[:numbering].map{|x| x.to_s}.join "."
+  end
+
   def same_heading_stack?  desired, existing, deep, mode = :normal
     last_row = case mode
       when :partial
@@ -343,11 +356,11 @@ class Card < ActiveRecord::Base
 # build up columns
   def fit_into_existing_column deep, column_number
     cell_has_a_value = self.name && !self.name.strip.blank?
-    row, column = deep[:row], deep[:columns][:cells][column_number]
+    row, column = deep[:row],  deep[:columns][:cells][column_number]
     if list || !report?(deep) || cell_has_a_value || !column[row]
       column[row] ||= []
       column[row]  << self
-    end
+     end
   end
 # build up columns
   def add_a_first_column contexts, column, deep
@@ -763,16 +776,24 @@ class Card < ActiveRecord::Base
       deep = look_wider         contexts, deep, max_aspect_depth, 0
       deep[:row] += 1
     end
+    deep[:indents]   ||= []
+#    deep[:numberings] ||= []
+    deep[:indents   ][deep[:row]] = item_depth || 0
+#    deep[:numberings][deep[:row]] = self.class.paper_numbering_list || []
+    self.class.paper_numbering_push
     unless (item_depth += 1) >= max_item_depth
       items.each do |item|
+        self.class.paper_numbering_increment
         deep = item.look_deeper contexts, deep, max_item_depth, max_aspect_depth, item_depth
       end
     end
+    self.class.paper_numbering_pop
     item_depth -= 1
     deep
   end
 
   def look_deep action, max_item_depth = 9, max_aspect_depth = 9
+    self.class.paper_numbering_reset
     look_deeper \
       []                                , #no context yet
       {                                   #deep

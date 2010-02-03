@@ -63,8 +63,8 @@
   </div>
   <div param="controls">
     <table class="controls" ><tr class="controls">
-      <td                      ><add-item            /></td>
-      <td class="delete-button"><trash redir="true"  /></td>
+      <td                      ><start-any-list /><add-rows /></td>
+      <td class="delete-button"><trash redir="true"         /></td>
     </tr></table>
   </div>
 </def>

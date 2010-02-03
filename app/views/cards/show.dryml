@@ -200,9 +200,8 @@
   <add-item-row />
 </def>
 
-<def tag="items-rows">
-  <!-- &this is deep items, an array -->
-<% @list_depth ||= 0 %>
+<def tag="items-rows" doc="this: deep_items, an array">
+< % @list_depth ||= 0 % >
   <unless       test="&attributes['items_off'  ]">
     <tr>
       <item-cells if="&attributes['numbers_off']" merge-attrs />

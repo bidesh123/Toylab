@@ -1,9 +1,0 @@
-var innerDoc = window.frames["tgt_frame"].document;
-
-function editpage() {
-  alert(
-    window.frames["tgt_frame"].document.getElementById("Div2").innerHTML
-  );
-  alert(innerDoc.getElementById("Div2").innerHTML);
-}
-

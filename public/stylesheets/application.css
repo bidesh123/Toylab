@@ -1,3 +1,7 @@
+td.corner-controls{
+    vertical-align:top;}
+
+th.item-kind {font-size:1.618em;}
 th.kind-cell a {color: #9cf;}
 td.aspect-cell {
   border-top:    .618em solid #f7f7f7;

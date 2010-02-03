@@ -220,16 +220,15 @@
   <small><small param="default" /></small>
 </def>
 
-<def tag="items">
+<!--
+<def tag="items"> not used ??
   <table>
-    <items-rows with="&@deep_items" merge-attrs />
+    item-ro
   </table>
   <add-item-row />
 </def>
-
-<def tag="items-rows">
-  <!-- &this is deep items, an array -->
-<% @list_depth ||= 0 %>
+<def tag="items-rows" doc="this is deep items, an array">
+< % @list_depth ||= 0 % >
   <unless       test="&attributes['items_off'  ]">
     <tr>
       <item-cells if="&attributes['numbers_off']" merge-attrs />
@@ -243,6 +242,8 @@
     </tr>
   </unless>
 </def>
+
+-->
 
 <def tag="item-row">
   <tr>
