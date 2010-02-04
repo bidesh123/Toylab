@@ -4,6 +4,13 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="create-suite-button">
+  <set label="#{attributes[:label]}" />
+  <form class="new-suite" with="&Card.new_suite" >
+    <submit if class="new-suite" label="&label" />
+  </form>
+</def>
+
 <def tag="card-id" >
   <if test="current_user.administrator?">
     <div class="tool">
@@ -920,6 +927,7 @@
   <% #logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
   <% scope.deep[:indents] << [] %>
   <set indents    ="&scope.deep[:indents].reverse" />
+    <%= indents.join "-"    %>
     <% indent = indents.pop %>
   <tr repeat="&rows=scope.deep[:columns][:cells].normalize_and_transpose">
     <% indent = indents.pop - 1 %>
@@ -972,7 +980,7 @@
     <else>
       <editor:name blank-message="..."/>
     </else>
-    </if><else>
+  </if><else>
     &nbsp; <!-- to do: create button for first level aspects -->
   </else>
 </def>

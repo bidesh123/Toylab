@@ -13,7 +13,7 @@
 
 <def tag="pitch">
   <div class="pitch">
-    <div class="sub-pitch"><why-toy-office /></div>
+    <div class="sub-pitch"><why-toy-office if="&false"/></div>
     <toy-office-metaphor if="&false"/>
     <toy-office-uses     if="&false"/>
     <toy-office-how-to   if="&false"/>
@@ -23,13 +23,25 @@
 <def tag="home-nav">
   <div with="&current_user" class="sub-pitch">
     <ul class="sub-pitch pink" param>Get started
-        <li if="&signup_url" class="nav-item class-link" param="sign-up">Click <a href="/cards">suites</a> to start</li>
+        <li if="&signup_url" class="nav-item class-link" param="sign-up">
+          <create-suite-button label="Create your own office suite" />
+        </li>
       <unless test="&logged_in?">
         <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up</a> for more privileges</li>
         <li class='nav-item' param="log-in">Or just <a href="&login_url">Log in</a> if you're already signed up</li>
       </unless>
     </ul>
+    <see-suites />
   </div>
+</def>
+
+<def tag="see-suites">
+  <ul param="sub-pitch" class="orange">
+    See other toyoffice suites
+    <li if="&signup_url" class="nav-item class-link" param="sign-up">
+      Click <a href="/cards">suites</a> to see others
+    </li>
+  </ul>
 </def>
 
 <def tag="why-toy-office">

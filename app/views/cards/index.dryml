@@ -2,9 +2,7 @@
   <content-header:></content-header>
   <new_link:></new_link:>
   <content-body:>
-    <form class="new-suite" with="&Card.new_suite"  >
-      <submit if class="new-suite" label="Create your own office suite" />
-    </form>
+    <create-suite-button label="Create your own office suite" />
     <page-nav class="top-page-nav"/>
     <collection />
     <page-nav class="bottom-page-nav"/>
