@@ -477,9 +477,8 @@
           </div>
         </header>
         <section with-flash-messages param="content"/>
-        <footer class="page-footer" param >
-                      <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
-
+        <footer class="page-footer" if="&params[:controller]=='bare'" param >
+          <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
         </footer>
         <page-scripts param/>
       </set-scoped>
