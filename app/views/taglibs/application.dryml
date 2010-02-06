@@ -4,6 +4,15 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="card-number-editor">
+  <if test="&this.context_id">
+    <if       test="&this.whole_id"><editor:whole_position /></if>
+    <else><if test="&this.table_id"><editor:table_position /></if>
+    <else><if test="&this.list_id" ><editor:list_position  /></if>
+    </else></else>
+  </if>
+</def>
+
 <def tag="create-suite-button">
   <set label="#{attributes[:label]}" />
   <form class="new-suite" with="&Card.new_suite" >

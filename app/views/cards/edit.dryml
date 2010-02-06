@@ -57,15 +57,6 @@
   </table>
 </def>
 
-<def tag="card-number-editor">
-  <if test="&this.context_id">
-    <if       test="&this.whole_id"><editor:whole_position /></if>
-    <else><if test="&this.table_id"><editor:table_position /></if>
-    <else><if test="&this.list_id" ><editor:list_position  /></if>
-    </else></else>
-  </if>
-</def>
-
 <def tag="aspect-cell">
   <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
   <td class="#{klass}">
