@@ -32,13 +32,13 @@ function installAutocomplete(el, url, parentName) {
 var showDelay = 1.0;
 
 // Duration of the appear animation
-var appearDelay = 0.25;
+var showCardMenuDelay = 0.25;
 
 // Number of seconds before we trigger the fade animation
-var hideDelay = 0.5;
+var hideCardMenuDelay = 0.5;
 
 // Duration of the fade animation
-var fadeDelay = 2.0;
+var hideCardMenuDuration = 2.0;
 
 var hideShowEngine = {
   'mouseover': {
@@ -62,27 +62,27 @@ var hideShowEngine = {
       return 'hidden';
     },
     'showing':    function(context) {
-      context.delay(hideDelay, function() { context.transition("hideTimeout") });
+      context.delay(hideCardMenuDelay, function() { context.transition("hideTimeout") });
       return 'waitToHide';
     },
     'shown':      function(context) {
-      context.delay(hideDelay, function() { context.transition("hideTimeout") });
+      context.delay(hideCardMenuDelay, function() { context.transition("hideTimeout") });
       return 'waitToHide';
     },
   },
 
   'showTimeout': {
     'waitToShow': function(context) {
-      if(context.aspectControls) {new Effect.Appear(context.aspectControls, {duration: appearDelay})};
-      new Effect.Appear(context.coreControls,   {duration: appearDelay, afterFinish: function() { context.transition("showingDone"); }});
+      if(context.aspectControls) {new Effect.Slide(context.aspectControls, {duration: showCardMenuDelay})};
+      new Effect.Slide(context.coreControls,   {duration: SlideDelay, afterFinish: function() { context.transition("showingDone"); }});
       return 'showing';
     },
   },
 
   'hideTimeout': {
     'waitToHide': function(context) {
-      if(context.aspectControls) {new Effect.Fade(context.aspectControls, {duration: fadeDelay})};
-      new Effect.Fade(context.coreControls,   {duration: fadeDelay, afterFinish: function() { context.transition("hidingDone"); }});
+      if(context.aspectControls) {new Effect.Fade(context.aspectControls, {duration: hideCardMenuDuration})};
+      new Effect.Fade(context.coreControls,   {duration: hideCardMenuDuration, afterFinish: function() { context.transition("hidingDone"); }});
       return 'hiding';
     },
   },
