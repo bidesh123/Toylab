@@ -156,7 +156,7 @@
       collection-id="&this.id"
       pad="&selected_pad"
     />
-</if>
+  </if>
 </def>
 
 <def tag="add-inner-item-from-pad">
@@ -352,12 +352,12 @@
         />
       </td>
       <td class="bottom-controls"
-         ><start-any-list
+         ><start-any-list if="&true || this && this.items.count == 0"
         /><if test="&can_edit? :pad" ><editor:pad/>Pad</if
-         ><br
-        /><editor:theme
+         ><br if="&(this && this.items.count == 0 && can_create?(Card.new(:list_id => id)) || can_edit?(:pad))"
+        /><editor:theme  if="&can_edit? :theme"
         /><editor:access if="&can_edit? :access"
-        /><br
+        /><br if="&can_edit?(:theme) || can_edit?(:access)"
         /><reveal-aspect-or-item which="items" with="&this"
         /><body-toggle   if="&scope.deep[:action] != 'list'"
         /><show-card-inline
