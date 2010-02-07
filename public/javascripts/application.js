@@ -1,3 +1,7 @@
+var $j = jQuery.noConflict();
+
+window.onload = function(){ alert("welcome"); }
+
 function adjustRows (textarea) {
     if (document.all) {
         while (textarea.scrollHeight > textarea.clientHeight)
@@ -34,11 +38,11 @@ var showDelay = 1.0;
 // Duration of the appear animation
 var appearDelay = 0.25;
 
-// Number of seconds before we trigger the fade animation
-var hideDelay = 0.5;
+// Number of seconds before we trigger the hide animation
+var hideDelay = 2.5;
 
-// Duration of the fade animation
-var fadeDelay = 2.0;
+// Duration of the hide animation
+var hideDuration = 4.0;
 
 var hideShowEngine = {
   'mouseover': {
@@ -68,7 +72,7 @@ var hideShowEngine = {
     'shown':      function(context) {
       context.delay(hideDelay, function() { context.transition("hideTimeout") });
       return 'waitToHide';
-    },
+    }
   },
 
   'showTimeout': {
@@ -76,28 +80,38 @@ var hideShowEngine = {
       if(context.aspectControls) {new Effect.Appear(context.aspectControls, {duration: appearDelay})};
       new Effect.Appear(context.coreControls,   {duration: appearDelay, afterFinish: function() { context.transition("showingDone"); }});
       return 'showing';
-    },
+    }
   },
 
   'hideTimeout': {
     'waitToHide': function(context) {
-      if(context.aspectControls) {new Effect.Fade(context.aspectControls, {duration: fadeDelay})};
-      new Effect.Fade(context.coreControls,   {duration: fadeDelay, afterFinish: function() { context.transition("hidingDone"); }});
+      if(context.aspectControls) {
+        new     Effect.Parallel(
+          [ new Effect.BlindUp( context.aspectControls               ,
+            { duration: hideDuration                               } ) ,
+            new Effect.BlindUp( context.coreControls                 ,
+            { duration: hideDuration                               } ) ] ,
+          {   afterFinish:
+                function() {    context.transition("hidingDone");}   }   )
+      }
+      else {
+        new     Effect.SlideUp( context.coreControls                      )
+      };
       return 'hiding';
-    },
+    }
   },
 
   'showingDone': {
     'showing':    function(context) {
       return 'shown';
-    },
+    }
   },
 
   'hidingDone': {
     'hiding':     function(context) {
       return 'hidden';
-    },
-  },
+    }
+  }
 };
 
 Event.observe(window, "load", function() {

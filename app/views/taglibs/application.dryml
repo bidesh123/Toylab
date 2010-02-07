@@ -465,7 +465,7 @@
       </do>
 
       <do param="scripts">
-        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy"/>
+        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery"/>
         <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
         <do param="custom-scripts"/>
         <javascript param="application-javascript" name="application"/>
@@ -935,7 +935,7 @@
   <% #logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
   <% scope.deep[:indents] << [] %>
   <set indents    ="&scope.deep[:indents].reverse" />
-    <%= indents.join "-"    %>
+    <%#= indents.join "-"    %>
     <% indent = indents.pop %>
   <tr repeat="&rows=scope.deep[:columns][:cells].normalize_and_transpose">
     <% indent = indents.pop - 1 %>

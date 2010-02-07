@@ -1,7 +1,7 @@
 
 Element.addMethods({
  textNodes: function(element){
-                        alert(this.nodeName");
+                        alert(this.nodeName);
    return $A(this.childNodes).select( function(child){
        return this.nodeType == 3 || $.nodeName(this, "br");
    } );
