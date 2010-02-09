@@ -465,7 +465,7 @@
       </do>
 
       <do param="scripts">
-        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery"/>
+        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy"/>
         <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
         <do param="custom-scripts"/>
         <javascript param="application-javascript" name="application"/>
@@ -716,7 +716,7 @@
 </def>
 
 <def tag="pads">
-  <div class="pads" if="&params[:more] != 'bare'" >
+  <div class="pads" if="&false && params[:more] != 'bare'" >
     <ul class="pad-nav">Current pad
       <no-pad />
       <repeat with="&this.all_pads">
