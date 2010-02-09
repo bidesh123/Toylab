@@ -720,6 +720,7 @@
     <ul class="pad-nav">Current pad
       <no-pad />
       <repeat with="&this.all_pads">
+        <%=  $CURRENT_PAD.to_i %>
         <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
         <li class="<%=li_style%>"><%=
           link_to(

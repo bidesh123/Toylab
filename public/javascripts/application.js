@@ -1,37 +1,3 @@
-var $j = jQuery.noConflict();
-
-window.onload = function(){ alert("welcome"); }
-
-function adjustRows (textarea) {
-    if (document.all) {
-        while (textarea.scrollHeight > textarea.clientHeight)
-            textarea.rows++;
-            textarea.scrollTop = 0;
-        }
-    else if (textarea.rows) {
-        var lineBreaks = countLineBreaks(textarea.value);
-        var rows = parseInt(textarea.rows);
-        var wrap = textarea.getAttribute('wrap');
-        if (lineBreaks > rows)
-            textarea.rows = ++rows;
-        else if (wrap.toLowerCase() == 'soft' || wrap.toLowerCase() == 'hard') {
-            while (textarea.rows * textarea.cols <= textarea.value.length) {
-                textarea.rows = ++rows;
-            }
-        }
-    }
-}
-
-function installAutocomplete(el, url, parentName) {
-  var inplaceForm = $(el.id + "-inplaceeditor");
-  var inplaceFields = inplaceForm.select("input");
-  var inplaceField = inplaceFields[0];
-  var update = $("auto_completer");
-  var cardId = $(el).up(".core-unit").id;
-  var id = cardId.split("_").last();
-  new Ajax.Autocompleter(inplaceField, update, url, {method:'get', paramName: 'q', parameters: 'parent_id=' + id});
-};
-
 // Number of seconds before we trigger the appear animation
 var showDelay = 1.0;
 
@@ -43,6 +9,32 @@ var hideDelay = 2.5;
 
 // Duration of the hide animation
 var hideDuration = 4.0;
+
+/*
+var $j = jQuery.noConflict();
+$j(document).ready(function(){
+    alert("N'ajustez pas votre appareil");
+    $j("a").click(function(event) {
+        event.preventDefault()          ;
+        $j(this).animate( {
+            background: abc,
+            color: #000,
+            padding:100
+          }          ,
+          5000       ,
+          function() {
+          },
+          { duration: 'slow',
+            complete: function() {
+              $(this).after('<div>Animation complete.</div>');
+            }
+
+        } ) ;
+        alert("We control the horizontal")
+     } );
+} );
+*/
+
 
 var hideShowEngine = {
   'mouseover': {
@@ -201,3 +193,34 @@ Event.observe(window, "load", function() {
       });
     });
 });
+
+function adjustRows (textarea) {
+    if (document.all) {
+        while (textarea.scrollHeight > textarea.clientHeight)
+            textarea.rows++;
+            textarea.scrollTop = 0;
+        }
+    else if (textarea.rows) {
+        var lineBreaks = countLineBreaks(textarea.value);
+        var rows = parseInt(textarea.rows);
+        var wrap = textarea.getAttribute('wrap');
+        if (lineBreaks > rows)
+            textarea.rows = ++rows;
+        else if (wrap.toLowerCase() == 'soft' || wrap.toLowerCase() == 'hard') {
+            while (textarea.rows * textarea.cols <= textarea.value.length) {
+                textarea.rows = ++rows;
+            }
+        }
+    }
+}
+
+function installAutocomplete(el, url, parentName) {
+  var inplaceForm = $(el.id + "-inplaceeditor");
+  var inplaceFields = inplaceForm.select("input");
+  var inplaceField = inplaceFields[0];
+  var update = $("auto_completer");
+  var cardId = $(el).up(".core-unit").id;
+  var id = cardId.split("_").last();
+  new Ajax.Autocompleter(inplaceField, update, url, {method:'get', paramName: 'q', parameters: 'parent_id=' + id});
+};
+
