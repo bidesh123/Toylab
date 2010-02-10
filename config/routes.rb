@@ -1,14 +1,15 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.site_search  'search', :controller => 'front', :action => 'search'
-  map.root :controller => 'front', :action => 'index'
+  map.site_search  'search'            , :controller => 'front', :action => 'search'
+  map.root                               :controller => 'front', :action => 'index'
 
   Hobo.add_routes(map)
 
-  map.connect 'bare/:id/:action', :controller => 'cards', :action => 'edit', :more => 'bare'
-  map.connect '/reorders', :controller => "reorders", :action => "create"
-  map.auto_card_kind '/cards/auto/kind', :controller => "cards", :action => "auto_kind"
-  map.auto_card_name '/cards/auto/name', :controller => "cards", :action => "auto_name"
+  map.connect        'bare/:id/:action', :controller => 'cards'   , :action => 'edit'     ,
+                                                                    :more   => 'bare'
+  map.connect        '/reorders'       , :controller => "reorders", :action => "create"
+  map.auto_card_kind '/cards/auto/kind', :controller => "cards"   , :action => "auto_kind"
+  map.auto_card_name '/cards/auto/name', :controller => "cards"   , :action => "auto_name"
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -52,6 +53,6 @@ ActionController::Routing::Routes.draw do |map|
 #  map.connect ':id/:action/:controller', :controller => 'cards', :action => 'show'
 #  map.connect '/:controller/set_pad/:new_pad'   , :controller => 'cards', :action => 'set_pad'
 #  map.bare    '/bare/:id/:action', :controller => 'cards'
-  map.connect '/:controller/:action/:id'        , :controller => 'cards', :action => 'show'
+  map.connect '/:controller/:action/:id'        , :controller => 'cards', :action => 'edit'
   map.connect '/:controller/:action/:id.:format'
 end

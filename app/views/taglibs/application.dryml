@@ -741,10 +741,6 @@
   <li class="view-link advanced"><%= link_to("text", url_for(:action => "page" ), :disabled => false  )  %></li>
 </def>
 
-<def tag="page-view" attrs="off">
-  <li class="view-link advanced"><%= link_to("text", url_for(:action => "page" ), :disabled => false  )  %></li>
-</def>
-
 <def tag="paper-view" attrs="off">
   <li class="view-link advanced"><%= link_to("paper", url_for(:action => "paper" ), :disabled => false  )  %></li>
 </def>
