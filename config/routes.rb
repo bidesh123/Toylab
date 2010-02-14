@@ -51,7 +51,6 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
 
 #  map.connect ':id/:action/:controller', :controller => 'cards', :action => 'show'
-#  map.connect '/:controller/set_pad/:new_pad'   , :controller => 'cards', :action => 'set_pad'
 #  map.bare    '/bare/:id/:action', :controller => 'cards'
   map.connect '/:controller/:action/:id'        , :controller => 'cards', :action => 'edit'
   map.connect '/:controller/:action/:id.:format'

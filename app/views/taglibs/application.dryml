@@ -4,6 +4,134 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="core">
+  <table id="#{dom_id(this)}" class="core core-unit">
+    <core-main-row if="&!scope.deep[:no_aspects]" />
+    <core-name-row />
+    <core-body-row if="&!scope.deep[:no_bodies ]"/>
+    <core-script-row if="&this.viewable_by?(current_user, :script)" />
+    <core-bottom-controls-tr />
+  </table>
+</def>
+
+<def tag="core-main-row">
+  <tr class="core-main-row"   >
+    <%  kind_style="kind-cell #{this.theme_class}"%>
+    <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
+      <if test="&this.id == (base = this.recursive_kind_base).id">
+        <kind-editor/>
+      </if>
+      <else>
+        <a kind with="&base"><view field="kind" /></a>
+      </else>
+    </th>
+    <else><empty-cell /></else>
+    <td rowspan="3"><core-controls /></td>
+    <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
+    <else><td rowspan="3"></td></else>
+  </tr>
+</def>
+
+<def tag="core-name-row">
+  <tr class="name">
+    <%  name_style="name-cell #{this.theme_class}" %>
+    <td class="#{name_style}">
+      <if test="&params[:action] == 'paper'">
+          <paper-numbering if="&this.list"/>
+      </if>
+      <if test="&params[:action] == 'list'">
+          <simple-numbering if="&this.list"/>
+      </if>
+      <editor:name blank-message="&this.blank_name"/>
+    </td>
+    <empty-cell if="&!scope.deep[:no_aspects]" />
+  </tr>
+</def>
+
+<def tag="core-body-row">
+  <%  body_style = "body-cell #{this.theme_class}"
+      display_style = this.body ? "inherit" : "none" %>
+  <tr   class="body body-row" id="<%= dom_id(this, :body_row ) %>" style="display:<%=display_style%>" >
+    <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>">
+      <if test="&this.body ">
+        <editor:body                   blank-message="A" />
+      </if>
+      <else>
+        <editor:body class="ssssssstiny-gray" blank-message="A" />
+      </else>
+    </td>
+    <empty-cell if="&!scope.deep[:no_aspects]" />
+  </tr>
+</def>
+
+<def tag="core-script-row">
+  <tr class="script">
+    <td class="script-cell">
+      <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
+        <if test="&this.script">
+          <editor:script                   blank-message="....." />
+        </if>
+        <else>
+          <editor:script class="tiny-gray" blank-message="....." />
+        </else>
+      </div>
+    </td>
+   </tr>
+</def>
+
+<def tag="page" attrs="title, full-title">
+  <% full_title ||= "#{title} : #{app_name}" %>
+  <html merge-attrs>
+    <head param>
+      <title param><%=
+        if this.nil?
+          "Home"
+        elsif this.is_a? Card
+          this.reference_name
+        elsif this.is_a? User
+          this.name
+        elsif this.is_a? Array
+          "Suites"
+        else
+          "toy office"
+        end
+ %>   </title>
+      <do param="stylesheets">
+        <stylesheet name="reset, hobo-rapid"/>
+        <stylesheet name="application" param="app-stylesheet"/>
+      </do>
+
+      <do param="scripts">
+        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery, jquery.lavalamp, jquery.easing"/>
+        <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
+        <do param="custom-scripts"/>
+        <javascript param="application-javascript" name="application"/>
+      </do>
+    </head>
+
+    <body param>
+    <set-scoped flash-rendered="&false">
+        <ajax-progress param/>
+        <header class="page-header" param>
+          <div param="top-line" if="&params[:more] != 'bare'">
+            <main-nav current="&title" param/>
+            <account-nav if="&login_url(Hobo::User.default_user_model)" param />
+          </div>
+          <div if="&params[:more] != 'bare'">
+            <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
+            <!-- <live-search param if="&defined_route? :site_search"/>-->
+          </div>
+        </header>
+        <section with-flash-messages param="content"/>
+        <footer class="page-footer" if="&params[:controller]=='bare'" param >
+          <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
+        </footer>
+        <page-scripts param/>
+      </set-scoped>
+    </body>
+  </html>
+</def>
+
 <def tag="card-number-editor">
   <if test="&this.context_id">
     <if       test="&this.whole_id"><editor:whole_position /></if>
@@ -242,21 +370,8 @@
   <%= Thread.current[:numbering][-1].to_s %>&nbsp;
 </def>
 
-<def tag="core-main-row">
-  <tr class="core-main-row"   >
-    <%  kind_style="kind-cell #{this.theme_class}"%>
-    <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
-      <if test="&this.id == (base = this.recursive_kind_base).id">
-        <kind-editor/>
-      </if>
-      <else>
-        <a kind with="&base"><view field="kind" /></a>
-      </else>
-    </th>
-    <else><empty-cell /></else>
-    <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
-    <else><td rowspan="3"></td></else>
-  </tr>
+<def tag="core-controls">
+  <img src="/images/blueball.png" alt="*" />
 </def>
 
 <def tag="self-and-aspects-row">
@@ -440,59 +555,6 @@
        </li>
     </ul>
   </do>
-</def>
-
-<def tag="page" attrs="title, full-title">
-  <% full_title ||= "#{title} : #{app_name}" %>
-  <html merge-attrs>
-    <head param>
-      <title param><%=
-        if this.nil?
-          "Home"
-        elsif this.is_a? Card
-          this.reference_name
-        elsif this.is_a? User
-          this.name
-        elsif this.is_a? Array
-          "Suites"
-        else
-          "toy office"
-        end
- %>   </title>
-      <do param="stylesheets">
-        <stylesheet name="reset, hobo-rapid"/>
-        <stylesheet name="application" param="app-stylesheet"/>
-      </do>
-
-      <do param="scripts">
-        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy"/>
-        <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
-        <do param="custom-scripts"/>
-        <javascript param="application-javascript" name="application"/>
-      </do>
-    </head>
-
-    <body param>
-    <set-scoped flash-rendered="&false">
-        <ajax-progress param/>
-        <header class="page-header" param>
-          <div class="top-line" if="&params[:more] != 'bare'">
-            <main-nav current="&title" param/>
-            <account-nav if="&login_url(Hobo::User.default_user_model)" param />
-          </div>
-          <div if="&params[:more] != 'bare'">
-            <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
-            <!-- <live-search param if="&defined_route? :site_search"/>-->
-          </div>
-        </header>
-        <section with-flash-messages param="content"/>
-        <footer class="page-footer" if="&params[:controller]=='bare'" param >
-          <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
-        </footer>
-        <page-scripts param/>
-      </set-scoped>
-    </body>
-  </html>
 </def>
 
 <def tag="add-column">
@@ -716,16 +778,15 @@
 </def>
 
 <def tag="pads">
-  <div class="pads" if="&false && params[:more] != 'bare'" >
+  <div class="pads" if="&params[:more] != 'bare'" >
     <ul class="pad-nav">Current pad
       <no-pad />
       <repeat with="&this.all_pads">
-        <%=  $CURRENT_PAD.to_i %>
         <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
         <li class="<%=li_style%>"><%=
           link_to(
             this.kind,
-            url_for(:action => "set_pad", :id => this.id )
+            url_for(:controller => "cards", :action => 'set_pad', :id => this.id )
             )
         %></li>
       </repeat>
@@ -854,62 +915,6 @@
   </tr>
 </def>
 
-<def tag="core-name-row">
-  <tr class="name">
-    <%  name_style="name-cell #{this.theme_class}" %>
-    <td class="#{name_style}">
-      <if test="&params[:action] == 'paper'">
-          <paper-numbering if="&this.list"/>
-      </if>
-      <if test="&params[:action] == 'list'">
-          <simple-numbering if="&this.list"/>
-      </if>
-      <editor:name blank-message="&this.blank_name"/>
-    </td>
-    <empty-cell if="&!scope.deep[:no_aspects]" />
-  </tr>
-</def>
-
-<def tag="core-body-row">
-  <%  body_style = "body-cell #{this.theme_class}"
-      display_style = this.body ? "inherit" : "none" %>
-  <tr   class="body body-row" id="<%= dom_id(this, :body_row ) %>" style="display:<%=display_style%>" >
-    <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>">
-      <if test="&this.body ">
-        <editor:body                   blank-message="A" />
-      </if>
-      <else>
-        <editor:body class="ssssssstiny-gray" blank-message="A" />
-      </else>
-    </td>
-    <empty-cell if="&!scope.deep[:no_aspects]" />
-  </tr>
-</def>
-
-<def tag="core-script-row">
-  <tr class="script">
-    <td class="script-cell">
-      <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
-        <if test="&this.script">
-          <editor:script                   blank-message="....." />
-        </if>
-        <else>
-          <editor:script class="tiny-gray" blank-message="....." />
-        </else>
-      </div>
-    </td>
-  </tr>
-</def>
-
-<def tag="core">
-  <table id="#{dom_id(this)}" class="core core-unit">
-    <core-main-row if="&!scope.deep[:no_aspects]" />
-    <core-name-row />
-    <core-body-row if="&!scope.deep[:no_bodies ]"/>
-    <core-script-row if="&this.viewable_by?(current_user, :script)" />
-    <core-bottom-controls-tr />
-  </table>
-</def>
 
 <def tag="rails-authenticity-token">
   <span style="display:none" id="rails.authtoken"><%= form_authenticity_token %></span>

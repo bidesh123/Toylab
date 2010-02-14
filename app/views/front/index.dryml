@@ -20,32 +20,68 @@
   </div>
 </def>
 
+<def tag="get-started">
+  <ul class="sub-pitch pink">
+    Get started
+    <li if="&signup_url"                class="nav-item">
+      <create-suite-button label="Create your own office suite" />
+    </li>
+    <li if="&signup_url && !logged_in?" class="nav-item">
+      <a href="&signup_url">Sign up</a> for more privileges
+    </li>
+    <li if="&login_url && !logged_in?"  class="nav-item">
+      Or just <a href="&login_url">Log in</a> if you're already signed up
+    </li>
+  </ul>
+</def>
+
 <def tag="home-nav">
   <div with="&current_user" class="sub-pitch">
-    <ul class="sub-pitch pink" param>Get started
-        <li if="&signup_url" class="nav-item class-link" param="sign-up">
-          <create-suite-button label="Create your own office suite" />
-        </li>
-      <unless test="&logged_in?">
-        <li if="&signup_url" class="nav-item" param="sign-up"><a href="&signup_url">Sign up</a> for more privileges</li>
-        <li class='nav-item' param="log-in">Or just <a href="&login_url">Log in</a> if you're already signed up</li>
-      </unless>
-    </ul>
-    <see-suites />
+    <get-started />
+    <screencasts />
+    <see-suites  />
+    <caveat      />
   </div>
 </def>
 
 <def tag="see-suites">
-  <ul param="sub-pitch" class="orange">
-    See other toyoffice suites
-    <li if="&signup_url" class="nav-item class-link" param="sign-up">
-      Click <a href="/cards">suites</a> to see others
+  <ul class="sub-pitch orange">
+    See other toy office suites
+    <li if="&signup_url" class="nav-item class-link">
+      Click <a href="/cards">suites</a>
+    </li>
+  </ul>
+</def>
+
+<def tag="screencasts">
+  <ul class="sub-pitch orange">
+    Find out more
+    <li class="nav-item class-link">
+      Watch the <a href="http://www.youtube.com/watch?v=Lv7ar0_uObI">demo</a>
+    </li>
+  </ul>
+</def>
+
+<def tag="caveat">
+  <ul class="sub-pitch yellow">
+    Caveat
+    <li class ="tiny">
+      Pre-alpha demo to demonstrate our unique technology.
+    </li>
+    <li class ="tiny">
+      This lab version has many known bugs, issues and incomplete attempts at progress.
+    </li>
+    <li class ="tiny">
+      Do not use this site with real data.
+    </li>
+    <li class ="tiny">
+      For now, the best way to explore toy office is to see the screencasts.
     </li>
   </ul>
 </def>
 
 <def tag="why-toy-office">
-  <ul param="sub-pitch" class="orange">
+  <ul class="sub-pitch orange">
     Get your information:
     <li class="pink">On your own website</li>
     <li class="orange">Safe and backed up automatically</li>
@@ -57,7 +93,7 @@
 </def>
 
 <def tag="toy-office-metaphor">
-  <ul param="sub-pitch" class="yellow">
+  <ul class="sub-pitch yellow">
     Build and manage your World like a game - using Building Blocks.
     <li>Building Blocks are like the cells in your body.</li>
     <li>They are separate parts, yet work together to make your whole body function.</li>
@@ -66,7 +102,7 @@
 </def>
 
 <def tag="toy-office-uses">
-  <ul param="sub-pitch" class="green">
+  <ul class="sub-pitch green">
     Let's say that today your life is focused on the following areas
     <li><i>Job search</i></li>
     <li>Billy's school project</li>
@@ -81,7 +117,7 @@
 </def>
 
 <def tag="toy-office-how-to">
-  <ul param="sub-pitch" class="blue">
+  <ul class="sub-pitch blue">
     Here is where Toy Office comes in.
     <li>   
       In your toy office suite, you can construct and then manage the different
@@ -96,7 +132,7 @@
       in seconds. That is the Toy Office breakthrough!
     </li>
   </ul>
-  <ul param="sub-pitch" class="purple">Toy Office 101
+  <ul class="sub-pitch purple">Toy Office 101
     <li>
       Start by clicking the All button for an list of any publicly available
       toy office suites.  Watch it appear at the top of the list as Untitled,

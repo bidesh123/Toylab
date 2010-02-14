@@ -6,6 +6,7 @@
   <navigation class="main-nav" merge-attrs param="default">
     <nav-item href="#{base_url}/">Home</nav-item>
     <nav-item with="&Card">Cards</nav-item>
+    <nav-item with="&Main">Mains</nav-item>
   </navigation>
 </def>
 
@@ -71,7 +72,7 @@
       <section-group>
         <section param="main-content">
           <header param="content-header">
-            <a:based_on param="parent-link">&laquo; <name/></a:based_on>
+            <a:table param="parent-link">&laquo; <name/></a:table>
             <h2 param="heading"><name/></h2>
 
             <record-flags fields="pad" param/>
@@ -83,7 +84,7 @@
     
           <section param="content-body" with-flash-messages>
             <view:body param="description"/>
-            <field-list fields="kind, script, view, access, theme, list_position, whole_position, table_position, list, table, whole" param/>
+            <field-list fields="kind, script, view, access, theme, list_position, whole_position, table_position, based_on, list, suite, whole" param/>
             <section param="collection-section">
               <h3 param="collection-heading">Items</h3>
               
@@ -126,6 +127,102 @@
 
 
 
+
+
+
+
+  
+<!-- ====== Main Pages ====== -->
+
+
+<def tag="index-page" for="Main">
+  <page merge title="Mains">
+    <body: class="index-page main" param/>
+    
+    <content: param>
+      <header param="content-header">
+        <h2 param="heading">Mains</h2>
+
+        <p param="count" if>There <count prefix="are"/></p>
+      </header>
+      
+      <section param="content-body">
+
+        <a action="new" to="&model" param="new-link"/>      
+
+        <page-nav param="top-page-nav"/>
+
+        <collection param/>
+
+        <page-nav param="bottom-page-nav"/>
+
+
+      </section>
+    </content:>
+  </page>
+</def>
+
+
+<def tag="new-page" for="Main">
+  <page merge title="New Main">
+    <body: class="new-page main" param/>
+    
+    <content: param>
+      <section param="content-header">
+        <h2 param="heading">New Main</h2>
+      </section>
+      
+      <section param="content-body">
+        <form param>
+          <submit: label="Create Main"/>
+        </form>
+      </section>
+    </content:>
+  </page>
+</def>
+
+
+<def tag="show-page" for="Main">
+  <page merge title="Main">
+
+    <body: class="show-page main" param/>
+
+    <content: param>
+          <header param="content-header">
+            <h2 param="heading"><name/></h2>
+
+            <record-flags fields="" param/>
+
+            <a action="edit" if="&can_edit?" param="edit-link">Edit Main</a>
+          </header>
+    
+          <section param="content-body">
+            <view:body param="description"/>
+          </section>
+    </content:>
+    
+  </page>
+</def>
+
+
+<def tag="edit-page" for="Main">
+  <page merge title="Edit Main">
+
+    <body: class="edit-page main" param/>
+
+    <content:>
+      <section param="content-header">
+        <h2 param="heading">Edit <type-name/></h2>
+        <delete-button label="Remove This Main" param/>
+      </section>
+
+      <section param="content-body">
+        <form param/>
+      </section>
+    </content:>
+    
+  </page>
+</def>
 
 
 

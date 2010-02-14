@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100106034214) do
+ActiveRecord::Schema.define(:version => 20100213165649) do
 
   create_table "cards", :force => true do |t|
     t.string   "kind"
@@ -30,6 +30,14 @@ ActiveRecord::Schema.define(:version => 20100106034214) do
     t.integer  "whole_position"
     t.integer  "table_position"
     t.boolean  "pad"
+    t.integer  "suite_id"
+  end
+
+  create_table "mains", :force => true do |t|
+    t.string   "name"
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

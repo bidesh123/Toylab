@@ -46,6 +46,11 @@ class Card < ActiveRecord::Base
   has_many   :instances, :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true,
                          :dependent  => :destroy
 
+  #5
+  belongs_to :suite    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true
+  has_many   :parts    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true,
+                         :dependent  => :destroy
+
   sortable :scope => :list_id , :list_name => :list ,  :column =>  :list_position
   sortable :scope => :whole_id, :list_name => :whole,  :column => :whole_position
   sortable :scope => :table_id, :list_name => :table,  :column => :table_position
@@ -62,13 +67,18 @@ class Card < ActiveRecord::Base
 # after_update :follow_up_on_update
 
   def nature
+    #eventual support for ionheritance vis is a, is, has a, has some
+  end
 
+  def recursive_suite #temp
+    return self unless s = (list || whole || table)
+    s.recursive_suite
   end
 
   def source_base source
     r = if source.kind then self.class.find_pad source.kind end
     r ||= source.recursive_kind_base
-   end
+  end
 
   def generate_dependents source
     return unless source.is_a? Card

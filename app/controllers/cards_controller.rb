@@ -10,7 +10,7 @@ class CardsController < ApplicationController
   show_action :tree
   show_action :paper
   show_action :slide
-  show_action :new_pad
+  show_action :set_pad
   show_action :list
   show_action :custom
 
@@ -18,7 +18,7 @@ class CardsController < ApplicationController
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
 
   def set_pad    
-    $CURRENT_PAD = params[:new_pad]
+    $CURRENT_PAD = params[:id]
     redirect_to :back
   end
 
