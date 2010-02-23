@@ -66,16 +66,16 @@
   <ul class="sub-pitch yellow">
     Caveat
     <li class ="tiny">
-      Pre-alpha demo to demonstrate our unique technology.
+      This pre-alpha demo is only for demonstrating our unique database technology.
     </li>
     <li class ="tiny">
-      This lab version has many known bugs, issues and incomplete attempts at progress.
+      It is lab version with known bugs, issues and ongoing work.
+    </li>
+     <li class ="tiny">
+      Please, do not use this site with real data. Yet...
     </li>
     <li class ="tiny">
-      Do not use this site with real data.
-    </li>
-    <li class ="tiny">
-      For now, the best way to explore toy office is to see the screencasts.
+      For now, the best way to explore toy office is to see the <a href="http://www.youtube.com/watch?v=Lv7ar0_uObI">screencasts</a>.
     </li>
   </ul>
 </def>

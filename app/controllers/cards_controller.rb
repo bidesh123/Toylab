@@ -17,15 +17,20 @@ class CardsController < ApplicationController
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
 
-  def set_pad    
+  def boost_activation
+    session[:activation] ||= {}
+    session[:activation][params[:id]] ||= 0
+    session[:activation][params[:id]]  += 1
+    redirect_to :back
+  end
+
+  def set_pad
     $CURRENT_PAD = params[:id]
     redirect_to :back
   end
 
   def show
-    hobo_show do
-      render :action => this.auto_view
-    end
+    redirect_to :action => "edit"
   end
 
   def report

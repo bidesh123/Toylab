@@ -1,8 +1,23 @@
+/*
+window.location.replace('http://toylab.heroku.com/bump');
+but can I NOT tell the server?
+    what's the server got to do with whether an object is selected and how deep it is opened'
+check_the_state_of_the_cookie('active');
+document.cookie =
+    'activity317=testcookie; expires=Thu, 2 Aug 2001 20:47:11 UTC; path=/';
+document.cookie =
+    'activity317=testcookie; expires=Thu, 2 Aug 2001 20:47:11 UTC; path=/';
+0-off       white   normal    no menus      not selected;
+1-auto      green   selected  hover_menus   selected;
+2-on        orange  menu      stable_menus  selected;
+3-custom    red     control   controls      selected;
+*/
+
 // Number of seconds before we trigger the appear animation
-var showDelay = 1.0;
+var appearDelay = 1.0;
 
 // Duration of the appear animation
-var appearDelay = 0.25;
+var appearDuration = 0.25;
 
 // Number of seconds before we trigger the hide animation
 var hideDelay = 2.5;
@@ -39,7 +54,7 @@ $j(document).ready(function(){
 var hideShowEngine = {
   'mouseover': {
     'hidden':     function(context) {
-      context.delay(showDelay, function() { context.transition("showTimeout") });
+      context.delay(appearDelay, function() { context.transition("showTimeout") });
       return 'waitToShow';
     },
     'waitToHide': function(context) {
@@ -47,7 +62,7 @@ var hideShowEngine = {
       return 'shown';
     },
     'hiding':     function(context) {
-      context.delay(showDelay, function() { context.transition("showTimeout") });
+      context.delay(appearDelay, function() { context.transition("showTimeout") });
       return 'waitToShow';
     }
   },
@@ -69,8 +84,10 @@ var hideShowEngine = {
 
   'showTimeout': {
     'waitToShow': function(context) {
-      if(context.aspectControls) {new Effect.Appear(context.aspectControls, {duration: appearDelay})};
-      new Effect.Appear(context.coreControls,   {duration: appearDelay, afterFinish: function() { context.transition("showingDone"); }});
+      if(context.aspectControls) {new Effect.Appear(context.aspectControls, {duration: appearDuration})};
+      new Effect.Appear(context.coreControls,   {
+          duration: appearDuration,
+          afterFinish: function() { context.transition("showingDone"); }});
       return 'showing';
     }
   },

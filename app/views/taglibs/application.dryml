@@ -4,6 +4,79 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="add-pad-row-buttons">
+  <if test="&this && this.list">
+<%  list_id = this.list
+    element, collection =
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    element = "#{this.class.current_pad} #{element}"
+    target_item = this
+    last_item = this.list.items.count == this.list_position
+    list_id = this.list.id
+    the_kind = this.kind
+    the_pad = this.class.current_pad%>
+    <repeat with="&this.pertinent_pads">
+<%    tooltip, label = [
+        "Add a #{this} row below this one",
+        "Add #{this} row"]
+      no_pad  = ['', nil].include? this
+      no_kind = ['', 'item'].include? the_kind %>
+      <add-item-or-row-form with="&target_item" unless="&no_pad"
+        element="&element"
+        label="&label"
+        tooltip="&tooltip"
+        collection-id="&list_id"
+        pad="&this"
+      />
+    </repeat>
+  </if>
+</def>
+
+<def tag="start-list-from-pad">
+  <if test="&this && this.items.count == 0 &&
+            selected_pad = this.class.current_pad">
+    <%element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      tooltip, label = [
+        "Start list with #{selected_pad.indefinite} #{element}",
+        "Start list with #{selected_pad}"]
+      no_pad = selected_pad.blank?
+    %>
+    <add-item-or-row-form unless="&no_pad"
+      element="&element"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="&this.id"
+      pad="&selected_pad"
+    />
+  </if>
+</def>
+
+<def tag="add-inner-item-from-pad">
+  <if test="&this && this.items.count  > 0 &&
+            selected_pad = this.class.current_pad">
+    <%element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      tooltip, label = [
+        "Add an inner #{selected_pad} #{element}",
+        "Add inner #{selected_pad}" ]
+      no_pad = selected_pad.blank?
+    %>
+    <add-item-or-row-form unless="&no_pad"
+      element="&element"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="&this.id"
+      pad="&selected_pad"
+    />
+</if>
+</def>
+
+<def tag="javascript-variables">
+  <div id="activity-level" style="display:none;"><%=h ActivityLevel %></div>
+  <div id="current-pad"    style="display:none;"><%=h CurrentPad    %></div>
+</def>
+
 <def tag="core">
   <table id="#{dom_id(this)}" class="core core-unit">
     <core-main-row if="&!scope.deep[:no_aspects]" />
@@ -133,10 +206,10 @@
 </def>
 
 <def tag="card-number-editor">
-  <if test="&this.context_id">
-    <if       test="&this.whole_id"><editor:whole_position /></if>
-    <else><if test="&this.table_id"><editor:table_position /></if>
-    <else><if test="&this.list_id" ><editor:list_position  /></if>
+  <if test="&this.context_id">Number
+    <if       test="&this.whole_id"><view:whole_position /></if>
+    <else><if test="&this.table_id"><view:table_position /></if>
+    <else><if test="&this.list_id" ><view:list_position  /></if>
     </else></else>
   </if>
 </def>
@@ -152,7 +225,7 @@
   <if test="current_user.administrator?">
     <div class="tool">
       Card <%= this.id%>
-      Number <card-number-editor />
+      <card-number-editor />
     </div>
     <div class="tool" if="&false"><context-editors           /></div>
   </if>
@@ -182,44 +255,15 @@
   </if>
 </def>
 
-<def tag="add-pad-row-buttons">
-  <if test="&this && this.list">
-<%  list_id = this.list
-    element, collection =
-      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-    element = "#{this.class.current_pad} #{element}"
-    target_item = this
-    last_item = this.list.items.count == this.list_position
-    list_id = this.list.id
-    the_kind = this.kind
-    the_pad = this.class.current_pad%>
-    <repeat with="&this.pertinent_pads">
-<%    tooltip, label = [
-        "Add a #{this} row below this one",
-        "Add #{this} row"]
-      no_pad  = ['', nil].include? this
-      no_kind = ['', 'item'].include? the_kind %>
-      <add-item-or-row-form with="&target_item" unless="&no_kind"
-        element="&element"
-        label="&label"
-        tooltip="&tooltip"
-        collection-id="&list_id"
-        pad="&this"
-      />
-    </repeat>
-  </if>
-</def>
-
 <def tag="add-item-or-row-form">
-<%style = "add-#{attributes[:element]}"
-  submit_style = "toy-nav tooltip #{style}"  %>
-<% new_card = this.class.new(
-             :list_id  => attributes[:collection_id]      ,
-             :kind     => attributes[:item_kind]     || '')
-   if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
-     new_card.based_on =  pad_card
-   end
-%>
+  <%style = "add-#{attributes[:element]}"
+    submit_style = "toy-nav tooltip #{style}"
+    new_card = this.class.new(
+      :list_id  => attributes[:collection_id]      ,
+      :kind     => attributes[:item_kind]     || '')
+    if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
+      new_card.based_on =  pad_card
+    end %>
   <form class="&style" with="&new_card">
     <submit label=                        "&attributes[:label]"
         title="&attributes[:tooltip] || attributes[:label]"
@@ -266,44 +310,6 @@
     </if>
   </if>
   <else>nothing to add an item to</else>
-</def>
-
-<def tag="start-list-from-pad">
-  <if test="&this && this.items.count > 0 &&
-            selected_pad = this.class.current_pad">
-<%  element, collection =
-      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-    tooltip, label = [
-      "Start list with #{selected_pad.indefinite} #{element}",
-      "Start list with #{selected_pad}"]
-    no_pad = selected_pad.blank? %>
-    <add-item-or-row-form unless="&no_pad"
-      element="&element"
-      label="&label"
-      tooltip="&tooltip"
-      collection-id="&this.id"
-      pad="&selected_pad"
-    />
-  </if>
-</def>
-
-<def tag="add-inner-item-from-pad">
-  <if test="&this && this.items.count > 0          &&
-            selected_pad = this.class.current_pad" >
-<%  element, collection =
-      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-    tooltip, label = [
-      "Start list with #{selected_pad.indefinite} #{element}",
-      "Start list with #{selected_pad}"]
-    no_pad = selected_pad.blank? %>
-    <add-item-or-row-form unless="&no_pad"
-      element="&element"
-      label="&label"
-      tooltip="&tooltip"
-      collection-id="&this.id"
-      pad="&selected_pad"
-    />
-</if>
 </def>
 
 <def tag="add-rows">
@@ -371,7 +377,7 @@
 </def>
 
 <def tag="core-controls">
-  <img src="/images/blueball.png" alt="*" />
+  <img if="&false" src="/images/blueball.png" alt="*" />
 </def>
 
 <def tag="self-and-aspects-row">
@@ -456,7 +462,7 @@
 
 <def tag="start-any-list">
   <start-list />
-  <start-list-from-pad if test="self.class.current_pad" />
+  <start-list-from-pad if="&this.class.current_pad" />
 </def>
 
 <def tag="bottom-controls">

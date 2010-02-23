@@ -67,7 +67,7 @@ class Card < ActiveRecord::Base
 # after_update :follow_up_on_update
 
   def nature
-    #eventual support for ionheritance vis is a, is, has a, has some
+    #eventual support for inheritance vis is a, is, has a, has some, has many
   end
 
   def recursive_suite #temp
@@ -96,7 +96,8 @@ class Card < ActiveRecord::Base
 
   def local_pads
     return [] unless list
-    pads = list.items.map{|item| item.recursive_kind}.uniq
+    all = all_pads
+    pads = list.items.map{|item| item.recursive_kind}.uniq.select {|p| find_pad p}
     pads.delete 'item'
     pads
   end
@@ -122,9 +123,10 @@ class Card < ActiveRecord::Base
     pad_cards.uniq.sort.map{ |kind| self.find_pad kind}
   end
 
-  def find_pad
-    return false unless kind
-    self.class.find_pad kind
+  def find_pad k
+    k ||= kind
+    return false unless k
+    self.class.find_pad k
   end
 
   def self.find_pad kind
@@ -180,7 +182,7 @@ class Card < ActiveRecord::Base
         if item.kind == the_kind
           item.based_on = self
         else
-          unforeseen kind of item
+          unforeseen(kind(of(item)))
         end
       end
     end
@@ -768,7 +770,7 @@ class Card < ActiveRecord::Base
     when "custom", "chart"
       "tree"
     else
-      "report"
+      "tree"
     end
   end
 
