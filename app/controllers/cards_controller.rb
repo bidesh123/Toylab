@@ -8,7 +8,7 @@ class CardsController < ApplicationController
   show_action :table
   show_action :page
   show_action :tree
-  show_action :paper
+  show_action :opus
   show_action :slide
   show_action :set_pad
   show_action :list
@@ -54,9 +54,9 @@ class CardsController < ApplicationController
     end
   end
 
-  def paper
+  def opus
     hobo_show do
-      this.update_attribute(:view, "paper")
+      this.update_attribute(:view, "opus")
       render :action => this.auto_view
     end
   end

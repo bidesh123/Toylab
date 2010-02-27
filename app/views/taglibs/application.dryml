@@ -4,6 +4,54 @@
 <include src="taglibs/auto/rapid/forms"/>
 <!-- <set-theme name="clean"/> -->
 
+
+<def tag="view" attrs="inline, block, if-blank, no-wrapper, truncate"><%=
+  #raise HoboError, "view of non-viewable field '#{this_field}' of #{this_parent.typed_id rescue this_parent}" unless
+  #  can_view?
+  res = if !can_view? ## fg
+          nil_view
+        elsif this.nil? && if_blank.nil?
+          this_type.is_a?(Class) && this_type <= String ? "" : nil_view
+        elsif (refl = this_field_reflection) && refl.macro == :has_many
+          collection_view(attributes)
+        else
+          view_tag = find_polymorphic_tag("view")
+
+          if view_tag == "view" # i.e. it didn't find a type specific tag
+            if this.respond_to?(:to_html)
+              this.to_html(scope.xmldoctype)
+            else
+              this.to_s
+            end
+          else
+            attrs = add_classes(attributes, "view", type_and_field._?.dasherize, model_id_class)
+
+            view_attrs = attrs_for(view_tag)
+            the_view = send(view_tag, attrs & view_attrs)
+            the_view = if_blank if if_blank && the_view.blank?
+
+            truncate = 30 if truncate == true
+            the_view = self.truncate(the_view, truncate.to_i) if truncate
+            the_view = the_view.strip
+
+            if no_wrapper
+              the_view
+            else
+              wrapper = if inline
+                          :span
+                        elsif block || this.is_a?(HoboFields::Text)
+                          :div
+                        else
+                          :span
+                        end
+              element(wrapper, attrs - view_attrs, the_view)
+            end
+          end
+        end
+   Hobo::Dryml.last_if = !res.blank?
+   res
+%></def>
+
 <def tag="add-pad-row-buttons">
   <if test="&this && this.list">
 <%  list_id = this.list
@@ -79,17 +127,28 @@
 
 <def tag="core">
   <table id="#{dom_id(this)}" class="core core-unit">
-    <core-main-row if="&!scope.deep[:no_aspects]" />
-    <core-name-row />
-    <core-body-row if="&!scope.deep[:no_bodies ]"/>
-    <core-script-row if="&this.viewable_by?(current_user, :script)" />
-    <core-bottom-controls-tr />
+    <core-main-row           if="&this.core_main_row? scope.deep"     />
+    <core-name-row           if="&this.core_name_row?"                />
+    <core-body-row           if="&this.core_body_row? scope.deep"     />
+    <core-script-row         if="&this.core_script_row? current_user" />
+    <core-bottom-controls-tr if="&this.core_bottom_controls_row?"     />
   </table>
 </def>
 
 <def tag="core-main-row">
   <tr class="core-main-row"   >
-    <%  kind_style="kind-cell #{this.theme_class}"%>
+    <% kind_style="kind-cell #{this.theme_class}"
+    n_rows = [
+      this.core_main_row?(scope.deep)    ,
+      this.core_name_row?                ,
+      this.core_body_row?(scope.deep)    ,
+      this.core_script_row?(current_user),
+      this.core_bottom_controls_row?
+    ].inject(0){|sum, n| sum + (n ? 1 : 0) }
+%>
+    <td class="core-left-controls core-controls" rowspan="<%=  n_rows %>">
+      <core-left-controls />
+    </td>
     <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
       <if test="&this.id == (base = this.recursive_kind_base).id">
         <kind-editor/>
@@ -99,9 +158,8 @@
       </else>
     </th>
     <else><empty-cell /></else>
-    <td rowspan="3"><core-controls /></td>
     <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
-    <else><td rowspan="3"></td></else>
+    <else><td rowspan="<%=  n_rows - 1 %>"></td></else>
   </tr>
 </def>
 
@@ -109,8 +167,8 @@
   <tr class="name">
     <%  name_style="name-cell #{this.theme_class}" %>
     <td class="#{name_style}">
-      <if test="&params[:action] == 'paper'">
-          <paper-numbering if="&this.list"/>
+      <if test="&params[:action] == 'opus'">
+          <recursive-numbering if="&this.list"/>
       </if>
       <if test="&params[:action] == 'list'">
           <simple-numbering if="&this.list"/>
@@ -207,10 +265,13 @@
 
 <def tag="card-number-editor">
   <if test="&this.context_id">Number
-    <if       test="&this.whole_id"><view:whole_position /></if>
-    <else><if test="&this.table_id"><view:table_position /></if>
-    <else><if test="&this.list_id" ><view:list_position  /></if>
-    </else></else>
+    <if            test="&this.whole_id && can_view?(:whole_position)">
+      <editor:whole_position   />
+    </if><else><if test="&this.table_id && can_view?(:table_position)">
+      <editor:table_position />
+    </if><else><if test="&this.list_id  && can_view?(:list_position)" >
+      <editor:list_position  />
+    </if></else></else>
   </if>
 </def>
 
@@ -232,10 +293,12 @@
 </def>
 
 <def tag="context-editors">
-  aspect of <editor:whole />
-  column of <editor:table />
-  belongs to list <editor:list />
-  based on <a with="&this.based_on" if="&this.based_on"><view:kind /></a>
+  <if test="can_view?(:whole)"   >aspect of <editor:whole /></if>
+  <if test="can_view?(:table)"   >column of <editor:table /></if>
+  <if test="can_view?(:table)"     >in list <editor:list  /></if>
+  <if test="can_view?(:based on)" >based on
+    <a with="&this.based_on" if            ><view:kind    /></a>
+  </if>
 </def>
 
 <def tag="add-row">
@@ -326,23 +389,23 @@
 </def>
 
 <def tag="card" for="Card">
-  <%  Card.paper_numbering_reset %>
+  <%  Card.numbering_reset %>
   <hierarchical-card />
 </def>
 
 <def tag="list-row">
   <tr class="list-row" if="&this.items">
-<%        Card.paper_numbering_push      %>
+<%        Card.numbering_push      %>
     <td class="list-row" colspan="2">
       <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
       <table class="list-rows" id="&table_dom_id" if="&this.items">
         <repeat with="&this.items">
-<%        Card.paper_numbering_increment %>
+<%        Card.numbering_increment %>
           <item-row />
         </repeat>
       </table>
     </td>
-<%        Card.paper_numbering_pop       %>
+<%        Card.numbering_pop       %>
   </tr>
 </def>
 
@@ -368,7 +431,7 @@
   <else>&nbsp;&nbsp;&nbsp;</else>
 </def>
 
-<def tag="paper-numbering">
+<def tag="recursive-numbering">
   <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>&nbsp;
 </def>
 
@@ -376,8 +439,9 @@
   <%= Thread.current[:numbering][-1].to_s %>&nbsp;
 </def>
 
-<def tag="core-controls">
+<def tag="core-left-controls">
   <img if="&false" src="/images/blueball.png" alt="*" />
+  <else>&nbsp;</else>
 </def>
 
 <def tag="self-and-aspects-row">
@@ -774,11 +838,11 @@
     <ul class="view-nav">View as
       <page-view   />
       <list-view   />
-      <paper-view  />
-      <tree-view   />
-      <table-view  />
-      <report-view />
+      <opus-view  />
+      <!--table-view  /-->
       <slide-view  />
+      <report-view />
+      <tree-view   />
     </ul>
   </div>
 </def>
@@ -800,16 +864,17 @@
   </div>
 </def>
 
+
 <def tag="no-pad">
-  <li class="pad-link"><%= link_to "none", url_for(:action => "set_pad")  %></li>
+  <li class="pad-link" style = "#{$CURRENT_PAD.to_i ? '' : 'not-enabled '}pad-link"><%= link_to "none", url_for(:action => "set_pad")  %></li>
 </def>
 
 <def tag="page-view" attrs="off">
   <li class="view-link advanced"><%= link_to("text", url_for(:action => "page" ), :disabled => false  )  %></li>
 </def>
 
-<def tag="paper-view" attrs="off">
-  <li class="view-link advanced"><%= link_to("paper", url_for(:action => "paper" ), :disabled => false  )  %></li>
+<def tag="opus-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("opus", url_for(:action => "opus" ), :disabled => false  )  %></li>
 </def>
 
 <def tag="slide-view" attrs="off">

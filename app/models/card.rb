@@ -9,7 +9,7 @@ class Card < ActiveRecord::Base
     pad          :boolean
     view         enum_string(:view    , :none    , :custom ,
                              :page    , :slide  ,
-                             :list    , :paper  , :tree,
+                             :list    , :opus  , :tree,
                              :table   , :report , :chart                     )
     access       enum_string(:access  ,
                              :private , :public , :shared  , :open  , :closed)
@@ -65,6 +65,26 @@ class Card < ActiveRecord::Base
 # before_save do |c| c.context_id = c.whole_id || c.list_id end
   after_create :follow_up_on_create
 # after_update :follow_up_on_update
+
+  def core_main_row? deep
+    !deep[:no_aspects]
+  end
+
+  def core_name_row?
+    true
+  end
+
+  def core_body_row? deep
+    !deep[:no_bodies ]
+  end
+
+  def core_script_row? user
+    viewable_by?(user, :script)
+  end
+
+  def core_bottom_controls_row? deep = ""
+    true
+  end
 
   def nature
     #eventual support for inheritance vis is a, is, has a, has some, has many
@@ -216,27 +236,27 @@ class Card < ActiveRecord::Base
       :order => "list_position DESC"
   end
 
-  def self.paper_numbering_reset
+  def self.numbering_reset
     Thread.current[:numbering] = []
   end
 
-  def self.paper_numbering_push
+  def self.numbering_push
     Thread.current[:numbering].push 0
   end
 
-  def self.paper_numbering_pop
+  def self.numbering_pop
     Thread.current[:numbering].pop
   end
 
-  def self.paper_numbering_increment
+  def self.numbering_increment
     Thread.current[:numbering][-1] += 1
   end
 
-  def self.paper_numbering_list
+  def self.numbering_list
     Thread.current[:numbering]
   end
 
-  def self.paper_numbering
+  def self.recursive_numbering
     Thread.current[:numbering].map{|x| x.to_s}.join "."
   end
 
@@ -254,7 +274,7 @@ class Card < ActiveRecord::Base
   end
 
   def find_name_stack mode, desired, deep
-    crash unless  deep[:columns][:names]
+    crash unless deep[:columns][:names]
     reserved = 1
     name_stacks = deep[:columns][:names][reserved..-1]
     case mode
@@ -765,7 +785,7 @@ class Card < ActiveRecord::Base
 
   def auto_view
     case self.view
-    when "list", "paper", "slide", "table", "page", "report", "tree"
+    when "list", "opus", "slide", "table", "page", "report", "tree"
       self.view
     when "custom", "chart"
       "tree"
@@ -791,21 +811,21 @@ class Card < ActiveRecord::Base
     deep[:indents]   ||= []
 #    deep[:numberings] ||= []
     deep[:indents   ][deep[:row]] = item_depth || 0
-#    deep[:numberings][deep[:row]] = self.class.paper_numbering_list || []
-    self.class.paper_numbering_push
+#    deep[:numberings][deep[:row]] = self.class.numbering_list || []
+    self.class.numbering_push
     unless (item_depth += 1) >= max_item_depth
       items.each do |item|
-        self.class.paper_numbering_increment
+        self.class.numbering_increment
         deep = item.look_deeper contexts, deep, max_item_depth, max_aspect_depth, item_depth
       end
     end
-    self.class.paper_numbering_pop
+    self.class.numbering_pop
     item_depth -= 1
     deep
   end
 
   def look_deep action, max_item_depth = 9, max_aspect_depth = 9
-    self.class.paper_numbering_reset
+    self.class.numbering_reset
     look_deeper \
       []                                , #no context yet
       {                                   #deep

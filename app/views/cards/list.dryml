@@ -1,7 +1,7 @@
 <toy-list />
 
 <def tag="toy-list">
-  <%  Card.paper_numbering_reset %>
+  <%  Card.numbering_reset %>
   <set-scoped deep="&@card.edit_deep" >
     <% scope.deep[:no_aspects] = true %>
     <% scope.deep[:no_bodies ] = true %>

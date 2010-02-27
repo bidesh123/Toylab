@@ -24,7 +24,7 @@
       <content-body:>
         <rails-authenticity-token />
         <javascript-variables if="&false"/>
-<%      Card.paper_numbering_reset #tree only %>
+<%      Card.numbering_reset #tree only %>
         <card first tree-view />
       </content-body:  >
       <aside:          >

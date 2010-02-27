@@ -131,17 +131,17 @@ Event.observe(window, "load", function() {
       aspectControls : table.down(".right-controls"),
 
       // Executes a function after a timeout
-      delay: function(delay, fn) {
+      delay          : function(delay, fn) {
         this.cancellableFunction = fn.delay(delay, this);
       },
 
       // Cancels a timeout that's been initiated, but only if there is one
-      cancelDelay: function() {
+      cancelDelay    : function() {
         if (this.cancellableFunction) window.clearTimeout(this.cancellableFunction)
         this.cancellableFunction = null;
       },
 
-      transition: function(eventName) {
+      transition     : function(eventName) {
         fn = hideShowEngine[eventName][this.state];
 
         // Only call the transition function if there is one, else we keep the same state

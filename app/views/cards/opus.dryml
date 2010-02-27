@@ -1,7 +1,7 @@
-<toy-paper />
+<toy-opus />
 
-<def tag="toy-paper">
-  <%  Card.paper_numbering_reset %>
+<def tag="toy-opus">
+  <%  Card.numbering_reset %>
   <set-scoped deep="&@card.edit_deep" >
     <% scope.deep[:no_aspects] = true %>
     <show-page>
@@ -38,8 +38,8 @@
   </td>
 </def>
 
-<def tag="paper-view">
-  <li class="not-enabled view-link advanced"><%= link_to("paper"  , url_for(:action => "paper", :disabled => true), :disabled => true  )  %></li>
+<def tag="opus-view">
+  <li class="not-enabled view-link advanced"><%= link_to("opus"  , url_for(:action => "opus", :disabled => true), :disabled => true  )  %></li>
 </def>
 
 <div id="auto_completer" style="display:none" class="auto_complete"></div>

@@ -1,4 +1,6 @@
 /* Styles for the entire LavaLamp menu */
+td.core-left-controls{background:white;}
+
 ul.sub-pitch {padding-top:.618em;}
 ul.sub-pitch li.tiny{font-size: .382em;}
 
@@ -24,8 +26,8 @@ td.aspect-cell {
 
 td.item-cell {
   border-left: 2.6em solid transparent;
-  padding-left: .236em;
   border-bottom: 1px solid #fc9;
+  padding-left: .236em;
   padding-top: .382em;
   padding-bottom: .618em;
 }
@@ -315,7 +317,7 @@ th, td { padding-bottom:.0008em;padding-top:.0008em;}
 ul.sub-pitch li {
     text-indent:1em;
 }
-th, td { padding-right:.15em}
+th, td { padding-right:.00015em}
 
 td.aspects-table {
     padding-left:.15em;
