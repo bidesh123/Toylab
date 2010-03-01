@@ -146,7 +146,7 @@
       this.core_bottom_controls_row?
     ].inject(0){|sum, n| sum + (n ? 1 : 0) }
 %>
-    <td class="core-left-controls core-controls" rowspan="<%=  n_rows %>">
+    <td class="core-left-controls" rowspan="<%=  n_rows %>">
       <core-left-controls />
     </td>
     <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
@@ -265,11 +265,11 @@
 
 <def tag="card-number-editor">
   <if test="&this.context_id">Number
-    <if            test="&this.whole_id && can_view?(:whole_position)">
-      <editor:whole_position   />
-    </if><else><if test="&this.table_id && can_view?(:table_position)">
+    <if            test="&this.whole_id">
+      <editor:whole_position />
+    </if><else><if test="&this.table_id" >
       <editor:table_position />
-    </if><else><if test="&this.list_id  && can_view?(:list_position)" >
+    </if><else><if test="&this.list_id"  >
       <editor:list_position  />
     </if></else></else>
   </if>
@@ -283,7 +283,7 @@
 </def>
 
 <def tag="card-id" >
-  <if test="current_user.administrator?">
+  <if test="&current_user.administrator?">
     <div class="tool">
       Card <%= this.id%>
       <card-number-editor />
@@ -543,7 +543,7 @@
         /><editor:theme  if="&can_edit? :theme"
         /><editor:access if="&can_edit? :access"
         /><br if="&can_edit?(:theme) || can_edit?(:access)"
-        /><reveal-aspect-or-item which="items" with="&this"
+        /><toggle-aspect-or-item which="items" with="&this"
         /><body-toggle   if="&scope.deep[:action] != 'list'"
         /><show-card-inline
         /><trash
@@ -553,7 +553,7 @@
       <td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
       <td class="access"><editor:access if="&can_edit? :access"/></td>
-      <td class="reveal"><reveal-aspect-or-item which="items" with="&this"/></td>
+      <td class="toggle"><toggle-aspect-or-item which="items" with="&this"/></td>
       <td class="core-body-toggle"><body-toggle  if="&scope.deep[:action] != 'list'"/></td>
       <td class="core-trash"><trash/></td-->
     </tr>
@@ -838,26 +838,30 @@
     <ul class="view-nav">View as
       <page-view   />
       <list-view   />
-      <opus-view  />
-      <!--table-view  /-->
-      <slide-view  />
-      <report-view />
+      <opus-view   />
       <tree-view   />
+      <report-view />
+      <!--table-view  /-->
+      <!-- slide-view  /-->
     </ul>
   </div>
 </def>
 
 <def tag="pads">
   <div class="pads" if="&params[:more] != 'bare'" >
-    <ul class="pad-nav">Current pad
-      <no-pad />
+
+    <ul class="pad-nav">
+      <if test="&$CURRENT_PAD">Current pad</if>
+      <else>Pads</else>
+      <pad-none />
       <repeat with="&this.all_pads">
         <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
         <li class="<%=li_style%>"><%=
-          link_to(
-            this.kind,
-            url_for(:controller => "cards", :action => 'set_pad', :id => this.id )
-            )
+          link_to this.kind, url_for(
+            :controller => "cards",
+            :action => 'set_pad',
+            :id => this.id
+          )
         %></li>
       </repeat>
     </ul>
@@ -865,8 +869,13 @@
 </def>
 
 
-<def tag="no-pad">
-  <li class="pad-link" style = "#{$CURRENT_PAD.to_i ? '' : 'not-enabled '}pad-link"><%= link_to "none", url_for(:action => "set_pad")  %></li>
+<def tag="pad-none">
+  <li class="pad-link" if="&$CURRENT_PAD" style = "pad-link">
+    <%= link_to "none", url_for(
+      :action => "set_pad",
+      :id => 0)
+  %>
+  </li>
 </def>
 
 <def tag="page-view" attrs="off">
@@ -918,11 +927,15 @@
   </tr>
 </def>
 
-<def tag="reveal-aspect-or-item">
+<def tag="toggle-aspect-or-item">
   <%=
-    link_to_function(
-    "Toggle #{attributes[:which] == "aspects" ? "Right" : "Below"}",
-    "Effect.toggle('#{dom_id(this, attributes[:which])}')")
+    if (  subs = attributes[:which]) == "aspects" && this.aspects.count > 0
+      link_to_function "Toggle Right",
+        "Effect.toggle('#{dom_id(this, subs)}')"
+    elsif subs                       == "items"   && this.items.count > 0
+      link_to_function "Toggle Below",
+        "Effect.toggle('#{dom_id(this, subs)}')"
+    end
   %>
 </def>
 

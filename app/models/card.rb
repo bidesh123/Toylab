@@ -82,7 +82,7 @@ class Card < ActiveRecord::Base
     viewable_by?(user, :script)
   end
 
-  def core_bottom_controls_row? deep = ""
+  def core_bottom_controls_row?
     true
   end
 
@@ -127,7 +127,9 @@ class Card < ActiveRecord::Base
   end
       
   def self.current_pad
-    return unless $CURRENT_PAD && current = self.find($CURRENT_PAD)
+    return unless
+      $CURRENT_PAD     &&
+      current = self.find_by_id($CURRENT_PAD)
     current.kind unless (["", "none"].include? current.kind)
   end
 
@@ -475,7 +477,7 @@ class Card < ActiveRecord::Base
   end
 
   def base #caching only
-    @base ||= self.class.find based_on_id
+    @base ||= self.class.find_by_id based_on_id
   end
 
   def bases
@@ -1266,7 +1268,7 @@ class Card < ActiveRecord::Base
 
 
 #  def itself
-#    @itself ||= self.class.find id
+#    @itself ||= self.class.find_by_id id
 #  end
 #
 #    def follow_up_on_create

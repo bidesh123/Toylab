@@ -25,7 +25,7 @@ class CardsController < ApplicationController
   end
 
   def set_pad
-    $CURRENT_PAD = params[:id]
+    $CURRENT_PAD = params[:id].to_i == 0 ? nil : params[:id]
     redirect_to :back
   end
 
@@ -130,11 +130,11 @@ class CardsController < ApplicationController
   def load_editable_card
     return if params[:edit_id].blank?
 
-    @editable_card     = Card.find(params[:edit_id])
+    @editable_card     = Card.find_by_id(params[:edit_id])
     @editable_children = Array(@editable_card) + @editable_card.find_deep_aspects
   end
 
   def load_parent_card
-    @parent_card = Card.find(params[:parent_id])
+    @parent_card = Card.find_by_id(params[:parent_id])
   end
 end

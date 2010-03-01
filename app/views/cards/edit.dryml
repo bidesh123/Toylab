@@ -6,7 +6,7 @@
 
 <def tag="core-right-controls-td">
   <td class="right-controls" rowspan="3" style="display:none">
-    <reveal-aspect-or-item which="aspects"/>
+    <toggle-aspect-or-item which="aspects"/>
     <script-editor-toggle />
     <card-id />
     <add-aspect />
