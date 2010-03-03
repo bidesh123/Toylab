@@ -1,7 +1,8 @@
 /* Styles for the entire LavaLamp menu */
+div.sub-pitch {margin-top: .618em;}
 td.core-left-controls{background:white;}
 
-ul.sub-pitch {padding-top:.618em;}
+ul.sub-pitch {padding-top: .382em;}
 ul.sub-pitch li.tiny{font-size: .382em;}
 
 body.front-page ul{margin-bottom: 0em;}
