@@ -150,11 +150,11 @@
       <core-left-controls />
     </td>
     <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
-      <if test="&this.id == (base = this.recursive_kind_base).id">
-        <kind-editor/>
+      <if test="&this.id == (the_mold = this.recursive_kind_mold).id">
+        <kind-editor blank-message="::"/>
       </if>
       <else>
-        <a kind with="&base"><view field="kind" /></a>
+        <a kind with="&the_mold"><view field="kind" /></a>
       </else>
     </th>
     <else><empty-cell /></else>
@@ -293,12 +293,14 @@
 </def>
 
 <def tag="context-editors">
-  <if test="can_view?(:whole)"   >aspect of <editor:whole /></if>
-  <if test="can_view?(:table)"   >column of <editor:table /></if>
-  <if test="can_view?(:table)"     >in list <editor:list  /></if>
-  <if test="can_view?(:based on)" >based on
-    <a with="&this.based_on" if            ><view:kind    /></a>
-  </if>
+  <if test="can_view?(:whole)" >aspect of <editor:whole /></if>
+  <if test="can_view?(:table)" >column of <editor:table /></if>
+  <if test="can_view?(:list)"  >in list <editor:list    /></if>
+  <if test="can_view?(:mold)"  >mold <editor:mold       /></if>
+  <if test="can_view?(:ref)"   >ref <editor:ref         /></if>
+  <!--if test="can_view?(:mold)"  >mold
+    <a with="&this.mold" if    ><view:kind    /></a>
+  </if-->
 </def>
 
 <def tag="add-row">
@@ -323,9 +325,10 @@
     submit_style = "toy-nav tooltip #{style}"
     new_card = this.class.new(
       :list_id  => attributes[:collection_id]      ,
-      :kind     => attributes[:item_kind]     || '')
+      :kind     => attributes[:item_kind]     || '',
+      :view     => 'none'                          )
     if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
-      new_card.based_on =  pad_card
+      new_card.mold =  pad_card
     end %>
   <form class="&style" with="&new_card">
     <submit label=                        "&attributes[:label]"
@@ -652,7 +655,7 @@
    rows = Array.new table.column_name_rows(scope.deep)
    if rows.length > 1 && rows[0][0]
      rows[1][0] = rows[0][0]
-     rows[0].map!{{:kind =>'delete', :base => nil, :type => 'control'}}
+     rows[0].map!{{:kind =>'delete', :mold => nil, :type => 'control'}}
      rows[0][0]
    end
    first_kind = true
@@ -670,10 +673,10 @@
         case this[:type]
         when "aspect"
           b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:base]     ,        "..." ]
+          [ this[:kind]      , this[:mold]     ,        "..." ]
         when "column"
           b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:base]     , (b  || ":::::")]
+          [ this[:kind]      , this[:mold]     , (b  || ":::::")]
         when "control"
           [ ""         , nil             , nil]
         else
@@ -690,13 +693,13 @@
       <else><%= kind_to_display %></else>
       <if test="&false">
         Table:    <%=
-          if b = this[:base]
+          if b = this[:mold]
             b.table_id      ? table.full_reference : "nil"
           else
             'pouet'
           end     %>
         Colonne:  <%=
-          (b = this[:base]) ?     b.full_reference : 'nil'
+          (b = this[:mold]) ?     b.full_reference : 'nil'
                   %>
       </if>
        </th>

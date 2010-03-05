@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100213165649) do
+ActiveRecord::Schema.define(:version => 20100305003955) do
 
   create_table "cards", :force => true do |t|
     t.string   "kind"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(:version => 20100213165649) do
     t.integer  "whole_id"
     t.text     "body"
     t.integer  "list_id"
-    t.integer  "based_on_id"
+    t.integer  "mold_id"
     t.string   "theme"
     t.integer  "owner_id"
     t.text     "script"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20100213165649) do
     t.integer  "table_position"
     t.boolean  "pad"
     t.integer  "suite_id"
+    t.integer  "ref_id"
   end
 
   create_table "mains", :force => true do |t|

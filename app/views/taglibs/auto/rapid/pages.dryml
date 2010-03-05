@@ -84,7 +84,7 @@
     
           <section param="content-body" with-flash-messages>
             <view:body param="description"/>
-            <field-list fields="kind, script, view, access, theme, list_position, whole_position, table_position, based_on, list, suite, table" param/>
+            <field-list fields="kind, script, view, access, theme, list_position, whole_position, table_position, list, mold, ref, suite, table" param/>
             <section param="collection-section">
               <h3 param="collection-heading">Items</h3>
               

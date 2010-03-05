@@ -29,7 +29,7 @@ class Card < ActiveRecord::Base
   #1
   belongs_to :list     , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true
   has_many   :items    , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true,
-                         :dependent  => :destroy, :order       =>  "list_position"
+                         :dependent  => :destroy, :order       => "list_position"
 
   #2
   belongs_to :whole    , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true
@@ -42,11 +42,14 @@ class Card < ActiveRecord::Base
                          :dependent  => :destroy, :order       => "table_position"
 
   #4
-  belongs_to :based_on , :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true
-  has_many   :instances, :class_name => "Card"  , :foreign_key => :based_on_id, :accessible => true,
-                         :dependent  => :destroy
+  belongs_to :mold     , :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
+# has_many   :instances, :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
 
   #5
+  belongs_to :ref     , :class_name => "Card"   , :foreign_key => :ref_id      , :accessible => true
+# has_many   :akas    , :class_name => "Card"   , :foreign_key => :ref_id      , :accessible => true
+
+  #6
   belongs_to :suite    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true
   has_many   :parts    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true,
                          :dependent  => :destroy
@@ -58,13 +61,39 @@ class Card < ActiveRecord::Base
   named_scope :top_level                                                               ,
      :conditions => ["list_id IS ? AND whole_id IS ? AND table_id IS ?", nil, nil, nil],
      :order => "created_at DESC"
-#  named_scope :similar_instances, lambda {
+# named_scope :similar_instances, lambda {
 #    {:conditions => ["kind    IS ? AND owner_id IS ?", kind, acting_user.id]}
 #  }
 
+  named_scope :lookup, lambda { |name, kind, suite_id, id|{
+    :conditions => [
+      "name = ? AND (kind = ? OR kind = NULL) AND id != ?",
+       name      ,   kind                     ,   id      ] ,
+    :order => "created_at DESC"
+  }}
+
 # before_save do |c| c.context_id = c.whole_id || c.list_id end
-  after_create :follow_up_on_create
-# after_update :follow_up_on_update
+  after_create  :follow_up_on_create
+  after_update  :follow_up_on_update
+  before_update :prepare_for_update
+
+  def follow_up_on_update
+    return if on_automatic?
+    on_automatic do
+      return unless name && k = recursive_kind
+      candidates = self.class.lookup(name, kind, suite_id, id)
+      logger.debug "candidates : #{candidates.to_yaml}"
+      match = candidates.detect {|c| c.recursive_kind == k}
+      logger.debug "match : #{match.to_yaml}"
+      return unless match = self.class.lookup(name, kind, suite_id, id).detect {|c| c.recursive_kind == k}
+      logger.debug "uuuuuuuuuuuuuuuuuuuu"
+      update_attributes :ref_id => match.id
+    end
+  end
+
+  def prepare_for_update
+    true
+  end
 
   def core_main_row? deep
     !deep[:no_aspects]
@@ -95,23 +124,23 @@ class Card < ActiveRecord::Base
     s.recursive_suite
   end
 
-  def source_base source
+  def source_mold source
     r = if source.kind then self.class.find_pad source.kind end
-    r ||= source.recursive_kind_base
+    r ||= source.recursive_kind_mold
   end
 
   def generate_dependents source
     return unless source.is_a? Card
     source.aspects.each do |sub_source|
-      self.aspects.create! :based_on_id => source_base(sub_source).id
+      self.aspects.create! :mold_id => source_mold(sub_source).id
     end
     source.items.each   do |sub_source|
-      self.items.create!   :based_on_id => source_base(sub_source).id
+      self.items.create!   :mold_id => source_mold(sub_source).id
     end
   end
 
   def follow_up_on_create
-    generate_dependents based_on if based_on || nature
+    generate_dependents mold if mold || nature
   end
 
   def local_pads
@@ -170,13 +199,13 @@ class Card < ActiveRecord::Base
     return unless dest_items = this_table.items    
     if this_table.columns.length == 1 #special case for no pre-existing columns
       on_automatic do
-#       if (base = self.table.based_on) &&
-#          (cols = base.columns)        &&
-#          (col = cols[0])
-#         update_attributes :based_on_id => col.id  ,
+#       if (the_mold = self.table.mold) &&
+#          (cols = the_mold.columns   ) &&
+#          (col = cols[0]             )
+#         update_attributes :mold_id => col.id  ,
 #                           :kind        => col.kind
         dest_items.each do |dest_item|
-          dest_item.update_attributes(:based_on_id => id  ,
+          dest_item.update_attributes(:mold_id => id  ,
                                       :kind        => kind) if dest_item
         end
         this_table.columns.create! #1st column used for items, so introduce another
@@ -185,7 +214,7 @@ class Card < ActiveRecord::Base
       on_automatic do
         dest_items.each do |dest_item|
           dest_item.aspects.create!(
-            :based_on_id => self.id,
+            :mold_id => self.id,
             :kind        => self.kind
           ) if dest_item
         end
@@ -193,7 +222,7 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def base_existing_items_on_this_column #first column
+  def mold_existing_items_on_this_column #first column
     # default dependence on the column at creation
     # items can be made independent later
     on_automatic do
@@ -202,7 +231,7 @@ class Card < ActiveRecord::Base
       write_attribute(kind, the_kind)
       items.each do |item|
         if item.kind == the_kind
-          item.based_on = self
+          item.mold = self
         else
           unforeseen(kind(of(item)))
         end
@@ -319,8 +348,8 @@ class Card < ActiveRecord::Base
     k = (h[:kind] ?  "#{h[:kind]}" : "vague") + " #{c} #{id} [#{name}]"
     case h[:type]
     when "column"
-      b = h[:base] ? "#{h[:base].id.to_s}" : "NO"
-      bk = h[:base].kind ? h[:kind].to_s : "vague"
+      b = h[:mold] ? "#{h[:mold].id.to_s}" : "NO"
+      bk = h[:mold].kind ? h[:kind].to_s : "vague"
       "#{k} belonging to #{bk} column "
     when "aspect"
       "#{k}"
@@ -332,9 +361,9 @@ class Card < ActiveRecord::Base
   end
 
   def coded_heading
-    b = based_on ? based_on : self
-    { :type => based_on ? "column" : "aspect",
-      :base => b.recursive_kind_base         ,
+    b = mold ? mold : self
+    { :type => mold ? "column" : "aspect",
+      :mold => b.recursive_kind_mold         ,
       :kind => b.recursive_kind                }
    end
 
@@ -426,7 +455,7 @@ class Card < ActiveRecord::Base
 
   def nil_heading
     { :type => 'nil',
-      :base =>  nil,
+      :mold =>  nil,
       :kind => 'nil' }
   end
 
@@ -444,7 +473,7 @@ class Card < ActiveRecord::Base
  
   def strict_heading_match? desired, existing
     partial_heading_match?( desired, existing, :type) &&
-    partial_heading_match?( desired, existing, :base) &&
+    partial_heading_match?( desired, existing, :mold) &&
     partial_heading_match?( desired, existing, :kind)
   end
     
@@ -465,42 +494,42 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_kind
-    if r = recursive_kind_base
+    if r = recursive_kind_mold
       r.kind
     end
   end
 
-  def recursive_kind_base
+  def recursive_kind_mold
     return self if kind && !kind.strip.blank?
-    return self unless b = based_on
-    b.recursive_kind_base
+    return self unless b = mold
+    b.recursive_kind_mold
   end
 
-  def base #caching only
-    @base ||= self.class.find_by_id based_on_id
+  def get_mold #caching only
+    @mold ||= self.class.find_by_id mold_id
   end
 
-  def bases
-    if based_on
-      based_on.bases
+  def molds
+    if mold
+      mold.molds
     else
       []
     end + [self]
   end
 
-  def old_recursive_base
-    if base
-      base
-    elsif based_on
-      based_on.recursive_kind
+  def old_recursive_mold
+    if m = get_mold
+      m
+    elsif mold
+      mold.recursive_kind
     end
   end
 
-  def new_recursive_base
-    if base
-      base.recursive_base
-    elsif based_on
-      based_on.recursive_kind
+  def new_recursive_mold
+    if m = get_mold
+      m.recursive_mold
+    elsif mold
+      mold.recursive_kind
     end
   end
 
@@ -536,10 +565,10 @@ class Card < ActiveRecord::Base
     case self.it.class.name
     when "Card"
       case reference
-      when :id,
-           nil, :name, :theme, :view, :kind,
-           :aspects, :items, :columns, :based_on, :instances,
-           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+      when nil,
+           :id, :name, :theme, :view, :kind,
+           :aspects, :items, :columns,  :mold,    :ref, :instances,
+           :created_at   , :updated_at, :mold_id, :ref_id, :owner_id,
            :list_id      , :whole_id      , :table_id      ,
            :list_position, :whole_position, :table_position,
            :list         , :whole         , :table         , :owner,
@@ -559,14 +588,14 @@ class Card < ActiveRecord::Base
     when "Card"
       case reference
       when :id           ,
-           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+           :created_at   , :updated_at    , :mold_id   ,ref_id,  :owner_id,
            :list_id      , :whole_id      , :table_id      ,
            :list_position, :whole_position, :table_position,
            :list         , :whole         , :table         , :owner,
            :script       ,
            :access       ,
            nil, :name, :body, :theme, :view, :kind,
-           :aspects, :items, :columns, :based_on, :instances
+           :aspects, :items, :columns, :mold, :ref, :instances
         it.send("#{reference}=", val)
       else
         ""
@@ -796,7 +825,7 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def inherit_from_base
+  def inherit_from_mold
     return false unless example = self
     #inherit_by_example example
     true
@@ -1012,7 +1041,7 @@ class Card < ActiveRecord::Base
       when nil
         :see
       when              :id            , :created_at   , :updated_at,
-                        :based_on_id   , :owner_id     , :owner,
+                        :mold_id   , :owner_id     , :owner,
                         :whole_id      , :list_id      , :table_id                                                                      :owner
         :program
       when              :whole_position, :list_position, :table_position
@@ -1021,13 +1050,13 @@ class Card < ActiveRecord::Base
         :script
       when              :access
         :control_access
-      when              :kind, :view   , :based_on      , :pad  ,
+      when              :kind, :view   , :mold      , :pad  ,
                         :whole         , :list          , :table
 
         :edit_structure
-      when              :name, :body, :theme
+      when              :name, :body, :theme, :ref, :ref_id
         :edit_data
-      when              :instances # what ??
+      when              :instances
         :edit_data
       else
         "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
@@ -1043,12 +1072,12 @@ class Card < ActiveRecord::Base
     demand = case
       when any_changed?(:id,
                         :created_at    , :updated_at   ,
-                        :based_on_id   , :owner_id     , :owner         ,
+                        :mold_id   , :owner_id     , :owner         ,
                         :whole_id      , :list_id      , :table_id      )
         :manage
       when any_changed?(:id,
                         :created_at    , :updated_at   ,
-                        :based_on_id   , :owner_id     , :owner         ,
+                        :mold_id   , :owner_id     , :owner         ,
                         :whole_id      , :list_id      , :table_id      )
         :program
       when any_changed?(:whole_position, :list_position, :table_position)
@@ -1059,7 +1088,7 @@ class Card < ActiveRecord::Base
         :control_access
       when any_changed?(:kind, :view, :whole, :table, :pad              )
         :edit_structure
-      when any_changed?(:name, :body, :theme, :list                     )
+      when any_changed?(:name, :body, :theme, :list, :ref, :ref_id                     )
         :edit_data
       when changed?
 #        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
@@ -1074,7 +1103,7 @@ class Card < ActiveRecord::Base
   def view_permitted? attribute
     demand = case attribute
       when :id,
-           :created_at   , :updated_at    , :based_on_id   , :owner_id,
+           :created_at   , :updated_at    , :mold_id   , :owner_id,
            :list_id      , :whole_id      , :table_id      ,
            :list_position, :whole_position, :table_position,
            :list         , :whole         , :table         , :owner
@@ -1083,8 +1112,8 @@ class Card < ActiveRecord::Base
         :script
       when :access
         :control_access
-      when nil, :name, :body, :theme, :view, :kind, :pad,
-                :aspects, :items, :columns, :based_on, :instances
+      when nil, :name, :body, :theme, :view, :kind, :pad, :ref, :ref_id,
+                :aspects, :items, :columns, :mold, :instances
         :see
       else
         "error_view_unknown_attribute_#{attribute.inspect}".to_sym
@@ -1273,7 +1302,7 @@ class Card < ActiveRecord::Base
 #
 #    def follow_up_on_create
 # adadad;    if table
-#      base_existing_items_on_this_column if table.columns.length == 1 #first column
+#      mold_existing_items_on_this_column if table.columns.length == 1 #first column
 #      generate_column_cells table # new columns are inherited from in each row
 #    elsif list # new row inherits from list
 #      return
@@ -1288,10 +1317,10 @@ class Card < ActiveRecord::Base
 #    cols = list.columns
 #    return false unless cols && cols.length > 0 && (first_column = cols.shift)
 #    on_automatic do
-#      update_attributes :based_on_id => first_column.id, :kind =>first_column.kind
+#      update_attributes :mold_id => first_column.id, :kind =>first_column.kind
 #      cols.each do |col|
 #        this_new_aspect = self.aspects.create!(
-#          :based_on_id => col.id,
+#          :mold_id => col.id,
 #          :kind        => col.kind
 #        )
 #        this_new_aspect.generate_aspects_recursively col
@@ -1303,7 +1332,7 @@ class Card < ActiveRecord::Base
 #    adadadad; self.kind = source.kind if source.kind
 #    source.aspects.each do |source_aspect|
 #      sub_aspect = self.aspects.create!(
-#        :based_on_id => source_aspect.id,
+#        :mold_id => source_aspect.id,
 #        :kind        => source_aspect.kind
 #      )
 #      sub_aspect.generate_aspects_recursively source_aspect
@@ -1323,7 +1352,7 @@ class Card < ActiveRecord::Base
 #    self.kind ||= source.kind if source.kind
 #    source.columns.each do |source_column|
 #      self.columns.create!(
-#        :based_on_id => source_column.based_on_id  ,
+#        :mold_id => source_column.mold_id  ,
 #        :kind        => source_column.kind
 #      )
 #    end
@@ -1333,7 +1362,7 @@ class Card < ActiveRecord::Base
 #     adadad; self.kind ||= source.kind if source.kind
 #     source.items.each do |source_item|
 #       new_item = self.items.create!(
-#          :based_on_id => source_item.id  , #but this is already set to the column is it not?
+#          :mold_id => source_item.id  , #but this is already set to the column is it not?
 #          :kind        => source_item.kind
 #        )
 #      new_item.generate_aspects_recursively source_item

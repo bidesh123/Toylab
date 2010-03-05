@@ -127,6 +127,8 @@ td.aspect-body-cell {
   color: #eee;
 }
 
+.kind-cell .tiny-gray { font-size: 1em;}
+
 .hilite, .logo, ul a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
 .hilite input, th input, h1 input, div.table-header, td.name-cell,
   td.aspect-name-cell,

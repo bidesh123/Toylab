@@ -1,4 +1,17 @@
 /*
+Event.addBehavior({
+
+    '.string.in-place-edit' :
+     function (ev) {
+
+         var ipe = Hobo._makeInPlaceEditor(this, {clickToEditText:"Cluck to enter or change text"})
+         ipe.getText = function() {
+             return this.element.innerHTML.gsub(/<br\s*\/?>/, "\n").unescapeHTML()
+         }
+    }
+});
+ **/
+/*
 window.location.replace('http://toylab.heroku.com/bump');
 but can I NOT tell the server?
     what's the server got to do with whether an object is selected and how deep it is opened'
