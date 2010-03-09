@@ -5,6 +5,53 @@
 <!-- <set-theme name="clean"/> -->
 
 
+<def tag="list-row">
+  <do with="&this.recursive_ref || this">
+    <tr class="list-row" if="&this.items">
+  <%        Card.numbering_push      %>
+      <td class="list-row" colspan="2">
+        <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
+        <table class="list-rows" id="&table_dom_id" if="&this.items">
+          <repeat with="&this.items">
+  <%        Card.numbering_increment %>
+            <item-row />
+          </repeat>
+        </table>
+      </td>
+  <%        Card.numbering_pop       %>
+    </tr>
+  </do>
+</def>
+
+<def tag="self-and-aspects-row">
+  <% aspects_id = dom_id(this, 'aspects')                  %>
+  <tr class="self-and-aspects-row">
+    <td class="core"                        ><core          /></td>
+    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
+      <td class="aspects-table"
+          if="&this.aspects"
+          id="&aspects_id"
+      >
+        <aspects-table />
+      </td>
+    </do>
+  </tr>
+</def>
+
+<def tag="self-and-aspects-row-edit">
+  <% aspects_id = dom_id(this, 'aspects')                  %>
+  <tr class="self-and-aspects-row">
+    <td class="core"                        ><core          /></td>
+    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
+      <td if="&this.aspects"
+          id="&aspects_id"
+      >
+        <aspects-table />
+      </td>
+    </do>
+  </tr>
+</def>
+
 <def tag="view" attrs="inline, block, if-blank, no-wrapper, truncate"><%=
   #raise HoboError, "view of non-viewable field '#{this_field}' of #{this_parent.typed_id rescue this_parent}" unless
   #  can_view?
@@ -288,7 +335,7 @@
       Card <%= this.id%>
       <card-number-editor />
     </div>
-    <div class="tool" if="&false"><context-editors           /></div>
+    <div class="tool" if="&true"><context-editors           /></div>
   </if>
 </def>
 
@@ -296,6 +343,7 @@
   <if test="can_view?(:whole)" >aspect of <editor:whole /></if>
   <if test="can_view?(:table)" >column of <editor:table /></if>
   <if test="can_view?(:list)"  >in list <editor:list    /></if>
+  <if test="can_view?(:suite)" >in suite <view:suite    /></if>
   <if test="can_view?(:mold)"  >mold <editor:mold       /></if>
   <if test="can_view?(:ref)"   >ref <editor:ref         /></if>
   <!--if test="can_view?(:mold)"  >mold
@@ -326,12 +374,13 @@
     new_card = this.class.new(
       :list_id  => attributes[:collection_id]      ,
       :kind     => attributes[:item_kind]     || '',
+      :suite_id => this.suite_id              || id,
       :view     => 'none'                          )
     if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
       new_card.mold =  pad_card
     end %>
   <form class="&style" with="&new_card">
-    <submit label=                        "&attributes[:label]"
+    <submit label=                    "&attributes[:label]"
         title="&attributes[:tooltip] || attributes[:label]"
         class="&submit_style" />
     <after-submit uri="#{request.request_uri}"/>
@@ -341,12 +390,11 @@
 <def tag="start-list">
   <if test="&this">
     <if test="this.items.count == 0">
-  <%  element, collection =
+<%    element, collection =
         mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
       label, tooltip =
         ["Start #{collection}",
-         "Add a first #{element} to #{collection} #{this.reference_name}"]
-   %>
+         "Add a first #{element} to #{collection} #{this.reference_name}"] %>
       <add-item-or-row-form
           element="&element"
           label="&label"
@@ -396,22 +444,6 @@
   <hierarchical-card />
 </def>
 
-<def tag="list-row">
-  <tr class="list-row" if="&this.items">
-<%        Card.numbering_push      %>
-    <td class="list-row" colspan="2">
-      <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
-      <table class="list-rows" id="&table_dom_id" if="&this.items">
-        <repeat with="&this.items">
-<%        Card.numbering_increment %>
-          <item-row />
-        </repeat>
-      </table>
-    </td>
-<%        Card.numbering_pop       %>
-  </tr>
-</def>
-
 <def tag="script-editor-toggle">
   <span class="tool" if="&can_edit?(:script)">
     <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
@@ -445,28 +477,6 @@
 <def tag="core-left-controls">
   <img if="&false" src="/images/blueball.png" alt="*" />
   <else>&nbsp;</else>
-</def>
-
-<def tag="self-and-aspects-row">
-  <tr class="self-and-aspects-row">
-    <td class="core">
-        <core />
-    </td>
-    <td class="aspects-table" if="&!scope.deep[:no_aspects] && this.aspects" id="<%= dom_id(this, 'aspects') %>">
-      <aspects-table />
-    </td>
-  </tr>
-</def>
-
-<def tag="self-and-aspects-row-edit">
-  <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
-     aspects_id = dom_id(this, 'aspects')                  %>
-  <tr class="self-and-aspects-row">
-    <td   class="core"    ><core          /></td>
-    <if test="&!scope.deep[:no_aspects] && this.aspects">
-      <td id="&aspects_id"><aspects-table /></td>
-    </if>
-  </tr>
 </def>
 
 
@@ -542,7 +552,10 @@
       <td class="bottom-controls"
          ><start-any-list if="&true || this && this.items.count == 0"
         /><if test="&can_edit? :pad" ><editor:pad/>Pad</if
-         ><br if="&(this && this.items.count == 0 && can_create?(Card.new(:list_id => id)) || can_edit?(:pad))"
+         ><% new_card = this.class.new(
+               :list_id  =>                  this.id,
+               :suite_id => this.suite_id || this.id)
+        %><br if="&this && this.items.count == 0 && can_create?(new_card)"
         /><editor:theme  if="&can_edit? :theme"
         /><editor:access if="&can_edit? :access"
         /><br if="&can_edit?(:theme) || can_edit?(:access)"
@@ -569,9 +582,12 @@
          (this.aspects.count > 0 ?
            " Describe another aspect of " : "Describe aspects of ") +
          this.reference_name
+       new_card = this.class.new(
+               :whole_id =>                  this.id,
+               :suite_id => this.suite_id || this.id)
     %>
-    <form class="add-aspect" with="&Card.new(:whole_id => this.id)">
-      <submit label="Add an aspect" title ="&tooltip" class ="toy-nav add-aspect"/>
+    <form class="add-aspect" with="&new_card">
+      <submit label="Add an aspect" title="&tooltip" class="toy-nav add-aspect"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
   </if>
@@ -664,26 +680,26 @@
 %>
   <tr repeat="&rows">
     <empty-cell />
-    <th repeat>
+    <th class="title-cell" repeat>
 <%    kind_to_display        , object_to_update, blank_message = case this.class.name
       when "NilClass"
-        [  ""                , nil             ,        "Nil"          ]
+        [  ""                , nil             ,        "Nil"       ]
       when "Hash"
          nbsp = "\xC2\xA0"
         case this[:type]
         when "aspect"
           b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:mold]     ,        "..." ]
+          [ this[:kind]      , this[:mold]     ,        "ggggg..."       ]
         when "column"
           b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:mold]     , (b  || ":::::")]
+          [ this[:kind]      , this[:mold]     , (b  || ":::::")    ]
         when "control"
-          [ ""         , nil             , nil]
+          [ ""               , nil             , nil                ]
         else
-          [ "#{this[:type]}?", nil             , nil                   ]
+          [ "#{this[:type]}?", nil             , nil                ]
         end
       else
-        [   this.class.name  , nil             ,        "cataclysm"    ]
+        [   this.class.name  , nil             ,        "cataclysm" ]
       end
       first_kind = false
 %>
@@ -703,7 +719,7 @@
                   %>
       </if>
        </th>
-    <td>
+    <td class="add-column">
       <add-column with="&table" if="&scope.deep[:action] == 'table' && (row_count += 1) == 1" />
       <else><empty-cell /></else>
     </td>
@@ -819,6 +835,7 @@
 <def tag="empty-cell">
   <td unless="&attributes[:first]" class="grey-empty-cell"><span param="default">&nbsp;</span></td>
 </def>
+
 <def tag="right-border-cell">
 </def>
 
@@ -980,7 +997,7 @@
 </def>
 
 <def tag="recursive-card">
-  <table class="card inner drop-target">
+  <table class="card inner drop-target" merge-attrs>
     <self-and-aspects-row />
     <list-row />
   </table>
@@ -1015,7 +1032,7 @@
 </def>
 
 <def tag="left-tool-cell">
-  <td><show-card-inline /></td>
+  <td class="left-tool-cell"><show-card-inline /></td>
 </def>
 
 <def tag="content-rows">

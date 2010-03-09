@@ -36,7 +36,7 @@
             "#{this.reported_view} by " +
             "#{(this.owner || Guest).name}" %>
         <a title="&tooltip">
-          <if test="&ref = this.reference_name"><%= ref %></if>
+          <if test="&rf = this.reference_name"><%= rf %></if>
           <else><%= image_tag "toy_magnifier.png"       %></else>
         </a>
         <span class="author tiny-gray">

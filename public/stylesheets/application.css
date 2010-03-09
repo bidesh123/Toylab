@@ -1,4 +1,7 @@
 /* Styles for the entire LavaLamp menu */
+th.aspect-kind-cell {color: transparent;}
+th.aspect-kind-cell:hover {color: #999;}
+th.title-cell {padding-right:.618em;}
 div.sub-pitch {margin-top: .618em;}
 td.core-left-controls{background:white;}
 
@@ -164,7 +167,12 @@ input {
 }
 
 td.cell, div.cells th{
-    border-right:4px solid #eee; padding-left:.618em;
+    border-right:1px solid #eee; padding-left:.618em;
+}
+
+td.cell{
+    border-bottom:1px solid #eee;
+    border-left:1px solid #eee;
 }
 
 td.cell.sub-cell, div.cells th{

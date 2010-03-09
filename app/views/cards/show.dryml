@@ -23,7 +23,7 @@
   <% css_class  = "aspect-body-cell"
      css_class += " inner" if !attributes[:first] %>
   <td class="<%= css_class %>">
-    <editor:body blank-message="..." />
+    <editor:body if="&this.body" />
   </td>
 </def>
 

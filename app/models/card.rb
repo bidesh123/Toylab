@@ -25,30 +25,24 @@ class Card < ActiveRecord::Base
 
   #0
   belongs_to :owner    , :class_name => "User"  , :creator => true
-
   #1
   belongs_to :list     , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true
   has_many   :items    , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true,
                          :dependent  => :destroy, :order       => "list_position"
-
   #2
   belongs_to :whole    , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true
   has_many   :aspects  , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true,
                          :dependent  => :destroy, :order       => "whole_position"
-
   #3
   belongs_to :table    , :class_name => "Card"  , :foreign_key => :table_id   , :accessible => true
   has_many   :columns  , :class_name => "Card"  , :foreign_key => :table_id   , :accessible => true,
                          :dependent  => :destroy, :order       => "table_position"
-
   #4
   belongs_to :mold     , :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
 # has_many   :instances, :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
-
   #5
   belongs_to :ref     , :class_name => "Card"   , :foreign_key => :ref_id      , :accessible => true
 # has_many   :akas    , :class_name => "Card"   , :foreign_key => :ref_id      , :accessible => true
-
   #6
   belongs_to :suite    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true
   has_many   :parts    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true,
@@ -58,18 +52,51 @@ class Card < ActiveRecord::Base
   sortable :scope => :whole_id, :list_name => :whole,  :column => :whole_position
   sortable :scope => :table_id, :list_name => :table,  :column => :table_position
 
-  named_scope :top_level                                                               ,
-     :conditions => ["list_id IS ? AND whole_id IS ? AND table_id IS ?", nil, nil, nil],
-     :order => "created_at DESC"
-# named_scope :similar_instances, lambda {
-#    {:conditions => ["kind    IS ? AND owner_id IS ?", kind, acting_user.id]}
+  named_scope :suites    ,
+     :conditions  => "suite_id IS NULL",
+     :order       => "created_at DESC"
+
+# named_scope :similar_instances, lambda { |suite_id|
+#    {:conditions => ["kind    IS ? AND suite_id IS ?", kind, suite_id]}
 #  }
 
-  named_scope :lookup, lambda { |name, kind, suite_id, id|{
-    :conditions => [
-      "name = ? AND (kind = ? OR kind = NULL) AND id != ?",
-       name      ,   kind                     ,   id      ] ,
-    :order => "created_at DESC"
+#  named_scope :lookup, lambda { |nam, kind, suite_id, id| {
+#    :conditions => [
+#      "name = ? AND "                  +
+#      "(kind = ? OR kind = NULL OR kind = '') AND " +
+#      "suite_id = ? AND "              +
+#      "id != ? AND "                   +
+#      "ref_id IS NULL"                  ,
+#                                 nam, kind, suite_id, id ] ,
+#    :order => "created_at ASC"
+#  }}
+
+  named_scope :named    , lambda {             |nam | {
+    :conditions   => ["name = ?"                , nam  ]
+  }}
+
+  named_scope :as_a     , lambda {             |kind| {
+    :conditions   => ["kind = ? OR kind = '' OR kind IS NULL"   , kind ]
+  }}
+
+  named_scope :part_of  , lambda {             |s_id| {
+    :conditions   => ["suite_id = ?"            , s_id ]
+  }}
+
+  named_scope :suites, lambda {                    {
+    :conditions   => ["suite_id IS NULL"                 ]
+  }}
+
+  named_scope :but_not  , lambda {             |i_d | {
+    :conditions   => ["id != ?"                 , i_d  ]
+  }}
+
+  named_scope :originals, lambda {                    {
+    :conditions   => ["ref_id IS NULL"                 ]
+  }}
+
+  named_scope :latest   , lambda {                    {
+    :order        => "created_at ASC"
   }}
 
 # before_save do |c| c.context_id = c.whole_id || c.list_id end
@@ -78,14 +105,30 @@ class Card < ActiveRecord::Base
   before_update :prepare_for_update
 
   def follow_up_on_update
+    logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     return if on_automatic?
+    logger.debug "not on automaticccccccccccccccccc"
     on_automatic do
+      logger.debug "now yessssssssssssssssssssssssss"
       return unless name && k = recursive_kind
-      candidates = self.class.lookup(name, kind, suite_id, id)
-      logger.debug "candidates : #{candidates.to_yaml}"
+      logger.debug "name: #{name}"
+      names = self.class.named(name)
+      logger.debug "#{names.length} namesssssssssss"
+      logger.debug "recursive_kind: #{k}"
+      kinds = names.as_a(k)
+      logger.debug "#{kinds.length} as a #{k}"
+      suites = kinds.part_of(suite_id)
+      logger.debug "#{suites.length} part of #{suite_id}"
+      all_but = suites.but_not(id)
+      logger.debug "#{all_but.length} but not #{id}"
+      origs = all_but.originals
+      logger.debug "#{origs.length} originals"
+      candidates = origs.latest
+      logger.debug "candidatessssssssss"
+      logger.debug candidates.to_yaml
       match = candidates.detect {|c| c.recursive_kind == k}
-      logger.debug "match : #{match.to_yaml}"
-      return unless match = self.class.lookup(name, kind, suite_id, id).detect {|c| c.recursive_kind == k}
+      return unless match
+      logger.debug "match : #{match.id}"
       logger.debug "uuuuuuuuuuuuuuuuuuuu"
       update_attributes :ref_id => match.id
     end
@@ -93,6 +136,180 @@ class Card < ActiveRecord::Base
 
   def prepare_for_update
     true
+  end
+
+  def self.field reference
+    case self.it.class.name
+    when "Card"
+      case reference
+      when #standard field list
+           nil             , :owner,
+           :id             , :owner_id       ,
+           :name           , :kind           ,
+           :ref            , :mold           , :suite          ,
+           :ref_id         , :mold_id        , :suite_id       ,
+           :akas           , :instances      , :parts          ,
+
+           :list_id        , :whole_id       , :table_id       ,
+           :list_position  , :whole_position , :table_position ,
+           :list           , :whole          , :table          ,
+           :items          , :aspects        , :columns        ,
+
+           :body           , :access         , :theme          ,
+           :script         , :view           , :pad            ,
+           :created_at     , :updated_at
+        it.send reference
+      else
+        ""
+      end
+    else
+      ""
+    end
+  end
+
+  def self.set_field reference
+    case self.it.class.name
+    when "Card"
+      case reference
+      when
+           nil             , :owner,
+           :id             , :owner_id       ,
+           :name           , :kind           ,
+           :ref            , :mold           , :suite          ,
+           :ref_id         , :mold_id        , :suite_id       ,
+           :akas           , :instances      , :parts          ,
+
+           :list_id        , :whole_id       , :table_id       ,
+           :list_position  , :whole_position , :table_position ,
+           :list           , :whole          , :table          ,
+           :items          , :aspects        , :columns        ,
+
+           :body           , :access         , :theme          ,
+           :script         , :view           , :pad            ,
+           :created_at     , :updated_at
+        it.send("#{reference}=", val)
+      else
+        ""
+      end
+    else
+      ""
+    end
+  end
+
+  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
+    demand = case attribute
+      when nil
+        :see
+      when
+                             :owner                            ,
+           :id             , :owner_id                         ,
+           :ref            , :mold           , :suite          ,
+           :ref_id         , :mold_id        , :suite_id       ,
+           :akas                             , :parts          ,
+
+           :list_id        , :whole_id       , :table_id       ,
+           :list           , :whole          , :table          ,
+           :items          , :aspects        , :columns        ,
+
+           :body                             , :theme          ,
+                             :view                             ,
+           :created_at     , :updated_at
+        :program
+      when :list_position  , :whole_position , :table_position
+        :manage
+      when :script
+        :script
+      when                   :access
+        :control_access
+      when                   :kind                             ,
+            :view           , :pad
+        :edit_structure
+      when :name                                               ,
+           :body                             , :theme          ,
+                             :view                             ,
+                             :instances
+        :edit_data
+      else
+        "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
+      end
+#    logger.debug "edit permitted on #{attribute.inspect} yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+#    logger.debug "demand #{demand.to_yaml}"
+    permitted? demand
+  end
+
+  def update_permitted?
+#    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+#    logger.debug changed?.to_yaml
+    demand = case
+      when any_changed?(     :owner                            ,
+           :id             , :owner_id                         ,
+           :ref            , :mold           , :suite          ,
+           :ref_id         , :mold_id        , :suite_id       ,
+           :akas                             , :parts          ,
+
+           :list_id        , :whole_id       , :table_id       ,
+           :list           , :whole          , :table          ,
+           :items          , :aspects        , :columns        ,
+
+           :body                             , :theme          ,
+                             :view                             ,
+           :created_at     , :updated_at                       )
+        :program
+      when any_changed?(
+           :list_position  , :whole_position , :table_position )
+        :manage
+      when any_changed?(
+           :script                                             )
+        :script
+      when any_changed?(     :access                           )
+        :control_access
+      when any_changed?(     :kind                             ,
+                             :view           , :pad            )
+        :edit_structure
+      when any_changed?(
+           :name                                               ,
+           :body                             , :theme          ,
+                             :view                             ,
+                             :instances                        )
+        :edit_data
+      when changed?
+#        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
+#        logger.debug changed?.to_yaml
+        "unknown attribute changed: #{changed?.to_s}"
+      else #nothing is changed???
+        :see
+     end
+    permitted? demand
+  end
+
+  def view_permitted? attribute
+    demand = case attribute
+      when                   :owner                            ,
+           :id             , :owner_id                         ,
+           :ref            , :mold           , :suite          ,
+           :ref_id         , :mold_id        , :suite_id       ,
+           :akas                             , :parts          ,
+
+           :list_id        , :whole_id       , :table_id       ,
+           :list_position  , :whole_position , :table_position ,
+           :list           , :whole          , :table          ,
+
+           :created_at     , :updated_at
+        :manage
+      when :script
+        :script
+      when                   :access
+        :control_access
+      when nil             ,
+           :name           , :kind                             ,
+           :items          , :aspects        , :columns        ,
+           :body                             , :theme          ,
+                             :view           , :pad
+        :see
+      else
+        "error_view_unknown_attribute_#{attribute.inspect}".to_sym
+      end
+    permitted? demand
   end
 
   def core_main_row? deep
@@ -119,9 +336,29 @@ class Card < ActiveRecord::Base
     #eventual support for inheritance vis is a, is, has a, has some, has many
   end
 
-  def recursive_suite #temp
-    return self unless s = (list || whole || table)
-    s.recursive_suite
+  def reset_suite!
+    return unless context
+    s_id = recursive_suite.id
+    update_attribute :suite_id, s_id unless s_id == id
+  end
+
+  def self.reset_suites
+    find(:all).each {|c| c.reset_suite!}
+  end
+
+  def recursive_ref
+    return unless r = ref
+    r.recursive_ref_inner
+  end
+
+  def recursive_ref_inner
+    return self unless r = ref
+    r.recursive_ref_inner
+  end
+
+  def recursive_suite
+    return self unless ctx = context
+    ctx.recursive_suite
   end
 
   def source_mold source
@@ -561,50 +798,6 @@ class Card < ActiveRecord::Base
 
   @@it = Hash.new {|h,k| h[k] = nil }
 
-  def self.field reference
-    case self.it.class.name
-    when "Card"
-      case reference
-      when nil,
-           :id, :name, :theme, :view, :kind,
-           :aspects, :items, :columns,  :mold,    :ref, :instances,
-           :created_at   , :updated_at, :mold_id, :ref_id, :owner_id,
-           :list_id      , :whole_id      , :table_id      ,
-           :list_position, :whole_position, :table_position,
-           :list         , :whole         , :table         , :owner,
-           :access       ,
-           :script       , :body
-        it.send reference
-      else
-        ""
-      end
-    else
-      ""
-    end
-  end
-
-  def self.set_field reference
-    case self.it.class.name
-    when "Card"
-      case reference
-      when :id           ,
-           :created_at   , :updated_at    , :mold_id   ,ref_id,  :owner_id,
-           :list_id      , :whole_id      , :table_id      ,
-           :list_position, :whole_position, :table_position,
-           :list         , :whole         , :table         , :owner,
-           :script       ,
-           :access       ,
-           nil, :name, :body, :theme, :view, :kind,
-           :aspects, :items, :columns, :mold, :ref, :instances
-        it.send("#{reference}=", val)
-      else
-        ""
-      end
-    else
-      ""
-    end
-  end
-
   def self.sub reference
     case self.it.class.name
     when "Card"
@@ -1032,91 +1225,6 @@ class Card < ActiveRecord::Base
         :delete_item
       else
         :error_invalid_destruction_context
-      end
-    permitted? demand
-  end
-
-  def edit_permitted?(attribute) #try_the_automatically_derived_version_first
-    demand = case attribute
-      when nil
-        :see
-      when              :id            , :created_at   , :updated_at,
-                        :mold_id   , :owner_id     , :owner,
-                        :whole_id      , :list_id      , :table_id                                                                      :owner
-        :program
-      when              :whole_position, :list_position, :table_position
-        :manage
-      when              :script
-        :script
-      when              :access
-        :control_access
-      when              :kind, :view   , :mold      , :pad  ,
-                        :whole         , :list          , :table
-
-        :edit_structure
-      when              :name, :body, :theme, :ref, :ref_id
-        :edit_data
-      when              :instances
-        :edit_data
-      else
-        "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
-      end
-#    logger.debug "edit permitted on #{attribute.inspect} yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-#    logger.debug "demand #{demand.to_yaml}"
-    permitted? demand
-  end
-
-  def update_permitted?
-#    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-#    logger.debug changed?.to_yaml
-    demand = case
-      when any_changed?(:id,
-                        :created_at    , :updated_at   ,
-                        :mold_id   , :owner_id     , :owner         ,
-                        :whole_id      , :list_id      , :table_id      )
-        :manage
-      when any_changed?(:id,
-                        :created_at    , :updated_at   ,
-                        :mold_id   , :owner_id     , :owner         ,
-                        :whole_id      , :list_id      , :table_id      )
-        :program
-      when any_changed?(:whole_position, :list_position, :table_position)
-        :manage
-      when any_changed?(:script                                         )
-        :script
-      when any_changed?(:access                                         )
-        :control_access
-      when any_changed?(:kind, :view, :whole, :table, :pad              )
-        :edit_structure
-      when any_changed?(:name, :body, :theme, :list, :ref, :ref_id                     )
-        :edit_data
-      when changed?
-#        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
-#        logger.debug changed?.to_yaml
-        "unknown attribute changed: #{changed?.to_s}"
-      else #nothing is changed???
-        :see
-     end
-    permitted? demand
-  end
-
-  def view_permitted? attribute
-    demand = case attribute
-      when :id,
-           :created_at   , :updated_at    , :mold_id   , :owner_id,
-           :list_id      , :whole_id      , :table_id      ,
-           :list_position, :whole_position, :table_position,
-           :list         , :whole         , :table         , :owner
-        :manage
-      when :script
-        :script
-      when :access
-        :control_access
-      when nil, :name, :body, :theme, :view, :kind, :pad, :ref, :ref_id,
-                :aspects, :items, :columns, :mold, :instances
-        :see
-      else
-        "error_view_unknown_attribute_#{attribute.inspect}".to_sym
       end
     permitted? demand
   end

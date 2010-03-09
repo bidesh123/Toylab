@@ -36,7 +36,7 @@ var appearDuration = 0.25;
 var hideDelay = 2.5;
 
 // Duration of the hide animation
-var hideDuration = 4.0;
+var hideDuration = 0.25;
 
 /*
 var $j = jQuery.noConflict();

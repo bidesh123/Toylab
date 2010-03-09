@@ -83,7 +83,7 @@ class CardsController < ApplicationController
   end
 
   def index
-    hobo_index Card.top_level
+    hobo_index Card.suites
   end
 
   def create

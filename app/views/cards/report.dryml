@@ -33,7 +33,7 @@
   <% css_class  = "aspect-kind-cell"
      css_class += " inner" if !attributes[:first] %>
   <th class="<%= css_class %>">
-    <editor:kind blank-message=".." />
+    <editor:kind blank-message=":::" />
   </th>
 </def>
 
@@ -49,7 +49,7 @@
   <% css_class  = "aspect-body-cell"
      css_class += " inner" if !attributes[:first] %>
   <td class="<%= css_class %>">
-    <editor:body blank-message="..." />
+    <editor:body if="&this.body"/>
   </td>
 </def>
 
