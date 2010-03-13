@@ -5,12 +5,11 @@
 <include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
-
 <def tag="manage-attachment">
-  <%= this.attachment.url.to_s %>
+  <!--%= this.attachment.url.to_s %-->
   <span class="tool" if="&can_edit?(:attachment)">
-    <%= cid = dom_id(this, :image)
-        link_to_function("Image", "$(#{cid.to_json}).show()") %>
+<%= cid = dom_id this, :image
+    link_to_function "Image", "$(#{cid.to_json}).show()" %>
   </span>
 </def>
 
@@ -21,11 +20,10 @@
 </extend>
 
 <def tag="core-image">
-  <set url="&this.attachment" />
+  <set url="&this.attachment.url" />
   <img src="&url" if="&url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'" />
   <form id="&dom_id(this, &quot;image&quot;)" style="display:none;" ></form>
 </def>
-
 
 <def tag="core">
   <table id="#{dom_id(this)}" class="core core-unit">
