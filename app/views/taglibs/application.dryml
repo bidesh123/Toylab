@@ -962,7 +962,7 @@
 
 <def tag="body-toggle">
   <div class="tool">
-    <%= cid = dom_id(this, :body_row); link_to_function("Toggle Body", "$(#{cid.to_json}).toggle()") %>
+    <%= cid = dom_id(this, :body_row); link_to_function("Body", "$(#{cid.to_json}).show()") %>
   </div>
 </def>
 
