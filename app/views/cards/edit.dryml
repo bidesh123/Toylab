@@ -7,9 +7,10 @@
 <def tag="core-right-controls-td">
   <td class="right-controls" rowspan="3" style="display:none">
     <toggle-aspect-or-item which="aspects"/>
-    <script-editor-toggle />
-    <card-id />
+    <script-editor-toggle if="&false"/>
+    <card-id if="&false" />
     <add-aspect />
+    <manage-attachment />
   </td>
 </def>
 

@@ -6,6 +6,13 @@
 <!-- <set-theme name="clean"/> -->
 
 
+<def tag="manage-attachment">
+  <span class="tool" if="&can_edit?(:script)">
+    <%= cid = dom_id(this, :image)
+        link_to_function("Image", "$(#{cid.to_json}).show()") %>
+  </span>
+</def>
+
 <extend tag="form" for="Card">
   <old-form merge multipart>
     <field-list: fields="attachment"/>
@@ -14,13 +21,8 @@
 
 <def tag="core-image">
   <set url="&this.attachment" />
-  <if test="&url.to_s[-12,12] != '/missing.png'">
-    <img src="&url" />
-    <form id="&dom_id(this, &quot;items&quot;)" style="display:none;"/>
-  </if>
-  <else>
-    <form id="&dom_id(this, &quot;items&quot;)" />
-  </else>
+  <img src="&url" if="&url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'" />
+  <form id="&dom_id(this, &quot;image&quot;)" style="display:none;" />
 </def>
 
 
@@ -216,7 +218,6 @@
   <tr class="core-main-row"   >
     <% kind_style="kind-cell #{this.theme_class}"
     n_rows = [
-      this.core_image_row?               ,
       this.core_main_row?(scope.deep)    ,
       this.core_name_row?                ,
       this.core_body_row?(scope.deep)    ,
@@ -366,7 +367,9 @@
       Card <%= this.id%>
       <card-number-editor />
     </div>
-    <div class="tool" if="&true"><context-editors           /></div>
+    <div class="tool" >
+      <context-editors    />
+    </div>
   </if>
 </def>
 
@@ -477,7 +480,7 @@
 
 <def tag="script-editor-toggle">
   <span class="tool" if="&can_edit?(:script)">
-    <%= cid = dom_id(this, :script_cell); link_to_function("Toggle Script", "$(#{cid.to_json}).toggle()") %>
+    <%= cid = dom_id(this, :script_cell); link_to_function("Script", "$(#{cid.to_json}).show()") %>
   </span>
 </def>
 
