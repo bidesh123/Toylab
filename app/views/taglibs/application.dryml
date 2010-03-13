@@ -2,8 +2,48 @@
 <include src="taglibs/auto/rapid/cards"/>
 <include src="taglibs/auto/rapid/pages"/>
 <include src="taglibs/auto/rapid/forms"/>
+<include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
+
+<extend tag="form" for="Card">
+  <old-form merge multipart>
+    <field-list: fields="attachment"/>
+  </old-form>
+</extend>
+
+<def tag="core-image">
+  <set url="&this.attachment" />
+  <if test="&url.to_s[-12,12] != '/missing.png'">
+    <img src="&url" />
+    <form id="&dom_id(this, &quot;items&quot;)" style="display:none;"/>
+  </if>
+  <else>
+    <form id="&dom_id(this, &quot;items&quot;)" />
+  </else>
+</def>
+
+
+<def tag="core">
+  <table id="#{dom_id(this)}" class="core core-unit">
+    <core-image-row          if="&this.core_main_row? scope.deep"     />
+    <core-main-row           if="&this.core_main_row? scope.deep"     />
+    <core-name-row           if="&this.core_name_row?"                />
+    <core-body-row           if="&this.core_body_row? scope.deep"     />
+    <core-script-row         if="&this.core_script_row? current_user" />
+    <core-bottom-controls-tr if="&this.core_bottom_controls_row?"     />
+  </table>
+</def>
+
+<def tag="core-image-row">
+  <tr class="core-image-row">
+    <empty-cell />
+    <td class="core-image">
+      <core-image />
+    </td>
+    <empty-cell />
+  </tr>
+</def>
 
 <def tag="list-row">
   <do with="&this.recursive_ref || this">
@@ -164,7 +204,7 @@
       collection-id="&this.id"
       pad="&selected_pad"
     />
-</if>
+  </if>
 </def>
 
 <def tag="javascript-variables">
@@ -172,20 +212,11 @@
   <div id="current-pad"    style="display:none;"><%=h CurrentPad    %></div>
 </def>
 
-<def tag="core">
-  <table id="#{dom_id(this)}" class="core core-unit">
-    <core-main-row           if="&this.core_main_row? scope.deep"     />
-    <core-name-row           if="&this.core_name_row?"                />
-    <core-body-row           if="&this.core_body_row? scope.deep"     />
-    <core-script-row         if="&this.core_script_row? current_user" />
-    <core-bottom-controls-tr if="&this.core_bottom_controls_row?"     />
-  </table>
-</def>
-
 <def tag="core-main-row">
   <tr class="core-main-row"   >
     <% kind_style="kind-cell #{this.theme_class}"
     n_rows = [
+      this.core_image_row?               ,
       this.core_main_row?(scope.deep)    ,
       this.core_name_row?                ,
       this.core_body_row?(scope.deep)    ,

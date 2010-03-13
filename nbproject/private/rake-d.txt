@@ -46,6 +46,8 @@ doc\:guides=Generate Rails guides
 doc\:plugins=Generate documentation for all installed plugins
 doc\:plugins\:acts_as_list=Generate documentation for the acts_as_list plugin
 doc\:plugins\:hobo=Generate documentation for the hobo plugin
+doc\:plugins\:paperclip=Generate documentation for the paperclip plugin
+doc\:plugins\:paperclip_with_hobo=Generate documentation for the paperclip_with_hobo plugin
 doc\:plugins\:will_paginate=Generate documentation for the will_paginate plugin
 doc\:plugins\:yaml_db=Generate documentation for the yaml_db plugin
 doc\:rails=Build the RDOC HTML Files
@@ -69,6 +71,10 @@ notes\:custom=Enumerate a custom annotation, specify with ANNOTATION=WTFHAX
 notes\:fixme=Enumerate all FIXME annotations
 notes\:optimize=Enumerate all OPTIMIZE annotations
 notes\:todo=Enumerate all TODO annotations
+paperclip\:clean=Cleans out invalid attachments. Useful after you've added new validations.
+paperclip\:refresh=Refreshes both metadata and thumbnails.
+paperclip\:refresh\:metadata=Regenerates content_type/size metadata for a given CLASS (and optional ATTACHMENT).
+paperclip\:refresh\:thumbnails=Regenerates thumbnails for a given CLASS (and optional ATTACHMENT).
 prod=
 production=Runs the following task in the production environment
 rails\:freeze\:edge=Lock to latest Edge Rails, for a specific release use RELEASE=1.2.0

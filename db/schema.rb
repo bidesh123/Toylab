@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100305003955) do
+ActiveRecord::Schema.define(:version => 20100313054400) do
 
   create_table "cards", :force => true do |t|
     t.string   "kind"
@@ -32,6 +32,10 @@ ActiveRecord::Schema.define(:version => 20100305003955) do
     t.boolean  "pad"
     t.integer  "suite_id"
     t.integer  "ref_id"
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
   end
 
   create_table "mains", :force => true do |t|

@@ -1,24 +1,47 @@
 class Card < ActiveRecord::Base
   hobo_model # Don't put anything above this
 
+#  require 'paperclip'
+  
+  module AttributeWatcher
+  #  define_callbacks :attribute_changed
+  #  attribute_changed :flag_attribute_changed
+  #  def write_attribute(attr_name, value)
+  #    returning(super) do
+  #      @last_attribute_name = attr_name
+  #      run_callbacks(:attribute_changed)
+  #    end
+  #  end
+  #  private
+  #    def flag_attribute_changed
+  #    attribute = @last_attribute_name
+  #    old_val, new_val = send("#{attribute}_change")
+  #    logger.info "Changed! #{attribute} from #{old_val} to #{new_val}"
+  #    end
+  end
+
   fields do
-    name         :string
-    body         :text
-    kind         :string
-    script       :text
-    pad          :boolean
-    view         enum_string(:view    , :none    , :custom ,
-                             :page    , :slide  ,
-                             :list    , :opus  , :tree,
-                             :table   , :report , :chart                     )
-    access       enum_string(:access  ,
-                             :private , :public , :shared  , :open  , :closed)
-    theme        enum_string(:theme   ,
-                             :pink    , :orange , :yellow, :green   , :purple,
-                             :none                                           )
-    list_position  :integer
-    whole_position :integer
-    table_position :integer
+    name             :string
+    body             :text
+    kind             :string
+    script           :text
+    pad              :boolean
+    view             enum_string(:view   , :none  , :custom,
+                                 :page   , :slide ,
+                                 :list   , :opus  , :tree  ,
+                                 :table  , :report, :chart                     )
+    access           enum_string(:access ,
+                                 :private, :public, :shared, :open , :closed)
+    theme            enum_string(:theme  ,
+                                 :pink   , :orange, :yellow, :green, :purple,
+                                 :none                                         )
+    list_position    :integer
+    whole_position   :integer
+    table_position   :integer
+#    attachment_file_name    :string
+#    attachment_content_type :string
+#    attachment_file_size    :integer
+#    attachment_updated_at   :datetime
 
     timestamps
   end
@@ -72,7 +95,7 @@ class Card < ActiveRecord::Base
 #  }}
 
   named_scope :named    , lambda {             |nam | {
-    :conditions   => ["name = ?"                , nam  ]
+    :conditions   => ["name = ?"              , nam                    ]
   }}
 
   named_scope :as_a     , lambda {             |kind| {
@@ -80,62 +103,116 @@ class Card < ActiveRecord::Base
   }}
 
   named_scope :part_of  , lambda {             |s_id| {
-    :conditions   => ["suite_id = ?"            , s_id ]
-  }}
-
-  named_scope :suites, lambda {                    {
-    :conditions   => ["suite_id IS NULL"                 ]
+    :conditions   => ["suite_id = ?"          , s_id                   ]
   }}
 
   named_scope :but_not  , lambda {             |i_d | {
-    :conditions   => ["id != ?"                 , i_d  ]
+    :conditions   => ["id != ?"               , i_d                    ]
   }}
 
   named_scope :originals, lambda {                    {
-    :conditions   => ["ref_id IS NULL"                 ]
+    :conditions   => ["ref_id IS NULL"                                 ]
   }}
 
   named_scope :latest   , lambda {                    {
-    :order        => "created_at ASC"
+    :order        => "created_at DESC"
   }}
 
-# before_save do |c| c.context_id = c.whole_id || c.list_id end
-  after_create  :follow_up_on_create
-  after_update  :follow_up_on_update
+  has_attached_file :attachment,
+#    :styles => {
+#      :tiny => "35x35",
+#      :preview => "175x175",
+#      :large => "300x300"
+#    },
+    :storage => :s3,
+    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
+    :path => ":attachment/:id/:style.:extension"           ,
+    :bucket => 'toy-office-development'
+
+
+  def init_from_s3_upload
+    self.attachment_content_type =
+      file_extension_content_type(self.attachment_file_name)
+#      acl_obj = self.attachment.s3_object.acl
+#      if acl_obj.grants.find { |g| g.to_s =~ /READ to AllUsers/ }
+        self.acl = 'public-read'
+#      else
+#        self.acl = 'private'
+#      end
+  end
+
+  before_save do |c|
+    c.ensure_suite
+  end
+
+  def ensure_suite
+    return unless !suite_id && context
+    s = recursive_suite.id
+    suite_id = s unless s == id
+  end
+
+  def reset_suite!
+    return unless context
+    s_id = recursive_suite.id
+    update_attribute :suite_id, s_id unless s_id == id
+  end
+
+  def after_create
+    follow_up_on_create
+    create_image_on_cloud if image?
+  end
+
+  def image?
+    #return (attachment.content_type =~ /^image.*/) ? true : false
+    (attachment.content_type =~ /^image.*/) ? true : false
+  end
+
+  def create_image_on_cloud
+#    self.attachment.reprocess!
+  end
+
+  def file_extension_content_type filename
+    types = MIME::Types.type_for(filename)
+    types.empty? ? nil : types.first.content_type
+  end
+
   before_update :prepare_for_update
+  after_update  :follow_up_on_update
 
   def follow_up_on_update
-    logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+#        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+#        logger.debug "@catch"
+#        logger.debug "catch"
     return if on_automatic?
-    logger.debug "not on automaticccccccccccccccccc"
+#        logger.debug "not on automaticccccccccccccccccc"
     on_automatic do
-      logger.debug "now yessssssssssssssssssssssssss"
+#          logger.debug "now yessssssssssssssssssssssssss"
       return unless name && k = recursive_kind
-      logger.debug "name: #{name}"
-      names = self.class.named(name)
-      logger.debug "#{names.length} namesssssssssss"
-      logger.debug "recursive_kind: #{k}"
-      kinds = names.as_a(k)
-      logger.debug "#{kinds.length} as a #{k}"
-      suites = kinds.part_of(suite_id)
-      logger.debug "#{suites.length} part of #{suite_id}"
-      all_but = suites.but_not(id)
-      logger.debug "#{all_but.length} but not #{id}"
-      origs = all_but.originals
-      logger.debug "#{origs.length} originals"
+#          logger.debug "name: #{name}"
+      names      = self.class.named(name)
+#          logger.debug "#{names.length} namesssssssssss"
+#          logger.debug "recursive_kind: #{k}"
+      kinds      = names.as_a(k)
+#          logger.debug "#{kinds.length} as a #{k}"
+      suites     = kinds.part_of(suite_id)
+#          logger.debug "#{suites.length} part of #{suite_id}"
+      all_but    = suites.but_not(id)
+#          logger.debug "#{all_but.length} but not #{id}"
+      origs      = all_but.originals
+#          logger.debug "#{origs.length} originals"
       candidates = origs.latest
-      logger.debug "candidatessssssssss"
-      logger.debug candidates.to_yaml
+#          logger.debug "candidatessssssssss"
+#          logger.debug candidates.to_yaml
       match = candidates.detect {|c| c.recursive_kind == k}
       return unless match
-      logger.debug "match : #{match.id}"
-      logger.debug "uuuuuuuuuuuuuuuuuuuu"
+#          logger.debug "match : #{match.id}"
+#          logger.debug "uuuuuuuuuuuuuuuuuuuu"
       update_attributes :ref_id => match.id
     end
   end
 
   def prepare_for_update
-    true
+    @catch = "hi"
   end
 
   def self.field reference
@@ -145,7 +222,7 @@ class Card < ActiveRecord::Base
       when #standard field list
            nil             , :owner,
            :id             , :owner_id       ,
-           :name           , :kind           ,
+           :name           , :kind           , :attachment     ,
            :ref            , :mold           , :suite          ,
            :ref_id         , :mold_id        , :suite_id       ,
            :akas           , :instances      , :parts          ,
@@ -174,7 +251,7 @@ class Card < ActiveRecord::Base
       when
            nil             , :owner,
            :id             , :owner_id       ,
-           :name           , :kind           ,
+           :name           , :kind           , :attachment     ,
            :ref            , :mold           , :suite          ,
            :ref_id         , :mold_id        , :suite_id       ,
            :akas           , :instances      , :parts          ,
@@ -222,9 +299,9 @@ class Card < ActiveRecord::Base
       when                   :access
         :control_access
       when                   :kind                             ,
-            :view           , :pad
+            :view          , :pad
         :edit_structure
-      when :name                                               ,
+      when :name                             , :attachment     ,
            :body                             , :theme          ,
                              :view                             ,
                              :instances
@@ -267,7 +344,11 @@ class Card < ActiveRecord::Base
                              :view           , :pad            )
         :edit_structure
       when any_changed?(
-           :name                                               ,
+           :name                             , :attachment     ,
+           :attachment_file_name                               ,
+           :attachment_updated_at                              ,
+           :attachment_content_type                            ,
+           :attachment_file_size                               ,
            :body                             , :theme          ,
                              :view                             ,
                              :instances                        )
@@ -301,7 +382,7 @@ class Card < ActiveRecord::Base
       when                   :access
         :control_access
       when nil             ,
-           :name           , :kind                             ,
+           :name           , :kind           , :attachment     ,
            :items          , :aspects        , :columns        ,
            :body                             , :theme          ,
                              :view           , :pad
@@ -310,6 +391,10 @@ class Card < ActiveRecord::Base
         "error_view_unknown_attribute_#{attribute.inspect}".to_sym
       end
     permitted? demand
+  end
+
+  def core_image_row?
+    true
   end
 
   def core_main_row? deep
@@ -334,12 +419,6 @@ class Card < ActiveRecord::Base
 
   def nature
     #eventual support for inheritance vis is a, is, has a, has some, has many
-  end
-
-  def reset_suite!
-    return unless context
-    s_id = recursive_suite.id
-    update_attribute :suite_id, s_id unless s_id == id
   end
 
   def self.reset_suites
