@@ -17,8 +17,9 @@ Rails::Initializer.run do |config|
   # They can then be installed with "rake gems:install" on new installations.
   # config.gem "bj"
    config.gem "hpricot", :source => "http://code.whytheluckystiff.net"
-  # config.gem "aws-s3", :lib => "aws/s3"
+   config.gem "aws-s3", :lib => "aws/s3"
    config.gem "shuber-sortable", :lib => "sortable", :source => "http://gems.github.com/"
+   config.gem "hoptoad_notifier"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
