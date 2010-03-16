@@ -65,6 +65,9 @@ git_submodules=
 hobo\:generate_taglibs=Run the DRYML generators to generate taglibs in app/views/taglibs/auto
 hobo\:run_standard_generators=Run the standard generators that the hobo command runs.
 hobo\:symlink_assets=Replace commonly used hobo assets with symlinks into the plugin so that they stay up to date
+hoptoad\:deploy=Notify Hoptoad of a new deploy.
+hoptoad\:log_stdout=
+hoptoad\:test=Verify your gem installation by sending a test exception to the hoptoad service
 log\:clear=Truncates all *.log files in log/ to zero bytes
 notes=Enumerate all annotations
 notes\:custom=Enumerate a custom annotation, specify with ANNOTATION=WTFHAX

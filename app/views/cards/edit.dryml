@@ -8,7 +8,7 @@
   <td class="right-controls" rowspan="3" style="display:none">
     <toggle-aspect-or-item which="aspects"/>
     <script-editor-toggle if="&false"/>
-    <card-id if="&false" />
+    <card-id if="&true  || false" />
     <add-aspect />
     <manage-attachment />
   </td>
