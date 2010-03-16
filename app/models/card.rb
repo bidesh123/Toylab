@@ -127,7 +127,7 @@ class Card < ActiveRecord::Base
     :storage => :s3,
     :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
     :path => ":attachment/:id/:style.:extension"           ,
-    :bucket => 'toy-office-test'
+    :bucket => 'toy-office-development'
 
 
   def init_from_s3_upload
@@ -147,8 +147,8 @@ class Card < ActiveRecord::Base
 
   def ensure_suite
     return unless !suite_id && context
-    s = recursive_suite.id
-    suite_id = s unless s == id
+    return unless (s = recursive_suite).is_a? Card
+    suite = s unless s.id == id
   end
 
   def reset_suite!
@@ -1038,19 +1038,17 @@ class Card < ActiveRecord::Base
 
   def context
     @context ||= case
-       when list_id
-         list
-       when whole_id
-         whole
-       when table_id
-         table
-       else #suite
-         nil
-       end
+      when list_id
+        list if list
+      when whole
+        whole if whole
+      when table_id
+        table if table
+      end
   end
   
   def context_id
-     list_id ||  whole_id ||  table_id
+    list_id || whole_id || table_id
   end
 
 #  def position

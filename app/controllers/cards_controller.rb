@@ -24,6 +24,10 @@ class CardsController < ApplicationController
     redirect_to :back
   end
 
+  def click
+    raise "Kaboom"
+  end
+
   def set_pad
     $CURRENT_PAD = params[:id].to_i == 0 ? nil : params[:id]
     redirect_to :back
