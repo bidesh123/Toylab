@@ -373,12 +373,12 @@
 </def>
 
 <def tag="context-editors">
-  <if test="can_view?(:whole)" >aspect of <editor:whole /></if>
-  <if test="can_view?(:table)" >column of <editor:table /></if>
-  <if test="can_view?(:list)"  >in list <editor:list    /></if>
-  <if test="can_view?(:suite)" >in suite <view:suite    /></if>
-  <if test="can_view?(:mold)"  >mold <editor:mold       /></if>
-  <if test="can_view?(:ref)"   >ref <editor:ref         /></if>
+  <if test="can_view?(:whole)" >aspect of <editor:whole    /></if>
+  <if test="can_view?(:table)" >column of <editor:table    /></if>
+  <if test="can_view?(:list)"  >in list <editor:list /><br /></if>
+  <if test="can_view?(:suite)" >in suite <view:suite       /></if>
+  <if test="can_view?(:mold)"  >mold <editor:mold          /></if>
+  <if test="can_view?(:ref)"   >ref <editor:ref            /></if>
   <!--if test="can_view?(:mold)"  >mold
     <a with="&this.mold" if    ><view:kind    /></a>
   </if-->

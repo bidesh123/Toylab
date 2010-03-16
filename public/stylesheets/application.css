@@ -1,4 +1,5 @@
 /* Styles for the entire LavaLamp menu */
+div.table-plus th, div.table-plus td {border: 1px solid fuchsia;}
 th.aspect-kind-cell {color: transparent;}
 th.aspect-kind-cell:hover {color: #999;}
 th.title-cell {padding-right:.618em;}

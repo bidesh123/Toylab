@@ -29,12 +29,12 @@ class Card < ActiveRecord::Base
     view             enum_string(:view   , :none  , :custom,
                                  :page   , :slide ,
                                  :list   , :opus  , :tree  ,
-                                 :table  , :report, :chart                     )
+                                 :table  , :report, :chart                  )
     access           enum_string(:access ,
                                  :private, :public, :shared, :open , :closed)
     theme            enum_string(:theme  ,
                                  :pink   , :orange, :yellow, :green, :purple,
-                                 :none                                         )
+                                 :none                                      )
     list_position    :integer
     whole_position   :integer
     table_position   :integer
@@ -234,7 +234,11 @@ class Card < ActiveRecord::Base
 
            :body           , :access         , :theme          ,
            :script         , :view           , :pad            ,
-           :created_at     , :updated_at
+           :created_at     , :updated_at                       ,
+           :attachment_file_name             ,
+           :attachment_content_type          ,
+           :attachment_file_size             ,
+           :attachment_updated_at
         it.send reference
       else
         ""
@@ -263,7 +267,11 @@ class Card < ActiveRecord::Base
 
            :body           , :access         , :theme          ,
            :script         , :view           , :pad            ,
-           :created_at     , :updated_at
+           :created_at     , :updated_at                       ,
+           :attachment_file_name             ,
+           :attachment_content_type          ,
+           :attachment_file_size             ,
+           :attachment_updated_at
         it.send("#{reference}=", val)
       else
         ""
@@ -304,7 +312,11 @@ class Card < ActiveRecord::Base
       when :name                             , :attachment     ,
            :body                             , :theme          ,
                              :view                             ,
-                             :instances
+                             :instances                        ,
+           :attachment_file_name             ,
+           :attachment_content_type          ,
+           :attachment_file_size             ,
+           :attachment_updated_at
         :edit_data
       else
         "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
@@ -351,7 +363,11 @@ class Card < ActiveRecord::Base
            :attachment_file_size                               ,
            :body                             , :theme          ,
                              :view                             ,
-                             :instances                        )
+                             :instances                        ,
+           :attachment_file_name             ,
+           :attachment_content_type          ,
+           :attachment_file_size             ,
+           :attachment_updated_at                                    )
         :edit_data
       when changed?
 #        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
@@ -385,7 +401,11 @@ class Card < ActiveRecord::Base
            :name           , :kind           , :attachment     ,
            :items          , :aspects        , :columns        ,
            :body                             , :theme          ,
-                             :view           , :pad
+                             :view           , :pad            ,
+           :attachment_file_name             ,
+           :attachment_content_type          ,
+           :attachment_file_size             ,
+           :attachment_updated_at
         :see
       else
         "error_view_unknown_attribute_#{attribute.inspect}".to_sym

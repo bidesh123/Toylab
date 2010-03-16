@@ -13,6 +13,7 @@ class CardsController < ApplicationController
   show_action :set_pad
   show_action :list
   show_action :custom
+  index_action :manage
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
@@ -84,6 +85,10 @@ class CardsController < ApplicationController
       this.update_attribute(:view, "list")
       render :action => this.auto_view
     end
+  end
+
+  def manage
+    hobo_index Card
   end
 
   def index
