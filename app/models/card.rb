@@ -155,15 +155,31 @@ class Card < ActiveRecord::Base
     suite = s unless s.id == id
   end
 
+  def self.reset_suites
+    find(:all).each {|c| c.reset_suite!}
+    n, bad = Card.count, Thread.current[:bad_suites]
+    if bad = Thread.current[:bad_suites]
+      "#{bad} fixed of #{Card.count}"
+     else
+      "#{Card.count} OK"
+    end
+  end
+
   def reset_suite!
     return unless context
     s_id = recursive_suite.id
-    update_attribute :suite_id, s_id unless s_id == id
+    if s_id == id
+      if s_id == suite_id
+      else
+        update_attribute :suite_id, s_id
+        Thread.current[:bad_suites] ||= 0
+        Thread.current[:bad_suites] += 1
+      end
+    end
   end
 
-  def after_create
-    follow_up_on_create
-    create_image_on_cloud if image?
+  def self.numbering_reset
+    Thread.current[:numbering] = []
   end
 
   def image?
@@ -443,10 +459,6 @@ class Card < ActiveRecord::Base
 
   def nature
     #eventual support for inheritance vis is a, is, has a, has some, has many
-  end
-
-  def self.reset_suites
-    find(:all).each {|c| c.reset_suite!}
   end
 
   def recursive_ref
