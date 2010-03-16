@@ -1,0 +1,31 @@
+<index-page>
+  <content-header:></content-header>
+  <new_link:></new_link:>
+  <content-body:>
+    <create-suite-button label="Create your own office suite" />
+    <page-nav class="top-page-nav"/>
+    <% fs = [
+         :id             , :owner,
+         :owner_id       ,
+         :name           , :kind           ,
+         :attachment_file_name             ,
+         :attachment_content_type          ,
+         :attachment_file_size             ,
+         :attachment_updated_at            ,
+         :ref            , :mold           , :suite          ,
+         :ref_id         , :mold_id        , :suite_id       ,
+                                             :parts          ,
+
+         :list_id        , :whole_id       , :table_id       ,
+         :list_position  , :whole_position , :table_position ,
+         :list           , :whole          , :table          ,
+         :items          , :aspects        , :columns        ,
+
+         :body           , :access         , :theme          ,
+         :script         , :view           , :pad            ,
+         :created_at     , :updated_at
+       ].map{|x| x.to_s}.join ","  %>
+    <table-plus fields="&fs" field-tag="editor" />
+    <page-nav class="bottom-page-nav"/>
+  </content-body:>
+</index-page>
