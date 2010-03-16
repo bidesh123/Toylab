@@ -1,5 +1,9 @@
-/* Styles for the entire LavaLamp menu */
-div.table-plus th, div.table-plus td {border: 1px solid fuchsia;}
+span.manage {font-size:.382em;}
+span.manage th {font-weight:700;}
+div.table-plus {border: 4px;}
+div.table-plus th {background:#666;}
+div.table-plus th a {color: white;}
+div.table-plus th, div.table-plus td {border: 1px solid #eee;letter-spacing: -0.025em;}
 th.aspect-kind-cell {color: transparent;}
 th.aspect-kind-cell:hover {color: #999;}
 th.title-cell {padding-right:.618em;}
@@ -411,6 +415,10 @@ ul.main-nav, div.context.ul {
 }
 ul.account-nav, div.search {
     float:right;
+}
+
+span.manage div.search {
+    float:none; display:block;
 }
 
 ul.main-nav li, li.dev-user-changer, div.search, div.views li, div.pads li, div.context li, ul.account-nav li {
@@ -1370,6 +1378,7 @@ th.numeric {
 }
 */
 
+/* Styles for the entire LavaLamp menu */
 .lavaLamp {
     position: relative;
     height: 29px; width: 421px;
