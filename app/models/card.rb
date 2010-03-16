@@ -130,6 +130,10 @@ class Card < ActiveRecord::Base
     :bucket => 'toy-office-development'
 
 
+  def suite_group
+    recursive_suite || self
+  end
+
   def init_from_s3_upload
     self.attachment_content_type =
       file_extension_content_type(self.attachment_file_name)
@@ -367,7 +371,7 @@ class Card < ActiveRecord::Base
            :attachment_file_name             ,
            :attachment_content_type          ,
            :attachment_file_size             ,
-           :attachment_updated_at                                    )
+           :attachment_updated_at                              )
         :edit_data
       when changed?
 #        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
@@ -456,6 +460,11 @@ class Card < ActiveRecord::Base
   end
 
   def recursive_suite
+    return self unless ctx = context
+    ctx.recursive_suite
+  end
+
+  def initial_suite
     return self unless ctx = context
     ctx.recursive_suite
   end

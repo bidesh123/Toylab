@@ -373,15 +373,38 @@
 </def>
 
 <def tag="context-editors">
-  <if test="can_view?(:whole)" >aspect of <editor:whole    /></if>
-  <if test="can_view?(:table)" >column of <editor:table    /></if>
-  <if test="can_view?(:list)"  >in list <editor:list /><br /></if>
-  <if test="can_view?(:suite)" >in suite <view:suite       /></if>
-  <if test="can_view?(:mold)"  >mold <editor:mold          /></if>
-  <if test="can_view?(:ref)"   >ref <editor:ref            /></if>
-  <!--if test="can_view?(:mold)"  >mold
-    <a with="&this.mold" if    ><view:kind    /></a>
-  </if-->
+  <% can_whole = can_view? :whole
+     can_table = can_view? :table  
+     can_list  = can_view? :list
+  %>
+  <if            test="&this.whole_id  && can_whole">
+    aspect <editor:whole_position /> of <editor:whole /><br />
+  </if><else><if test="&this.table_id  && can_table">
+    column <editor:table_position /> of <editor:table /><br />
+  </if><else><if test="&this.list_id   && can_list">
+    item   <editor:list_position  /> of <editor:list  /><br />
+  </if><!--else>
+    <if test="&can_whole"    >aspect of <editor:whole /><br /></if>
+    <if test="can_table"     >column of <editor:table /><br /></if>
+    <if test="can_list"      >in list   <editor:list  /><br /></if>
+  </else--></else></else>
+  <if            test="&this.suite">
+    <if                            test="&can_view?(:suite)">
+      in suite            <view:suite_id /> <view:suite />
+    </if>
+  </if><else>
+      is a suite
+  </else>
+  <if            test="&this.mold">
+    <if                            test="&can_view?(:mold)" >
+      <br />based on mold <view:mold_id  /> <editor:mold />
+    </if>
+  </if>
+  <if            test="&this.ref">
+    <if                            test="&can_view?(:ref)"  >
+      <br />refers to     <view:ref_id   /> <editor:ref  />
+    </if>
+  </if>
 </def>
 
 <def tag="add-row">
@@ -407,7 +430,7 @@
     new_card = this.class.new(
       :list_id  => attributes[:collection_id]      ,
       :kind     => attributes[:item_kind]     || '',
-      :suite_id => this.suite_id              || id,
+      :suite_id => this.suite_group.id             ,
       :view     => 'none'                          )
     if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
       new_card.mold =  pad_card
@@ -463,8 +486,7 @@
   <if test="&this">
 <%  element, collection =
     inner = this.id == @card.id ?  "" : "inner "
-    article = element == 'item' || inner > '' ? 'an' : 'a'
-%>
+    article = element == 'item' || inner > '' ? 'an' : 'a' %>
     <if test="&this.list && this.list_id != @card.list_id">
       <add-row />
       <add-pad-row-buttons />
@@ -586,8 +608,8 @@
          ><start-any-list if="&true || this && this.items.count == 0"
         /><if test="&can_edit? :pad" ><editor:pad/>Pad</if
          ><% new_card = this.class.new(
-               :list_id  =>                  this.id,
-               :suite_id => this.suite_id || this.id)
+               :list_id  => this.id            ,
+               :suite_id => this.suite_group.id)
         %><br if="&this && this.items.count == 0 && can_create?(new_card)"
         /><editor:theme  if="&can_edit? :theme"
         /><editor:access if="&can_edit? :access"
@@ -616,8 +638,8 @@
            " Describe another aspect of " : "Describe aspects of ") +
          this.reference_name
        new_card = this.class.new(
-               :whole_id =>                  this.id,
-               :suite_id => this.suite_id || this.id)
+               :whole_id => this.id            ,
+               :suite_id => this.suite_group.id)
     %>
     <form class="add-aspect" with="&new_card">
       <submit label="Add an aspect" title="&tooltip" class="toy-nav add-aspect"/>
