@@ -1,3 +1,10 @@
+ul.navigation {font-size:13px;}
+ul.navigation a {text-decoration:underline;}
+h1.app-name a {text-decoration:none;}
+ul a {color: #36f;}
+div.top-line {border-bottom:10px red;}
+td.core-image img {margin-top: .618em;}
+div.section.with-flash { border-top: 1px solid #eee;}
 span.manage {font-size:.382em;}
 span.manage th {font-weight:700;}
 div.table-plus {border: 4px;}
@@ -137,15 +144,20 @@ td.aspect-body-cell {
 
 .kind-cell .tiny-gray { font-size: 1em;}
 
-.hilite, .logo, ul a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
+.hilite, ul a, th, h1, h2, h3, h4, h5, h6, ul.sub-pitch, span.drag-handle,
 .hilite input, th input, h1 input, div.table-header, td.name-cell,
   td.aspect-name-cell,
     div.slide.kind-cell .tiny-gray,
     .body-cell          .tiny-gray,
     td.aspect-body-cell .tiny-gray{
     font-family: sans-serif;
-    font-weight:900;
+    font-weight:400;
 }
+.logo {
+    font-family: sans-serif;
+    font-size: sans-serif;
+    font-weight:900;}
+
 
 
 html.page-view div.controls {
@@ -314,12 +326,6 @@ td.aspect-body-cell {font-size:162%;}
 
 div.aspects {margin-top:.62em;}
 
-a {
-  text-decoration:none;
-}
-ul a {
-  color: #69f;
-}
 ul.cards,
 h1, h2,
 table.field-list, div.actions {

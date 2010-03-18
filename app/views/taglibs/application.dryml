@@ -326,7 +326,7 @@
             <main-nav current="&title" param/>
             <account-nav if="&login_url(Hobo::User.default_user_model)" param />
           </div>
-          <div if="&params[:more] != 'bare'">
+          <div class="app-name" if="&params[:more] != 'bare'">
             <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
             <!-- <live-search param if="&defined_route? :site_search"/>-->
           </div>
@@ -911,7 +911,7 @@
 
 <def tag="views">
   <div class="views" if="&params[:more] != 'bare'"    >
-    <ul class="view-nav">View as
+    <ul class="navigation view-nav">View as
       <page-view   />
       <list-view   />
       <opus-view   />
@@ -926,7 +926,7 @@
 <def tag="pads">
   <div class="pads" if="&params[:more] != 'bare'" >
 
-    <ul class="pad-nav">
+    <ul class="navigation pad-nav">
       <if test="&$CURRENT_PAD">Current pad</if>
       <else>Pads</else>
       <pad-none />
