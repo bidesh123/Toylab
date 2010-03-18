@@ -22,11 +22,13 @@
 <def tag="core-image">
   <set url="&this.attachment.url" />
   <img src="&url" if="&url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'" />
-  <form id="&dom_id(this, &quot;attachment&quot;)" style="display:none;" ></form>
+  <% domid = dom_id this, :attachment %>
+  <form id="#{domid}" style="display:none;" ></form>
 </def>
 
 <def tag="core">
-  <table id="#{dom_id(this)}" class="core core-unit">
+  <% domid = dom_id this %>
+  <table id="#{domid}" class="core core-unit">
     <core-image-row                                                   />
     <core-main-row           if="&this.core_main_row? scope.deep"     />
     <core-name-row           if="&this.core_name_row?"                />
@@ -49,30 +51,27 @@
 <def tag="list-row">
   <do with="&this.recursive_ref || this">
     <tr class="list-row" if="&this.items">
-  <%        Card.numbering_push      %>
+  <%  Card.numbering_push
+      domid = dom_id this, :items %>
       <td class="list-row" colspan="2">
-        <set table-dom-id="&dom_id(this, &quot;items&quot;)" />
-        <table class="list-rows" id="&table_dom_id" if="&this.items">
+        <table class="list-rows" id="#{domid}" if="&this.items">
           <repeat with="&this.items">
-  <%        Card.numbering_increment %>
+  <%  Card.numbering_increment %>
             <item-row />
           </repeat>
         </table>
       </td>
-  <%        Card.numbering_pop       %>
+  <%  Card.numbering_pop       %>
     </tr>
   </do>
 </def>
 
 <def tag="self-and-aspects-row">
-  <% aspects_id = dom_id(this, 'aspects')                  %>
+  <% domid = dom_id this, :aspects %>
   <tr class="self-and-aspects-row">
     <td class="core"                        ><core          /></td>
     <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
-      <td class="aspects-table"
-          if="&this.aspects"
-          id="&aspects_id"
-      >
+      <td class="aspects-table" id="#{domid}" if="&this.aspects">
         <aspects-table />
       </td>
     </do>
@@ -80,13 +79,11 @@
 </def>
 
 <def tag="self-and-aspects-row-edit">
-  <% aspects_id = dom_id(this, 'aspects')                  %>
+  <% domid = dom_id this, :aspects %>
   <tr class="self-and-aspects-row">
-    <td class="core"                        ><core          /></td>
+    <td class="core"><core /></td>
     <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
-      <td if="&this.aspects"
-          id="&aspects_id"
-      >
+      <td id="#{domid}" if="&this.aspects">
         <aspects-table />
       </td>
     </do>
@@ -161,7 +158,7 @@
         element="&element"
         label="&label"
         tooltip="&tooltip"
-        collection-id="&list_id"
+        collection-id="#{list_id}"
         pad="&this"
       />
     </repeat>
@@ -182,7 +179,7 @@
       element="&element"
       label="&label"
       tooltip="&tooltip"
-      collection-id="&this.id"
+      collection-id="#{this.id}"
       pad="&selected_pad"
     />
   </if>
@@ -202,7 +199,7 @@
       element="&element"
       label="&label"
       tooltip="&tooltip"
-      collection-id="&this.id"
+      collection-id="#{this.id}"
       pad="&selected_pad"
     />
   </if>
@@ -259,9 +256,11 @@
 
 <def tag="core-body-row">
   <%  body_style = "body-cell #{this.theme_class}"
-      display_style = this.body ? "inherit" : "none" %>
-  <tr   class="body body-row" id="<%= dom_id(this, :body_row ) %>" style="display:<%=display_style%>" >
-    <td class="#{body_style}" id="<%= dom_id(this, :body_cell) %>">
+      display_style = this.body ? "inherit" : "none"
+      br_id = dom_id this, :body_row
+      domid = dom_id this, :body_cell %>
+  <tr   class="body body-row" id="#{br_id}" style="display:<%=display_style%>" >
+    <td class="#{body_style}" id="#{domid}">
       <if test="&this.body ">
         <editor:body                   blank-message="A" />
       </if>
@@ -276,7 +275,8 @@
 <def tag="core-script-row">
   <tr class="script">
     <td class="script-cell">
-      <div id="<%= dom_id(this, :script_cell) %>" style="display:none">
+      <% domid = dom_id this, :script_cell %>
+      <div id="#{domid}" style="display:none">
         <if test="&this.script">
           <editor:script                   blank-message="....." />
         </if>
@@ -419,7 +419,7 @@
        element="&element"
        label="&label"
        tooltip="&tooltip"
-       collection-id="&this.list_id"
+       collection-id="#{this.list_id}"
      />
   </if>
 </def>
@@ -455,7 +455,7 @@
           element="&element"
           label="&label"
           tooltip="&tooltip"
-          collection-id="&this.id"
+          collection-id="#{this.id}"
       />
     </if>
   </if>
@@ -475,7 +475,7 @@
           element="&element"
           label="&label"
           tooltip="&tooltip"
-          collection-id="&this.id"
+          collection-id="#{this.id}"
       />
     </if>
   </if>
@@ -540,9 +540,9 @@
 
 <def tag="drag-handle">
   <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
-     drag_id = dom_id(this, :drag_handle)            %>
+     domid = dom_id this, :drag_handle                  %>
   <div class="tool" if="&can_drag">
-    <span class="drag_handle drag-handle" id="&drag_id">
+    <span class="drag_handle drag-handle" id="#{domid}">
       Move
     </span>
   </div>
@@ -1145,7 +1145,8 @@
 <def tag="cell">
   <if test="&this">
     <if test="&false || @editable_card">
-      <input:name class="editable_now" id="&dom_id(this, :editor_now)" name="card[name]" />
+      <% domid = dom_id this, :editor_now %>
+      <input:name class="editable_now" id="#{domid}" name="card[name]" />
     </if>
     <else>
       <editor:name blank-message="..."/>

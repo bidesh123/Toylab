@@ -15,7 +15,25 @@ class ApplicationController < ActionController::Base
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password"). 
   filter_parameter_logging :password
+
+
+  def in_place_editor(attributes)
+    click_to_edit_text = attributes.delete(:click_to_edit_text) || "..."
+    blank_message = attributes.delete(:blank_message) || click_to_edit_text
+
+    attributes = add_classes(attributes, "in-place-edit", model_id_class(this_parent, this_field))
+    attributes.update(:hobo_blank_message => blank_message,
+                      :click_to_edit_text => click_to_edit_text,
+                      :if_blank => blank_message,
+                      :no_wrapper => false)
+
+    update = attributes.delete(:update)
+    attributes[:hobo_update] = update if update
+    view(attributes)
+  end
+
 end
+
 
 class String
   def indefinite
