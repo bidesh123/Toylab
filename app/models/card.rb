@@ -146,21 +146,20 @@ class Card < ActiveRecord::Base
     dest_group = destination_group target
     failed = case dest_group
     when :whole
-      if peer
+      if peer # target is a peer
         insert_in_context target.whole, :whole, target.whole_position
-      else
+      else    # target is a context
         insert_in_context target      , :whole      
       end
     when :list
       if peer
         insert_in_context target.list , :list , target.list_position
-      else # context
+      else
         insert_in_context target      , :list
       end
     else
       :not_implemented
     end
-#    save unless failed
   end
  
   def destination_group target
