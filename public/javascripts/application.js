@@ -199,7 +199,7 @@ Event.observe(window, "load", function() {
 
     $$(".drag_handle").each(function(handle) {
       var el = handle.up("table.card");
-      new Draggable(el, {revert: true, handle: handle, scroll: window});
+      new Draggable(el, {revert: 'failure', handle: handle, scroll: window});
     });
 
     $$(".drop-target").each(function(target) {

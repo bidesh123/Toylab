@@ -1,3 +1,33 @@
+.drag_handle {
+  cursor: move;
+}
+
+.drop-hover {
+  border: .382em solid #7d8;
+}
+
+/**** Styling for Toy Office Logo ****/
+
+.logo .t {letter-spacing: -0.09em;}
+.logo .oy{letter-spacing: -0.12em;}
+.logo .y {letter-spacing: -0.18em;}
+.logo .o {letter-spacing: -0.09em;}
+.logo .ff{letter-spacing: -0.12em;}
+.logo .fi{letter-spacing: -0.09em;}
+.logo .i {letter-spacing: -0.09em;}
+.logo .c {letter-spacing: -0.09em;}
+.logo .e {                        }
+/* standard darker */
+.logo .toy {
+     background: transparent; color: #666;
+ }
+.logo .o    {                 color: #e69;} /*   #f9c    #e69  */
+.logo .ff   {                 color: #e96;} /*   #fc9    #e96  */
+.logo .fi   {                 color: #ec0;} /*   #ff9    #ec0  */
+.logo .i    {                 color: #7d8;} /*   #cfc    #7d8  */
+.logo .c    {                 color: #69f;} /*   #9cf    #69f  */
+.logo .e    {                 color: #96f;} /*   #c9f    #96f  */
+
 ul.navigation {font-size:13px;}
 ul.navigation a {text-decoration:underline;}
 h1.app-name a {text-decoration:none;}
@@ -255,14 +285,6 @@ body.edit-page div.content-body {font-size:261.8%;}
 
 div.aside {float:right;}
 
-.drag_handle {
-  cursor: move;
-}
-
-.drop-hover {
-  border: .382em solid red;
-}
-
 td.body-cell {
   color:#333;
 }
@@ -376,28 +398,6 @@ div {
 }
 
 .hidden {display:none;}
-
-/**** Styling for Toy Office Logo ****/
-
-.logo .t {letter-spacing: -0.09em;}
-.logo .oy{letter-spacing: -0.12em;}
-.logo .y {letter-spacing: -0.18em;}
-.logo .o {letter-spacing: -0.09em;}
-.logo .ff{letter-spacing: -0.12em;}
-.logo .fi{letter-spacing: -0.09em;}
-.logo .i {letter-spacing: -0.09em;}
-.logo .c {letter-spacing: -0.09em;}
-.logo .e {                        }
-/* standard darker */
-.logo .toy {
-     background: transparent; color: #666;
- }
-.logo .o    {                 color: #e69;} /*   #f9c    #e69  */
-.logo .ff   {                 color: #e96;} /*   #fc9    #e96  */
-.logo .fi   {                 color: #ec0;} /*   #ff9    #ec0  */
-.logo .i    {                 color: #7d8;} /*   #cfc    #7d8  */
-.logo .c    {                 color: #69f;} /*   #9cf    #69f  */
-.logo .e    {                 color: #96f;} /*   #c9f    #96f  */
 
 /**** Generic Toy Office styling  ****/
 

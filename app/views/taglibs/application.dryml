@@ -363,8 +363,7 @@
 <def tag="card-id" >
   <if test="&current_user.administrator?">
     <div class="tool">
-      Card <%= this.id%>
-      <card-number-editor />
+      <%= this.suite? ? 'Suite' : 'Card' %> <%= this.id %>
     </div>
     <div class="tool" >
       <context-editors    />
@@ -378,31 +377,32 @@
      can_list  = can_view? :list
   %>
   <if            test="&this.whole_id  && can_whole">
-    aspect <editor:whole_position /> of <view:whole_id /> <editor:whole /><br />
+    aspect <editor:whole_position blank-message=".."/>
+    of       <view:whole_id /><editor:whole /><br />
   </if><else><if test="&this.table_id  && can_table">
-    column <editor:table_position /> of <view:table_id /> <editor:table /><br />
-  </if><else><if test="&this.list_id   && can_list">
-    item   <editor:list_position  /> of <view:list_id  /> <editor:list  /><br />
+    column <editor:table_position blank-message=".."/>
+    of       <view:table_id /><editor:table /><br />
+  </if><else><if test="&this.list_id   && can_list" >
+    item   <editor:list_position  blank-message=".."/>
+    of       <view:list_id  /><editor:list  /><br />
   </if><!--else>
     <if test="&can_whole"    >aspect of <editor:whole /><br /></if>
     <if test="can_table"     >column of <editor:table /><br /></if>
     <if test="can_list"      >in list   <editor:list  /><br /></if>
   </else--></else></else>
-  <if            test="&this.suite">
-    <if                            test="&can_view?(:suite)">
-      in suite            <view:suite_id /> <view:suite />
-    </if>
-  </if><else>
-      is a suite
-  </else>
-  <if            test="&this.mold">
-    <if                            test="&can_view?(:mold)" >
-      <br />based on mold <view:mold_id  /> <editor:mold />
+  <if               test="&this.suite">
+    <if                             test="&can_view?(:suite)" >
+      in suite            <view:suite_id   />   <view:suite />
     </if>
   </if>
-  <if            test="&this.ref">
-    <if                            test="&can_view?(:ref)"  >
-      <br />refers to     <view:ref_id   /> <editor:ref  />
+  <if               test="&this.mold ">
+    <if                            test="&can_view?(:mold )" >
+      <br />based on mold <view:mold_id    /> <editor:mold  />
+    </if>
+  </if>
+  <if               test="&this.ref  ">
+    <if                            test="&can_view?(:ref  )"  >
+      <br />refers to     <view:ref_id     /> <editor:ref   />
     </if>
   </if>
 </def>

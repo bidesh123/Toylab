@@ -125,10 +125,70 @@ class Card < ActiveRecord::Base
 #      :large => "300x300"
 #    },
     :storage => :s3,
-    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml",
+    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml"       ,
     :path => ":attachment/:id/:style.:extension"           ,
     :bucket => 'toy-office-development'
 
+
+  def insert_in_context(target_context, grouping, position = 0)
+    return unless target_context && grouping && self.send(grouping)
+    ctx, destination_collection = case grouping
+    when :whole
+      [whole, target_context.aspects]
+    when :list
+      [list , target_context.items  ]
+    else
+     return # not supported
+    end
+    remove_from_list grouping
+    destination_collection << self
+    self.insert_at! position + 1, grouping
+  end
+
+  def move_to!(target)
+    return unless target
+    target_level = horizontal? == target.horizontal? ? :peer : :context
+    dest_group = destination_group target
+    failed = case dest_group
+    when :whole
+      case target_level
+      when :peer
+        insert_in_context target.whole, :whole, target.whole_position
+      when :context
+        insert_in_context target      , :whole
+      else
+       logger.debug(":programming_errorrrrrrrrrrrrrrrrrrr")
+       :programming_error
+      end
+    when :list
+      case target_level
+      when :peer
+        insert_in_context target.list , :list , target.list_position
+      when :context
+        insert_in_context target      , :list
+      else
+        :programming_error
+      end
+    else
+      :not_implemented
+    end
+    save unless failed
+  end
+ 
+  def destination_group target
+    if         list_id &&        whole_id ||        table_id || suite? ||
+        target.list    && target.whole    || target.table
+
+      logger.debug "unsupported destination_group of card #{target.id}, #{target.reference_name}tatatatatatata"
+      logger.debug "source_group #{destination_group}"
+      return :unsupported
+    end
+    if !source_group
+      logger.debug "no source group for card #{target.id}, #{target.reference_name}titititititi"
+      logger.debug "source_group #{destination_group}"
+    end
+    source_group
+  end
 
   def suite_group
     recursive_suite || self
@@ -1022,59 +1082,12 @@ class Card < ActiveRecord::Base
   def source_group
     case
     when whole_id then :whole
-    when table_id then :table
     when list_id  then :list
+    when table_id then :unsupported
     when suite?   then :suites
+    else
+      logger.debug "huh?huh?huh?huh?huh?huh?huh?huh?huh?huh?"
     end
-  end
-
-  def destination_group
-    source_group
-    :table       if               whole_id &&  target.list && target.whole
-    :table       if               whole_id &&  target.table
-    :unsupported if table_id               &&  target.list
-    :unsupported if list_id   &&  whole_id &&  target.list
-    :unsupported if list_id   && !whole_id &&  target.table
-    :unsupported if list_id   && !whole_id &&  target.list && target.whole
-    :suites      if list_id   && !whole_id &&  target.suite?
-    :unsupported if suite?                 &&  target.table
-    :unsupported if suite?                 &&  target.list && target.whole
-    :item        if suite?                 && !target.suite?
-  end
-
-  def move_to!(target)
-    operation = self.horizontal? == target.horizontal? ? :insert : :add
-    unless new_group = destination_group == :unsupported
-      self.remove_from_list source_group
-      case operation
-      when :insert
-        case new_group
-        when :whole
-          self.insert_at!(target.whole_position, :whole) if target.whole
-        when :table
-          self.insert_at!(target.table_position, :table) if target.table
-        when :list
-          self.insert_at!(target.list_position , :list ) if target.list
-        else # :item, suite?
-          self.insert_at! target.list_position , :list
-        end
-      when :add
-        case new_group
-        when :whole
-          target.aspects << self
-        when :table
-          target.columns << self
-        when :list
-          target.items   << self
-        else # :suite
-           #error # you'd have to drag to the root.
-           #is the root the suites button or the toy office logo ? or both?
-        end
-      else #error
-      end
-    end
-  #to do what if you drag to the top item in the page!!!!? it should NOT become a peer
-  #if it does, the redirect should be the context, at least one level
   end
 
   def context
@@ -1349,6 +1362,7 @@ class Card < ActiveRecord::Base
 
   def permitted? demand
     reason = forbidden? demand
+    logger.debug "refused: #{reason}" if reason.is_a? String
     return !reason unless reason.is_a? String
     logger.debug "8888888888888888888888888888888888888888888888888"
     logger.debug "toy permission error"
