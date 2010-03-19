@@ -79,21 +79,6 @@ class Card < ActiveRecord::Base
      :conditions  => "suite_id IS NULL",
      :order       => "created_at DESC"
 
-# named_scope :similar_instances, lambda { |suite_id|
-#    {:conditions => ["kind    IS ? AND suite_id IS ?", kind, suite_id]}
-#  }
-
-#  named_scope :lookup, lambda { |nam, kind, suite_id, id| {
-#    :conditions => [
-#      "name = ? AND "                  +
-#      "(kind = ? OR kind = NULL OR kind = '') AND " +
-#      "suite_id = ? AND "              +
-#      "id != ? AND "                   +
-#      "ref_id IS NULL"                  ,
-#                                 nam, kind, suite_id, id ] ,
-#    :order => "created_at ASC"
-#  }}
-
   named_scope :named    , lambda {             |nam | {
     :conditions   => ["name = ?"              , nam                    ]
   }}
@@ -129,6 +114,16 @@ class Card < ActiveRecord::Base
     :path => ":attachment/:id/:style.:extension"           ,
     :bucket => 'toy-office-development'
 
+  def init_from_s3_upload
+    self.attachment_content_type =
+      file_extension_content_type(self.attachment_file_name)
+#    acl_obj = self.attachment.s3_object.acl
+#    if acl_obj.grants.find { |g| g.to_s =~ /READ to AllUsers/ }
+#      self.acl = 'public-read'
+#    else
+#      self.acl = 'private'
+#    end
+  end
 
   def insert_in_context(target_context, grouping, position = 0)
     return unless target_context && grouping && self.send(grouping)
@@ -146,33 +141,26 @@ class Card < ActiveRecord::Base
   end
 
   def move_to!(target)
-    return unless target
-    target_level = horizontal? == target.horizontal? ? :peer : :context
+    return unless target && !suite?
+    peer = horizontal? == target.horizontal? && !target.suite?
     dest_group = destination_group target
     failed = case dest_group
     when :whole
-      case target_level
-      when :peer
+      if peer
         insert_in_context target.whole, :whole, target.whole_position
-      when :context
-        insert_in_context target      , :whole
       else
-       logger.debug(":programming_errorrrrrrrrrrrrrrrrrrr")
-       :programming_error
+        insert_in_context target      , :whole      
       end
     when :list
-      case target_level
-      when :peer
+      if peer
         insert_in_context target.list , :list , target.list_position
-      when :context
+      else # context
         insert_in_context target      , :list
-      else
-        :programming_error
       end
     else
       :not_implemented
     end
-    save unless failed
+#    save unless failed
   end
  
   def destination_group target
@@ -192,17 +180,6 @@ class Card < ActiveRecord::Base
 
   def suite_group
     recursive_suite || self
-  end
-
-  def init_from_s3_upload
-    self.attachment_content_type =
-      file_extension_content_type(self.attachment_file_name)
-#      acl_obj = self.attachment.s3_object.acl
-#      if acl_obj.grants.find { |g| g.to_s =~ /READ to AllUsers/ }
-        self.acl = 'public-read'
-#      else
-#        self.acl = 'private'
-#      end
   end
 
   before_save do |c|
