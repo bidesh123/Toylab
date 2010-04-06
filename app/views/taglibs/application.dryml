@@ -23,7 +23,7 @@
   <set url="&this.attachment.url" />
   <img src="&url" if="&url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'" />
   <% domid = dom_id this, :attachment %>
-  <form id="#{domid}" style="display:none;" ></form>
+  <form id="#{domid}" style="display:none;" /><!--/form-->
 </def>
 
 <def tag="core">
