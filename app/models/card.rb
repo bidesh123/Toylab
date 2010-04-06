@@ -141,39 +141,32 @@ class Card < ActiveRecord::Base
   end
 
   def move_to!(target)
-    return unless target && !suite?
+    return if suite? || !target
     peer = horizontal? == target.horizontal? && !target.suite?
-    dest_group = destination_group target
-    failed = case dest_group
-    when :whole
-      if peer # target is a peer
-        insert_in_context target.whole, :whole, target.whole_position
-      else    # target is a context
-        insert_in_context target      , :whole      
+    grouping = destination_group target
+    return unless [:list, :whole].include?(grouping)
+    if peer # target is a peer
+      case grouping
+      when :whole
+        logger.debug "insert_in_context target.whole, grouping, target.whole_position #{[target.whole.id, grouping, target.whole_position].to_yaml}hhhhhhhhhhhhhhhhhhhhhhhhhhhh"
+        insert_in_context target.whole, grouping, target.whole_position
+      when :list
+        logger.debug "insert_in_context target.whole, grouping, target.whole_position #{[target.list.id , grouping, target.list_position ].to_yaml}iiiiiiiiiiiiiiiiiiiiiiiiiii"
+        insert_in_context target.list , grouping, target.list_position
       end
-    when :list
-      if peer
-        insert_in_context target.list , :list , target.list_position
-      else
-        insert_in_context target      , :list
-      end
-    else
-      :not_implemented
+    else    # target is a context
+        logger.debug "insert_in_context target      , grouping                        #{[target         , grouping                       ].to_yaml}jjjjjjjjjjjjjjjjjjjjjjjj"
+        insert_in_context target      , grouping
     end
   end
  
+  def bad_pointers
+    [suite?, list, whole, table].select{|x| x }.length > 1
+  end
+  
   def destination_group target
-    if         list_id &&        whole_id ||        table_id || suite? ||
-        target.list    && target.whole    || target.table
-
-      logger.debug "unsupported destination_group of card #{target.id}, #{target.reference_name}tatatatatatata"
-      logger.debug "source_group #{destination_group}"
-      return :unsupported
-    end
-    if !source_group
-      logger.debug "no source group for card #{target.id}, #{target.reference_name}titititititi"
-      logger.debug "source_group #{destination_group}"
-    end
+    return :bad_pointers if bad_pointers || target.bad_pointers
+    return :unsupported  if table || target.table
     source_group
   end
 
