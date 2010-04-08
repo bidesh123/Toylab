@@ -540,15 +540,15 @@
 
 <def tag="drag-handle">
   <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
-     domid = dom_id this, :drag_handle                  %>
+     domid = dom_id this, :drag_handle                      %>
   <div class="tool" if="&can_drag">
     <span class="drag_handle drag-handle" id="#{domid}">
       Move
     </span>
   </div>
+<def tag="toy-report" attrs="shallow, whole-off">
 </def>
 
-<def tag="toy-report" attrs="shallow, whole-off">
   <%         whole_off = "&false" %>
   <if test="&whole_off ==  true">
     <card    whole-off="&whole_off" />
