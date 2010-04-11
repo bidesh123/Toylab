@@ -5,6 +5,12 @@
 <include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
+
+
+<!-- i want toggle-below to be persisted over the session -->
+
+
+
 <def tag="manage-attachment">
   <!--%= this.attachment.url.to_s %-->
   <span class="tool" if="&can_edit?(:attachment)">
@@ -499,10 +505,23 @@
   <hierarchical-card />
 </def>
 
-<def tag="script-editor-toggle">
+<def tag="script-editor-show-old">
   <span class="tool" if="&can_edit?(:script)">
     <%= cid = dom_id(this, :script_cell)
         link_to_function("Script", "$(#{cid.to_json}).show()") %>
+  </span>
+</def>
+
+<def tag="script-editor-show">
+  <span class="tool" if="&can_edit?(:script)">
+
+        <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
+        <li class="<%=li_style%>"><%=
+          link_to this.kind, url_for(
+            :controller => "cards",
+            :action     => 'set_pad',
+            :id         => this.id
+          )%>
   </span>
 </def>
 
@@ -546,9 +565,9 @@
       Move
     </span>
   </div>
-<def tag="toy-report" attrs="shallow, whole-off">
 </def>
 
+<def tag="toy-report" attrs="shallow, whole-off">
   <%         whole_off = "&false" %>
   <if test="&whole_off ==  true">
     <card    whole-off="&whole_off" />
@@ -935,22 +954,21 @@
         <li class="<%=li_style%>"><%=
           link_to this.kind, url_for(
             :controller => "cards",
-            :action => 'set_pad',
-            :id => this.id
-          )
-        %></li>
+            :action     => 'set_pad',
+            :id         => this.id
+          )%>
+        </li>
       </repeat>
     </ul>
   </div>
 </def>
 
-
 <def tag="pad-none">
   <li class="pad-link" if="&$CURRENT_PAD" style = "pad-link">
-    <%= link_to "none", url_for(
-      :action => "set_pad",
-      :id => 0)
-  %>
+    <%=   link_to "none", url_for(
+            :action     => "set_pad",
+            :id         => 0
+          )%>
   </li>
 </def>
 

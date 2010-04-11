@@ -114,6 +114,45 @@ class Card < ActiveRecord::Base
     :path => ":attachment/:id/:style.:extension"           ,
     :bucket => 'toy-office-development'
 
+  def self.the_users *keys
+    ks = session_key(keys).unshift formal_param_id
+    session[ks.map{|key|key.to_s}.join('_').to_sym]
+  end
+
+  def self.formal_param_id
+    "c#{params[:id].to_i.to_s}"
+  end
+
+  def self.states
+    session[:states] || {}
+  end
+
+  def states
+    self.class.states[id] || {}
+  end
+  
+#  the_users({[:script, :visible] => 'on',  :theme => :pink})
+#  the_users   "script   visible  is  on OR  theme is  pink"
+
+  def the_users *which    
+    which.length == 0 ?  states  : states[flatten_array_of_strings(which)]
+  end
+  
+  def flatten_array_of_strings *a
+    a.map{|o|
+      case o.class.name
+      when 'Array'
+        o.map{|x      |                   flatten_array_of_strings x    }.join   ' '
+      when 'String'
+        o
+      when 'Hash'
+        o.map{|key,val| "#{key.to_s} is #{flatten_array_of_strings val}"}.join ' AND '
+      else
+        o.to_s
+      end
+    }.join(' ').squeeze(" ").strip
+  end
+    
   def init_from_s3_upload
     self.attachment_content_type =
       file_extension_content_type(self.attachment_file_name)

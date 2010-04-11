@@ -11,6 +11,8 @@ class CardsController < ApplicationController
   show_action :opus
   show_action :slide
   show_action :set_pad
+  show_action :show_script
+  show_action :hide_script
   show_action :list
   show_action :custom
   index_action :manage
@@ -18,19 +20,23 @@ class CardsController < ApplicationController
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
 
-  def boost_activation
-    session[:activation] ||= {}
-    session[:activation][params[:id]] ||= 0
-    session[:activation][params[:id]]  += 1
-    redirect_to :back
-  end
-
   def click
     raise "Kaboom"
   end
 
   def set_pad
     $CURRENT_PAD = params[:id].to_i == 0 ? nil : params[:id]
+    # global is implemented as session in rails
+    redirect_to :back
+  end
+
+  def show_script
+    session[Card.session_key(:script, :visibility)] = 'on'
+    redirect_to :back
+  end
+
+  def hide_script
+    session[Card.session_key(:script, :visibility)] = 'off'
     redirect_to :back
   end
 
@@ -146,4 +152,11 @@ class CardsController < ApplicationController
   def load_parent_card
     @parent_card = Card.find_by_id(params[:parent_id])
   end
+#  def boost_activation
+#    session[:activation] ||= {}
+#    session[:activation][params[:id]] ||= 0
+#    session[:activation][params[:id]]  += 1
+#    redirect_to :back
+#  end
+#
 end
