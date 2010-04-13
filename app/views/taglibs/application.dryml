@@ -5,11 +5,57 @@
 <include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
-
-
 <!-- i want toggle-below to be persisted over the session -->
 
+<def tag="core-script-row">
+  <tr class="script">
+    <td class="script-cell">
+      <% domid = dom_id this, :script_cell
+         visibility    = the_current this.formal_id, :script, :visibility
+         showq = ['on', 'custom'].include? visibility
+         display_style = showq ? "inherit" : "none"
+      %>
+      <div id="#{domid}" style="display:none">
+        <if test="&this.script">
+          <editor:script                   blank-message="....." />
+        </if>
+        <else>
+          <editor:script class="tiny-gray" blank-message="....." />
+        </else>
+      </div>
+    </td>
+   </tr>
+</def>
 
+<def tag="script-editor-show-old">
+  <span class="tool" if="&can_edit?(:script)">
+    <%= cid = dom_id(this, :script_cell)
+        link_to_function("Script", "$(#{cid.to_json}).show()") %>
+  </span>
+</def>
+
+<def tag="script-editor-show">
+  <%  visibility    = the_current this.formal_id, :script, :visibility
+      now_showing = ['on','custom'].include? visibility
+      li_style = "#{now_showing ? '' : 'not-enabled '}script-editor-link" %>
+  <span class="tool" if="&can_edit?(:script)">
+    <li class="<%=li_style%>">
+      <if test="&now_showing" >
+          <%=  link_to 'Hide Script', url_for(
+            :controller => "cards",
+            :action     => 'hide_script',
+            :id         => this.id
+          )%>
+      </if><else>
+          <%=  link_to 'Show Script', url_for(
+            :controller => "cards",
+            :action     => 'show_script',
+            :id         => this.id
+          )%>
+      </else>
+    </li>
+  </span>
+</def>
 
 <def tag="manage-attachment">
   <!--%= this.attachment.url.to_s %-->
@@ -278,22 +324,6 @@
   </tr>
 </def>
 
-<def tag="core-script-row">
-  <tr class="script">
-    <td class="script-cell">
-      <% domid = dom_id this, :script_cell %>
-      <div id="#{domid}" style="display:none">
-        <if test="&this.script">
-          <editor:script                   blank-message="....." />
-        </if>
-        <else>
-          <editor:script class="tiny-gray" blank-message="....." />
-        </else>
-      </div>
-    </td>
-   </tr>
-</def>
-
 <def tag="page" attrs="title, full-title">
   <% full_title ||= "#{title} : #{app_name}" %>
   <html merge-attrs>
@@ -498,31 +528,6 @@
       <add-pad-row-buttons />
     </if>
   </if>
-</def>
-
-<def tag="card" for="Card">
-  <%  Card.numbering_reset %>
-  <hierarchical-card />
-</def>
-
-<def tag="script-editor-show-old">
-  <span class="tool" if="&can_edit?(:script)">
-    <%= cid = dom_id(this, :script_cell)
-        link_to_function("Script", "$(#{cid.to_json}).show()") %>
-  </span>
-</def>
-
-<def tag="script-editor-show">
-  <span class="tool" if="&can_edit?(:script)">
-
-        <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
-        <li class="<%=li_style%>"><%=
-          link_to this.kind, url_for(
-            :controller => "cards",
-            :action     => 'set_pad',
-            :id         => this.id
-          )%>
-  </span>
 </def>
 
 <def tag="out-slide">

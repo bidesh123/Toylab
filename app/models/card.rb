@@ -64,8 +64,8 @@ class Card < ActiveRecord::Base
   belongs_to :mold     , :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
 # has_many   :instances, :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
   #5
-  belongs_to :ref     , :class_name => "Card"   , :foreign_key => :ref_id      , :accessible => true
-# has_many   :akas    , :class_name => "Card"   , :foreign_key => :ref_id      , :accessible => true
+  belongs_to :ref      , :class_name => "Card"  , :foreign_key => :ref_id      , :accessible => true
+# has_many   :akas     , :class_name => "Card"  , :foreign_key => :ref_id      , :accessible => true
   #6
   belongs_to :suite    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true
   has_many   :parts    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true,
@@ -105,54 +105,33 @@ class Card < ActiveRecord::Base
 
   has_attached_file :attachment,
 #    :styles => {
-#      :tiny => "35x35",
-#      :preview => "175x175",
-#      :large => "300x300"
+#      :icon    => "32x32"  ,
+#      :preview => "160x160",
+#      :large   => "400x400"
 #    },
     :storage => :s3,
     :s3_credentials => "#{RAILS_ROOT}/config/s3.yml"       ,
     :path => ":attachment/:id/:style.:extension"           ,
     :bucket => 'toy-office-development'
 
-  def self.the_users *keys
-    ks = session_key(keys).unshift formal_param_id
-    session[ks.map{|key|key.to_s}.join('_').to_sym]
+  def the_current?    *p # p: keys, followed by the val
+    key = session_key formal_id, keys
+    [p[-1]].flatten.include session[:states][key]
+    true
   end
 
-  def self.formal_param_id
-    "c#{params[:id].to_i.to_s}"
+  def card_session_key *the_keys
+    session_key Card.formal_id(id), the_keys
   end
 
-  def self.states
-    session[:states] || {}
+  def          formal_id
+    self.class.formal_id id
   end
 
-  def states
-    self.class.states[id] || {}
+  def     self.formal_id the_id
+    "c#{the_id.to_i.to_s}"
   end
-  
-#  the_users({[:script, :visible] => 'on',  :theme => :pink})
-#  the_users   "script   visible  is  on OR  theme is  pink"
 
-  def the_users *which    
-    which.length == 0 ?  states  : states[flatten_array_of_strings(which)]
-  end
-  
-  def flatten_array_of_strings *a
-    a.map{|o|
-      case o.class.name
-      when 'Array'
-        o.map{|x      |                   flatten_array_of_strings x    }.join   ' '
-      when 'String'
-        o
-      when 'Hash'
-        o.map{|key,val| "#{key.to_s} is #{flatten_array_of_strings val}"}.join ' AND '
-      else
-        o.to_s
-      end
-    }.join(' ').squeeze(" ").strip
-  end
-    
   def init_from_s3_upload
     self.attachment_content_type =
       file_extension_content_type(self.attachment_file_name)

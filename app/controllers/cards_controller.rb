@@ -1,5 +1,4 @@
-class CardsController < ApplicationController
-
+class CardsController < ApplicationController  helper_method :current_user
   hobo_model_controller
 
   auto_actions :all
@@ -19,6 +18,11 @@ class CardsController < ApplicationController
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
+  before_filter :grab_session
+
+  def grab_session
+    @states = session[:states]
+  end
 
   def click
     raise "Kaboom"
@@ -31,12 +35,12 @@ class CardsController < ApplicationController
   end
 
   def show_script
-    session[Card.session_key(:script, :visibility)] = 'on'
+    set_the_current :script, :visibility, 'on'
     redirect_to :back
   end
 
   def hide_script
-    session[Card.session_key(:script, :visibility)] = 'off'
+    set_the_current :script, :visibility, 'off'
     redirect_to :back
   end
 

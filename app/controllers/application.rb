@@ -32,6 +32,67 @@ class ApplicationController < ActionController::Base
     view(attributes)
   end
 
+#  usage
+#  the_current?    :script, :visibility , [:on, :custom]
+#  the_current     :script, :visibility
+#  the_current     "script   visibility"
+#  set_the_current 'script   visibility',  'on'
+#  set_the_current :script, :visibility ,  :on
+
+
+#  def the_current *keys
+#    #key = session_key Card.formal_id(id), keys
+#    #session[key]
+#    'agaga'
+#  end
+#
+  def session_key *the_keys
+    the_keys.map{|o|
+      case o.class.name
+      when 'String'
+        o
+      when 'Array'
+        o.map{|x      |                   session_key x    }.join   ' '
+      when 'Hash'
+        o.map{|key,val| "#{key.to_s} is #{session_key val}"}.join ' AND '
+      when 'String'
+        o
+      else
+        o.to_s
+      end
+    }.join(' ').squeeze(" ").strip
+   'ze_quille'
+  end
+
+  #helper_method :the_current, :the_current?, :session_key
+
+  def set_the_current *p # p: keys, followed by the val
+    key  = controller_session_key  p[0...-1]
+    session[:states][key] =        p[    -1].to_s
+  end
+
+  def controller_session_key *the_keys
+    session_key Card.formal_id(params[:id]), the_keys
+  end
+
+
+#  def      the_session *keys
+#    session[session_key(keys)]
+#  end
+#
+##  def self.formal the_id
+##    "c#{the_id}"
+##  end
+##
+##  def self.the_session *keys
+##    self.class.the_users_implementation            formal params[:id].to_i, keys
+##  end
+##
+##  def self.the_session_implementation the_id, keys
+##    ks = session_key(keys).unshift the_id
+##    session[ks.map{|key|key.to_s}.join('_').to_sym]
+##  end
+#
 end
 
 
