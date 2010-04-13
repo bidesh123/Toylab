@@ -114,24 +114,6 @@ class Card < ActiveRecord::Base
     :path => ":attachment/:id/:style.:extension"           ,
     :bucket => 'toy-office-development'
 
-  def the_current?    *p # p: keys, followed by the val
-    key = session_key formal_id, keys
-    [p[-1]].flatten.include session[:states][key]
-    true
-  end
-
-  def card_session_key *the_keys
-    session_key Card.formal_id(id), the_keys
-  end
-
-  def          formal_id
-    self.class.formal_id id
-  end
-
-  def     self.formal_id the_id
-    "c#{the_id.to_i.to_s}"
-  end
-
   def init_from_s3_upload
     self.attachment_content_type =
       file_extension_content_type(self.attachment_file_name)

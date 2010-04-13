@@ -1,4 +1,4 @@
-class CardsController < ApplicationController  helper_method :current_user
+class CardsController < ApplicationController
   hobo_model_controller
 
   auto_actions :all
@@ -10,8 +10,14 @@ class CardsController < ApplicationController  helper_method :current_user
   show_action :opus
   show_action :slide
   show_action :set_pad
+  show_action :show_aspects
+  show_action :show_body
   show_action :show_script
+  show_action :show_sub_items
+  show_action :hide_aspects
+  show_action :hide_body
   show_action :hide_script
+  show_action :hide_sub_items
   show_action :list
   show_action :custom
   index_action :manage
@@ -34,13 +40,43 @@ class CardsController < ApplicationController  helper_method :current_user
     redirect_to :back
   end
 
+  def show_aspects
+    set_the_current :aspects  , :visibility, 'on'
+    redirect_to :back
+  end
+
+  def show_body
+    set_the_current :body     , :visibility, 'on'
+    redirect_to :back
+  end
+
   def show_script
-    set_the_current :script, :visibility, 'on'
+    set_the_current :script   , :visibility, 'on'
+    redirect_to :back
+  end
+
+  def show_sub_items
+    set_the_current :sub_items, :visibility, 'on'
+    redirect_to :back
+  end
+
+  def hide_aspects
+    set_the_current :aspects  , :visibility, 'off'
+    redirect_to :back
+  end
+
+  def hide_body
+    set_the_current :body     , :visibility, 'off'
     redirect_to :back
   end
 
   def hide_script
-    set_the_current :script, :visibility, 'off'
+    set_the_current :script   , :visibility, 'off'
+    redirect_to :back
+  end
+
+  def hide_sub_items
+    set_the_current :sub_items, :visibility, 'off'
     redirect_to :back
   end
 
@@ -156,11 +192,5 @@ class CardsController < ApplicationController  helper_method :current_user
   def load_parent_card
     @parent_card = Card.find_by_id(params[:parent_id])
   end
-#  def boost_activation
-#    session[:activation] ||= {}
-#    session[:activation][params[:id]] ||= 0
-#    session[:activation][params[:id]]  += 1
-#    redirect_to :back
-#  end
-#
+
 end
