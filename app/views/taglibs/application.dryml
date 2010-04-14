@@ -5,14 +5,12 @@
 <include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
-<!-- i want toggle-below to be persisted over the session -->
-
 <def tag="core-script-row">
   <tr class="script">
-    <td class="script-cell">
-<%    domid = dom_id this, :script_cell
+    <td class="script-cell"><%
+      domid = dom_id this, :script_cell
       visible = the_current? this.id, :script, :visibility, ['on', 'custom']
-      display_style = visible ? "inherit" : "none"                           %>
+      display_style = visible ? "inherit" : "none"                            %>
       <div id="#{domid}" style="display:<%=display_style%>">
         <if test="&this.script">
           <editor:script                   blank-message="....." />
@@ -25,12 +23,12 @@
    </tr>
 </def>
 
-<def tag="core-body-row">
-  <%  body_style = "body-cell #{this.theme_class}"
-      visible = the_current? this.id, :body, :visibility, ['on', 'custom']
-      display_style = visible ? "inherit" : "none"
-      br_id = dom_id this, :body_row
-      domid = dom_id this, :body_cell %>
+<def tag="core-body-row"><%
+  body_style = "body-cell #{this.theme_class}"
+  visible = the_current? this.id, :body, :visibility, ['on', 'custom']
+  display_style = visible ? "inherit" : "none"
+  br_id = dom_id this, :body_row
+  domid = dom_id this, :body_cell                                             %>
   <tr   class="body body-row" id="#{br_id}" style="display:<%=display_style%>" >
     <td class="#{body_style}" id="#{domid}">
       <if test="&this.body ">
@@ -44,19 +42,43 @@
   </tr>
 </def>
 
+<def tag="toggle-aspect-or-item">                                             <%
+  horiz = attributes[:which] == "aspects"
+  sub_name     = horiz ? "Aspects" : "Sub-Items"
+  subs_method  = horiz ? "aspects" : "items"
+  visible = the_current? this.id, subs_method, :visibility, ['on', 'custom']
+  show_hide = visible ? 'Hide' : "Show"
+  if this.send(sub_down).count > 0                                            %>
+     <%=  link_to_function "#{show_hide} #{sub_name}"         ,
+          "Effect.#{show_hide}('#{dom_id(this, subs_method)}')" %>            <%
+  end                                                                         %>
+</def>
+
+<def tag="old-toggle-aspect-or-item">
+  <%=
+    if (  subs = attributes[:which]) == "aspects" && this.aspects.count > 0
+      link_to_function "Toggle Aspects",
+        "Effect.toggle('#{dom_id(this, subs)}')"
+    elsif subs                       == "items"   && this.items.count > 0
+      link_to_function "Toggle Sub-Items",
+        "Effect.toggle('#{dom_id(this, subs)}')"
+    end
+  %>
+</def>
+
 <def tag="toggle-body">
-  <div class="tool">
-<%=   if the_current? this.id, :body, :visibility, ['on', 'custom']
-        link_to 'Hide Body', url_for(
-          :controller => "cards"    ,
-          :action     => 'hide_body',
-          :id         => this.id    )
-      else
-        link_to 'Show Body', url_for(
-          :controller => "cards"    ,
-          :action     => 'show_body',
-          :id         => this.id    )
-      end                                                                    %>
+  <div class="tool">                                                         <%=
+    if the_current? this.id, :body, :visibility, ['on', 'custom']
+      link_to 'Hide Body', url_for(
+        :controller => "cards"    ,
+        :action     => 'hide_body',
+        :id         => this.id    )
+    else
+      link_to 'Show Body', url_for(
+        :controller => "cards"    ,
+        :action     => 'show_body',
+        :id         => this.id    )
+    end                                                                       %>
   </div>
 </def>
 
@@ -80,9 +102,9 @@
 
 <def tag="manage-attachment">
   <!--%= this.attachment.url.to_s %-->
-  <span class="tool" if="&can_edit?(:attachment)">
-<%= cid = dom_id this, :attachment
-    link_to_function "Image", "$(#{cid.to_json}).show()" %>
+  <span class="tool" if="&can_edit?(:attachment)">                           <%=
+    cid = dom_id this, :attachment
+    link_to_function "Image", "$(#{cid.to_json}).show()"                      %>
   </span>
 </def>
 
@@ -92,11 +114,12 @@
   </old-form>
 </extend>
 
-<def tag="core-image">
-  <set url="&this.attachment.url" />
-  <img src="&url" if="&url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'" />
-  <% domid = dom_id this, :attachment %>
-  <form id="#{domid}" style="display:none;" /><!--/form-->
+<def tag="core-image">                                                       <%
+  url= this.attachment.url
+  valid_url = url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'      %>
+  <img src="&url" if="&valid_url" />                                         <%
+  domid = dom_id this, :attachment                                            %>
+  <form id="#{domid}" style="display:none;" />
 </def>
 
 <def tag="core">
@@ -628,28 +651,25 @@
 <def tag="bottom-controls">
   <table class="bottom-controls">
     <tr   class="bottom-controls">
-      <td class="bottom-controls"
-         ><add-rows
-        />
+      <td class="bottom-controls">
+        <add-rows/>
       </td>
-      <td class="bottom-controls"
-         ><start-any-list if="&true || this && this.items.count == 0"
-        /><if test="&can_edit? :pad" ><editor:pad/>Pad</if
-         ><% new_card = this.class.new(
-               :list_id  => this.id            ,
-               :suite_id => this.suite_group.id)
-        %><br if="&this && this.items.count == 0 && can_create?(new_card)"
-        /><editor:theme  if="&can_edit? :theme"
-        /><editor:access if="&can_edit? :access"
-        /><br if="&can_edit?(:theme) || can_edit?(:access)"
-        /><toggle-aspect-or-item which="items" with="&this"
-        /><toggle-body if="&scope.deep[:action] != 'list'"
-        /><show-card-inline
-        /><trash
-        />
+      <td class="bottom-controls">
+        <start-any-list if="&true || this && this.items.count == 0" />
+        <if test="&can_edit? :pad" ><editor:pad/>Pad</if>                     <%
+          new_card = this.class.new :list_id  => this.id            ,
+                                    :suite_id => this.suite_group.id          %>
+        <br if="&this && this.items.count == 0 && can_create?(new_card)" />
+        <editor:theme  if="&can_edit? :theme" />
+        <editor:access if="&can_edit? :access" />
+        <br if="&can_edit?(:theme) || can_edit?(:access)" />
+        <toggle-aspect-or-item which="items" with="&this" />
+        <toggle-body if="&scope.deep[:action] != 'list'" />
+        <show-card-inline />
+        <trash />
       </td>
-      <!--td class="core-add-item"><add-rows /></td>
-      <td class="go"   ><show-card-inline /></td>
+      <!--td class="core-add-item"><add-rows /></td>-->
+      <!--<td class="go"   ><show-card-inline /></td>
       <td class="theme"><editor:theme     /></td>
       <td class="access"><editor:access if="&can_edit? :access"/></td>
       <td class="toggle"><toggle-aspect-or-item which="items" with="&this"/></td>
@@ -1021,18 +1041,6 @@
       <corner-controls />
     </td>
   </tr>
-</def>
-
-<def tag="toggle-aspect-or-item">
-  <%=
-    if (  subs = attributes[:which]) == "aspects" && this.aspects.count > 0
-      link_to_function "Toggle Right",
-        "Effect.toggle('#{dom_id(this, subs)}')"
-    elsif subs                       == "items"   && this.items.count > 0
-      link_to_function "Toggle Below",
-        "Effect.toggle('#{dom_id(this, subs)}')"
-    end
-  %>
 </def>
 
 <def tag="report-card">
