@@ -13,11 +13,11 @@ class CardsController < ApplicationController
   show_action :show_aspects
   show_action :show_body
   show_action :show_script
-  show_action :show_sub_items
+  show_action :show_items
   show_action :hide_aspects
   show_action :hide_body
   show_action :hide_script
-  show_action :hide_sub_items
+  show_action :hide_items
   show_action :list
   show_action :custom
   index_action :manage
@@ -55,8 +55,8 @@ class CardsController < ApplicationController
     redirect_to :back
   end
 
-  def show_sub_items
-    set_the_current :sub_items, :visibility, 'on'
+  def show_items
+    set_the_current :items, :visibility, 'on'
     redirect_to :back
   end
 
@@ -75,8 +75,8 @@ class CardsController < ApplicationController
     redirect_to :back
   end
 
-  def hide_sub_items
-    set_the_current :sub_items, :visibility, 'off'
+  def hide_items
+    set_the_current :items, :visibility, 'off'
     redirect_to :back
   end
 
