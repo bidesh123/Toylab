@@ -56,7 +56,7 @@ class CardsController < ApplicationController
   end
 
   def show_items
-    set_the_current :items, :visibility, 'on'
+    set_the_current :items    , :visibility, 'on'
     redirect_to :back
   end
 
@@ -76,7 +76,7 @@ class CardsController < ApplicationController
   end
 
   def hide_items
-    set_the_current :items, :visibility, 'off'
+    set_the_current :items    , :visibility, 'off'
     redirect_to :back
   end
 

@@ -17,6 +17,17 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password
 
 
+  def prep that, part = :all
+    r = {}
+    r[:name         ] = part
+    r[:domid        ] = dom_id   that, part
+    r[:visible      ] = visible? that, part
+    r[:show_hide    ] = r[:visible  ] ? 'Hide' : 'Show'
+    r[:action       ] = r[:show_hide].downcase
+    r[:display_style] = r[:visible  ] ? "inherit" : "none"
+    r
+  end
+
   def in_place_editor(attributes)
     click_to_edit_text = attributes.delete(:click_to_edit_text) || "..."
     blank_message = attributes.delete(:blank_message) || click_to_edit_text
@@ -40,30 +51,47 @@ class ApplicationController < ActionController::Base
 #  set_the_current  :script, :visibility ,  :on
 
 
-  def the_current?    *p # p: keys, followed by the val
-    key = session_key p[0...-1]
-    [p[-1]].flatten.include? session[key]
+  def invisible? that   , part = :all
+    #deprecated
+
   end
 
-  def the_current *keys
+  def   visible? that   , part = :all
+    default = case part
+    when :script
+      'off'
+    else
+      'on'
+    end
+    the_current? that.id, part, :visibility, 'on' do
+      default
+    end
+  end
+
+  def the_current?   *p # p: keys, followed by the val
+    key = session_key p[0...-1]
+    [p[-1]].flatten.include?(session[key] || yield )
+  end
+
+  def the_current    *keys
     key = session_key keys
     session[key]
   end
 
-  def session_key *the_keys
+  def session_key         *the_keys
     w = (session_key_words the_keys).split.join '_'
     whoah unless w[0]
     w = 'c' + w if ('0'..'9').include? w[0]
     w.to_sym
   end
 
-  def session_key_words *the_keys
+  def session_key_words   *the_keys
     the_keys.map{|o|
       case o.class.name
       when 'String'
         o
       when 'Array'
-        o.map{|x      |                   session_key_words x    }.join   ' '
+        o.map{|x      |                   session_key_words x    }.join ' '
       when 'Hash'
         o.map{|key,val| "#{key.to_s} is #{session_key_words val}"}.join ' AND '
       when 'String'
@@ -74,7 +102,7 @@ class ApplicationController < ActionController::Base
     }.join(' ').squeeze(" ").strip
   end
 
-  helper_method :the_current, :the_current?, :session_key
+  helper_method :the_current, :the_current?, :session_key, :visible?, :invisible?, :prep
 
   def set_the_current *p # p: keys, followed by the val
     key          = session_key params[:id], p[0...-1]
@@ -82,7 +110,6 @@ class ApplicationController < ActionController::Base
   end
 
 end
-
 
 class String
   def indefinite

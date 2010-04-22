@@ -109,10 +109,10 @@ class Card < ActiveRecord::Base
 #      :preview => "160x160",
 #      :large   => "400x400"
 #    },
-    :storage => :s3,
-    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml"       ,
-    :path => ":attachment/:id/:style.:extension"           ,
-    :bucket => 'toy-office-development'
+    :storage        => :s3                                ,
+    :s3_credentials => "#{RAILS_ROOT}/config/s3.yml"      ,
+    :path           => ":attachment/:id/:style.:extension",
+    :bucket         => 'toy-office-development'
 
   def init_from_s3_upload
     self.attachment_content_type =
