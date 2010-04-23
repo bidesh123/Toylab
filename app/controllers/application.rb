@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
 
   def   visible? that   , part = :all
     default = case part
-    when :script, :kind
+    when :script, :body
       'off'
     else
       'on'
