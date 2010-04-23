@@ -58,12 +58,12 @@ class ApplicationController < ActionController::Base
 
   def   visible? that   , part = :all
     default = case part
-    when :script
+    when :script, :kind
       'off'
     else
       'on'
     end
-    the_current? that.id, part, :visibility, 'on' do
+    the_current? that.id, part, :visibility, ['on', 'custom', 'auto'] do
       default
     end
   end
