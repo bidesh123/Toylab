@@ -103,6 +103,67 @@ class Card < ActiveRecord::Base
     :order        => "created_at DESC"
   }}
 
+  after_create :follow_up_on_create
+
+  RecursivityMax = 3
+
+  def follow_up_on_create
+    uniquely do
+      generate_dependents mold
+    end
+  end
+
+  def      uniquely # expects a block
+    t = Thread.current[:recursivity] ||= []
+    already_there = t.include? id
+    t.push id
+#    logger.debug 'before'+ (recursivity.to_yaml)
+#    logger.debug('notyet'+ (!t.include?(id)).to_yaml)
+#    logger.debug 'big'+ (RecursivityMax.to_yaml)
+#    logger.debug 'little'+ (t.length.to_yaml)
+#    logger.debug('fit'+ (t.length <= RecursivityMax).to_yaml )
+#    logger.debug('fat'+ ((t.length <= RecursivityMax && !t[0...-1].include?(id)).to_yaml))
+    yield if t.length <= RecursivityMax && !already_there
+  ensure
+    t.pop
+  end
+
+  def generate_dependents source
+    [:aspects, :items].each do |part|
+      source.send(part).each do |sub_source|
+        self.send(part).create! :mold_id  => source_mold(sub_source).id,
+                                :suite_id => suite_id
+      end
+    end if source.is_a? Card
+#    return unless source.is_a?(Card)
+#    source.aspects.each do |sub_source|
+#      self.aspects.create! :mold_id => source_mold(sub_source).id,
+#                           :suite_id => suite_id
+#    end
+#    source.items.each   do |sub_source|
+#      self.items.create!   :mold_id => source_mold(sub_source).id,
+#                           :suite_id => suite_id
+#    end
+
+  end
+
+  def self.recursivity_reset
+    Thread.current[:recursivity] = []
+  end
+
+  def self.recursivity
+    Thread.current[:recursivity].map{|x| x.to_s}.join "."
+  end
+
+  def      recursivity
+    self.class.recursivity
+  end
+
+  def source_mold source
+    r = if source.kind then self.class.find_pad source.kind end
+    r ||= source.recursive_kind_mold
+  end
+
   has_attached_file :attachment,
 #    :styles => {
 #      :icon    => "32x32"  ,
@@ -123,6 +184,55 @@ class Card < ActiveRecord::Base
 #    else
 #      self.acl = 'private'
 #    end
+  end
+
+  before_save do |c|
+    c.ensure_suite
+  end
+
+  def ensure_suite
+    return unless !suite_id && context
+    return unless (s = recursive_suite).is_a? Card
+    suite = s unless s.id == id
+  end
+
+  before_update :prepare_for_update
+  after_update  :follow_up_on_update
+
+  def follow_up_on_update
+#        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+#        logger.debug "@catch"
+#        logger.debug "catch"
+    return if on_automatic?
+#        logger.debug "not on automaticccccccccccccccccc"
+    on_automatic do
+#          logger.debug "now yessssssssssssssssssssssssss"
+      return unless name && k = recursive_kind
+#          logger.debug "name: #{name}"
+      names      = self.class.named(name)
+#          logger.debug "#{names.length} namesssssssssss"
+#          logger.debug "recursive_kind: #{k}"
+      kinds      = names.as_a(k)
+#          logger.debug "#{kinds.length} as a #{k}"
+      suites     = kinds.part_of(suite_id)
+#          logger.debug "#{suites.length} part of #{suite_id}"
+      all_but    = suites.but_not(id)
+#          logger.debug "#{all_but.length} but not #{id}"
+      origs      = all_but.originals
+#          logger.debug "#{origs.length} originals"
+      candidates = origs.latest
+#          logger.debug "candidatessssssssss"
+#          logger.debug candidates.to_yaml
+      match = candidates.detect {|c| c.recursive_kind == k}
+      return unless match
+#          logger.debug "match : #{match.id}"
+#          logger.debug "uuuuuuuuuuuuuuuuuuuu"
+      update_attributes :ref_id => match.id
+    end
+  end
+
+  def prepare_for_update
+    @catch = "hi"
   end
 
   def insert_in_context(target_context, grouping, position = 0)
@@ -174,16 +284,6 @@ class Card < ActiveRecord::Base
     recursive_suite || self
   end
 
-  before_save do |c|
-    c.ensure_suite
-  end
-
-  def ensure_suite
-    return unless !suite_id && context
-    return unless (s = recursive_suite).is_a? Card
-    suite = s unless s.id == id
-  end
-
   def self.reset_suites
     find(:all).each {|c| c.reset_suite!}
     n, bad = Card.count, Thread.current[:bad_suites]
@@ -207,61 +307,18 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def self.numbering_reset
-    Thread.current[:numbering] = []
-  end
-
   def image?
     #return (attachment.content_type =~ /^image.*/) ? true : false
     (attachment.content_type =~ /^image.*/) ? true : false
   end
 
-  def create_image_on_cloud
-#    self.attachment.reprocess!
-  end
-
+#  def create_image_on_cloud
+##    self.attachment.reprocess!
+#  end
+#
   def file_extension_content_type filename
     types = MIME::Types.type_for(filename)
     types.empty? ? nil : types.first.content_type
-  end
-
-  before_update :prepare_for_update
-  after_update  :follow_up_on_update
-
-  def follow_up_on_update
-#        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-#        logger.debug "@catch"
-#        logger.debug "catch"
-    return if on_automatic?
-#        logger.debug "not on automaticccccccccccccccccc"
-    on_automatic do
-#          logger.debug "now yessssssssssssssssssssssssss"
-      return unless name && k = recursive_kind
-#          logger.debug "name: #{name}"
-      names      = self.class.named(name)
-#          logger.debug "#{names.length} namesssssssssss"
-#          logger.debug "recursive_kind: #{k}"
-      kinds      = names.as_a(k)
-#          logger.debug "#{kinds.length} as a #{k}"
-      suites     = kinds.part_of(suite_id)
-#          logger.debug "#{suites.length} part of #{suite_id}"
-      all_but    = suites.but_not(id)
-#          logger.debug "#{all_but.length} but not #{id}"
-      origs      = all_but.originals
-#          logger.debug "#{origs.length} originals"
-      candidates = origs.latest
-#          logger.debug "candidatessssssssss"
-#          logger.debug candidates.to_yaml
-      match = candidates.detect {|c| c.recursive_kind == k}
-      return unless match
-#          logger.debug "match : #{match.id}"
-#          logger.debug "uuuuuuuuuuuuuuuuuuuu"
-      update_attributes :ref_id => match.id
-    end
-  end
-
-  def prepare_for_update
-    @catch = "hi"
   end
 
   def self.field reference
@@ -510,25 +567,6 @@ class Card < ActiveRecord::Base
     ctx.recursive_suite
   end
 
-  def source_mold source
-    r = if source.kind then self.class.find_pad source.kind end
-    r ||= source.recursive_kind_mold
-  end
-
-  def generate_dependents source
-    return unless source.is_a? Card
-    source.aspects.each do |sub_source|
-      self.aspects.create! :mold_id => source_mold(sub_source).id
-    end
-    source.items.each   do |sub_source|
-      self.items.create!   :mold_id => source_mold(sub_source).id
-    end
-  end
-
-  def follow_up_on_create
-    generate_dependents mold if mold || nature
-  end
-
   def local_pads
     return [] unless list
     all = all_pads
@@ -538,7 +576,7 @@ class Card < ActiveRecord::Base
   end
 
   def pertinent_pads
-    [self.class.current_pad].concat local_pads
+    [self.class.current_pad].concat(local_pads).uniq.compact
   end
       
   def self.current_pad
@@ -651,30 +689,6 @@ class Card < ActiveRecord::Base
     Card.find :first,
       :conditions => "list_id = #{list_id} AND list_position < #{list_position}",
       :order => "list_position DESC"
-  end
-
-  def self.numbering_reset
-    Thread.current[:numbering] = []
-  end
-
-  def self.numbering_push
-    Thread.current[:numbering].push 0
-  end
-
-  def self.numbering_pop
-    Thread.current[:numbering].pop
-  end
-
-  def self.numbering_increment
-    Thread.current[:numbering][-1] += 1
-  end
-
-  def self.numbering_list
-    Thread.current[:numbering]
-  end
-
-  def self.recursive_numbering
-    Thread.current[:numbering].map{|x| x.to_s}.join "."
   end
 
   def same_heading_stack?  desired, existing, deep, mode = :normal
@@ -1118,12 +1132,32 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def inherit_from_mold
-    return false unless example = self
-    #inherit_by_example example
-    true
+  def self.numbering_reset
+    Thread.current[:numbering] = []
   end
 
+  def self.numbering_increment
+    Thread.current[:numbering][-1] += 1
+  end
+
+  def self.numbering_push
+    Thread.current[:numbering].push 0
+  end
+
+  def self.numbering_pop
+    Thread.current[:numbering].pop
+  end
+
+  def self.numbering_list
+    Thread.current[:numbering]
+  end
+
+#  def inherit_from_mold
+#    return false unless example = self
+#    #inherit_by_example example
+#    true
+#  end
+#
   #def look_wide
   #end
 
@@ -1509,18 +1543,6 @@ class Card < ActiveRecord::Base
 #    @itself ||= self.class.find_by_id id
 #  end
 #
-#    def follow_up_on_create
-# adadad;    if table
-#      mold_existing_items_on_this_column if table.columns.length == 1 #first column
-#      generate_column_cells table # new columns are inherited from in each row
-#    elsif list # new row inherits from list
-#      return
-#      generate_row_cells # it can inherit from the columns
-#      generate_columns   # it can inherit columns from a pad of its kind
-#      generate_sub_items # it can inherit items   from a pad of its kind
-#    end
-#  end
-#
 #  def generate_row_cells
 #    adadad;#self is a new item in a list
 #    cols = list.columns
@@ -1603,6 +1625,22 @@ class Card < ActiveRecord::Base
 #    on_automatic do
 #      generate_dependents_recursively example
 #    end
+#  end
+#
+
+#  def follow_up_on_create
+#    uniquely do
+#      generate_dependents mold
+#    end if mold
+##    if table
+##      mold_existing_items_on_this_column if table.columns.length == 1 #first column
+##      generate_column_cells table # new columns are inherited from in each row
+##    elsif list # new row inherits from list
+##      return
+##      generate_row_cells # it can inherit from the columns
+##      generate_columns   # it can inherit columns from a pad of its kind
+##      generate_sub_items # it can inherit items   from a pad of its kind
+##    end
 #  end
 #
 

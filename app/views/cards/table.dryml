@@ -39,10 +39,10 @@
     #logger.debug "---#{no_redirect}=== supposed to be nil"
     #logger.debug "[[[#{attributes[:no_redirect]}]]]"
     #logger.debug this.inspect
-    if attributes[:no_redirect] == "ggggg" then
-      redirect_uri = nil
-      attributes[:no_redirect] = nil
-    end
+    #if attributes[:no_redirect] == "ggggg" then
+      #redirect_uri = nil
+      #attributes[:no_redirect] = nil
+    #end
   %>
   <td class="delete-button">
     <delete-button class="nav-button" after-submit="&cards_url" label="x" title="#{tooltip}" />

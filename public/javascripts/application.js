@@ -33,7 +33,7 @@ var appearDelay = 1.0;
 var appearDuration = 0.25;
 
 // Number of seconds before we trigger the hide animation
-var hideDelay = 2.5;
+var hideDelay = 1.8;
 
 // Duration of the hide animation
 var hideDuration = 0.25;

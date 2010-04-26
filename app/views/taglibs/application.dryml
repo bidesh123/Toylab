@@ -69,10 +69,10 @@
         style="display:<%=part[:display_style]%>" >
     <td class="#{body_style}" id="#{body_cell_dom_id}">
       <if test="&this.body ">
-        <editor:body                          blank-message="A" />
+        <editor:body                                    blank-message="A" />
       </if>
       <else>
-        <editor:body class="ssssssstiny-gray" blank-message="A" />
+        <editor:body class="whydoesntthisworktiny-gray" blank-message="A" />
       </else>
     </td>
     <empty-cell if="&!scope.deep[:no_aspects]" />
@@ -233,72 +233,69 @@
    res
 %></def>
 
-<def tag="add-pad-row-buttons">
-  <if test="&this && this.list">
-<%  list_id = this.list
+<def tag="add-pad-rows">                                                      <%
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  last_item = this.list.items.count == this.list_position
+  no_kind = ['', 'item'].include? this.kind
+  collection_id = this.list.id
+  position = this.send "#{collection}_position"
+%>
+  <repeat with="&this.pertinent_pads"
+          if="&(that = this) && (list_id = this.list)">                     <%
+    tooltip, label = [
+      "Add a #{this} row below this one",
+      "Add #{  this} row"]
+    el = "#{this} #{element}"                                               %>
+    <add-item-or-row-form with="&that" if="&this && this.length>0"
+      element="&el"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="&collection_id"
+      pad="&this"
+      position="&position"
+    />
+  </repeat>
+</def>
+
+<def tag="start-list-from-pad">                                               <%
+  that = this
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  pertinent = that                         &&
+              that.items.count == 0        &&
+              (pads = that.pertinent_pads)                                    %>
+  <repeat with="&pads" if="&pertinent">
+    <unless test="&this.blank?">                                              <%
+      tooltip, label = [
+        "Start list with #{this.indefinite} #{element}",
+        "Start list with #{this}"                      ]                      %>
+      <add-item-or-row-form with="&that"
+                            element="&element"
+                            label="&label"
+                            tooltip="&tooltip"
+                            collection-id="#{that.id}"
+                            pad="&this"                />
+    </unless>
+  </repeat>
+</def>
+
+<def tag="add-inner-item-from-pad">  <!-- deprecated -->                      <%
     element, collection =
-      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-    element = "#{this.class.current_pad} #{element}"
-    target_item = this
-    last_item = this.list.items.count == this.list_position
-    list_id = this.list.id
-    the_kind = this.kind
-    the_pad = this.class.current_pad%>
-    <repeat with="&this.pertinent_pads">
-<%    tooltip, label = [
-        "Add a #{this} row below this one",
-        "Add #{this} row"]
-      no_pad  = ['', nil].include? this
-      no_kind = ['', 'item'].include? the_kind %>
-      <add-item-or-row-form with="&target_item" unless="&no_pad"
-        element="&element"
-        label="&label"
-        tooltip="&tooltip"
-        collection-id="#{list_id}"
-        pad="&this"
-      />
-    </repeat>
-  </if>
-</def>
-
-<def tag="start-list-from-pad">
-  <if test="&this && this.items.count == 0 &&
-            selected_pad = this.class.current_pad">
-    <%element, collection =
-        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-      tooltip, label = [
-        "Start list with #{selected_pad.indefinite} #{element}",
-        "Start list with #{selected_pad}"]
-      no_pad = selected_pad.blank?
-    %>
-    <add-item-or-row-form unless="&no_pad"
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list"]                %>
+  <repeat with="&this.pertinent_pads"
+          if="&(that = this) && that.items.count  >  0">                      <%
+    tooltip, label = [
+      "Add an inner #{this} #{element}",
+      "Add inner #{   this}"           ]                                      %>
+    <add-item-or-row-form with="&that" unless="&this.blank?"
       element="&element"
       label="&label"
       tooltip="&tooltip"
       collection-id="#{this.id}"
-      pad="&selected_pad"
+      pad="&this"
     />
-  </if>
-</def>
-
-<def tag="add-inner-item-from-pad">
-  <if test="&this && this.items.count  > 0 &&
-            selected_pad = this.class.current_pad">
-    <%element, collection =
-        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-      tooltip, label = [
-        "Add an inner #{selected_pad} #{element}",
-        "Add inner #{selected_pad}" ]
-      no_pad = selected_pad.blank?
-    %>
-    <add-item-or-row-form unless="&no_pad"
-      element="&element"
-      label="&label"
-      tooltip="&tooltip"
-      collection-id="#{this.id}"
-      pad="&selected_pad"
-    />
-  </if>
+  </repeat>
 </def>
 
 <def tag="javascript-variables">
@@ -470,18 +467,19 @@
 </def>
 
 <def tag="add-row">
-  <if test="&this && this.list">
-  <% element, collection =
-       mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-     tooltip, label =
-       ["Add a row below this one",
-        "Add row"]
-    %>
-    <add-item-or-row-form if="&this.list.items.count == this.list_position"
+  <if test="&this && this.list">                                              <%
+    element, collection =
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    position = this.send "#{collection}_position"
+    tooltip, label      =
+      ["Add a row below this one",
+       "Add row"]                                                             %>
+    <add-item-or-row-form 
        element="&element"
        label="&label"
        tooltip="&tooltip"
        collection-id="#{this.list_id}"
+       position="&position"
      />
   </if>
 </def>
@@ -507,7 +505,7 @@
 
 <def tag="start-list">
   <if test="&this">
-    <if test="this.items.count == 0">
+    <if test="&this.items.count == 0">
 <%    element, collection =
         mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
       label, tooltip =
@@ -551,7 +549,7 @@
     article = element == 'item' || inner > '' ? 'an' : 'a' %>
     <if test="&this.list && this.list_id != @card.list_id">
       <add-row />
-      <add-pad-row-buttons />
+      <add-pad-rows />
     </if>
   </if>
 </def>
@@ -644,8 +642,11 @@
 </def>
 
 <def tag="start-any-list">
-  <start-list />
-  <start-list-from-pad if="&this.class.current_pad" />
+  <start-list />                                                              <%
+    pertinent = this                           &&
+                this.pertinent_pads.length > 0 &&
+                this.items.count == 0                                         %>
+  <start-list-from-pad if="&pertinent" />
 </def>
 
 <def tag="bottom-controls">
@@ -664,7 +665,7 @@
         <editor:access if="&can_edit? :access" />
         <br if="&can_edit?(:theme) || can_edit?(:access)" />
         <toggle-aspect-or-item which="items" with="&this" />
-        <toggle-body if="&scope.deep[:action] != 'list'" />
+        <toggle-body if="&scope.deep[:action] != 'list'"  />
         <show-card-inline />
         <trash />
       </td>
@@ -792,7 +793,7 @@
         case this[:type]
         when "aspect"
           b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:mold]     ,        "ggggg..."       ]
+          [ this[:kind]      , this[:mold]     ,        "::"         ]
         when "column"
           b = if first_kind; first_kind = false ; nbsp ; end
           [ this[:kind]      , this[:mold]     , (b  || ":::::")    ]
@@ -861,10 +862,10 @@
   else
     request.request_uri
   end
-  if attributes[:no_redirect] == "ggggg" then
-    redirect_uri = nil
-    attributes[:no_redirect] = nil
-  end
+  #if attributes[:no_redirect] == "gggg" then
+    #redirect_uri             = nil
+    #attributes[:no_redirect] = nil
+  #end
   %>
   <!-- <delete-button
                  with="&this" after-submit="&redirect_uri" title="#{tooltip}"
@@ -964,7 +965,7 @@
       <opus-view   />
       <tree-view   />
       <report-view />
-      <!--table-view  /-->
+      <!-- table-view  /-->
       <!-- slide-view  /-->
     </ul>
   </div>
