@@ -38,10 +38,6 @@ class Card < ActiveRecord::Base
     list_position    :integer
     whole_position   :integer
     table_position   :integer
-#    attachment_file_name    :string
-#    attachment_content_type :string
-#    attachment_file_size    :integer
-#    attachment_updated_at   :datetime
 
     timestamps
   end
@@ -103,9 +99,48 @@ class Card < ActiveRecord::Base
     :order        => "created_at DESC"
   }}
 
-  after_create :follow_up_on_create
-
   RecursivityMax = 3
+
+  after_create :follow_up_on_create
+  before_update :prepare_for_update
+  after_update  :follow_up_on_update
+
+
+  def follow_up_on_update
+#        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+#        logger.debug "@catch"
+#        logger.debug "catch"
+    return if on_automatic? || !whole
+#        logger.debug "not on automaticccccccccccccccccc"
+    on_automatic do
+#          logger.debug "now yessssssssssssssssssssssssss"
+      return unless name && k = recursive_kind
+#          logger.debug "name: #{name}"
+      names      = self.class.named(name)
+#          logger.debug "#{names.length} namesssssssssss"
+#          logger.debug "recursive_kind: #{k}"
+      kinds      = names.as_a(k)
+#          logger.debug "#{kinds.length} as a #{k}"
+      suites     = kinds.part_of(suite_id)
+#          logger.debug "#{suites.length} part of #{suite_id}"
+      all_but    = suites.but_not(id)
+#          logger.debug "#{all_but.length} but not #{id}"
+      origs      = all_but.originals
+#          logger.debug "#{origs.length} originals"
+      candidates = origs.latest
+#          logger.debug "candidatessssssssss"
+#          logger.debug candidates.to_yaml
+      match = candidates.detect {|c| c.recursive_kind == k}
+      return unless match
+#          logger.debug "match : #{match.id}"
+#          logger.debug "uuuuuuuuuuuuuuuuuuuu"
+      update_attributes :ref_id => match.id
+    end
+  end
+
+  def prepare_for_update
+    @catch = "hi"
+  end
 
   def follow_up_on_create
     uniquely do
@@ -117,12 +152,6 @@ class Card < ActiveRecord::Base
     t = Thread.current[:recursivity] ||= []
     already_there = t.include? id
     t.push id
-#    logger.debug 'before'+ (recursivity.to_yaml)
-#    logger.debug('notyet'+ (!t.include?(id)).to_yaml)
-#    logger.debug 'big'+ (RecursivityMax.to_yaml)
-#    logger.debug 'little'+ (t.length.to_yaml)
-#    logger.debug('fit'+ (t.length <= RecursivityMax).to_yaml )
-#    logger.debug('fat'+ ((t.length <= RecursivityMax && !t[0...-1].include?(id)).to_yaml))
     yield if t.length <= RecursivityMax && !already_there
   ensure
     t.pop
@@ -135,16 +164,6 @@ class Card < ActiveRecord::Base
                                 :suite_id => suite_id
       end
     end if source.is_a? Card
-#    return unless source.is_a?(Card)
-#    source.aspects.each do |sub_source|
-#      self.aspects.create! :mold_id => source_mold(sub_source).id,
-#                           :suite_id => suite_id
-#    end
-#    source.items.each   do |sub_source|
-#      self.items.create!   :mold_id => source_mold(sub_source).id,
-#                           :suite_id => suite_id
-#    end
-
   end
 
   def self.recursivity_reset
@@ -194,45 +213,6 @@ class Card < ActiveRecord::Base
     return unless !suite_id && context
     return unless (s = recursive_suite).is_a? Card
     suite = s unless s.id == id
-  end
-
-  before_update :prepare_for_update
-  after_update  :follow_up_on_update
-
-  def follow_up_on_update
-#        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-#        logger.debug "@catch"
-#        logger.debug "catch"
-    return if on_automatic?
-#        logger.debug "not on automaticccccccccccccccccc"
-    on_automatic do
-#          logger.debug "now yessssssssssssssssssssssssss"
-      return unless name && k = recursive_kind
-#          logger.debug "name: #{name}"
-      names      = self.class.named(name)
-#          logger.debug "#{names.length} namesssssssssss"
-#          logger.debug "recursive_kind: #{k}"
-      kinds      = names.as_a(k)
-#          logger.debug "#{kinds.length} as a #{k}"
-      suites     = kinds.part_of(suite_id)
-#          logger.debug "#{suites.length} part of #{suite_id}"
-      all_but    = suites.but_not(id)
-#          logger.debug "#{all_but.length} but not #{id}"
-      origs      = all_but.originals
-#          logger.debug "#{origs.length} originals"
-      candidates = origs.latest
-#          logger.debug "candidatessssssssss"
-#          logger.debug candidates.to_yaml
-      match = candidates.detect {|c| c.recursive_kind == k}
-      return unless match
-#          logger.debug "match : #{match.id}"
-#          logger.debug "uuuuuuuuuuuuuuuuuuuu"
-      update_attributes :ref_id => match.id
-    end
-  end
-
-  def prepare_for_update
-    @catch = "hi"
   end
 
   def insert_in_context(target_context, grouping, position = 0)
