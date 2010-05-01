@@ -13,11 +13,11 @@ class Card < ActiveRecord::Base
   #    end
   #  end
   #  private
-  #    def flag_attribute_changed
-  #    attribute = @last_attribute_name
+  #  def flag_attribute_changed
+  #     attribute = @last_attribute_name
   #    old_val, new_val = send("#{attribute}_change")
   #    logger.info "Changed! #{attribute} from #{old_val} to #{new_val}"
-  #    end
+  #  end
   end
 
   fields do
@@ -99,6 +99,7 @@ class Card < ActiveRecord::Base
     :order        => "created_at DESC"
   }}
 
+  IDMark = 'cf::'
   RecursivityMax = 3
 
   after_create :follow_up_on_create
@@ -306,7 +307,7 @@ class Card < ActiveRecord::Base
     when "Card"
       case reference
       when #standard field list
-           nil             , :owner,
+           nil             , :owner                            ,
            :id             , :owner_id       ,
            :name           , :kind           , :attachment     ,
            :ref            , :mold           , :suite          ,
@@ -547,18 +548,33 @@ class Card < ActiveRecord::Base
     ctx.recursive_suite
   end
 
-  def local_pads
-    return [] unless list
-    all = all_pads
-    pads = list.items.map{|item| item.recursive_kind}.uniq.select {|p| find_pad p}
-    pads.delete 'item'
-    pads
+#  def local_pads
+#    return [] unless list
+#    pads = {}
+#    list.items.reverse.map do |i|
+#      unless (i_kind = i.recursive_kind).blank?
+#        pad_hash[i_kind] = find_pad(i_kind) || i
+#      end
+#    end
+#    pads.delete_if {|k,v| !(k && k.length > 0)}.values
+#  end
+#
+#  def pertinent_pads
+#    [self.class.current_pad].concat(local_pads).uniq.compact
+#  end
+#
+  def pertinent_pads
+    current = self.class.current_pad
+    pads = {}
+    pads[current] = current if current
+    list.items.reverse.map do |i|
+      unless (i_kind = i.recursive_kind).blank?
+        pads[i_kind] = find_pad(i_kind) || i
+      end
+    end if list
+    pads.delete_if {|k,v| !(k && k.length > 0)}.values
   end
 
-  def pertinent_pads
-    [self.class.current_pad].concat(local_pads).uniq.compact
-  end
-      
   def self.current_pad
     return unless
       $CURRENT_PAD     &&
@@ -572,7 +588,7 @@ class Card < ActiveRecord::Base
 
   def self.all_pads
     pad_cards = self.find_all_by_pad(true,
-      :order => "updated_at DESC",
+      :order => "updated_at DESC"        ,
       :conditions => ["kind > ?", "''"]) || []
     pad_cards.map!{|pad_card| pad_card.kind}
     pad_cards.uniq.sort.map{ |kind| self.find_pad kind}
@@ -778,18 +794,20 @@ class Card < ActiveRecord::Base
     column             = []
     column[deep[:row]] = [self]
     if no_columns_yet? deep
-      add_a_first_column(                         wider_contexts, column, deep) #if list
+      add_a_first_column(                         wider_contexts, column,  deep) #if list
     elsif list
-      fit_into_existing_column                                   deep, 0
-    elsif column_number = find_name_stack(:match, wider_contexts        , deep)
+      fit_into_existing_column                                             deep,
+        0
+    elsif column_number = find_name_stack(:match, wider_contexts         , deep)
       crash unless column_number.is_a? Integer
-      fit_into_existing_column                                   deep, column_number
+      fit_into_existing_column                                             deep,
+        column_number
     else
-      add_column_to_existing_ones                 wider_contexts, column, deep
+      add_column_to_existing_ones                 wider_contexts, column , deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
       aspects.each do |aspect|
-        deep = aspect.look_wider                  wider_contexts        , deep,
+        deep = (aspect.recursive_ref || aspect).look_wider wider_contexts, deep,
           max_aspect_depth, aspect_depth
       end
     end
@@ -1154,7 +1172,7 @@ class Card < ActiveRecord::Base
     unless (item_depth += 1) >= max_item_depth
       items.each do |item|
         self.class.numbering_increment
-        deep = item.look_deeper contexts, deep, max_item_depth, max_aspect_depth, item_depth
+        deep = (item.recursive_ref  || item).look_deeper contexts, deep, max_item_depth, max_aspect_depth, item_depth
       end
     end
     self.class.numbering_pop
@@ -1162,9 +1180,35 @@ class Card < ActiveRecord::Base
     deep
   end
 
+  def self.debug_map s
+    case s.class.name
+    when 'NilClass'
+      'nil'
+    when 'Array'
+      return 'empty array' if s.length == 0
+      r="<ul class='debug'>array of #{s.length} element#{'s' if s.length > 1}"
+      ss = s.each do |element|
+        r += "<li>#{self.debug_map element}</li>"
+      end
+      r += "</ul>"
+    when 'Hash'
+      return 'empty hash' if s.length == 0
+      r="<ul class='debug'>hash of #{s.length} pair#{'s' if s.length > 1}"
+      ss = s.each do |key, value|
+        r += "<li><ul><li>#{key}</li>
+              <li>#{self.debug_map value}</li></ul></li>"
+      end
+      r += "</ul>"
+    when 'Card'
+      s.full_reference
+    else
+      "#{s.class.name}: #{s.to_s}"
+    end
+  end
+  
   def look_deep action, max_item_depth = 9, max_aspect_depth = 9
     self.class.numbering_reset
-    look_deeper \
+    r = look_deeper \
       []                                , #no context yet
       {                                   #deep
         :root                    => id,
@@ -1179,6 +1223,8 @@ class Card < ActiveRecord::Base
       max_item_depth                    ,  #optional
       max_aspect_depth                  ,  #optional
       0                                    #item_depth
+    @toy_debug = self.class.debug_map r
+    r
   end
 
   def self.new_suite

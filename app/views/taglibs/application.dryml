@@ -5,6 +5,75 @@
 <include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="add-item-or-row-form">                                              <%
+  style = "add-#{attributes[:element]}"
+  submit_style = "toy-nav tooltip #{style}"
+  new_card = this.class.new(
+    :list_id  => attributes[:collection_id]      ,
+    :kind     => attributes[:item_kind]     || '',
+    :suite_id => this.suite_group.id             ,
+    :view     => 'none'                          )
+  p = attributes[:pad]
+  case c = p.class.name
+  when 'NilClass'
+  when 'String'
+    if p && p.length > 0
+      new_card.mold = this.class.find_pad p
+    end
+  when 'Card'
+    new_card.mold = p
+  else
+    crash
+  end                                                                         %>
+  <form class="&style" with="&new_card">
+    <submit label=                    "&attributes[:label]"
+        title="&attributes[:tooltip] || attributes[:label]"
+        class="&submit_style" />
+    <after-submit uri="#{request.request_uri}"/>
+  </form>
+</def>
+
+<def tag="start-list-from-pad">                                               <%
+  that = this
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  pertinent = that                         &&
+              that.items.count == 0        &&
+              (pads = that.pertinent_pads)                                    %>
+  <repeat with="&pads" if="&pertinent">                                       <%
+    k = (is_row = this.class.name == 'Card') ? this.recursive_kind : this     %>
+    <unless test="&this.blank?">                                              <%
+      tooltip, label = [
+        "Start list with #{k.indefinite} #{element}",
+        "Start list with #{k}"                      ]                         %>
+      <add-item-or-row-form with="&that"
+                            element="&element"
+                            label="&label"
+                            tooltip="&tooltip"
+                            collection-id="#{that.id}"
+                            pad="&this"                />
+    </unless>
+  </repeat>
+</def>
+
+<def tag="add-inner-item-from-pad">                                           <%
+    element, collection =
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list"]                %>
+  <repeat with="&this.pertinent_pads"
+          if="&(that = this) && this.items.count  >  0">                      <%
+    tooltip, label = [
+      "Add an inner #{this} #{element}",
+      "Add inner #{   this}"           ]                                      %>
+    <add-item-or-row-form with="&that" unless="&this.blank?"
+      element="&element"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="#{this.id}"
+      pad="&this"
+    />
+  </repeat>
+</def>
+
 <def tag="self-and-aspects-row">
   <% part = prep this, :aspects %>
   <tr class="self-and-aspects-row">
@@ -106,16 +175,6 @@
               :action     => "#{part[:action]}_#{part[:name]}",
               :id         => this.id                          )
   end                                                                         %>
-</def>
-
-<def tag="old-toggle-aspect-or-item">                                        <%=
-    if (  subs = attributes[:which]) == "aspects" && this.aspects.count > 0
-      link_to_function "Toggle Aspects",
-        "Effect.toggle('#{dom_id this, subs}')"
-    elsif subs                       == "items"   && this.items.count > 0
-      link_to_function "Toggle Sub-Items",
-        "Effect.toggle('#{dom_id this, subs}')"
-    end                                                                       %>
 </def>
 
 <def tag="toggle-body">
@@ -242,58 +301,21 @@
   position = this.send "#{collection}_position"
 %>
   <repeat with="&this.pertinent_pads"
-          if="&(that = this) && (list_id = this.list)">                     <%
+          if="&(that = this) && (list_id = this.list)">                       <%
+    k = (is_a_row = this.class.name == 'Card') ? this.recursive_kind : this
     tooltip, label = [
-      "Add a #{this} row below this one",
-      "Add #{  this} row"]
-    el = "#{this} #{element}"                                               %>
-    <add-item-or-row-form with="&that" if="&this && this.length>0"
+      "Add a #{k} row below this one",
+      "Add #{  k} row"]
+    el = "#{k} #{element}"
+    condition = this && is_a_row || this.length > 0
+    p = is_a_row ? this : "cf::#{this.id}"                                    %>
+    <add-item-or-row-form with="&that" if="&condition"
       element="&el"
       label="&label"
       tooltip="&tooltip"
       collection-id="&collection_id"
-      pad="&this"
+      pad="&p"
       position="&position"
-    />
-  </repeat>
-</def>
-
-<def tag="start-list-from-pad">                                               <%
-  that = this
-  element, collection =
-    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
-  pertinent = that                         &&
-              that.items.count == 0        &&
-              (pads = that.pertinent_pads)                                    %>
-  <repeat with="&pads" if="&pertinent">
-    <unless test="&this.blank?">                                              <%
-      tooltip, label = [
-        "Start list with #{this.indefinite} #{element}",
-        "Start list with #{this}"                      ]                      %>
-      <add-item-or-row-form with="&that"
-                            element="&element"
-                            label="&label"
-                            tooltip="&tooltip"
-                            collection-id="#{that.id}"
-                            pad="&this"                />
-    </unless>
-  </repeat>
-</def>
-
-<def tag="add-inner-item-from-pad">  <!-- deprecated -->                      <%
-    element, collection =
-      mainly_tabular_view ? ["row" ,"table"] : ["item","list"]                %>
-  <repeat with="&this.pertinent_pads"
-          if="&(that = this) && that.items.count  >  0">                      <%
-    tooltip, label = [
-      "Add an inner #{this} #{element}",
-      "Add inner #{   this}"           ]                                      %>
-    <add-item-or-row-form with="&that" unless="&this.blank?"
-      element="&element"
-      label="&label"
-      tooltip="&tooltip"
-      collection-id="#{this.id}"
-      pad="&this"
     />
   </repeat>
 </def>
@@ -437,17 +459,17 @@
   %>
   <if            test="&this.whole_id  && can_whole">
     aspect <editor:whole_position blank-message=".."/>
-    of       <view:whole_id /><editor:whole /><br />
+    of       <view:whole_id /><view:whole /><br />
   </if><else><if test="&this.table_id  && can_table">
     column <editor:table_position blank-message=".."/>
-    of       <view:table_id /><editor:table /><br />
+    of       <view:table_id /><view:table /><br />
   </if><else><if test="&this.list_id   && can_list" >
     item   <editor:list_position  blank-message=".."/>
-    of       <view:list_id  /><editor:list  /><br />
+    of       <view:list_id  /><view:list  /><br />
   </if><!--else>
-    <if test="&can_whole"    >aspect of <editor:whole /><br /></if>
-    <if test="can_table"     >column of <editor:table /><br /></if>
-    <if test="can_list"      >in list   <editor:list  /><br /></if>
+    <if test="&can_whole"    >aspect of <view:whole /><br /></if>
+    <if test="can_table"     >column of <view:table /><br /></if>
+    <if test="can_list"      >in list   <view:list  /><br /></if>
   </else--></else></else>
   <if               test="&this.suite">
     <if                             test="&can_view?(:suite)" >
@@ -482,25 +504,6 @@
        position="&position"
      />
   </if>
-</def>
-
-<def tag="add-item-or-row-form">
-  <%style = "add-#{attributes[:element]}"
-    submit_style = "toy-nav tooltip #{style}"
-    new_card = this.class.new(
-      :list_id  => attributes[:collection_id]      ,
-      :kind     => attributes[:item_kind]     || '',
-      :suite_id => this.suite_group.id             ,
-      :view     => 'none'                          )
-    if attributes[:pad] && pad_card = this.class.find_pad(attributes[:pad])
-      new_card.mold =  pad_card
-    end %>
-  <form class="&style" with="&new_card">
-    <submit label=                    "&attributes[:label]"
-        title="&attributes[:tooltip] || attributes[:label]"
-        class="&submit_style" />
-    <after-submit uri="#{request.request_uri}"/>
-  </form>
 </def>
 
 <def tag="start-list">

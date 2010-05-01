@@ -1,4 +1,8 @@
+ul.debug {list-style-type:none;}
+
+
 td.core {vertical-align:top;}
+tr.bottom-controls {vertical-align:top;}
 
 td.grey-empty-cell {font-size:1px;}
 
@@ -33,7 +37,6 @@ td.grey-empty-cell {font-size:1px;}
 .logo .e    {                 color: #96f;} /*   #c9f    #96f  */
 
 ul.navigation {font-size:13px;}
-ul.navigation a {text-decoration:underline;}
 h1.app-name a {text-decoration:none;}
 ul a {color: #36f;}
 div.top-line {border-bottom:10px red;}
@@ -62,16 +65,16 @@ body.front-page {margin-top: 1.618em;}
 td.corner-controls{
     vertical-align:top;}
 
-th.item-kind {font-size:1.618em;}
+th.item-kind {font-size: 1.618em;}
 th.kind-cell a {color: #9cf;}
 td.aspect-cell {
-  border-top:    .618em solid #f7f7f7;
-  border-right : 0px solid blue;
-  border-bottom: 0px solid blue;
-  border-left:   1px solid #eee;
-  padding-left:  1px;
-  padding-top:   0px;
-  vertical-align:top;
+  border-top:     .618em solid #f7f7f7;
+  border-right :  0px solid blue;
+  border-bottom:  0px solid blue;
+  border-left:    1px solid #eee;
+  padding-left:   1px;
+  padding-top:    0px;
+  vertical-align: top;
 }
 
 td.item-cell {
@@ -250,15 +253,15 @@ td.item-cell.theme-purple, td.aspect-cell.theme-purple {background-color:#c9f;}
 
 td.item-cell.theme-pink   table, td.aspect-cell.theme-pink   table {background-color:#ffcce6;}
 td.item-cell.theme-orange table, td.aspect-cell.theme-orange table {background-color:#fda;}
-td.item-cell.theme-yellow table, td.aspect-cell.theme-yellow table{background-color:#ff9;}
-td.item-cell.theme-green  table, td.aspect-cell.theme-green  table{background-color:#cfc;}
-td.item-cell.theme-purple table, td.aspect-cell.theme-purple table{background-color:#c9f;}
+td.item-cell.theme-yellow table, td.aspect-cell.theme-yellow table {background-color:#ff9;}
+td.item-cell.theme-green  table, td.aspect-cell.theme-green  table {background-color:#cfc;}
+td.item-cell.theme-purple table, td.aspect-cell.theme-purple table {background-color:#c9f;}
 
 td.item-cell.theme-pink   table, td.aspect-cell.theme-pink   td.core {background-color:#ffcce6;}
 td.item-cell.theme-orange table, td.aspect-cell.theme-orange td.core {background-color:#fda;}
-td.item-cell.theme-yellow table, td.aspect-cell.theme-yellow td.core{background-color:#ff9;}
-td.item-cell.theme-green  table, td.aspect-cell.theme-green  td.core{background-color:#cfc;}
-td.item-cell.theme-purple table, td.aspect-cell.theme-purple td.core{background-color:#c9f;}
+td.item-cell.theme-yellow table, td.aspect-cell.theme-yellow td.core {background-color:#ff9;}
+td.item-cell.theme-green  table, td.aspect-cell.theme-green  td.core {background-color:#cfc;}
+td.item-cell.theme-purple table, td.aspect-cell.theme-purple td.core {background-color:#c9f;}
 
 
 td.body-cell div.card-body           { padding-top:.236em; }
@@ -298,7 +301,7 @@ td.aspect-body-cell, div.card-body, td.body-cell, textarea, textarea:focus {
 }
 
 /* common */
-html {font-size:1.25em;}
+html {font-size:1.618em;}
 .aside {width: 30%;} /* works with % too */
 
 th.kind-cell{font-size:38.2%;}

@@ -37,8 +37,8 @@
 </def>
 
 <def tag="aspects-table">
-  <table class="aspects-table" if="&this.aspects">
-    <tr class="aspects-row">
+  <table class="aspects-table"     if="&this.aspects">
+    <tr  class="aspects-row">
       <repeat with="&this.aspects" if="&this.aspects">
         <aspect-cell />
       </repeat>
