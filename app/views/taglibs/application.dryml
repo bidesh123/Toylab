@@ -898,24 +898,28 @@
   </if>
 </def>
 
-<def tag="suite-name">
-  <% suite = this.is_a?(Card) ?
-       this.or_suite.reference_name.words :
-       ['toy', 'office']
-     part1 = suite[0]
-     part2 = suite[1..-1].join ' '
-     length1 = (part1 = suite[0]               ).length
-     length2 = (part2 = suite[1..-1].join ' '  ).length
-     n = (s       = part1                      ).length
-     m = (classes = ['o', 'ff', 'fi', 'c', 'e']).length
-     classes.rotate!(n % m) %>
-  <span class="logo"><span
-        class="office"   ><%
-          classes.each_index do |i|
-              %><span class="<%= classes[i] %>"
-                  ><%= s[i * n/m...((i+1) * n/m)] %></span><%
-          end %></span><span
-        class="toy"><%= part2 %></span></span>
+<def tag="suite-name"> <%
+  suite = this.is_a?(Card)             ?
+    this.or_suite.reference_name.words :
+    ['toy', 'office']
+  part2 = suite[1..-1].join ' '
+  part1 = []
+  suite[0].each_char do |x|
+    part1 << x
+  end
+  length1 = part1.length
+  length2 = part2.length
+  n = (s       = part1                      ).length
+  m = (classes = ['o', 'ff', 'fi', 'c', 'e']).length
+  classes.rotate!(n % m) %>
+  <span
+    class="logo"><span
+      class="office"   ><%
+        classes.each_index do |i|
+            %><span class="<%= classes[i] %>"
+                 ><%= s[i * n/m...((i+1) * n/m)].join %></span><%
+        end %></span><span
+      class="toy"><%= part2                      %></span></span>
 </def>
 
 <def tag="app-name">
