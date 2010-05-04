@@ -25,19 +25,25 @@ td.grey-empty-cell {font-size:1px;}
 .logo .i {letter-spacing: -0.09em;}
 .logo .c {letter-spacing: -0.09em;}
 .logo .e {                        }
+.suite-name .logo .o {letter-spacing: -0.09em;}
+.suite-name .logo .ff{letter-spacing: -0.09em;}
+.suite-name .logo .fi{letter-spacing: -0.09em;}
+.suite-name .logo .i {letter-spacing: -0.09em;}
+.suite-name .logo .c {letter-spacing: -0.09em;}
+.suite-name .logo .e {                        }
 /* standard darker */
 .logo .toy {
      background: transparent; color: #666;
  }
-.logo .o    {                 color: #e69;} /*   #f9c    #e69  */
-.logo .ff   {                 color: #e96;} /*   #fc9    #e96  */
-.logo .fi   {                 color: #ec0;} /*   #ff9    #ec0  */
-.logo .i    {                 color: #7d8;} /*   #cfc    #7d8  */
-.logo .c    {                 color: #69f;} /*   #9cf    #69f  */
-.logo .e    {                 color: #96f;} /*   #c9f    #96f  */
+.logo .o , .suite-name .o  {  color: #e69;} /*   #f9c    #e69  */
+.logo .ff, .suite-name .ff {  color: #e96;} /*   #fc9    #e96  */
+.logo .fi, .suite-name .fi {  color: #ec0;} /*   #ff9    #ec0  */
+.logo .i , .suite-name .i  {  color: #7d8;} /*   #cfc    #7d8  */
+.logo .c , .suite-name .c  {  color: #69f;} /*   #9cf    #69f  */
+.logo .e , .suite-name .e  {  color: #96f;} /*   #c9f    #96f  */
 
 ul.navigation {font-size:13px;}
-h1.app-name a {text-decoration:none;}
+h1.app-name a, h1.suite-name a {text-decoration:none;}
 ul a {color: #36f;}
 div.top-line {border-bottom:10px red;}
 td.core-image img {margin-top: .618em;}
@@ -201,9 +207,15 @@ html.page-view div.controls {
     margin-top:.618em;
 }
 
-div.context ul, ul.view-nav {
+ul.view-nav {
     padding-top:.618em;
 }
+
+div.context ul {
+    padding-top:.236em;
+    padding-bottom:.382em;
+}
+
 div.views, div.pads {
     padding-bottom:.618em;
 }

@@ -216,6 +216,10 @@ class Card < ActiveRecord::Base
     suite = s unless s.id == id
   end
 
+  def or_suite
+    suite || self
+  end
+
   def insert_in_context(target_context, grouping, position = 0)
     return unless target_context && grouping && self.send(grouping)
     ctx, destination_collection = case grouping
@@ -530,12 +534,12 @@ class Card < ActiveRecord::Base
 
   def recursive_ref
     return unless r = ref
-    r.recursive_ref_inner
+    r.or_ref
   end
 
-  def recursive_ref_inner
+  def or_ref
     return self unless r = ref
-    r.recursive_ref_inner
+    r.or_ref
   end
 
   def recursive_suite

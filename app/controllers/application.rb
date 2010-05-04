@@ -112,12 +112,32 @@ class ApplicationController < ActionController::Base
 end
 
 class String
+  def words
+    self.strip.split(/\s+/)
+  end
+
+  def first_word
+    words[0]
+  end
+
+  def first_words
+    words[0...-1]
+  end
+
+  def last_word
+    words[-1]
+  end
+
   def indefinite
     (self =~ /^[aeiou]/i ? "an " : "a ") + self
   end
 end
 
 class Array
+  def rotate! n = 1
+    n.times {push shift}
+  end
+  
   def dimensions
     return [0] if length == 0
     return [length] unless sub = self[0].is_a?(Array)

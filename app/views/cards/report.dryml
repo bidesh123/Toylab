@@ -128,7 +128,7 @@
 
 <def tag="aspects-kinds-row">
   <% @depth ||= 0 %>
-  <do with="&this.recursive_ref || this" if= "&!attributes['kinds_off' ]">
+  <do with="&this.or_ref" if= "&!attributes['kinds_off' ]">
     <tr class="aspects-kinds-row">
       <aspect-kind-cells first unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
@@ -141,7 +141,7 @@
 
 <def tag="bottoms-borders-row"> <!-- coming soon -->
   <% @depth ||= 0 %>
-  <do with="&this.recursive_ref || this"
+  <do with="&this.or_ref"
       if="&!attributes['bottom_borders_off' ] && !attributes['borders_off' ]">
     <tr class="bottoms-borders-row">
       <bottom-border-cells first unless="&attributes['whole_off']" />
@@ -155,7 +155,7 @@
 
 <def tag="aspects-names-row">
   <% @depth ||= 0 %>
-  <do with="&this.recursive_ref || this" if= "&!attributes['names_off' ]">
+  <do with="&this.or_ref" if= "&!attributes['names_off' ]">
     <tr class="aspects-names-row">
       <aspect-name-cells   first unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
@@ -168,7 +168,7 @@
 
 <def tag="aspects-bodies-row">
   <% @depth ||= 0 %>
-  <do with="&this.recursive_ref || this" if= "&!attributes['bodies_off']">
+  <do with="&this.or_ref" if= "&!attributes['bodies_off']">
      <tr class="aspects-bodies-row">
       <aspect-body-cells   first unless="&attributes['whole_off']" />
       <repeat with="&this.aspects" if="&this.aspects">
