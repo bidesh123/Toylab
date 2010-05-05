@@ -810,8 +810,8 @@ class Card < ActiveRecord::Base
       add_column_to_existing_ones                 wider_contexts, column , deep
     end
     unless (aspect_depth += 1) >= max_aspect_depth
-      aspects.each do |aspect|
-        deep = (aspect.recursive_ref || aspect).look_wider wider_contexts, deep,
+      or_ref.aspects.each do |aspect|
+        deep = aspect.look_wider wider_contexts, deep,
           max_aspect_depth, aspect_depth
       end
     end

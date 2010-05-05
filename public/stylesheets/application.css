@@ -1,3 +1,24 @@
+.aspect-kind-cell {font-size:100%;}
+body.show-page th.aspect-kind-cell.inner {font-size:.5em;}
+th.aspect-kind-cell {color:transparent;}
+th.aspect-kind-cell.inner {color: #666;}
+th.aspect-kind-cell:hover {color: #666;}
+td.cell.sub-cell {border-right:0px solid #eee;}
+
+td.cell, div.cells th{
+    border-right:1px solid #eee;
+    padding-left:.618em;
+}
+
+th.title-cell{
+    padding-left:.618em;
+    color:white;
+    background:#999;
+    font-weight:700;
+    font-size:1em;
+}
+th.title-cell, td.cell, div.cells th {padding-right:.618em;}
+.numeric {text-align: right;}
 ul.debug {list-style-type:none;}
 
 
@@ -6,13 +27,9 @@ tr.bottom-controls {vertical-align:top;}
 
 td.grey-empty-cell {font-size:1px;}
 
-.drag_handle {
-  cursor: move;
-}
+.drag_handle {cursor: move;}
 
-.drop-hover {
-  border: .382em solid #7d8;
-}
+.drop-hover {border: .382em solid #7d8;}
 
 /**** Styling for Toy Office Logo ****/
 
@@ -54,9 +71,6 @@ div.table-plus {border: 4px;}
 div.table-plus th {background:#666;}
 div.table-plus th a {color: white;}
 div.table-plus th, div.table-plus td {border: 1px solid #eee;letter-spacing: -0.025em;}
-th.aspect-kind-cell {color: transparent;}
-th.aspect-kind-cell:hover {color: #999;}
-th.title-cell {padding-right:.618em;}
 div.sub-pitch {margin-top: .618em;}
 td.core-left-controls{background:white;}
 
@@ -232,17 +246,9 @@ input {
     text-align:inherit;
 }
 
-td.cell, div.cells th{
-    border-right:1px solid #eee; padding-left:.618em;
-}
-
 td.cell{
     border-bottom:1px solid #eee;
     border-left:1px solid #eee;
-}
-
-td.cell.sub-cell, div.cells th{
-    border-right:0px solid #eee; padding-left:0em;
 }
 
 .kind-cell.theme-pink   {color:#f9c;}
@@ -289,7 +295,6 @@ table.card {border:1px 1px 1px 1px solid transparent; }
 
 body.show-page input.add-aspect {margin-left:1.617em;}
 body.show-page .inner {font-size:1em;}
-body.show-page td.aspect-kind-cell.inner {font-size:.5em;}
 
 
 div.slide {font-size:1.5em; text-align:center;}
@@ -334,7 +339,6 @@ td.aspect-name-cell {font-size:262%;}
 h2 {font-size:200%;}
 /*user*/
 
-.aspect-kind-cell {font-size:100%;}
 
 body.user h2 { margin-bottom:.62em;}
 

@@ -3,6 +3,103 @@
 
 <!-- 1===================== tag definitions ================================ -->
 
+<def tag="aspects-kinds-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <aspect-kind-cells merge-attrs />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-kinds-cells />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-names-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <aspect-name-cells merge-attrs />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-names-cells />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-bodies-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <aspect-body-cells merge-attrs />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-bodies-cells />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="bottoms-borders-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <bottom-border-cells/>
+    <repeat with="&aspects" if="&aspects">
+      <bottoms-borders-cells merge-attrs />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-kinds-row">
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="aspects-kinds-row" if= "&!attributes['kinds_off' ]">
+    <aspect-kind-cells first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-kinds-cells merge-attrs/>
+    </repeat>
+    <spacer-cell  />
+  </tr>
+</def>
+
+<def tag="bottoms-borders-row"> <!-- coming soon -->
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="bottoms-borders-row"
+      if="&!attributes['bottom_borders_off' ] && !attributes['borders_off' ]">
+    <bottom-border-cells first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <bottoms-borders-cells />
+    </repeat>
+    <spacer-cell  />
+  </tr>
+</def>
+
+<def tag="aspects-names-row">
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="aspects-names-row" if= "&!attributes['names_off' ]">
+    <aspect-name-cells   first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-names-cells merge-attrs />
+    </repeat>
+    <add-aspect-cell />
+  </tr>
+</def>
+
+<def tag="aspects-bodies-row">
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="aspects-bodies-row" if= "&!attributes['bodies_off']">
+    <aspect-body-cells   first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-bodies-cells merge-attrs />
+    </repeat>
+    <spacer-cell />
+  </tr>
+</def>
+
 <def tag="toy-report" attrs="shallow">
   <set-scoped deep="&shallow ?
                     @card.look_deep(params[:action],2,2) :
@@ -80,103 +177,6 @@
   <bottom-border-cell unless="&attributes[:first]" merge attrs />
   <bottom-border-cell                              merge attrs />
   <bottom-right-border-cell                        merge attrs />
-</def>
-
-<def tag="aspects-kinds-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <aspect-kind-cells merge-attrs />
-    <repeat with="&this.aspects" if="&this.aspects">
-      <aspects-kinds-cells />
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="aspects-names-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <aspect-name-cells merge-attrs />
-    <repeat with="&this.aspects" if="&this.aspects">
-      <aspects-names-cells />
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="aspects-bodies-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <aspect-body-cells merge-attrs />
-    <repeat with="&this.aspects" if="&this.aspects">
-      <aspects-bodies-cells />
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="bottoms-borders-cells">
-  <% @depth+=1 %>
-  <if test="&@depth<99">
-    <bottom-border-cells/>
-    <repeat with="&this.aspects" if="&this.aspects">
-      <bottoms-borders-cells merge-attrs />
-    </repeat>
-  </if>
-  <% @depth-=1 %>
-</def>
-
-<def tag="aspects-kinds-row">
-  <% @depth ||= 0 %>
-  <do with="&this.or_ref" if= "&!attributes['kinds_off' ]">
-    <tr class="aspects-kinds-row">
-      <aspect-kind-cells first unless="&attributes['whole_off']" />
-      <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-kinds-cells merge-attrs/>
-      </repeat>
-      <spacer-cell  />
-    </tr>
-  </do>
-</def>
-
-<def tag="bottoms-borders-row"> <!-- coming soon -->
-  <% @depth ||= 0 %>
-  <do with="&this.or_ref"
-      if="&!attributes['bottom_borders_off' ] && !attributes['borders_off' ]">
-    <tr class="bottoms-borders-row">
-      <bottom-border-cells first unless="&attributes['whole_off']" />
-      <repeat with="&this.aspects" if="&this.aspects">
-        <bottoms-borders-cells />
-      </repeat>
-      <spacer-cell  />
-    </tr>
-  </do>
-</def>
-
-<def tag="aspects-names-row">
-  <% @depth ||= 0 %>
-  <do with="&this.or_ref" if= "&!attributes['names_off' ]">
-    <tr class="aspects-names-row">
-      <aspect-name-cells   first unless="&attributes['whole_off']" />
-      <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-names-cells merge-attrs/>
-      </repeat>
-      <add-aspect-cell />
-    </tr>
-  </do>
-</def>
-
-<def tag="aspects-bodies-row">
-  <% @depth ||= 0 %>
-  <do with="&this.or_ref" if= "&!attributes['bodies_off']">
-     <tr class="aspects-bodies-row">
-      <aspect-body-cells   first unless="&attributes['whole_off']" />
-      <repeat with="&this.aspects" if="&this.aspects">
-        <aspects-bodies-cells merge-attrs />
-      </repeat>
-      <spacer-cell />
-    </tr>
-  </do>
 </def>
 
 <def tag="aspects-rows">

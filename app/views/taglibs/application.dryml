@@ -75,9 +75,10 @@
 </def>
 
 <def tag="self-and-aspects-row">
-  <% part = prep this, :aspects %>
+  <% part = prep this, :aspects
+     that = this        %>
   <tr class="self-and-aspects-row">
-    <td class="core"                        ><core          /></td>
+    <td class="core"><core merge-attrs /></td>
     <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
       <td class="aspects-table" id="#{part[:domid]}" if="&this.aspects"
           style="display:<%=part[:display_style]%>">
@@ -87,22 +88,22 @@
   </tr>
 </def>
 
-<def tag="self-and-aspects-row-edit">
-  <% part = prep this, :aspects %>
+<!--def tag="self-and-aspects-row-edit">
+  < % part = prep this, :aspects % >
   <tr class="self-and-aspects-row">
-    <td class="core"><core /></td>
+    <td class="core"><core merge-attrs /></td>
     <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
-      <td id="#{part[:domid]}" if="&this.aspects" style="<%=  part[:display_style]%>">>
+      <td id="#{part[:domid]}" if="&this.aspects" style="< %=  part[:display_style]% >">>
         <aspects-table />
       </td>
     </do>
   </tr>
-</def>
+</def-->
 
 <def tag="sub-items">
   <repeat with="&this.items">
     <% Card.numbering_increment %>
-    <item-row />
+    <item-row merge-attrs/>
   </repeat>
 </def>
 
@@ -115,7 +116,7 @@
         <if test="&part[:visible]">
           <table class="list-rows" id="#{part[:domid]}" if="&this.items"
                  style="display:inherit">
-            <sub-items />
+            <sub-items />            <else><sub-items merge-attrs /></else>
           </table>
         </if><else>
           <table class="list-rows" id="#{part[:domid]}" if="&this.items"
@@ -231,7 +232,7 @@
     <core-name-row           if="&this.core_name_row?"                />
     <core-body-row           if="&this.core_body_row? scope.deep"     />
     <core-script-row         if="&this.core_script_row? current_user" />
-    <core-bottom-controls-tr if="&this.core_bottom_controls_row?"     />
+    <core-bottom-controls-tr if="&this.core_bottom_controls_row?" merge-attrs/>
   </table>
 </def>
 
@@ -452,7 +453,7 @@
       <%= this.suite? ? 'Suite' : 'Card' %> <%= this.id %>
     </div>
     <div class="tool" >
-      <context-editors    />
+      <context-editors />
     </div>
   </if>
 </def>
@@ -509,6 +510,7 @@
        position="&position"
      />
   </if>
+  <else>not a list</else>
 </def>
 
 <def tag="start-list">
@@ -554,10 +556,12 @@
   <if test="&this">
 <%  element, collection =
     inner = this.id == @card.id ?  "" : "inner "
-    article = element == 'item' || inner > '' ? 'an' : 'a' %>
-    <if test="&this.list && this.list_id != @card.list_id">
-      <add-row />
-      <add-pad-rows />
+    article = element == 'item' || inner > '' ? 'an' : 'a' 
+    items = this.items      %>
+    <%=  [items.count, this.list_id, @card.list_id].to_yaml %>
+    <if test="&items.count > 0 && this.list_id != @card.list_id">
+      <add-row      with="&items[0]" />
+      <add-pad-rows with="&items[0]" />
     </if>
   </if>
 </def>
@@ -567,11 +571,13 @@
   <a action="slide" with="&the_item" if="&the_item" class="slide-nav">context</a>
   <else>&nbsp;&nbsp;&nbsp;</else>
 </def>
+
 <def tag="next-slide">
   <% the_item = this.higher_item %>
   <a action="slide" with="&the_item" if="&the_item" class="slide-nav">next</a>
   <else>&nbsp;&nbsp;&nbsp;</else>
 </def>
+
 <def tag="prev-slide">
   <% the_item = this.lower_item %>
   <a action="slide" with="&the_item" if="&the_item" class="slide-nav">prev</a>
@@ -597,15 +603,14 @@
 <def tag="drag-handle">
   <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
      domid = dom_id this, :drag_handle                      %>
-  <div class="tool" if="&can_drag">
+  <div class="tool" if="&can_drag && !@no_move[0...-1].include?(true)">
     <span class="drag_handle drag-handle" id="#{domid}">
-      Move
+      Move<%=%>
     </span>
   </div>
 </def>
 
 <def tag="toy-report" attrs="shallow, whole-off">
-  <%         whole_off = "&false" %>
   <if test="&whole_off ==  true">
     <card    whole-off="&whole_off" />
   </if><else>
@@ -790,7 +795,7 @@
    row_count = 0
 #   rows.delete_at 0 # temporarily no control row
 %>
-  <tr repeat="&rows">
+  <tr class="title-row" repeat="&rows">
     <empty-cell />
     <th class="title-cell" repeat>
 <%    kind_to_display        , object_to_update, blank_message = case this.class.name
@@ -954,7 +959,7 @@
   </if></else></else>
   <!-- <li                 unless="&attributes[:whole_off]" style="display:inline;background:white">
     --><li class="out-tag" unless="&attributes[:whole_off]" >
-    <a><%= this.reference_name %></a>
+    <a action="&params[:action]"><%= this.reference_name %></a>
   </li>
 </def>
 
@@ -966,7 +971,14 @@
   <a class="zoom-in" title="&tooltip" if="&params[:id].to_i != this.id">
     <%= "go" || image_tag("icons/zoom.png") %>
   </a>
+</def>
 
+<def tag="report-card-inline">
+  <%  tooltip =
+    "Leave this page to concentrate only on #{this.long_reference_name}" %>
+  <a class="zoom-in" title="&tooltip" if="&params[:id].to_i != this.id" action="&params[:action]">
+    <%= "go" || image_tag("icons/zoom.png") %>
+  </a>
 </def>
 
 <def tag="empty-cell">
@@ -1063,7 +1075,7 @@
 </def>
 
 <def tag="corner-controls">
-  <drag-handle />
+  <drag-handle merge-attrs/>
 </def>
 
 <def tag="core-bottom-controls-tr">
@@ -1072,7 +1084,7 @@
       <bottom-controls />
     </td>
     <td class="corner-controls">
-      <corner-controls />
+      <corner-controls merge-attrs/>
     </td>
   </tr>
 </def>
@@ -1085,7 +1097,7 @@
     <cells merge-attrs />
   </div>
   <div param="controls">
-   <add-rows if="&false" />
+   <add-rows if="&true" />
    <trash redir="true"/>
   </div>
   <div param="debug-toy" if="&false">
@@ -1102,7 +1114,7 @@
   <p><editor:body blank-message="A" /></p>
   <ol class="point-form">
     <li repeat="&this.items">
-      <a action="slide" if="&this.items.count>0 || !this.body.blank?" />
+      <a action="slide" if="&this.items.count > 0 || !this.body.blank?" />
       <else>
         <view:name if="&!this.name.blank?" />
         <else>
@@ -1115,28 +1127,39 @@
 </def>
 
 <def tag="recursive-card">
-  <table class="card inner drop-target" merge-attrs>
+  <% (@no_move ||= []).push !!this.ref %>
+  <table class="card inner" if="&@no_move.include? true">
     <self-and-aspects-row />
     <list-row />
   </table>
+  <else><table class="card inner drop-target">
+    <self-and-aspects-row />
+    <list-row />
+  </table></else>
+  <% @no_move.pop %>
 </def>
 
 <def tag="hierarchical-card">
-  <table class="card first-card drop-target" merge-attrs>
+  <% (@no_move ||= []).push !!this.ref %>
+  <table class="card first-card" if="&@no_move.include? true">
     <self-and-aspects-row />
     <list-row />
   </table>
+  <else><table class="card first-card drop-target">
+    <self-and-aspects-row />
+    <list-row />
+  </table></else>
+  <% @no_move.pop %>
 </def>
 
 <def tag="item-row">
   <tr class="item-row in-application-view model::card:#{this.id}">
     <%  klass="item-cell #{this.theme_class}" %>
     <td class="#{klass}">
-      <recursive-card item if="&true"/>
+      <recursive-card item if="&true" merge-attrs/>
     </td>
   </tr>
 </def>
-
 
 <def tag="rails-authenticity-token">
   <span style="display:none" id="rails.authtoken"><%= form_authenticity_token %></span>
@@ -1150,7 +1173,7 @@
 </def>
 
 <def tag="left-tool-cell">
-  <td class="left-tool-cell"><show-card-inline /></td>
+  <td class="left-tool-cell"><report-card-inline /></td>
 </def>
 
 <def tag="content-rows">
@@ -1159,9 +1182,9 @@
   <% #logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
   <% scope.deep[:indents] << [] %>
   <set indents    ="&scope.deep[:indents].reverse" />
-    <%#= indents.join "-"    %>
-    <% indent = indents.pop %>
-  <tr repeat="&rows=scope.deep[:columns][:cells].normalize_and_transpose">
+  <%#= indents.join "-"   %>
+  <% indent = indents.pop %>
+  <tr class="content-row" repeat="&rows=scope.deep[:columns][:cells].normalize_and_transpose">
     <% indent = indents.pop - 1 %>
     <set the-item-itself="&this[0]" />
     <unless                 test="&the_item_itself.nil?"           >
@@ -1183,8 +1206,9 @@
         <else> <!-- aspect cells -->
           <if              test="&this.nil? || this.length == 0"    ><empty-cell/>
           </if><else><if   test="&this.length == 1" with="&this[0]">
-              <if test="&this.numeric?"    ><td class="numeric cell"><cell /></td></if>
-              <else                        ><td class="cell"        ><cell /></td></else>
+              <if test="&this.numeric?"    >
+                <td class="numeric cell"><cell /></td>
+              </if><else                        ><td class="cell"        ><cell /></td></else>
             </if>
             <else>
               <td class="multiple-cell"    ><table class="multiple-cell">
