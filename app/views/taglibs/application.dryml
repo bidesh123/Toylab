@@ -553,12 +553,12 @@
 </def>
 
 <def tag="add-rows">
-  <if test="&this">
+  <if test="&this && (list = this.list)">
 <%  element, collection =
     inner = this.id == @card.id ?  "" : "inner "
     article = element == 'item' || inner > '' ? 'an' : 'a' 
-    items = this.items      %>
-    <%=  [items.count, this.list_id, @card.list_id].to_yaml %>
+    items = list.items
+    count = items.count     %>
     <if test="&items.count > 0 && this.list_id != @card.list_id">
       <add-row      with="&items[0]" />
       <add-pad-rows with="&items[0]" />
@@ -596,7 +596,6 @@
   <img if="&false" src="/images/blueball.png" alt="*" />
   <else>&nbsp;</else>
 </def>
-
 
 <!-- view-page -->
 
