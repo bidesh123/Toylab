@@ -107,6 +107,26 @@ class Card < ActiveRecord::Base
   after_update  :follow_up_on_update
 
 
+  def suite_reference
+    the_suite = or_suite
+    if !(suite_name = the_suite.name).blank? # suite name
+      if the_suite.toy_numeric?
+        the_suite.kind ? "#{the_suite.kind.to_s} #{suite_name}" : suite_name
+      else
+        suite_name
+      end
+    else
+      office = the_suite.kind && the_suite.kind.length > 0 ? the_suite.kind : 'office'
+      if !(user = the_suite.owner)
+        "Guest's #{office}"
+      elsif user_name = user.name # user exists
+        "#{user_name.possessive} #{office}"
+      else #strange user with no name
+        "New #{office}"
+      end
+    end
+  end
+
   def follow_up_on_update
 #        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 #        logger.debug "@catch"

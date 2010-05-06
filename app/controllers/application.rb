@@ -112,6 +112,11 @@ class ApplicationController < ActionController::Base
 end
 
 class String
+  def possessive # e.g. John's
+    return "" if length == 0
+    self[-1] == 's' ? self + "'" : self + "'s"
+  end
+
   def words
     self.strip.split(/\s+/)
   end

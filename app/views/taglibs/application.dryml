@@ -5,6 +5,105 @@
 <include src="paperclip" plugin="paperclip_with_hobo"/>
 <!-- <set-theme name="clean"/> -->
 
+<def tag="suite-name"> <%
+  suite = this.is_a?(Card)             ?
+    this.suite_reference.words :
+    ['toy', 'office']
+  part2 = suite[1..-1].join ' '
+  part1 = []
+  suite[0].each_char do |x|
+    part1 << x
+  end
+  n = (s       = part1                      ).length
+  m = (classes = ['o', 'ff', 'fi', 'c', 'e']).length
+  classes.rotate!(part1.hash % m) %>
+  <h1 param="suite-name"><a with="&this.or_suite">
+    <span        class="logo"><span
+                 class="office"><%
+      classes.each_index do |i|
+      %><span    class="<%= classes[i] %>"
+         ><%= s[i * n/m...((i+1) * n/m)].join
+      %></span><%
+      end
+  %></span><span class="toy"><%= part2
+  %></span></span>
+  </a></h1>
+</def>
+
+<def tag="page" attrs="title, full-title">
+  <% full_title ||= "#{title} : #{app_name}" %>
+  <html merge-attrs>
+    <head param>
+      <title param><%=
+        if this.nil?
+          "Home"
+        elsif this.is_a? Card
+          this.reference_name
+        elsif this.is_a? User
+          this.name
+        elsif this.is_a? Array
+          "Suites"
+        else
+          "toy office"
+        end
+ %>   </title>
+      <do param="stylesheets">
+        <stylesheet name="reset, hobo-rapid"/>
+        <stylesheet name="application" param="app-stylesheet"/>
+      </do>
+
+      <do param="scripts">
+        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery, jquery.lavalamp, jquery.easing"/>
+        <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
+        <do param="custom-scripts"/>
+        <javascript param="application-javascript" name="application"/>
+      </do>
+    </head>
+
+    <body param>
+    <set-scoped flash-rendered="&false">
+        <ajax-progress param/>
+        <header class="page-header" param>
+          <div param="top-line" if="&params[:more] != 'bare'">
+            <main-nav current="&title" param/>
+            <account-nav if="&login_url(Hobo::User.default_user_model)" param />
+          </div>
+          <if test="&params[:more] != 'bare'">
+            <div       class="suite-name" if="&params[:id]">
+              <suite-name />
+              <!-- <live-search param if="&defined_route? :site_search"/>-->
+            </div>
+            <else><div class="app-name">
+              <h1 param="app-name"  ><a href="#{base_url}/"  ><app-name   /></a></h1>
+              <!-- <live-search param if="&defined_route? :site_search"/>-->
+            </div></else>
+          </if>
+        </header>
+        <section with-flash-messages param="content"/>
+        <footer class="page-footer" if="&params[:id]" param >
+          <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
+        </footer>
+        <page-scripts param/>
+      </set-scoped>
+    </body>
+  </html>
+</def>
+
+<def tag="app-name">
+    <span class="logo"><span
+        class="toy"   ><span
+            class="t" >t</span><span
+            class="oy">o</span><span
+            class="y" >y</span></span><span
+        class="office"><span
+            class="o" >o</span><span
+            class="ff">f</span><span
+            class="fi">f</span><span
+            class="i" >i</span><span
+            class="c" >c</span><span
+            class="e" >e</span></span></span>
+</def>
+
 <def tag="add-item-or-row-form">                                              <%
   style = "add-#{attributes[:element]}"
   submit_style = "toy-nav tooltip #{style}"
@@ -370,63 +469,6 @@
   </tr>
 </def>
 
-<def tag="page" attrs="title, full-title">
-  <% full_title ||= "#{title} : #{app_name}" %>
-  <html merge-attrs>
-    <head param>
-      <title param><%=
-        if this.nil?
-          "Home"
-        elsif this.is_a? Card
-          this.reference_name
-        elsif this.is_a? User
-          this.name
-        elsif this.is_a? Array
-          "Suites"
-        else
-          "toy office"
-        end
- %>   </title>
-      <do param="stylesheets">
-        <stylesheet name="reset, hobo-rapid"/>
-        <stylesheet name="application" param="app-stylesheet"/>
-      </do>
-
-      <do param="scripts">
-        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery, jquery.lavalamp, jquery.easing"/>
-        <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
-        <do param="custom-scripts"/>
-        <javascript param="application-javascript" name="application"/>
-      </do>
-    </head>
-
-    <body param>
-    <set-scoped flash-rendered="&false">
-        <ajax-progress param/>
-        <header class="page-header" param>
-          <div param="top-line" if="&params[:more] != 'bare'">
-            <main-nav current="&title" param/>
-            <account-nav if="&login_url(Hobo::User.default_user_model)" param />
-          </div>
-          <if test="&params[:more] != 'bare'">
-            <div class="app-name" if="&!params[:id]">
-              <h1 param="app-name"><a href="#{base_url}/"><app-name/></a></h1>
-              <!-- <live-search param if="&defined_route? :site_search"/>-->
-            </div>
-            <div class="suite-name" if="&params[:id]">
-              <h1 param="suite-name"><a with="&this.or_suite"><suite-name/></a></h1>
-            </div>
-          </if>
-        </header>
-        <section with-flash-messages param="content"/>
-        <footer class="page-footer" if="&params[:id]" param >
-          <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
-        </footer>
-        <page-scripts param/>
-      </set-scoped>
-    </body>
-  </html>
-</def>
 
 <def tag="card-number-editor">
   <if test="&this.context_id">Number
@@ -900,45 +942,6 @@
       src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </script>
   </if>
-</def>
-
-<def tag="suite-name"> <%
-  suite = this.is_a?(Card)             ?
-    this.or_suite.reference_name.words :
-    ['toy', 'office']
-  part2 = suite[1..-1].join ' '
-  part1 = []
-  suite[0].each_char do |x|
-    part1 << x
-  end
-  length1 = part1.length
-  length2 = part2.length
-  n = (s       = part1                      ).length
-  m = (classes = ['o', 'ff', 'fi', 'c', 'e']).length
-  classes.rotate!(n % m) %>
-  <span
-    class="logo"><span
-      class="office"   ><%
-        classes.each_index do |i|
-            %><span class="<%= classes[i] %>"
-                 ><%= s[i * n/m...((i+1) * n/m)].join %></span><%
-        end %></span><span
-      class="toy"><%= part2                      %></span></span>
-</def>
-
-<def tag="app-name">
-    <span class="logo"><span
-        class="toy"   ><span
-            class="t" >t</span><span
-            class="oy">o</span><span
-            class="y" >y</span></span><span
-        class="office"><span
-            class="o" >o</span><span
-            class="ff">f</span><span
-            class="fi">f</span><span
-            class="i" >i</span><span
-            class="c" >c</span><span
-            class="e" >e</span></span></span>
 </def>
 
 <def tag="context">
