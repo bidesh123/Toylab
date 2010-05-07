@@ -140,7 +140,7 @@ class Card < ActiveRecord::Base
       names      = self.class.named(name)
 #          logger.debug "#{names.length} namesssssssssss"
 #          logger.debug "recursive_kind: #{k}"
-      kinds      = names.as_a(k)
+      kinds      = names #.as_a(k)
 #          logger.debug "#{kinds.length} as a #{k}"
       suites     = kinds.part_of(suite_id)
 #          logger.debug "#{suites.length} part of #{suite_id}"

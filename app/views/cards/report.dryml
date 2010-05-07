@@ -104,7 +104,7 @@
   <set-scoped deep="&shallow ?
                     @card.look_deep(params[:action],2,2) :
                     @card.look_deep(params[:action])" >
-   <show-page>
+    <show-page>
       <content-header:>
         <views />
         <context />
@@ -114,7 +114,7 @@
 
       <content-body:  >
         <rails-authenticity-token/>
-        <%         whole_off = "&false" %>
+        <%         whole_off = "&this.or_suite.id == this.id" %>
         <if test="&whole_off ==  true">
           <card    whole-off="&whole_off" />
         </if><else>
