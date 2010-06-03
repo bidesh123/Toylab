@@ -117,9 +117,9 @@
     <if test="&!row = this">
       <tr><td>empty row</td></tr>
     </if><else><if test="&!item = row[0]">
-      <tr><td>empty multiple item row</td></tr>
+       <!--tr><td>empty multiple item row</td></tr-->
       </if><else><if test="&!item_multiple = item[0]">
-        <tr><td>empty single item row</td></tr>
+        <!--tr><td>empty single item row</td></tr-->
       </if><else>
      <content-row indent="&indent"/>
     </else></else></else>
@@ -207,7 +207,7 @@
       <!-- this is a group of multiple cells in one display cell -->
       <set main="&nil" />
       <if test="&!multiple = this">
-        <empty-cell if="&false"/><td>empty single aspect: <%= this.peek %></td>
+        <empty-cell if="&false"/>
       </if><else>
         <% simple     = multiple[0] || multiple
            main     = simple[0]
