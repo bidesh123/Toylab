@@ -88,9 +88,8 @@
         mainly_tabular_view ? ["row" ,"table"] : ["item","list"]
       existing = this.items.count > 0
   %>
-
   <if test="&existing" with="&this.items[0]">
-     <%    k = (is_a_row = this.class.name == 'Card') ? this.recursive_kind : this%>
+    <% k = (is_a_row = this.class.name == 'Card') ? this.recursive_kind : this%>
     <repeat with="&this.pertinent_pads"
           if="&(that = this) && existing">                      <%
     tooltip, label = [
@@ -104,9 +103,7 @@
       pad="&this"
     />
   </repeat>
-
   </if>
-
 </def>
 
 <def tag="content-rows">
@@ -120,11 +117,11 @@
     <if test="&!row = this">
       <tr><td>empty row</td></tr>
     </if><else><if test="&!item = row[0]">
-      <!--tr><td>empty multiple item row</td></tr-->
-    </if><else><if test="&!item_multiple = item[0]">
-      <!--tr><td>empty single item row</td></tr-->
-    </if><else>
-      <content-row indent="&indent"/>
+      <tr><td>empty multiple item row</td></tr>
+      </if><else><if test="&!item_multiple = item[0]">
+        <tr><td>empty single item row</td></tr>
+      </if><else>
+     <content-row indent="&indent"/>
     </else></else></else>
   </repeat>
 </def>
@@ -133,10 +130,10 @@
   <%  padding="padding-left:#{1.618*indent}em;" %>
   <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
     <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
-        cell           = [[main, []]] # no subs on items %>
-    <do with="&cell">
+        cel           = [[main, []]] # no subs on items %>
+    <do with="&cel">
       <if test="&main.name.blank?">
-        <th class="cell" style="<%= padding %>">
+        <th class="cell"         style="<%= padding %>">
          <if test="&true"><cell /></if>
          <else><%= main.list_position %></else>
         </th>
@@ -157,7 +154,7 @@
 </def>
 
 <def tag="aspect-cell">
-  <if   test="&false && all.mults.now && this.length == 1" with="&this[0]"> <!-- no multiples present -->
+  <if   test="&false && all.mults.now && this.length == 1"> <!-- no multiples present -->
     <single-cell />
   </if>
   <else>
@@ -181,7 +178,7 @@
 </def>
 
 <def tag="single-cell">
-  <%  main = this[0][0] || this[0]
+<%  main = this[0][0] || this[0]
       subitems = main ? (this[0][1] || this[1] || []) : []
       cel = [[main, subitems]] %>
   <if test="&!main || main.name.blank?">
@@ -189,8 +186,8 @@
       <cell class="sub-cell" with="&cel" />
     </td>
   </if><else><if test="&main.numeric?">
-    <td class="numeric cell sub-cell">
-      <cell class="sub-cell" with="&cel"/>
+   <td class="numeric cell sub-cell">
+      <cell class="numeric sub-cell" with="&cel"/>
     </td>
   </if><else><!-- not numeric-->
     <td     class="cell sub-cell">
@@ -209,26 +206,25 @@
     <repeat> <!-- cells -->
       <!-- this is a group of multiple cells in one display cell -->
       <set main="&nil" />
-      <if test="&!cel = this">
-        <empty-cell />
-      </if><else><if test="&!multiple = cel.is_a?(Array) ? cel[0] : cel">
-          <td>empty single aspect: <%= this.peek %></td>
+      <if test="&!multiple = this">
+        <empty-cell if="&false"/><td>empty single aspect: <%= this.peek %></td>
       </if><else>
-        <% main     = multiple[0] || multiple
-           subitems = main ? multiple[1] || [] : []
+        <% simple     = multiple[0] || multiple
+           main     = simple[0]
+           subitems = main ? (simple[1] || []) : []
+           cel = [[main, subitems]]
         %>
-       <!--td>< %= this.peek %><br/>< %= subs.peek %> </td-->
+       <!--td>< %= this.peek %><br/>< %= subitems.peek %> </td-->
         <if test="&!main">
           <empty-cell />
         </if><else>
-          <%  cel = [[main, (subitems || [])]] %>
           <if test="&(column_counter+=1) == 1">
             <item-cell   with="&cel" indent="&indent" />
           </if><else>
             <aspect-cell with="&cel" />
           </else>
         </else>
-      </else></else>
+      </else>
     </repeat>
     <empty-cell />
   </tr>
@@ -250,29 +246,26 @@
     <else><!-- this is not a Card -->
       <%  main, subitems = [this[0][0], this[0][1] || []]
           cel = [[main, subitems]]                         %>
-      <!--br/>main< %=main.peek%>
-      <br/>subitems< %=subitems.peek%>
-      <br/>cel< %=cel.peek%-->
-                <if test="&!main">
-                  nbsp&nbsp; <!-- to do: create button for first level aspects -->
-                </if><else><if test="&!subitems">
-                    no sub items
-                </if><else><if test="&!subitems.is_a?(Array)">
-                    unknown subs
-                </if><else><if test="&subitems.length > 0" with="&cel">
-                  <table>
-                    <tr>
-                      <td><cell with="&main"/></td>
-                    </tr>
-                    <tr repeat="&subitems">
-                      <td style="text-indent:1.618em;"><cell /></td>
-                    </tr>
-                  </table>
-                </if><else>
-                  <if test="&main.is_a? Card">
-                    <cell with="&main" />
-                  </if>
-                </else></else></else></else>
+          <if test="&!main">
+            nbsp&nbsp; <!-- to do: create button for first level aspects -->
+          </if><else><if test="&!subitems">
+              no sub items
+          </if><else><if test="&!subitems.is_a?(Array)">
+              unknown subs
+          </if><else><if test="&subitems.length > 0" with="&cel">
+            <table>
+              <tr>
+                <td><cell with="&main"/></td>
+              </tr>
+              <tr repeat="&subitems">
+                <td style="text-indent:1.618em;"><cell /></td>
+              </tr>
+            </table>
+          </if><else>
+            <if test="&main.is_a? Card">
+              <cell with="&main" />
+            </if>
+          </else></else></else></else>
     </else>
   </else>
 </def>
@@ -520,10 +513,10 @@
 
 <def tag="toggle-aspect-or-item">                                            <%=
   horiz = attributes[:which] == "aspects"
-  subs          = horiz ?       "aspects" : "items"
+  sub_elements  horiz ?       "aspects" : "items"
   display_subs  = horiz ?       "Aspects" : "Sub-Items"
-  part = prep this, subs
-  if this.send(subs).count > 0
+  part = prep this, sub_elements
+  if this.send(sub_elements).count > 0
     link_to "#{part[:show_hide]} #{display_subs}",
       url_for(:controller => "cards"                          ,
               :action     => "#{part[:action]}_#{part[:name]}",
