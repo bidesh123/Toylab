@@ -513,7 +513,7 @@
 
 <def tag="toggle-aspect-or-item">                                            <%=
   horiz = attributes[:which] == "aspects"
-  sub_elements  horiz ?       "aspects" : "items"
+  sub_elements =  horiz ?       "aspects" : "items"
   display_subs  = horiz ?       "Aspects" : "Sub-Items"
   part = prep this, sub_elements
   if this.send(sub_elements).count > 0
