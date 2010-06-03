@@ -1,7 +1,5 @@
 class Card < ActiveRecord::Base
   hobo_model # Don't put anything above this
-
-#  require 'paperclip'
   
   module AttributeWatcher
   #  define_callbacks :attribute_changed
@@ -20,6 +18,32 @@ class Card < ActiveRecord::Base
   #  end
   end
 
+  def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
+    wider_contexts = contexts + [coded_heading]
+    r = deep[:row]
+    if no_columns_yet? deep
+      add_a_first_column                    wider_contexts, new_column(r), deep
+    elsif list
+      fit_into_existing_column                                             deep,
+        0
+    elsif icolumn = find_name_stack(:match, wider_contexts,                deep)
+      crash unless icolumn.is_a? Integer
+      fit_into_existing_column                                             deep,
+        icolumn
+    else
+      add_column_to_existing_ones           wider_contexts, new_column(r), deep
+    end
+    unless (aspect_depth += 1) >= max_aspect_depth
+      or_ref.aspects.each do |aspect|
+        deep = aspect.look_wider wider_contexts, deep,
+          max_aspect_depth, aspect_depth
+      end
+    end
+    aspect_depth -= 1
+    deep
+  end
+# build up columns
+  
   fields do
     name             :string
     body             :text
@@ -102,7 +126,7 @@ class Card < ActiveRecord::Base
   IDMark = 'cf::'
   RecursivityMax = 3
 
-  after_create :follow_up_on_create
+  after_create  :follow_up_on_create
   before_update :prepare_for_update
   after_update  :follow_up_on_update
 
@@ -136,6 +160,7 @@ class Card < ActiveRecord::Base
     on_automatic do
 #          logger.debug "now yessssssssssssssssssssssssss"
       return unless name && k = recursive_kind
+      return if name.strip.match(/^(\+|-)?\d+(,|.)\d*/)
 #          logger.debug "name: #{name}"
       names      = self.class.named(name)
 #          logger.debug "#{names.length} namesssssssssss"
@@ -813,44 +838,42 @@ class Card < ActiveRecord::Base
     ["report", "show"].include? deep[:action]
   end
 
-  def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
-    wider_contexts = contexts + [coded_heading]
-    column             = []
-    column[deep[:row]] = [self]
-    if no_columns_yet? deep
-      add_a_first_column(                         wider_contexts, column,  deep) #if list
-    elsif list
-      fit_into_existing_column                                             deep,
-        0
-    elsif column_number = find_name_stack(:match, wider_contexts         , deep)
-      crash unless column_number.is_a? Integer
-      fit_into_existing_column                                             deep,
-        column_number
-    else
-      add_column_to_existing_ones                 wider_contexts, column , deep
-    end
-    unless (aspect_depth += 1) >= max_aspect_depth
-      or_ref.aspects.each do |aspect|
-        deep = aspect.look_wider wider_contexts, deep,
-          max_aspect_depth, aspect_depth
-      end
-    end
-    aspect_depth -= 1
-    deep
+  def peek
+    name || "ID#{id}"
   end
-# build up columns
+
+  def with_subs
+    [[[self,
+      if s = subs
+        s
+      else
+        []
+      end]]]
+  end
+
+  def new_column row
+    column      = []
+    column[row] = self.with_subs
+  end
+    
+  def subs
+    return [] if list
+    items.select{|item| item.name && item.name.strip.length > 0   || []}
+#     items.select{|item| item.name && item.name.strip.match(/(^(\+|-)?\d|\d(\,|\.)\d*$)/) || nil} # alternate
+  end
+  
   def fit_into_existing_column deep, column_number
     cell_has_a_value = self.name && !self.name.strip.blank?
     row, column = deep[:row],  deep[:columns][:cells][column_number]
     if list || !report?(deep) || cell_has_a_value || !column[row]
       column[row] ||= []
-      column[row]  << self
-     end
+      column[row] << with_subs[0]
+    end
   end
 # build up columns
   def add_a_first_column contexts, column, deep
-    deep[:columns][:cells] << column
     deep[:columns][:names] << contexts
+    deep[:columns][:cells] << column
   end
 # build up columns
   def add_column_to_existing_ones name_stack, column, deep
@@ -1128,7 +1151,7 @@ class Card < ActiveRecord::Base
 #  end
 #
   def suite?
-    !list_id && !whole_id && !table_id
+    !list_id && !whole_id && !table_id || !suite
   end
 
   def horizontal?
@@ -1414,6 +1437,7 @@ class Card < ActiveRecord::Base
   end
 
   def permitted? demand
+    return true if acting_user.name == "prog"
     reason = forbidden? demand
     logger.debug "refused: #{reason}" if reason.is_a? String
     return !reason unless reason.is_a? String

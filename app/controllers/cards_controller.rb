@@ -167,17 +167,17 @@ class CardsController < ApplicationController
   def auto_kind #???
     # NOTE: To remove LOWER(name), remove the SQL condition and the 2nd Array element ====================================
     @cards = Card.all(:conditions => [
-                      "LOWER(kind) LIKE ? AND LOWER(name) = ?",
-                      "#{params[:q].to_s.downcase}%",
-                      @parent_card.name]).map(&:kind).uniq.sort
+      "LOWER(kind) LIKE ? AND LOWER(name) = ? AND (id = ? OR suite_id = ?)",
+      "#{params[:q].to_s.downcase}%",
+      @parent_card.name]).map(&:kind).uniq.sort, suite_id, suite_id
     render :action => :auto
   end
 
   def auto_name #???
     @cards = Card.all(:conditions => [
-                      "LOWER(name) LIKE ? AND LOWER(kind) = ?",
-                      "%#{params[:q].to_s.downcase}%",
-                      @parent_card.kind]).map(&:reference_name).uniq.sort
+      "LOWER(name) LIKE ? AND LOWER(kind) = ? AND (id = ? OR suite_id = ?)",
+      "%#{params[:q].to_s.downcase}%",
+      @parent_card.kind]).map(&:reference_name).uniq.sort, suite_id, suite_id
     render :action => :auto
   end
 

@@ -16,6 +16,7 @@ Rails::Initializer.run do |config|
   # Specify gems that this application depends on. 
   # They can then be installed with "rake gems:install" on new installations.
   # config.gem "bj"
+   config.gem "haml"
    config.gem "hpricot", :source => "http://code.whytheluckystiff.net"
    config.gem "aws-s3", :lib => "aws/s3"
    config.gem "shuber-sortable", :lib => "sortable", :source => "http://gems.github.com/"

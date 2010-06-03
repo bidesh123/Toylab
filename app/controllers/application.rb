@@ -1,9 +1,11 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 
-class ApplicationController < ActionController::Base
+  class ApplicationController < ActionController::Base
 
+#   require "template_streaming"
 #  include HoptoadNotifier::Catcher
+  
 
   helper :all # include all helpers, all the time
 
@@ -50,10 +52,8 @@ class ApplicationController < ActionController::Base
 #  set_the_current  'script   visibility',  'on'
 #  set_the_current  :script, :visibility ,  :on
 
-
   def invisible? that   , part = :all
     #deprecated
-
   end
 
   def   visible? that   , part = :all
@@ -136,6 +136,16 @@ class String
   def indefinite
     (self =~ /^[aeiou]/i ? "an " : "a ") + self
   end
+
+  def peek
+    "'#{self}'"
+  end
+end
+
+class NilClass
+  def peek
+    'nought'
+  end
 end
 
 class Array
@@ -161,5 +171,10 @@ class Array
   def make_both_same_size! a
     length == 0 ? [] : (Array.new rectangular!).transpose
   end
+
+  def peek
+    "[#{map{|x| x ? x.peek : :nil}.join ', '}]"
+  end
+
 end
 

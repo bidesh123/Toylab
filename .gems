@@ -1,1 +1,2 @@
 shuber-sortable --source http://gems.github.com
+template-streaming --source http://github.com/oggy/template_streaming.git

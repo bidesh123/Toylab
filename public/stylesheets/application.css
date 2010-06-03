@@ -60,7 +60,7 @@ td.grey-empty-cell {font-size:1px;}
 .logo .e , .suite-name .e  {  color: #96f;} /*   #c9f    #96f  */
 
 ul.navigation {font-size:13px;}
-h1.app-name a, h1.suite-name a {text-decoration:none;}
+h1.app-name a, h1.suite-name a, .logo {text-decoration:none;}
 ul a {color: #36f;}
 div.top-line {border-bottom:10px red;}
 td.core-image img {margin-top: .618em;}
