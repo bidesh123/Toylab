@@ -3,7 +3,7 @@
 <include src="taglibs/auto/rapid/pages"/>
 <include src="taglibs/auto/rapid/forms"/>
 <include src="paperclip" plugin="paperclip_with_hobo"/>
-<!--include src="template_streaming" plugin="template_streaming"/-->
+<require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
 <def tag="add-pad-rows">                                                      <%

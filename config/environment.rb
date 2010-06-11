@@ -1,4 +1,4 @@
-RAILS_GEM_VERSION = '2.2.2'
+# RAILS_GEM_VERSION = '2.2.2'
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -16,11 +16,11 @@ Rails::Initializer.run do |config|
   # Specify gems that this application depends on. 
   # They can then be installed with "rake gems:install" on new installations.
   # config.gem "bj"
-   config.gem "haml"
-   config.gem "hpricot", :source => "http://code.whytheluckystiff.net"
-   config.gem "aws-s3", :lib => "aws/s3"
-   config.gem "shuber-sortable", :lib => "sortable", :source => "http://gems.github.com/"
-   config.gem "hoptoad_notifier"
+#   config.gem "haml"
+#   config.gem "hpricot", :source => "http://code.whytheluckystiff.net"
+#   config.gem "aws-s3", :lib => "aws/s3"
+#   config.gem "shuber-sortable", :lib => "sortable", :source => "http://gems.github.com/"
+#   config.gem "hoptoad_notifier"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
@@ -61,3 +61,4 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
 end
+
