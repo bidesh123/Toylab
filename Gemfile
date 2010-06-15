@@ -1,7 +1,7 @@
 source :rubygems
 source "http://gems.github.com"
-gem "rails", "~> 2.2.2"
-gem "shuber-sortable"
+gem "rails", "2.2.2"
+gem "shuber-sortable", :require => 'sortable'
 # gem "template_streaming"
 
 group :production do
