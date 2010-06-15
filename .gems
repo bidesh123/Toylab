@@ -1,1 +1,5 @@
 shuber-sortable --source http://gems.github.com
+bj
+haml
+hpricot
+aws-s3
