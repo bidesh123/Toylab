@@ -3,7 +3,7 @@
 <include src="taglibs/auto/rapid/pages"/>
 <include src="taglibs/auto/rapid/forms"/>
 <include src="paperclip" plugin="paperclip_with_hobo"/>
-<require src="template_streaming" plugin="template_streaming"/-->
+<!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
 <def tag="add-pad-rows">                                                      <%
@@ -280,7 +280,7 @@
     part1 << x
   end
   n = (s       = part1                      ).length
-  m = (classes = ['o', 'ff', 'fi', 'i', 'c', 'e']).length
+  m = (classes = ['o', 'ff', 'fi', 'c', 'e']).length
   classes.rotate!(part1.hash % m) %>
   <h1 param="suite-name"><a with="&this.or_suite">
     <span        class="logo"><span
