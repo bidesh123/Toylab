@@ -50,7 +50,7 @@
 <def tag="aspect-cell">
   <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
   <td class="#{klass}">
-    <recursive-card aspect />
+    <recursive-card aspect if="&can_view?(:name)" />
   </td>
 </def>
 
