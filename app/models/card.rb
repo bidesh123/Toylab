@@ -20,8 +20,11 @@ class Card < ActiveRecord::Base
 
   def s *refs
     result = self
-    refs.each {|ref| result = result.sub ref rescue nil}
-    result.send(result.list_id ? :body : :name) rescue nil
+    refs.each { |ref| result = result.sub ref rescue nil }
+    bod = result.body rescue result.to_s
+    nam = result.name rescue result.to_s
+    fallback = nam || bod || "a #{kind}" || inspect
+    result = (result.list_id ? bod : nam) rescue fallback
   end
 
   def get x
@@ -875,9 +878,11 @@ class Card < ActiveRecord::Base
     ["report", "show"].include? deep[:action]
   end
 
-  def peek
+  def inspect
     name || "ID#{id}"
   end
+
+  alias :peek :inspect
 
   def with_subs
     [[[self,

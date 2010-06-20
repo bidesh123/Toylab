@@ -10,7 +10,7 @@
   <h1 param="suite-name"><a with="&this.the_suite"><span class="logo"><%
     logo_words  = (this.is_a?(Card) ? this.suite_reference : 'toy office').words
     logo        = logo_words.join ' '
-    logo_colors = this.the_suite.s 'Controls','Logo','Colors'
+    logo_colors = this.the_suite.s 'Controls','Logo','colors'
     if logo_colors
     else # no declared colors
       logo_colors = ""
@@ -47,19 +47,19 @@
         logo_word << x
       end
       color_word   =  []
-      color_words[i].each_char do |x|
+      (color_words[i] || "").each_char do |x|
         color_word << x
       end
       %><%
       logo_word.each_index do |j|
         c = color_word[j] || color_word[-1] || 'n'
-        color_class = color_classes[c]
+        color_class = color_classes[c.downcase]
         %><span class="<%= color_class %>"
          ><%= logo_word[j]
       %></span><%
       end
     end
-  %></span></a></h1>
+  %><br/></span></a></h1>
 </def>
 
 <!--def tag="suite-name">
