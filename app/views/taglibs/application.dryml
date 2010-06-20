@@ -6,6 +6,75 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="suite-name">
+  <h1 param="suite-name"><a with="&this.the_suite"><span class="logo"><%
+    logo_words  = (this.is_a?(Card) ? this.suite_reference : 'toy office').words
+    logo        = logo_words.join ' '
+    logo_colors = this.the_suite.s 'Controls','Logo','Colors'
+    if logo_colors
+    else # no declared colors
+      logo_colors = ""
+      colors = "roygbp".split ''
+      colored = logo_words[0]
+      i, n, m = -1, colors.length, colored.length
+      colors.rotate!(colored.hash % m)
+      logo_words[0].each_char do |c|
+        logo_colors += colors[(i +=1)*n/m]
+      end
+      if logo_words.length > 1
+        logo_colors += ' '
+        logo_words[1..-1].each do |w|
+          logo_colors += ' '
+          w.each_char do |c|
+            logo_colors += 'n'
+          end
+        end
+      end
+    end
+    color_classes = {
+      'r' => 'o',
+      'o' => 'ff',
+      'y' => 'fi',
+      'g' => 'i',
+      'b' => 'c',
+      'p' => 'e',
+      'n' => 'colorless'
+    }
+    color_words = logo_colors.words
+    logo_words.each_index do |i|
+      logo_word   =  []
+      logo_words[i].each_char do |x|
+        logo_word << x
+      end
+      color_word   =  []
+      color_words[i].each_char do |x|
+        color_word << x
+      end
+      %><%
+      logo_word.each_index do |j|
+        c = color_word[j] || color_word[-1] || 'n'
+        color_class = color_classes[c]
+        %><span class="<%= color_class %>"
+         ><%= logo_word[j]
+      %></span><%
+      end
+    end
+  %></span></a></h1>
+</def>
+
+<!--def tag="suite-name">
+    <span        class="logo"><span
+                 class="office"><%
+      classes.each_index do |i|
+      %><span    class="<%= classes[i] %>"
+         ><%= s[i * n/m...((i+1) * n/m)].join
+      %></span><%
+      end
+  %><span class="toy"><%= part2
+  %></span></span>
+  </a></h1>
+</def-->
+
 <def tag="add-pad-rows">                                                      <%
   element, collection =
     mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
@@ -268,31 +337,6 @@
           </else></else></else></else>
     </else>
   </else>
-</def>
-
-<def tag="suite-name"> <%
-  suite = this.is_a?(Card)     ?
-    this.suite_reference.words :
-    ['toy', 'office']
-  part2 = suite[1..-1].join ' '
-  part1 = []
-  suite[0].each_char do |x|
-    part1 << x
-  end
-  n = (s       = part1                      ).length
-  m = (classes = ['o', 'ff', 'fi', 'c', 'e']).length
-  classes.rotate!(part1.hash % m) %>
-  <h1 param="suite-name"><a with="&this.or_suite">
-    <span        class="logo"><span
-                 class="office"><%
-      classes.each_index do |i|
-      %><span    class="<%= classes[i] %>"
-         ><%= s[i * n/m...((i+1) * n/m)].join
-      %></span><%
-      end
-  %></span><span class="toy"><%= part2
-  %></span></span>
-  </a></h1>
 </def>
 
 <def tag="page" attrs="title, full-title">
@@ -703,7 +747,7 @@
 
 <def tag="create-suite-button">
   <set label="#{attributes[:label]}" />
-  <form class="new-suite" with="&Card.new_suite" >
+  <form class="new-suite" with="&c = Card.new_suite" >
     <submit if class="new-suite" label="&label" />
   </form>
 </def>
@@ -1350,7 +1394,7 @@
   <tr class="item-row in-application-view model::card:#{this.id}">
     <%  klass="item-cell #{this.theme_class}" %>
     <td class="#{klass}">
-      <recursive-card item if="&can_view?(:name)" merge-attrs/>
+      <recursive-card item if="&true" merge-attrs/>
     </td>
   </tr>
 </def>

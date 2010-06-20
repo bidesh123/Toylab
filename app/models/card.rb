@@ -1,21 +1,91 @@
 class Card < ActiveRecord::Base
   hobo_model # Don't put anything above this
   
-  module AttributeWatcher
-  #  define_callbacks :attribute_changed
-  #  attribute_changed :flag_attribute_changed
-  #  def write_attribute(attr_name, value)
-  #    returning(super) do
-  #      @last_attribute_name = attr_name
-  #      run_callbacks(:attribute_changed)
-  #    end
-  #  end
-  #  private
-  #  def flag_attribute_changed
-  #     attribute = @last_attribute_name
-  #    old_val, new_val = send("#{attribute}_change")
-  #    logger.info "Changed! #{attribute} from #{old_val} to #{new_val}"
-  #  end
+  @@it = Hash.new {|h,k| h[k] = nil }
+
+  def self.it
+    @@it[Thread.current.object_id]
+  end
+
+  def self.it= val
+    @@it[Thread.current.object_id] = val
+  end
+
+  def self.default_body
+    get toy("Toy Controls").s("Defaults", "Suite")
+#    get its("Defaults")
+#    get its("Suite")
+#    its :body
+  end
+
+  def s *refs
+    result = self
+    refs.each {|ref| result = result.sub ref rescue nil}
+    result.send(result.list_id ? :body : :name) rescue nil
+  end
+
+  def get x
+    self.class.get x
+  end
+
+  class << self
+    alias get it=
+    alias the its
+  end
+
+  def self.its reference
+    case       reference.class.name
+    when "String"
+      sub      reference
+    when "Symbol"
+      fild    reference
+    else
+      nil
+    end
+  end
+
+  def fild reference
+    send reference rescue ""
+  end
+
+  def self.fild reference
+    it.fild reference
+  end
+
+#  def it
+#    self.class.it
+#  end
+#
+#  def self.the a
+#    its a
+#  end
+#  this behavior seems covered by the aliases above
+
+  def self.sub reference
+    return unless self.it.class.name == "Card"
+    self.it.sub reference
+#    relevant = self.it.aspects.select do |aspect|
+#      aspect.recursive_kind ==  reference
+#    end + Card.find(:all                                               ,
+#                    :conditions => ["list_id = ? and name = ?"       ,
+#                                               self.it.id,  reference] )
+#    relevant[0] if relevant.length > 0
+  end
+
+  def sub reference
+    relevant = aspects.select do |aspect|
+      aspect.recursive_kind ==  reference
+    end + Card.find(:all                                               ,
+                    :conditions => ["list_id = ? and name = ?"       ,
+                                               id,          reference] )
+    relevant[0] if relevant.length > 0
+  end
+
+  def self.toy reference
+    Card.find(        :first, :conditions => [
+      "owner_id = ?        and name      = ?",
+      User.administrator_id,   reference
+    ])
   end
 
   def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
@@ -132,16 +202,16 @@ class Card < ActiveRecord::Base
 
 
   def suite_reference
-    the_suite = or_suite
-    if !(suite_name = the_suite.name).blank? # suite name
-      if the_suite.toy_numeric?
-        the_suite.kind ? "#{the_suite.kind.to_s} #{suite_name}" : suite_name
+    s = the_suite
+    if !(suite_name = s.name).blank? # suite name
+      if s.toy_numeric?
+        s.kind ? "#{s.kind.to_s} #{s}" : suite_name
       else
         suite_name
       end
     else
-      office = the_suite.kind && the_suite.kind.length > 0 ? the_suite.kind : 'office'
-      if !(user = the_suite.owner)
+      office = s.kind && s.kind.length > 0 ? s.kind : 'office'
+      if !(user = s.owner)
         "Guest's #{office}"
       elsif user_name = user.name # user exists
         "#{user_name.possessive} #{office}"
@@ -261,7 +331,7 @@ class Card < ActiveRecord::Base
     suite = s unless s.id == id
   end
 
-  def or_suite
+  def the_suite
     suite || self
   end
 
@@ -349,39 +419,6 @@ class Card < ActiveRecord::Base
   def file_extension_content_type filename
     types = MIME::Types.type_for(filename)
     types.empty? ? nil : types.first.content_type
-  end
-
-  def self.field reference
-    case self.it.class.name
-    when "Card"
-      case reference
-      when #standard field list
-           nil             , :owner                            ,
-           :id             , :owner_id       ,
-           :name           , :kind           , :attachment     ,
-           :ref            , :mold           , :suite          ,
-           :ref_id         , :mold_id        , :suite_id       ,
-           :akas           , :instances      , :parts          ,
-
-           :list_id        , :whole_id       , :table_id       ,
-           :list_position  , :whole_position , :table_position ,
-           :list           , :whole          , :table          ,
-           :items          , :aspects        , :columns        ,
-
-           :body           , :access         , :theme          ,
-           :script         , :view           , :pad            ,
-           :created_at     , :updated_at                       ,
-           :attachment_file_name             ,
-           :attachment_content_type          ,
-           :attachment_file_size             ,
-           :attachment_updated_at
-        it.send reference
-      else
-        ""
-      end
-    else
-      ""
-    end
   end
 
   def self.set_field reference
@@ -978,60 +1015,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def self.it= val
-    @@it[Thread.current.object_id] = val
-  end
-
-  def self.its reference
-    case       reference.class.name
-    when "String"
-      sub      reference
-    when "Symbol"
-      field    reference
-    else
-      nil
-    end
-  end
-
-  def self.default_body
-    get toy("Toy Controls")
-    get its("Defaults")
-    get its("Suite")
-    its :body
-  end
-
-  def self.the reference
-    its reference
-  end
-
-  @@it = Hash.new {|h,k| h[k] = nil }
-
-  def self.sub reference
-    case self.it.class.name
-    when "Card"
-      relevant = self.it.aspects.select do |aspect|
-        aspect.recursive_kind ==  reference
-      end + Card.find(:all  , :conditions => [
-                 "list_id = ? and name         = ?" ,
-               self.it.id     ,   reference
-        ])
-      relevant[0] if relevant.length > 0
-    else
-      nil
-    end
-  end
-
-  def self.toy reference
-    Card.find(        :first, :conditions => [
-                  "owner_id = ? and name      = ?",
-      User.administrator_id     ,   reference
-    ])
-  end
-
-  def self.it
-    @@it[Thread.current.object_id]
-  end
-  
   def next_slide #totlbull
     return first_item_down if first_item_down = (items || [nil])[0]
     higher_item(:list)
@@ -1055,11 +1038,10 @@ class Card < ActiveRecord::Base
     "...."
   end
 
-  def field x = :name
-    return nil unless x && !x.blank?
-
-  end
-
+#  def field x = :name
+#    return nil unless x && !x.blank?
+#  end
+#
   def recursive_owner
     recursive_owner_context.owner
   end
@@ -1607,9 +1589,21 @@ class Card < ActiveRecord::Base
     end
   end
 
-  class << self
-    alias get it=
-    alias the its
+  module AttributeWatcher
+  #  define_callbacks :attribute_changed
+  #  attribute_changed :flag_attribute_changed
+  #  def write_attribute(attr_name, value)
+  #    returning(super) do
+  #      @last_attribute_name = attr_name
+  #      run_callbacks(:attribute_changed)
+  #    end
+  #  end
+  #  private
+  #  def flag_attribute_changed
+  #     attribute = @last_attribute_name
+  #    old_val, new_val = send("#{attribute}_change")
+  #    logger.info "Changed! #{attribute} from #{old_val} to #{new_val}"
+  #  end
   end
 
 
