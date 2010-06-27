@@ -12,7 +12,7 @@ class Card < ActiveRecord::Base
   end
 
   def self.default_body
-    get toy("Toy Controls").s("Defaults", "Suite")
+    get toy("Toy Controls").s("Defaults", "Suite") rescue nil
 #    get its("Defaults")
 #    get its("Suite")
 #    its :body
