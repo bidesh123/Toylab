@@ -1,3 +1,13 @@
+/* td.side-nav {background-color: #fff;border-right:solid #69f .382em;} */
+li.sub-index {
+   color:green;
+}
+ul.side-links a.card-link .card-name {font-size: 0.618em;}
+table.page td.main-content {padding-left: .618em;}
+table.page td.main-content h1 {padding-bottom:.618em;}
+table.page td.side-nav {padding-right: 1em;}
+
+.suite-kind {font-size:0.618em;}
 .aspect-kind-cell {font-size:100%;}
 body.show-page th.aspect-kind-cell.inner {font-size:.5em;}
 th.aspect-kind-cell {color:transparent;}
@@ -282,6 +292,7 @@ td.item-cell.theme-green  table, td.aspect-cell.theme-green  td.core {background
 td.item-cell.theme-purple table, td.aspect-cell.theme-purple td.core {background-color:#c9f;}
 
 
+/* table.page div.card-body             { width:500px; } */
 td.body-cell div.card-body           { padding-top:.236em; }
 td.body-cell div.card-body tiny-gray { padding-top:0; }
 
@@ -307,7 +318,7 @@ div.slide input.delete-button {
 
 body.edit-page div.content-body {font-size:261.8%;}
 
-div.aside {float:right;}
+div.aside {float:left;}
 
 td.body-cell {
   color:#333;
@@ -384,7 +395,7 @@ th, td { padding-bottom:.0008em;padding-top:.0008em;}
 ul.sub-pitch li {
     text-indent:1em;
 }
-th, td { padding-right:.00015em}
+th, td { padding-right:.00015em;}
 
 td.aspects-table {
     padding-left:.15em;

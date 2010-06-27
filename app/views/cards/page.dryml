@@ -8,18 +8,35 @@
     </content-header:>
     <content-body:   >
       <rails-authenticity-token         />
-      <h1>
-        <editor:name />
-      </h1>
-      <p><editor:body blank-message="A" /></p>
-      <div param="controls">
-        <editor:access if="&can_edit? :access" />
-        <trash redir="true" />
-      </div>
+      <table class="page">
+        <tr>
+          <td class ="side-nav">
+            <ul class ="side-links">
+              <!--h3 param="items-collection"><a with="&this.the_suite">Accueuil</a></h3-->
+              <li repeat="&this.the_suite.items">
+                <a />
+                <ul class ="side-nav" if="&false && this.name == Forfaits">
+                  <li class="sub-index" repeat="&this.items">
+                    <a />
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </td>
+          <td class="main-content">
+            <h1 if="&this.suite"><editor:name /></h1>
+            <p ><editor:body blank-message="A" /></p>
+            <div param="controls">
+              <editor:access if="&can_edit? :access" />
+              <trash redir="true" />
+            </div>
+          </td>
+        </tr>
+      </table>
     </content-body:>
-   <aside:            >
-      <google                           />
-    </aside:       >
+    <aside:>
+      <google />
+    </aside:>
   </show-page>
 </def>
 

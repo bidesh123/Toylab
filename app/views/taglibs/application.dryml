@@ -6,6 +6,32 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="context">
+  <% can_use_contexts = this.the_suite.access != 'public'  || can_edit?(:name) %>
+  <div if="&this.context                     &&
+            this.suite                       &&
+            this.context_id != this.suite_id &&
+            can_use_contexts"
+       class="context" >
+    <ul>Context <out whole-off /></ul>
+  </div>
+</def>
+
+<def tag="views">
+  <% can_use_views = this.the_suite.access != 'public'  || can_edit?(:name) %>
+  <div class="views" if="&can_use_views && params[:more] != 'bare'"    >
+    <ul class="navigation view-nav">View as
+      <page-view   />
+      <!-- list-view   /-->
+      <!-- opus-view   /-->
+      <tree-view   />
+      <report-view />
+      <!-- table-view  /-->
+      <!-- slide-view  /-->
+    </ul>
+  </div>
+</def>
+
 <def tag="suite-name">
   <h1 param="suite-name"><a with="&this.the_suite"><span class="logo"><%
     logo_words  = (this.is_a?(Card) ? this.suite_reference : 'toy office').words
@@ -60,6 +86,9 @@
       end
     end
   %><br/></span></a></h1>
+  <span class="suite-kind" if="&this.is_a?(Card) && k = this.the_suite.kind">
+    <%= k %>
+  </span>
 </def>
 
 <!--def tag="suite-name">
@@ -1001,7 +1030,10 @@
 </def>
 
 <def tag="main-nav">
-  <navigation class="main-nav" merge-attrs param="default">
+  <% shown = current_user.administrator? ||
+            !this.is_a?(Card)            ||
+             this.is_a?(Card) && current_user.id == this.the_suite.owner.id %>
+  <navigation class="main-nav" merge-attrs param="default" if="&shown">
     <nav-item href="#{base_url}/">home</nav-item>
     <nav-item with="&Card">suites</nav-item>
     <nav-item with="&Card" if="&'workaround'">&nbsp;</nav-item>
@@ -1010,13 +1042,13 @@
 
 <def tag="account-nav">
   <do with="&current_user">
-    <ul class="navigation account-nav" param>
+    <ul class="navigation account-nav" param if="&!this.is_a? Card || RAILS_ENV == 'development'">
       <if test="&logged_in?">
         <li class='nav-item' param="logged-in-as">
           <a to="&current_user">logged in as <name/></a>
         </li>
         <li class='nav-item' param="account">
-          <a action="account"  >your account        </a  >
+          <a action="account"  >your account        </a>
         </li>
         <li class='nav-item' param="log-out">
           <a href="&logout_url">log out             </a>
@@ -1162,7 +1194,7 @@
 </def>
 
 <def tag="google">
-  <if test="&false">
+  <if test="&true">
     <script type="text/javascript"><!--
       google_ad_client = "pub-2559479460830705";
       /* 125x125, date de création 23/08/09 */
@@ -1175,13 +1207,6 @@
       src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </script>
   </if>
-</def>
-
-<def tag="context">
-  <div if="&this.context    && this.suite     &&
-            this.context_id != this.suite_id" class="context">
-    <ul>Context <out whole-off /></ul>
-  </div>
 </def>
 
 <def tag="out">
@@ -1238,20 +1263,6 @@
   <td class="spacer">
   <%= image_tag "spacer.gif", {:width => "4px"} %>
   </td>
-</def>
-
-<def tag="views">
-  <div class="views" if="&params[:more] != 'bare'"    >
-    <ul class="navigation view-nav">View as
-      <page-view   />
-      <!-- list-view   /-->
-      <!-- opus-view   /-->
-      <tree-view   />
-      <report-view />
-      <!-- table-view  /-->
-      <!-- slide-view  /-->
-    </ul>
-  </div>
 </def>
 
 <def tag="pads">
