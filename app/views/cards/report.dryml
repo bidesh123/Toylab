@@ -115,13 +115,25 @@
       <content-body:  >
         <rails-authenticity-token/>
         <%         whole_off = this.the_suite.id == this.id %>
-        <if test="&whole_off ==  true">
-          <card    whole-off="&whole_off" />
-        </if><else>
-          <card                           />
-        </else>
+        <table>
+          <tr>
+            <td class="left-links">
+              <side-links />
+            </td>
+            <td>
+              <if test="&whole_off ==  true">
+                <card    whole-off="&true" />
+              </if><else>
+                <card                           />
+              </else>
+            </td>
+            <td>
+              <google />
+            </td>
+          </tr>
+        </table>
       </content-body: >
-      <aside:><google /></aside:>
+      <aside:></aside:>
     </show-page>
   </set-scoped>
 </def>

@@ -6,6 +6,85 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="cell">
+  <if test="&!this">
+    &nbsp; <!-- to do: a create button for first level aspects -->
+  </if><else>
+    <if test="&this.is_a? Card">
+      <if test="&false || false && @editable_card">
+        <% domid = dom_id this, :editor_now %>
+        <input:name class="editable_now" id="#{domid}" name="card[name]" />
+      </if><else>
+        <editor:name blank-message="..." />
+      </else>
+    </if>
+    <else><!-- this (cell) is empty, without even a Card it could represent -->
+      <%  main, subitems = [this[0][0], this[0][1] || []]
+          cel = [[main, subitems]]                         %>
+          <if test="&!main">
+            nbsp&nbsp; <!-- to do: create button for first level aspects -->
+          </if><else><if test="&!subitems">
+              no sub items
+          </if><else><if test="&!subitems.is_a?(Array)">
+              unknown subs
+          </if><else><if test="&subitems.length > 0" with="&cel">
+            <table>
+              <tr>
+                <td><cell with="&main"/></td>
+              </tr>
+              <tr repeat="&subitems">
+                <td style="text-indent:1.618em;"><cell /></td>
+              </tr>
+            </table>
+          </if><else>
+            <if test="&main.is_a? Card">
+              <cell with="&main" />
+            </if>
+          </else></else></else></else>
+    </else>
+  </else>
+</def>
+
+<def tag="item-cell" attrs="indent">
+  <%  padding="padding-left:#{1.618*indent}em;" %>
+  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
+    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
+        cel           = [[main, []]] # no subs on items %>
+    <do with="&cel">
+      <if test="&main.name.blank?">
+        <th class="cell"         style="<%= padding %>">
+         <if test="&true"><cell /></if>
+         <else><%= main.list_position %></else>
+        </th>
+      </if><else><if test="&main.numeric?">
+        <th class="cell numeric" style="<%= padding %>">
+          <cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </if><else><!-- not numeric -->
+        <th class="cell"         style="<%= padding %>">
+          <cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </else></else>
+    </do>
+  </if>
+  <else>
+    <!-- no multiples in column 0 -->
+  </else>
+</def>
+
+<def tag="side-links">
+  <ul class ="side-links">
+    <li repeat="&this.the_suite.items">
+      <a class="side-link left-link"/>
+      <ul class ="side-nav" if="&false && this.name == Forfaits">
+        <li class="sub-index" repeat="&this.items">
+          <a side-link left-link/>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</def>
+
 <def tag="suite-name">
   <h1 param="suite-name"><a with="&this.the_suite"><span class="logo"><%
     logo_words  = (this.is_a?(Card) ? this.suite_reference : 'toy office').words
@@ -223,33 +302,6 @@
   </repeat>
 </def>
 
-<def tag="item-cell" attrs="indent">
-  <%  padding="padding-left:#{1.618*indent}em;" %>
-  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
-    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
-        cel           = [[main, []]] # no subs on items %>
-    <do with="&cel">
-      <if test="&main.name.blank?">
-        <th class="cell"         style="<%= padding %>">
-         <if test="&true"><cell /></if>
-         <else><%= main.list_position %></else>
-        </th>
-      </if><else><if test="&main.numeric?">
-        <th class="cell numeric" style="<%= padding %>">
-          <cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </if><else><!-- not numeric -->
-        <th class="cell"         style="<%= padding %>">
-          <cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </else></else>
-    </do>
-  </if>
-  <else>
-    <!-- no multiples in column 0 -->
-  </else>
-</def>
-
 <def tag="aspect-cell">
   <if   test="&false && all.mults.now && this.length == 1"> <!-- no multiples present -->
     <single-cell />
@@ -299,7 +351,7 @@
   <if test="&item_main = item_multiple[0][0] || item_multiple[0]"></if>
   <tr class="content-row">
     <%  column_counter = 0 %>
-    <left-tool-cell with="&item_main"/>
+    <left-tool-cell with="&item_main" if="&false"/>
     <repeat> <!-- cells -->
       <!-- this is a group of multiple cells in one display cell -->
       <set main="&nil" />
@@ -325,46 +377,6 @@
     </repeat>
     <empty-cell />
   </tr>
-</def>
-
-<def tag="cell">
-  <if test="&!this">
-    &nbsp; <!-- to do: a create button for first level aspects -->
-  </if>
-  <else>
-    <if test="&this.is_a? Card">
-      <if test="&false || false && @editable_card">
-        <% domid = dom_id this, :editor_now %>
-        <input:name class="editable_now" id="#{domid}" name="card[name]" />
-      </if><else>
-        <editor:name blank-message="..." />
-      </else>
-    </if>
-    <else><!-- this is not a Card -->
-      <%  main, subitems = [this[0][0], this[0][1] || []]
-          cel = [[main, subitems]]                         %>
-          <if test="&!main">
-            nbsp&nbsp; <!-- to do: create button for first level aspects -->
-          </if><else><if test="&!subitems">
-              no sub items
-          </if><else><if test="&!subitems.is_a?(Array)">
-              unknown subs
-          </if><else><if test="&subitems.length > 0" with="&cel">
-            <table>
-              <tr>
-                <td><cell with="&main"/></td>
-              </tr>
-              <tr repeat="&subitems">
-                <td style="text-indent:1.618em;"><cell /></td>
-              </tr>
-            </table>
-          </if><else>
-            <if test="&main.is_a? Card">
-              <cell with="&main" />
-            </if>
-          </else></else></else></else>
-    </else>
-  </else>
 </def>
 
 <def tag="page" attrs="title, full-title">
@@ -932,7 +944,6 @@
         <card first />
       </content-body:  >
       <aside:          >
-        <google />
       </aside:         >
     </show-page>
   </set-scoped>
@@ -1193,7 +1204,7 @@
 </def>
 
 <def tag="google">
-  <if test="&true">
+  <if test="&false">
     <script type="text/javascript"><!--
       google_ad_client = "pub-2559479460830705";
       /* 125x125, date de création 23/08/09 */

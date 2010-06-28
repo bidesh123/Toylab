@@ -15,9 +15,7 @@
         <rails-authenticity-token />
         <card first />
       </content-body:  >
-      <aside:          >
-        <google  />
-      </aside:         >
+      <aside:></aside:>
     </show-page>
   </set-scoped>
 </def>

@@ -16,7 +16,7 @@
           <trash />
         </div>
       </content-body:  >
-      <aside:          ><google /></aside:>
+      <aside:></aside:>
     </edit-page>
   </set-scoped>
 </def>
