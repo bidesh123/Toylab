@@ -6,72 +6,6 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
-<def tag="cell">
-  <if test="&!this">
-    &nbsp; <!-- to do: a create button for first level aspects -->
-  </if><else>
-    <if test="&this.is_a? Card">
-      <if test="&false || false && @editable_card">
-        <% domid = dom_id this, :editor_now %>
-        <input:name class="editable_now" id="#{domid}" name="card[name]" />
-      </if><else>
-        <editor:name blank-message="..." />
-      </else>
-    </if>
-    <else><!-- this (cell) is empty, without even a Card it could represent -->
-      <%  main, subitems = [this[0][0], this[0][1] || []]
-          cel = [[main, subitems]]                         %>
-          <if test="&!main">
-            nbsp&nbsp; <!-- to do: create button for first level aspects -->
-          </if><else><if test="&!subitems">
-              no sub items
-          </if><else><if test="&!subitems.is_a?(Array)">
-              unknown subs
-          </if><else><if test="&subitems.length > 0" with="&cel">
-            <table>
-              <tr>
-                <td><cell with="&main"/></td>
-              </tr>
-              <tr repeat="&subitems">
-                <td style="text-indent:1.618em;"><cell /></td>
-              </tr>
-            </table>
-          </if><else>
-            <if test="&main.is_a? Card">
-              <cell with="&main" />
-            </if>
-          </else></else></else></else>
-    </else>
-  </else>
-</def>
-
-<def tag="item-cell" attrs="indent">
-  <%  padding="padding-left:#{1.618*indent}em;" %>
-  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
-    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
-        cel           = [[main, []]] # no subs on items %>
-    <do with="&cel">
-      <if test="&main.name.blank?">
-        <th class="cell"         style="<%= padding %>">
-         <if test="&true"><cell /></if>
-         <else><%= main.list_position %></else>
-        </th>
-      </if><else><if test="&main.numeric?">
-        <th class="cell numeric" style="<%= padding %>">
-          <cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </if><else><!-- not numeric -->
-        <th class="cell"         style="<%= padding %>">
-          <cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </else></else>
-    </do>
-  </if>
-  <else>
-    <!-- no multiples in column 0 -->
-  </else>
-</def>
-
 <def tag="side-links">
   <ul class ="side-links">
     <li repeat="&this.the_suite.items">
@@ -302,6 +236,33 @@
   </repeat>
 </def>
 
+<def tag="item-cell" attrs="indent">
+  <%  padding="padding-left:#{1.618*indent}em;" %>
+  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
+    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
+        cel           = [[main, []]] # no subs on items %>
+    <do with="&cel">
+      <if test="&main.name.blank?">
+        <th class="cell"         style="<%= padding %>">
+         <if test="&true"><cell /></if>
+         <else><%= main.list_position %></else>
+        </th>
+      </if><else><if test="&main.numeric?">
+        <th class="cell numeric" style="<%= padding %>">
+          <cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </if><else><!-- not numeric -->
+        <th class="cell"         style="<%= padding %>">
+          <cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </else></else>
+    </do>
+  </if>
+  <else>
+    <!-- no multiples in column 0 -->
+  </else>
+</def>
+
 <def tag="aspect-cell">
   <if   test="&false && all.mults.now && this.length == 1"> <!-- no multiples present -->
     <single-cell />
@@ -377,6 +338,46 @@
     </repeat>
     <empty-cell />
   </tr>
+</def>
+
+<def tag="cell">
+  <if test="&!this">
+    &nbsp; <!-- to do: a create button for first level aspects -->
+  </if>
+  <else>
+    <if test="&this.is_a? Card">
+      <if test="&false || false && @editable_card">
+        <% domid = dom_id this, :editor_now %>
+        <input:name class="editable_now" id="#{domid}" name="card[name]" />
+      </if><else>
+        <editor:name blank-message="..." />
+      </else>
+    </if>
+    <else><!-- this is not a Card -->
+      <%  main, subitems = [this[0][0], this[0][1] || []]
+          cel = [[main, subitems]]                         %>
+          <if test="&!main">
+            nbsp&nbsp; <!-- to do: create button for first level aspects -->
+          </if><else><if test="&!subitems">
+              no sub items
+          </if><else><if test="&!subitems.is_a?(Array)">
+              unknown subs
+          </if><else><if test="&subitems.length > 0" with="&cel">
+            <table>
+              <tr>
+                <td><cell with="&main"/></td>
+              </tr>
+              <tr repeat="&subitems">
+                <td style="text-indent:1.618em;"><cell /></td>
+              </tr>
+            </table>
+          </if><else>
+            <if test="&main.is_a? Card">
+              <cell with="&main" />
+            </if>
+          </else></else></else></else>
+    </else>
+  </else>
 </def>
 
 <def tag="page" attrs="title, full-title">
@@ -1112,7 +1113,7 @@
 #   rows.delete_at 0 # temporarily no control row
 %>
   <tr class="title-row" repeat="&rows">
-    <empty-cell />
+    <empty-cell if="&false && 'use with left-tool'"/>
     <th class="title-cell" repeat>
 <%    kind_to_display        , object_to_update, blank_message = case this.class.name
       when "NilClass"
@@ -1135,8 +1136,7 @@
         [   this.class.name  , nil             ,        "cataclysm" ]
       end
       first_kind = false
-%>
-      <if with="&object_to_update">
+%>    <if with="&object_to_update">
         <kind-editor blank-message="&blank_message"  />
       </if>
       <else><%= kind_to_display %></else>

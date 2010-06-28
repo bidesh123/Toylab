@@ -12,7 +12,7 @@
     <add-aspect />
     <manage-attachment />
   </td>
-</def>s
+</def>
 <def tag="toy-edit">
   <set-scoped deep="&@card.edit_deep" >
     <show-page>

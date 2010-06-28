@@ -1,9 +1,5 @@
 <toy-page />
 
-<def tag="side-links">
-
-</def>
-
 <def tag="toy-page">
   <show-page class="page-view">
     <content-header:>
