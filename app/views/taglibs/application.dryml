@@ -6,6 +6,49 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="title-cell">
+  <th class="title-cell">
+    <%  first_kind = true
+        kind_to_display        , object_to_update, blank_message =
+          case this.class.name
+          when "NilClass"
+            [  ""                , nil             ,        "Nil"       ]
+          when "Hash"
+             nbsp = "\xC2\xA0"
+            case this[:type]
+            when "aspect"
+              b = if first_kind; first_kind = false ; nbsp ; end
+              [ this[:kind]      , this[:mold]     ,        "::"         ]
+            when "column"
+              b = if first_kind; first_kind = false ; nbsp ; end
+              [ this[:kind]      , this[:mold]     , (b  || ":::::")    ]
+            when "control"
+              [ ""               , nil             , nil                ]
+            else
+              [ "#{this[:type]}?", nil             , nil                ]
+            end
+          else
+            [   this.class.name  , nil             ,        "cataclysm" ]
+          end
+        first_kind = false %>
+    <if with="&object_to_update">
+      <kind-editor blank-message="&blank_message"  />
+    </if>
+    <else><%= kind_to_display %></else>
+    <if test="&false">
+      Table:    <%=
+        if b = this[:mold]
+          b.table_id      ? table.full_reference : "nil"
+        else
+          'pouet'
+        end     %>
+      Colonne:  <%=
+        (b = this[:mold]) ?     b.full_reference : 'nil'
+                %>
+    </if>
+  </th>
+</def >
+
 <def tag="side-links">
   <ul class ="side-links">
     <li repeat="&this.the_suite.items">
@@ -1114,44 +1157,7 @@
 %>
   <tr class="title-row" repeat="&rows">
     <empty-cell if="&false && 'use with left-tool'"/>
-    <th class="title-cell" repeat>
-<%    kind_to_display        , object_to_update, blank_message = case this.class.name
-      when "NilClass"
-        [  ""                , nil             ,        "Nil"       ]
-      when "Hash"
-         nbsp = "\xC2\xA0"
-        case this[:type]
-        when "aspect"
-          b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:mold]     ,        "::"         ]
-        when "column"
-          b = if first_kind; first_kind = false ; nbsp ; end
-          [ this[:kind]      , this[:mold]     , (b  || ":::::")    ]
-        when "control"
-          [ ""               , nil             , nil                ]
-        else
-          [ "#{this[:type]}?", nil             , nil                ]
-        end
-      else
-        [   this.class.name  , nil             ,        "cataclysm" ]
-      end
-      first_kind = false
-%>    <if with="&object_to_update">
-        <kind-editor blank-message="&blank_message"  />
-      </if>
-      <else><%= kind_to_display %></else>
-      <if test="&false">
-        Table:    <%=
-          if b = this[:mold]
-            b.table_id      ? table.full_reference : "nil"
-          else
-            'pouet'
-          end     %>
-        Colonne:  <%=
-          (b = this[:mold]) ?     b.full_reference : 'nil'
-                  %>
-      </if>
-       </th>
+    <title-cell repeat />
     <td class="add-column">
       <add-column with="&table" if="&scope.deep[:action] == 'table' && (row_count += 1) == 1" />
       <else><empty-cell /></else>
