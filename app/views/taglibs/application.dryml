@@ -45,8 +45,6 @@
       logo_words[i].each_char do |x|
         logo_word << x
       end
-  if current_user.administrator?
-  %><br/>logo_word : <%=  logo_word.inspect %><%end
       color_word   =  []
       (color_words[i] || "").each_char do |x|
         color_word << x
@@ -59,10 +57,7 @@
       %></span><%
       end
     end
-  if current_user.administrator?
-  %><br/>logo_words : <%=  logo_words.inspect %>
-  <br/>color_classes : <%=  color_classes.inspect %>
-  <br/>color_words : <%=  color_words.inspect %><%end%></span></a></h1>
+  %></span></a></h1>
   <span class="suite-kind" if="&this.is_a?(Card) && k = this.the_suite.kind">
     <%= k %>
   </span>
