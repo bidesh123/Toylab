@@ -606,7 +606,7 @@ class Card < ActiveRecord::Base
   end
 
   def core_script_row? user
-    viewable_by?(user, :script)
+    false && viewable_by?(user, :script)
   end
 
   def core_bottom_controls_row?

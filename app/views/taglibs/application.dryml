@@ -6,6 +6,32 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="self-and-aspects-row">
+  <% part = prep this, :aspects
+     that = this        %>
+  <tr class="self-and-aspects-row">
+    <td class="core"><core merge-attrs /></td>
+    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
+      <td class="aspects-table" id="#{part[:domid]}" if="&this.aspects"
+          style="display:<%=part[:display_style]%>">
+        <aspects-table />
+      </td>
+    </do>
+  </tr>
+</def>
+
+<!--def tag="self-and-aspects-row-edit">
+  < % part = prep this, :aspects % >
+  <tr class="self-and-aspects-row">
+    <td class="core"><core merge-attrs /></td>
+    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
+      <td id="#{part[:domid]}" if="&this.aspects" style="< %=  part[:display_style]% >">>
+        <aspects-table />
+      </td>
+    </do>
+  </tr>
+</def-->
+
 <def tag="stuctured-cell" attrs="item-cell">
   <%  main, subitems = [this[0][0], this[0][1] || []]
       cel = [[main, subitems]]                         %>
@@ -556,32 +582,6 @@
   </repeat>
 </def>
 
-<def tag="self-and-aspects-row">
-  <% part = prep this, :aspects
-     that = this        %>
-  <tr class="self-and-aspects-row">
-    <td class="core"><core merge-attrs /></td>
-    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
-      <td class="aspects-table" id="#{part[:domid]}" if="&this.aspects"
-          style="display:<%=part[:display_style]%>">
-        <aspects-table />
-      </td>
-    </do>
-  </tr>
-</def>
-
-<!--def tag="self-and-aspects-row-edit">
-  < % part = prep this, :aspects % >
-  <tr class="self-and-aspects-row">
-    <td class="core"><core merge-attrs /></td>
-    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
-      <td id="#{part[:domid]}" if="&this.aspects" style="< %=  part[:display_style]% >">>
-        <aspects-table />
-      </td>
-    </do>
-  </tr>
-</def-->
-
 <def tag="sub-items">
   <repeat with="&this.items">
     <% Card.numbering_increment %>
@@ -616,14 +616,13 @@
   body_style       = "body-cell #{this.theme_class}"
   body_row_dom_id  = dom_id this, :body_row
   body_cell_dom_id = dom_id this, :body_cell
-  part = prep this, :body                                                           %>
+  part = prep this, :body                                                     %>
   <tr   class="body body-row" id="#{body_row_dom_id }"
-        style="display:<%=part[:display_style]%>" >
+        style="display:<%=part[:display_style]%>">
     <td class="#{body_style}" id="#{body_cell_dom_id}">
       <if test="&this.body ">
         <editor:body                                    blank-message="A" />
-      </if>
-      <else>
+      </if><else>
         <editor:body class="whydoesntthisworktiny-gray" blank-message="A" />
       </else>
     </td>
@@ -712,8 +711,8 @@
     <core-image-row                                                   />
     <core-main-row           if="&this.core_main_row? scope.deep"     />
     <core-name-row           if="&this.core_name_row?"                />
-    <core-body-row           if="&this.core_body_row? scope.deep"     />
-    <core-script-row         if="&this.core_script_row?(current_user)" />
+    <core-body-row if="&this.core_body_row? scope.deep"     />
+    <core-script-row         if="&this.core_script_row? current_user" />
     <core-bottom-controls-tr if="&this.core_bottom_controls_row?" merge-attrs/>
   </table>
 </def>
@@ -787,7 +786,7 @@
       this.core_main_row?(scope.deep)    ,
       this.core_name_row?                ,
       this.core_body_row?(scope.deep)    ,
-      false && this.core_script_row?(current_user),
+      this.core_script_row?(current_user),
       this.core_bottom_controls_row?
     ].inject(0){|sum, n| sum + (n ? 1 : 0) }
 %>
@@ -1402,30 +1401,26 @@
 
 <def tag="recursive-card">
   <% (@no_move ||= []).push !!this.ref %>
-  <table class="card inner" if="&@no_move.include? true">
-    <self-and-aspects-row />
-    <list-row />
-  </table>
-  <else><table class="card inner drop-target">
-    <self-and-aspects-row />
-    <list-row />
+  <table               class="card inner" if="&@no_move.include? true">
+    <hierarchical-layout />
+  </table><else><table class="card inner drop-target"                 >
+    <hierarchical-layout />
   </table></else>
   <% @no_move.pop %>
 </def>
 
 <def tag="hierarchical-layout">
   <self-and-aspects-row />
-  <list-row />
+  <list-row             />
 </def>
 
 <def tag="hierarchical-card">
   <% (@no_move ||= []).push !!this.ref %>
-  <table class="card first-card" if="&@no_move.include? true">
+  <table               class="card first-card" if="&@no_move.include? true">
     <hierarchical-layout />
-  </table ><else>
-  <table class="card first-card drop-target">
+  </table><else><table class="card first-card drop-target"                 >
     <hierarchical-layout />
-  </table></else>
+  </table                     ></else>
   <% @no_move.pop %>
 </def>
 

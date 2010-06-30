@@ -19,6 +19,22 @@
   filter_parameter_logging :password
 
 
+  def   visible? that   , part = :all
+    default = case part
+    when :script
+      'off'
+    else
+      'on'
+    end
+    the_current? that.id, part, :visibility, ['on', 'custom', 'auto'] do
+      default
+    end
+  end
+
+  def invisible? that   , part = :all
+    #deprecated
+  end
+
   def prep that, part = :all
     r = {}
     r[:name         ] = part
@@ -51,22 +67,6 @@
 #  the_current  id, "script   visibility"
 #  set_the_current  'script   visibility',  'on'
 #  set_the_current  :script, :visibility ,  :on
-
-  def invisible? that   , part = :all
-    #deprecated
-  end
-
-  def   visible? that   , part = :all
-    default = case part
-    when :script, :body
-      'off'
-    else
-      'on'
-    end
-    the_current? that.id, part, :visibility, ['on', 'custom', 'auto'] do
-      default
-    end
-  end
 
   def the_current?   *p # p: keys, followed by the val
     key = session_key p[0...-1]
