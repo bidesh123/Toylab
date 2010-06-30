@@ -19,12 +19,15 @@ class Card < ActiveRecord::Base
   end
 
   def s *refs
-    result = self
-    refs.each { |ref| result = result.sub ref rescue nil }
-    bod = result.body rescue result.to_s
-    nam = result.name rescue result.to_s
-    fallback = nam || bod || "a #{kind}" || inspect
-    result = (result.list_id ? bod : nam) rescue fallback
+    r = self
+    refs.each { |ref| r = r.sub ref rescue nil }
+    if r.is_a? Card
+      nam, bod = r.name, r.body
+      fallback = nam || bod || ("a #{kind}" if kind) || inspect
+      r.list_id ? bod : nam
+    else
+      r
+    end
   end
 
   def get x
