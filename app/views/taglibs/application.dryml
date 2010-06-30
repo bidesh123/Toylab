@@ -6,6 +6,81 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="stuctured-cell" attrs="item-cell">
+  <%  main, subitems = [this[0][0], this[0][1] || []]
+      cel = [[main, subitems]]                         %>
+  <if test="&!main">
+    nbsp&nbsp; <!-- to do: create button for first level aspects -->
+  </if><else><if test="&!subitems">
+      no sub items
+  </if><else><if test="&!subitems.is_a?(Array)">
+      unknown subs
+  </if><else><if test="&subitems.length > 0" with="&cel">
+    <table>
+      <tr>
+        <td><%= item-_cell.inspect %><cell with="&main"/></td>
+      </tr>
+      <tr repeat="&subitems">
+        <td style="text-indent:1.618em;"><%= item-_cell.inspect %><cell /></td>
+      </tr>
+    </table>
+  </if><else><if test="&main.is_a? Card">
+    <cell with="&main" item-cell="&item_cell"/>
+  </if></else></else></else></else>
+</def>
+
+<def tag="user-a">
+  <a />
+</def>
+
+<def tag="cell" attrs="item-cell">
+  <if test="&!this">
+    &nbsp; <!-- to do: a create button for first level aspects -->
+  </if>
+  <else>
+    <if test="&this.is_a? Card">
+      <if test="&item_cell && this.items.count > 0 || (this.body && this.body.length > 0)">
+        <user-a />
+      </if><else><if test="&false || false && @editable_card">
+        <% domid = dom_id this, :editor_now #&& this.items.count > 0%>
+          <input:name class="editable_now" id="#{domid}" name="card[name]" />
+      </if><else>
+        <editor:name blank-message="..." />
+      </else></else>
+    </if>
+    <else><!-- this is not a Card -->
+      <stuctured-cell item-cell="&item_cell" />
+    </else>
+  </else>
+</def>
+
+<def tag="item-cell" attrs="indent">
+  <%  padding="padding-left:#{1.618*indent}em;" %>
+  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
+    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
+        cel           = [[main, []]] # no subs on items %>
+    <do with="&cel">
+      <if test="&main.name.blank?">
+        <th class="cell"         style="<%= padding %>">
+         <if test="&true"><cell item-cell /></if>
+         <else><%= main.list_position %></else>
+        </th>
+      </if><else><if test="&main.numeric?">
+        <th class="cell numeric" style="<%= padding %>">
+          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </if><else><!-- not numeric -->
+        <th class="cell"         style="<%= padding %>">
+          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </else></else>
+    </do>
+  </if>
+  <else>
+    <!-- no multiples in column 0 -->
+  </else>
+</def>
+
 <def tag="title-cell">
   <th class="title-cell">
     <%  first_kind = true
@@ -14,7 +89,7 @@
           when "NilClass"
             [  ""                , nil             ,        "Nil"       ]
           when "Hash"
-             nbsp = "\xC2\xA0"
+            nbsp = "\xC2\xA0"
             case this[:type]
             when "aspect"
               b = if first_kind; first_kind = false ; nbsp ; end
@@ -279,33 +354,6 @@
   </repeat>
 </def>
 
-<def tag="item-cell" attrs="indent">
-  <%  padding="padding-left:#{1.618*indent}em;" %>
-  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
-    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
-        cel           = [[main, []]] # no subs on items %>
-    <do with="&cel">
-      <if test="&main.name.blank?">
-        <th class="cell"         style="<%= padding %>">
-         <if test="&true"><cell /></if>
-         <else><%= main.list_position %></else>
-        </th>
-      </if><else><if test="&main.numeric?">
-        <th class="cell numeric" style="<%= padding %>">
-          <cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </if><else><!-- not numeric -->
-        <th class="cell"         style="<%= padding %>">
-          <cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </else></else>
-    </do>
-  </if>
-  <else>
-    <!-- no multiples in column 0 -->
-  </else>
-</def>
-
 <def tag="aspect-cell">
   <if   test="&false && all.mults.now && this.length == 1"> <!-- no multiples present -->
     <single-cell />
@@ -381,46 +429,6 @@
     </repeat>
     <empty-cell />
   </tr>
-</def>
-
-<def tag="cell">
-  <if test="&!this">
-    &nbsp; <!-- to do: a create button for first level aspects -->
-  </if>
-  <else>
-    <if test="&this.is_a? Card">
-      <if test="&false || false && @editable_card">
-        <% domid = dom_id this, :editor_now %>
-        <input:name class="editable_now" id="#{domid}" name="card[name]" />
-      </if><else>
-        <editor:name blank-message="..." />
-      </else>
-    </if>
-    <else><!-- this is not a Card -->
-      <%  main, subitems = [this[0][0], this[0][1] || []]
-          cel = [[main, subitems]]                         %>
-          <if test="&!main">
-            nbsp&nbsp; <!-- to do: create button for first level aspects -->
-          </if><else><if test="&!subitems">
-              no sub items
-          </if><else><if test="&!subitems.is_a?(Array)">
-              unknown subs
-          </if><else><if test="&subitems.length > 0" with="&cel">
-            <table>
-              <tr>
-                <td><cell with="&main"/></td>
-              </tr>
-              <tr repeat="&subitems">
-                <td style="text-indent:1.618em;"><cell /></td>
-              </tr>
-            </table>
-          </if><else>
-            <if test="&main.is_a? Card">
-              <cell with="&main" />
-            </if>
-          </else></else></else></else>
-    </else>
-  </else>
 </def>
 
 <def tag="page" attrs="title, full-title">
@@ -780,7 +788,7 @@
       this.core_name_row?                ,
       this.core_body_row?(scope.deep)    ,
       false && this.core_script_row?(current_user),
-      false && this.core_bottom_controls_row?
+      this.core_bottom_controls_row?
     ].inject(0){|sum, n| sum + (n ? 1 : 0) }
 %>
     <td class="core-left-controls" rowspan="<%=  n_rows + 1 %>">
@@ -1157,7 +1165,8 @@
 %>
   <tr class="title-row" repeat="&rows">
     <empty-cell if="&false && 'use with left-tool'"/>
-    <title-cell repeat />
+    <title-cell with="&this[0]" item-cell />
+    <title-cell repeat="&this[1..-1]" />
     <td class="add-column">
       <add-column with="&table" if="&scope.deep[:action] == 'table' && (row_count += 1) == 1" />
       <else><empty-cell /></else>
@@ -1404,15 +1413,18 @@
   <% @no_move.pop %>
 </def>
 
+<def tag="hierarchical-layout">
+  <self-and-aspects-row />
+  <list-row />
+</def>
+
 <def tag="hierarchical-card">
   <% (@no_move ||= []).push !!this.ref %>
   <table class="card first-card" if="&@no_move.include? true">
-    <self-and-aspects-row />
-    <list-row />
-  </table>
-  <else><table class="card first-card drop-target">
-    <self-and-aspects-row />
-    <list-row />
+    <hierarchical-layout />
+  </table ><else>
+  <table class="card first-card drop-target">
+    <hierarchical-layout />
   </table></else>
   <% @no_move.pop %>
 </def>

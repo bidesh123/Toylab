@@ -1,8 +1,12 @@
 /* td.side-nav {background-color: #fff;border-right:solid #69f .382em;} */
+div.aspects div.card-body {max-width:400px;}
+div.aspects th.aspect-kind-cell {color:red;}
+th a.card-link {color:#58f;}
 td.left-links {padding-right:.618em;}
 li.sub-index a {
    color:green;
 }
+ul.side-links li a {text-decoration:none;}
 ul.side-links a.card-link .card-name {font-size: 0.618em;}
 table.page td.main-content {padding-left: .618em;}
 table.page td.main-content h1 {padding-bottom:.618em;}
@@ -21,12 +25,18 @@ td.cell, div.cells th{
     padding-left:.618em;
 }
 
-th.title-cell{
-    padding-left:.618em;
+th.title-cell, th.item-title-cell{
     color:white;
     background:#999;
     font-weight:700;
+}
+th.title-cell{
+    padding-left:.618em;
     font-size:1em;
+}
+th.item-title-cell{
+    padding-left:0;
+    font-size:1.618em;
 }
 th.title-cell, td.cell, div.cells th {padding-right:.618em;}
 .numeric {text-align: right;}
@@ -71,7 +81,7 @@ td.grey-empty-cell {font-size:1px;}
 
 ul.navigation {font-size:13px;}
 h1.app-name a, h1.suite-name a, .logo {text-decoration:none;}
-ul a {color: #36f;}
+ul a {color: #47f;}
 div.top-line {border-bottom:10px red;}
 td.core-image img {margin-top: .618em;}
 div.section.with-flash { border-top: 1px solid #eee;}
