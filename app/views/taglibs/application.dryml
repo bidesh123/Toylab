@@ -608,9 +608,9 @@
         style="display:<%=part[:display_style]%>">
     <td class="#{body_style}" id="#{body_cell_dom_id}">
       <if test="&this.body ">
-        <editor:body                                    blank-message="A" />
+        <editor:body                   blank-message="A" />
       </if><else>
-        <editor:body class="whydoesntthisworktiny-gray" blank-message="A" />
+        <editor:body class="tiny-gray" blank-message="A" />
       </else>
     </td>
     <empty-cell if="&!scope.deep[:no_aspects]" />
