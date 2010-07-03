@@ -6,11 +6,80 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="side-link">
+  <if test="&this.linkable">
+    <a class="side-link left-link" action="report"/>
+  </if><else>
+  <view:name if="&this.name && name.length > 0"/>
+  </else>
+</def>
+
+<def tag="side-links">
+  <ul class ="side-links">
+    <li repeat="&this.the_suite.items">
+      <side-link/>
+      <ul class ="side-nav" if="&false && 'conditions for a second tier'">
+        <li class="sub-index" repeat="&this.items">
+          <side-link />
+        </li>
+      </ul>
+    </li>
+  </ul>
+</def>
+
+<def tag="cell" attrs="item-cell">
+  <if test="&!this">
+    &nbsp; <!-- to do: a create button for first level aspects -->
+  </if>
+  <else>
+    <if test="&this.is_a? Card">
+      <if test="&item_cell && this.linkable">
+        <user-a />
+      </if><else><if test="&false || false && @editable_card">
+        <% domid = dom_id this, :editor_now #&& this.items.count > 0%>
+          <input:name class="editable_now" id="#{domid}" name="card[name]" />
+      </if><else>
+        <editor:name blank-message="..." />
+      </else></else>
+    </if>
+    <else><!-- this is not a Card -->
+      <stuctured-cell item-cell="&item_cell" />
+    </else>
+  </else>
+</def>
+
+<def tag="item-cell" attrs="indent">
+  <%  padding="padding-left:#{1.618*indent}em;" %>
+  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
+    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
+        cel           = [[main, []]] # no subs on items %>
+    <do with="&cel">
+      <if test="&main.name.blank?">
+        <th class="cell"         style="<%= padding %>">
+         <if test="&true"><cell item-cell /></if>
+         <else><%= main.list_position %></else>
+        </th>
+      </if><else><if test="&main.numeric?">
+        <th class="cell numeric" style="<%= padding %>">
+          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </if><else><!-- not numeric -->
+        <th class="cell"         style="<%= padding %>">
+          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </else></else>
+    </do>
+  </if>
+  <else>
+    <!-- no multiples in column 0 -->
+  </else>
+</def>
+
 <def tag="suite-name">
-  <h1 param="suite-name"><a with="&this.the_suite"><span class="logo"><%
+  <h1 param="suite-name"><a with="&(this.the_suite rescue nil)"><span class="logo"><%
     logo_words  = (this.is_a?(Card) ? this.suite_reference : 'toy office').words
     logo        = logo_words.join ' '
-    logo_colors = this.the_suite.s 'Controls','Logo','colors'
+    logo_colors = this.the_suite.s 'Controls','Logo','colors' rescue nil
     tit = logo_colors.class
       unless logo_colors # no declared colors
       logo_colors = ""
@@ -117,54 +186,6 @@
   <a />
 </def>
 
-<def tag="cell" attrs="item-cell">
-  <if test="&!this">
-    &nbsp; <!-- to do: a create button for first level aspects -->
-  </if>
-  <else>
-    <if test="&this.is_a? Card">
-      <if test="&item_cell && this.items.count > 0 || (this.body && this.body.length > 0)">
-        <user-a />
-      </if><else><if test="&false || false && @editable_card">
-        <% domid = dom_id this, :editor_now #&& this.items.count > 0%>
-          <input:name class="editable_now" id="#{domid}" name="card[name]" />
-      </if><else>
-        <editor:name blank-message="..." />
-      </else></else>
-    </if>
-    <else><!-- this is not a Card -->
-      <stuctured-cell item-cell="&item_cell" />
-    </else>
-  </else>
-</def>
-
-<def tag="item-cell" attrs="indent">
-  <%  padding="padding-left:#{1.618*indent}em;" %>
-  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
-    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
-        cel           = [[main, []]] # no subs on items %>
-    <do with="&cel">
-      <if test="&main.name.blank?">
-        <th class="cell"         style="<%= padding %>">
-         <if test="&true"><cell item-cell /></if>
-         <else><%= main.list_position %></else>
-        </th>
-      </if><else><if test="&main.numeric?">
-        <th class="cell numeric" style="<%= padding %>">
-          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </if><else><!-- not numeric -->
-        <th class="cell"         style="<%= padding %>">
-          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
-        </th>
-      </else></else>
-    </do>
-  </if>
-  <else>
-    <!-- no multiples in column 0 -->
-  </else>
-</def>
-
 <def tag="title-cell">
   <th class="title-cell">
     <%  first_kind = true
@@ -207,19 +228,6 @@
     </if>
   </th>
 </def >
-
-<def tag="side-links">
-  <ul class ="side-links">
-    <li repeat="&this.the_suite.items">
-      <a class="side-link left-link"/>
-      <ul class ="side-nav" if="&false && this.name == Forfaits">
-        <li class="sub-index" repeat="&this.items">
-          <a side-link left-link/>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</def>
 
 <def tag="context">
   <% can_use_contexts = this.the_suite.access != 'public'  || can_edit?(:name) %>

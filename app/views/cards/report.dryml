@@ -115,6 +115,7 @@
       <content-body:  >
         <rails-authenticity-token/>
         <%         whole_off = this.the_suite.id == this.id %>
+        
         <table>
           <tr>
             <td class="left-links">

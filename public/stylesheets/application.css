@@ -6,7 +6,7 @@ td.left-links {padding-right:.618em;}
 li.sub-index a {
    color:green;
 }
-ul.side-links li a {text-decoration:none;}
+ul.side-links li a {text-decoration:none; font-weight: 700;}
 ul.side-links a.card-link .card-name {font-size: 0.618em;}
 table.page td.main-content {padding-left: .618em;}
 table.page td.main-content h1 {padding-bottom:.618em;}
@@ -81,7 +81,7 @@ td.grey-empty-cell {font-size:1px;}
 
 ul.navigation {font-size:13px;}
 h1.app-name a, h1.suite-name a, .logo {text-decoration:none;}
-ul a {color: #47f;}
+ul a {color: #69f;}
 div.top-line {border-bottom:10px red;}
 td.core-image img {margin-top: .618em;}
 div.section.with-flash { border-top: 1px solid #eee;}

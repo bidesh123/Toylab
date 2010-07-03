@@ -3,6 +3,10 @@ class Card < ActiveRecord::Base
   
   @@it = Hash.new {|h,k| h[k] = nil }
 
+  def linkable
+    items.count > 0 || (body && body.length > 0)
+  end
+
   def self.it
     @@it[Thread.current.object_id]
   end
