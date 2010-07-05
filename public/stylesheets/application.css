@@ -1,6 +1,16 @@
+div.aspects th.aspect-kind-cell{
+    padding-right:0.618em;
+    padding-left:0.382em;
+}
+
+th.title-cell, th.item-title-cell, div.aspects th.aspect-kind-cell{
+    color:white;
+    background:#999;
+    font-weight:700;
+}
+
 /* td.side-nav {background-color: #fff;border-right:solid #69f .382em;} */
 div.aspects div.card-body {max-width:400px;}
-div.aspects th.aspect-kind-cell {color:red;}
 th a.card-link {color:#58f;}
 td.left-links {padding-right:.618em;}
 li.sub-index a {
@@ -25,11 +35,6 @@ td.cell, div.cells th{
     padding-left:.618em;
 }
 
-th.title-cell, th.item-title-cell{
-    color:white;
-    background:#999;
-    font-weight:700;
-}
 th.title-cell{
     padding-left:.618em;
     font-size:1em;

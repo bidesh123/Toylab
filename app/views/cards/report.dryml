@@ -3,6 +3,12 @@
 
 <!-- 1===================== tag definitions ================================ -->
 
+<def tag="aspects">
+  <table>
+    <aspects-rows merge-attrs />
+  </table>
+</def>
+
 <def tag="aspects-kinds-cells">
   <% @depth+=1
      aspects = this.or_ref.aspects %>
@@ -114,8 +120,7 @@
 
       <content-body:  >
         <rails-authenticity-token/>
-        <%         whole_off = this.the_suite.id == this.id %>
-        
+        <% whole_off = this.the_suite.id == this.id %>
         <table>
           <tr>
             <td class="left-links">
@@ -123,9 +128,9 @@
             </td>
             <td>
               <if test="&whole_off ==  true">
-                <card    whole-off="&true" />
+                <card    whole-off />
               </if><else>
-                <card                           />
+                <card              />
               </else>
             </td>
             <td>
@@ -142,14 +147,20 @@
 <def tag="aspect-kind-cell">
   <% css_class  = "aspect-kind-cell"
      css_class += " inner" if !attributes[:first] %>
-  <th class="<%= css_class %>">
-    <if test="&this.id == (the_mold = this.recursive_kind_mold).id">
-      <kind-editor blank-message="::"/>
-    </if>
-    <else>
-      <a kind with="&the_mold"><view field="kind" /></a>
-    </else>
-  </th>
+  <if test="&can_edit?(:name)">
+    <th class="<%= css_class %>">
+     <set real-mccoy="this.id == (the_mold = this.recursive_kind_mold).id" />
+     <if test="&real-mccoy">
+       <kind-editor blank-message="::" />
+     </if><else>
+       <a kind with="&the_mold"><view field="kind" /></a>
+     </else>
+    </th>
+  </if><else><if test="&k = this.recursive_kind">
+    <th class="<%= css_class %>" if="&k = this.recursive_kind">
+      <%=  this.recursive_kind || "&nbsp;" %>
+    </th><else><empty-cell /></else>      
+  </if></else>
 </def>
 
 <def tag="aspect-name-cell">
@@ -197,12 +208,6 @@
   <aspects-names-row   merge-attrs />
   <aspects-bodies-row  merge-attrs />
   <bottoms-borders-row merge-attrs />
-</def>
-
-<def tag="aspects">
-  <table>
-    <aspects-rows merge-attrs />
-  </table>
 </def>
 
 <def tag="card" for="Card"><!-- why non recursive ? -->

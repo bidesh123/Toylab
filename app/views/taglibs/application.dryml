@@ -6,6 +6,26 @@
 <!--require src="template_streaming" plugin="template_streaming"/-->
 <!-- <set-theme name="clean"/> -->
 
+<def tag="report-card">
+  <div param="aspects">
+    <aspects merge-attrs />
+  </div>
+  <div param="cells">
+    <cells merge-attrs />
+  </div>
+  <div param="controls">
+   <add-inner-items if="&true" />
+   <trash redir="true"/>
+  </div>
+  <div param="debug-toy" if="&false">
+    <%= scope.deep[:debug_log] %>
+  </div>
+  <div param="development" if="&false">
+    <div></div>
+    <development-stuff param="development"/>
+  </div>
+</def>
+
 <def tag="side-link">
   <if test="&this.linkable">
     <a class="side-link left-link" action="report"/>
@@ -1355,26 +1375,6 @@
       <corner-controls merge-attrs/>
     </td>
   </tr>
-</def>
-
-<def tag="report-card">
-  <div param="aspects">
-    <aspects merge-attrs />
-  </div>
-  <div param="cells">
-    <cells merge-attrs />
-  </div>
-  <div param="controls">
-   <add-inner-items if="&true" />
-   <trash redir="true"/>
-  </div>
-  <div param="debug-toy" if="&false">
-    <%= scope.deep[:debug_log] %>
-  </div>
-  <div param="development" if="&false">
-    <div></div>
-    <development-stuff param="development"/>
-  </div>
 </def>
 
 <def tag="slide-card">
