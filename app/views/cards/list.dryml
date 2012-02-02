@@ -1,0 +1,37 @@
+<toy-list />
+
+<def tag="toy-list">
+  <%  Card.numbering_reset %>
+  <set-scoped deep="&@card.edit_deep" >
+    <% scope.deep[:no_aspects] = true %>
+    <% scope.deep[:no_bodies ] = true %>
+    <% scope.deep[:action    ] = params[:action] %>
+    <show-page>
+      <content-header:>
+        <views   />
+        <context />
+      </content-header:>
+      <content-body:>
+        <rails-authenticity-token />
+        <card first />
+      </content-body:  >
+      <aside:></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
+<def tag="aspects-table">
+</def>
+
+<def tag="aspect-cell">
+  <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
+  <td class="#{klass}">
+    <recursive-card aspect />
+  </td>
+</def>
+
+<def tag="list-view">
+  <li class="not-enabled view-link advanced"><%= link_to("list"  , url_for(:action => "list", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

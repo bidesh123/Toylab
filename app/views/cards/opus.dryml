@@ -1,0 +1,43 @@
+<toy-opus />
+
+<def tag="toy-opus">
+  <%  Card.numbering_reset %>
+  <set-scoped deep="&@card.edit_deep" >
+    <% scope.deep[:no_aspects] = true %>
+    <show-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:>
+        <rails-authenticity-token />
+        <card first />
+      </content-body:  >
+      <aside:></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
+<def tag="aspects-table">
+  <table class="aspects-table" if="&this.aspects">
+    <tr class="aspects-row">
+      <repeat with="&this.aspects" if="&this.aspects">
+        <aspect-cell />
+      </repeat>
+      <spacer-cell />
+    </tr>
+  </table>
+</def>
+
+<def tag="aspect-cell">
+  <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
+  <td class="#{klass}">
+    <recursive-card aspect />
+  </td>
+</def>
+
+<def tag="opus-view">
+  <li class="not-enabled view-link advanced"><%= link_to("opus"  , url_for(:action => "opus", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

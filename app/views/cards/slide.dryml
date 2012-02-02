@@ -1,0 +1,32 @@
+
+
+<toy-slide />
+
+<def tag="toy-slide">
+  <set-scoped deep="&@card.edit_deep" >
+    <edit-page>
+      <content-header: >
+        <context />
+        <views />
+      </content-header:>
+      <content-body:   >
+        <div class="slide">
+          <rails-authenticity-token />
+          <card />
+          <trash />
+        </div>
+      </content-body:  >
+      <aside:></aside:>
+    </edit-page>
+  </set-scoped>
+</def>
+
+<def tag="card" for="Card">
+  <slide-card />
+</def>
+
+<def tag="slide-view">
+  <li class="not-enabled view-link"><%= link_to("slide"  , url_for(:action => "slide", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

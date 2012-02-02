@@ -1,0 +1,77 @@
+<!--def tag="table-plus" attrs="sort-field, sort-direction, sort-columns" >
+  < % sort_field ||= @sort_field; sort_direction ||= @sort_direction; sort_columns ||= {} %>
+  < % sort_columns['this'] ||= this.member_class.name_attribute %>
+  <div class="table-plus" merge-attrs="&attributes - attrs_for(:with_fields) - attrs_for(:table)">
+    <div class="header" param="header">
+      <div class="search">
+        <form param="search-form" method="get" action="">
+          <hidden-fields for-query-string skip="page, search"/>
+          <span>Search</span>
+          <input class="search" type="search" name="search" value="&params[:search]"/>
+          <submit label="Go" class="search-button" param="search-submit"/>
+        </form>
+      </div>
+    </div>
+
+    <table merge-attrs="&attributes & (attrs_for(:table) + attrs_for(:with_fields))" empty merge-params>
+      <field-heading-row:>
+        <with-field-names merge-attrs="&all_attributes & attrs_for(:with_fields)">
+          < % col = sort_columns[scope.field_path] || scope.field_path
+             sort = sort_field == col && sort_direction == 'asc' ?
+                      "-#{col}" : col
+             sort_url = url_for(params.merge(:sort => sort) - [:page]) %>
+
+          <th param="#{scope.field-name}-heading">
+            <a href="&sort_url" class="column-sort"
+               param="#{scope.field-name}-heading-link">< %= scope.field_name.titleize %></a>
+            <if test="&col == sort_field">
+              <do param="up-arrow" if="&sort_direction == 'desc'">&uarr;</do>
+              <do param="down-arrow" if="&sort_direction == 'asc'">&darr;</do>
+            </if>
+          </th>
+        </with-field-names>
+        <th if="&all_parameters[:controls]" class="controls"></th>
+      </field-heading-row>
+    </table>
+    <do param="empty-message" if="empty?">No <collection-name lowercase/> to display</do>
+
+
+    <page-nav param if="&this.respond_to? :page_count"/>
+  </div>
+</def-->
+
+<index-page>
+  <content-header:></content-header>
+  <new_link:></new_link:>
+  <content-body:>
+<% fs = [
+         :id             , :owner,
+         :owner_id       ,
+         :name           , :kind           ,
+         :attachment_file_name             ,
+         :attachment_content_type          ,
+         :attachment_file_size             ,
+         :attachment_updated_at            ,
+         :ref            , :mold           , :suite          ,
+         :ref_id         , :mold_id        , :suite_id       ,
+                                             :parts          ,
+
+         :list_id        , :whole_id       , :table_id       ,
+         :list_position  , :whole_position , :table_position ,
+         :list           , :whole          , :table          ,
+         :items          , :aspects        , :columns        ,
+
+         :body           , :access         , :theme          ,
+         :script         , :view           , :pad            ,
+         :created_at     , :updated_at
+       ].map{|x| x.to_s}.join ","  %>
+    <span class="manage">
+      <page-nav class="top-page-nav"/>
+      <live-search if="&defined_route? :site_search" />
+       <table-plus fields="&fs" field-tag="view" >
+        <header:></header:>
+      </table-plus>
+      <page-nav class="bottom-page-nav"/>
+    </span>
+  </content-body:>
+</index-page>

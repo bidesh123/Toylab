@@ -1,0 +1,14 @@
+development:
+  bucket_name: toy-office-development
+  access_key_id: AKIAICD625PTDCOSN5HA
+  secret_access_key: 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
+
+test:
+  bucket_name: toy-office-development
+  access_key_id: AKIAICD625PTDCOSN5HA
+  secret_access_key: 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
+
+production:
+  bucket_name: toy-office-development
+  access_key_id: AKIAICD625PTDCOSN5HA
+  secret_access_key: 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

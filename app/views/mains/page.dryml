@@ -1,0 +1,15 @@
+<page>
+  <top-line:></top-line:>
+  <content:>
+    <main-menu />
+  </content:>
+</page>
+
+<def tag="main-menu">
+  <ul class="lavaLamp">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Plant a tree</a></li>
+    <li><a href="#">Travel</a></li>
+    <li><a href="#">Ride an elephant</a></li>
+  </ul>
+</def>

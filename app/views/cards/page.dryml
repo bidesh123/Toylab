@@ -1,0 +1,41 @@
+<toy-page />
+
+<def tag="toy-page">
+  <show-page class="page-view">
+    <content-header:>
+      <views />
+      <context />
+    </content-header:>
+    <content-body:   >
+      <rails-authenticity-token         />
+      <table class="page">
+        <tr>
+          <td class ="side-nav">
+            <side-links />
+          </td>
+          <td class="main-content">
+            <h1 if="&this.suite"><editor:name /></h1>
+            <p ><editor:body blank-message="A" /></p>
+            <div param="controls">
+              <editor:access if="&can_edit? :access" />
+              <trash redir="true" />
+            </div>
+          </td>
+        </tr>
+      </table>
+    </content-body:>
+    <aside:></aside:>
+  </show-page>
+</def>
+
+<def tag="recursive-card">
+</def>
+
+<def tag="self-and-aspects-row">
+</def>
+
+<def tag="page-view">
+  <li class="not-enabled view-link"><%= link_to("text"  , url_for(:action => "page", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>

@@ -1,0 +1,49 @@
+<index-page>
+  <content-header:></content-header>
+  <new_link:></new_link:>
+  <content-body:>
+    <create-suite-button label="Create your own office suite" />
+    <page-nav class="top-page-nav"/>
+    <collection />
+    <page-nav class="bottom-page-nav"/>
+  </content-body:>
+</index-page>
+
+<def tag="index-page">
+  <page merge title="Suites">
+    <body: class="index-page card" param/>
+    <content: param>
+      <header param="content-header">
+        <h2 param="heading">Cards</h2>
+        <p param="count" if>There <count prefix="are"/></p>
+      </header>
+      <section param="content-body">
+        <a action="new" to="&model" param="new-link"/>
+        <page-nav param="top-page-nav"/>
+        <collection param/>
+        <page-nav param="bottom-page-nav"/>
+      </section>
+    </content:>
+  </page>
+</def>
+
+<def tag="card" for="Card">
+  <card class="card" param="default" merge>
+    <header: param>
+     <h4 param="heading">
+        <%  tooltip = "A "
+            "#{this.recursive_access} " +
+            "#{this.reported_view} by " +
+            "#{(this.owner || Guest).name}" %>
+        <a title="&tooltip">
+          <if test="&rf = this.reference_name"><%= rf %></if>
+          <else><%= image_tag "toy_magnifier.png"       %></else>
+        </a>
+        <span class="author tiny-gray">
+        </span>
+      </h4>
+    </header:>
+    <body: param ></body:><!-- Just the header, ma'am. -->
+  </card>
+</def>
+

@@ -1,0 +1,25 @@
+<h-test>
+  <content-header:></content-header>
+  <new_link:></new_link:>
+  <content-body:>
+    <create-suite-button label="Create your own office suite" />
+    <page-nav class="top-page-nav"/>
+    <collection />
+    <page-nav class="bottom-page-nav"/>
+  </content-body:>
+</index-page>
+
+<def tag="h-test">
+  <page merge title="htest">
+    <body: class="h-test" param/>
+    <content: param>
+      <header param="content-header">
+        <h2 param="heading">hpricot test</h2>
+      </header>
+      <section param="content-body">
+        <% logger.debug h.to_yaml%>
+        h is a <%= h.class.name %>!
+      </section>
+    </content:>
+  </page>
+</def>

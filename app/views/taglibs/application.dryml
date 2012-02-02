@@ -1,0 +1,1498 @@
+<include src="rapid" plugin="hobo"/>
+<include src="taglibs/auto/rapid/cards"/>
+<include src="taglibs/auto/rapid/pages"/>
+<include src="taglibs/auto/rapid/forms"/>
+<include src="paperclip" plugin="paperclip_with_hobo"/>
+<!--require src="template_streaming" plugin="template_streaming"/-->
+<!-- <set-theme name="clean"/> -->
+
+<def tag="report-card">
+  <div param="aspects">
+    <aspects merge-attrs />
+  </div>
+  <div param="cells">
+    <cells merge-attrs />
+  </div>
+  <div param="controls">
+   <add-inner-items if="&true" />
+   <trash redir="true"/>
+  </div>
+  <div param="debug-toy" if="&false">
+    <%= scope.deep[:debug_log] %>
+  </div>
+  <div param="development" if="&false">
+    <div></div>
+    <development-stuff param="development"/>
+  </div>
+</def>
+
+<def tag="side-link">
+  <if test="&this.linkable">
+    <a class="side-link left-link" action="report"/>
+  </if><else>
+  <view:name if="&this.name && name.length > 0"/>
+  </else>
+</def>
+
+<def tag="side-links">
+  <ul class ="side-links">
+    <li repeat="&this.the_suite.items">
+      <side-link/>
+      <ul class ="side-nav" if="&false && 'conditions for a second tier'">
+        <li class="sub-index" repeat="&this.items">
+          <side-link />
+        </li>
+      </ul>
+    </li>
+  </ul>
+</def>
+
+<def tag="cell" attrs="item-cell">
+  <if test="&!this">
+    &nbsp; <!-- to do: a create button for first level aspects -->
+  </if>
+  <else>
+    <if test="&this.is_a? Card">
+      <if test="&item_cell && this.linkable">
+        <user-a />
+      </if><else><if test="&false || false && @editable_card">
+        <% domid = dom_id this, :editor_now #&& this.items.count > 0%>
+          <input:name class="editable_now" id="#{domid}" name="card[name]" />
+      </if><else>
+        <editor:name blank-message="..." />
+      </else></else>
+    </if>
+    <else><!-- this is not a Card -->
+      <stuctured-cell item-cell="&item_cell" />
+    </else>
+  </else>
+</def>
+
+<def tag="item-cell" attrs="indent">
+  <%  padding="padding-left:#{1.618*indent}em;" %>
+  <if test="&this.length == 1" with="&this[0]">   <!-- no multiples present -->
+    <%  main, subitems = [this[0][0] || this[0], this[0][1] || []]
+        cel           = [[main, []]] # no subs on items %>
+    <do with="&cel">
+      <if test="&main.name.blank?">
+        <th class="cell"         style="<%= padding %>">
+         <if test="&true"><cell item-cell /></if>
+         <else><%= main.list_position %></else>
+        </th>
+      </if><else><if test="&main.numeric?">
+        <th class="cell numeric" style="<%= padding %>">
+          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </if><else><!-- not numeric -->
+        <th class="cell"         style="<%= padding %>">
+          <cell item-cell /> <!-- no subs in col 0, built-in instead -->
+        </th>
+      </else></else>
+    </do>
+  </if>
+  <else>
+    <!-- no multiples in column 0 -->
+  </else>
+</def>
+
+<def tag="suite-name">
+  <h1 param="suite-name"><a with="&(this.the_suite rescue nil)"><span class="logo"><%
+    logo_words  = (this.is_a?(Card) ? this.suite_reference : 'toy office').words
+    logo        = logo_words.join ' '
+    logo_colors = this.the_suite.s 'Controls','Logo','colors' rescue nil
+    tit = logo_colors.class
+      unless logo_colors # no declared colors
+      logo_colors = ""
+      colors = "roygbp".split ''
+      colored = logo_words[0]
+      i, n, m = -1, colors.length, colored.length
+      colors.rotate!(colored.hash % m)
+      logo_words[0].each_char do |c|
+        logo_colors += colors[(i +=1)*n/m]
+      end
+      if logo_words.length > 1
+        logo_colors += ' '
+        logo_words[1..-1].each do |w|
+          logo_colors += ' '
+          w.each_char do |c|
+            logo_colors += 'n'
+          end
+        end
+      end
+    end
+    color_classes = {
+      'r' => 'o',
+      'o' => 'ff',
+      'y' => 'fi',
+      'g' => 'i',
+      'b' => 'c',
+      'p' => 'e',
+      'n' => 'colorless'
+    }
+    color_words = logo_colors.words
+    logo_words.each_index do |i|
+      logo_word   =  []
+      logo_words[i].each_char do |x|
+        logo_word << x
+      end
+      color_word   =  []
+      (color_words[i] || "").each_char do |x|
+        color_word << x
+      end
+      logo_word.each_index do |j|
+        c = color_word[j] || color_word[-1] || 'n'
+        color_class = color_classes[c.downcase] || 'unknown color #{c}'
+        %><span class="<%= color_class %>"
+         ><%= logo_word[j]
+      %></span><%
+      end
+    end
+  %></span></a></h1>
+  <span class="suite-kind" if="&this.is_a?(Card) && k = this.the_suite.kind">
+    <%= k %>
+  </span>
+</def>
+
+<def tag="self-and-aspects-row">
+  <% part = prep this, :aspects
+     that = this        %>
+  <tr class="self-and-aspects-row">
+    <td class="core"><core merge-attrs /></td>
+    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
+      <td class="aspects-table" id="#{part[:domid]}" if="&this.aspects"
+          style="display:<%=part[:display_style]%>">
+        <aspects-table />
+      </td>
+    </do>
+  </tr>
+</def>
+
+<!--def tag="self-and-aspects-row-edit">
+  < % part = prep this, :aspects % >
+  <tr class="self-and-aspects-row">
+    <td class="core"><core merge-attrs /></td>
+    <do if="&!scope.deep[:no_aspects]" with="&this.recursive_ref || this">
+      <td id="#{part[:domid]}" if="&this.aspects" style="< %=  part[:display_style]% >">>
+        <aspects-table />
+      </td>
+    </do>
+  </tr>
+</def-->
+
+<def tag="stuctured-cell" attrs="item-cell">
+  <%  main, subitems = [this[0][0], this[0][1] || []]
+      cel = [[main, subitems]]                         %>
+  <if test="&!main">
+    nbsp&nbsp; <!-- to do: create button for first level aspects -->
+  </if><else><if test="&!subitems">
+      no sub items
+  </if><else><if test="&!subitems.is_a?(Array)">
+      unknown subs
+  </if><else><if test="&subitems.length > 0" with="&cel">
+    <table>
+      <tr>
+        <td><%= item-_cell.inspect %><cell with="&main"/></td>
+      </tr>
+      <tr repeat="&subitems">
+        <td style="text-indent:1.618em;"><%= item-_cell.inspect %><cell /></td>
+      </tr>
+    </table>
+  </if><else><if test="&main.is_a? Card">
+    <cell with="&main" item-cell="&item_cell"/>
+  </if></else></else></else></else>
+</def>
+
+<def tag="user-a">
+  <a />
+</def>
+
+<def tag="title-cell">
+  <th class="title-cell">
+    <%  first_kind = true
+        kind_to_display        , object_to_update, blank_message =
+          case this.class.name
+          when "NilClass"
+            [  ""                , nil             ,        "Nil"       ]
+          when "Hash"
+            nbsp = "\xC2\xA0"
+            case this[:type]
+            when "aspect"
+              b = if first_kind; first_kind = false ; nbsp ; end
+              [ this[:kind]      , this[:mold]     ,        "::"         ]
+            when "column"
+              b = if first_kind; first_kind = false ; nbsp ; end
+              [ this[:kind]      , this[:mold]     , (b  || ":::::")    ]
+            when "control"
+              [ ""               , nil             , nil                ]
+            else
+              [ "#{this[:type]}?", nil             , nil                ]
+            end
+          else
+            [   this.class.name  , nil             ,        "cataclysm" ]
+          end
+        first_kind = false %>
+    <if with="&object_to_update">
+      <kind-editor blank-message="&blank_message"  />
+    </if>
+    <else><%= kind_to_display %></else>
+    <if test="&false">
+      Table:    <%=
+        if b = this[:mold]
+          b.table_id      ? table.full_reference : "nil"
+        else
+          'pouet'
+        end     %>
+      Colonne:  <%=
+        (b = this[:mold]) ?     b.full_reference : 'nil'
+                %>
+    </if>
+  </th>
+</def >
+
+<def tag="context">
+  <% can_use_contexts = this.the_suite.access != 'public'  || can_edit?(:name) %>
+  <div if="&this.context                     &&
+            this.suite                       &&
+            this.context_id != this.suite_id &&
+            can_use_contexts"
+       class="context" >
+    <ul>Context <out whole-off /></ul>
+  </div>
+</def>
+
+<def tag="views">
+  <% can_use_views = this.the_suite.access != 'public'  || can_edit?(:name) %>
+  <div class="views" if="&can_use_views && params[:more] != 'bare'"    >
+    <ul class="navigation view-nav">View as
+      <page-view   />
+      <!-- list-view   /-->
+      <!-- opus-view   /-->
+      <tree-view   />
+      <report-view />
+      <!-- table-view  /-->
+      <!-- slide-view  /-->
+    </ul>
+  </div>
+</def>
+
+<def tag="add-pad-rows">                                                      <%
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  last_item = this.list.items.count == this.list_position
+  no_kind = ['', 'item'].include? this.kind
+  collection_id = this.list.id
+  position = this.send "#{collection}_position"
+%>
+  <repeat with="&this.pertinent_pads"
+          if="&(that = this) && (list_id = this.list)">                       <%
+    k = (is_a_row = this.class.name == 'Card') ? this.recursive_kind : this
+    tooltip, label = [
+      "Add a #{k} row below this one",
+      "Add #{  k} row"]
+    el = "#{k} #{element}"
+    condition = this && is_a_row || this.length > 0
+    p = is_a_row ? this : "cf::#{this.id}"                                    %>
+    <add-item-or-row-form with="&that" if="&condition"
+      element="&el"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="&collection_id"
+      pad="&p"
+      position="&position"
+    />
+  </repeat>
+</def>
+
+<def tag="add-inner-items">
+  <if test="&this">
+    <if test="&this.items.count > 0">
+  <%  element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      label, tooltip =
+        ["Add #{element}",
+         "Add a #{element} to #{collection} #{this.reference_name}"]
+   %>
+      <add-inner-item-from-pad/>
+    </if>
+  </if>
+  <else>nothing to add an item to</else>
+</def>
+
+<def tag="add-rows">
+  <if test="&this && (list = this.list)">
+<%  element, collection =
+    inner = this.id == @card.id ?  "" : "inner "
+    article = element == 'item' || inner > '' ? 'an' : 'a'
+    the_items = list.items
+    count = the_items.count     %>
+    <if test="&count > 0 && this.list_id != @card.list_id">
+      <add-row      with="&the_items[0]" />
+      <add-pad-rows with="&the_items[0]" />
+    </if>
+  </if>
+</def>
+
+<def tag="add-inner-item">
+  <if test="&this">
+    <if test="&this.items.count > 0">
+  <%  element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      label, tooltip =
+        ["Add #{element}",
+         "Add a #{element} to #{collection} #{this.reference_name}"]
+   %>
+      <add-item-or-row-form
+          element="&element"
+          label="&label"
+          tooltip="&tooltip"
+          collection-id="#{this.id}"
+      />
+    </if>
+  </if>
+  <else>nothing to add an item to</else>
+</def>
+
+<def tag="add-inner-item-from-pad">
+  <%  element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list"]
+      existing = this.items.count > 0
+  %>
+  <if test="&existing" with="&this.items[0]">
+    <% k = (is_a_row = this.class.name == 'Card') ? this.recursive_kind : this%>
+    <repeat with="&this.pertinent_pads"
+          if="&(that = this) && existing">                      <%
+    tooltip, label = [
+      "Add #{k.indefinite} #{element}",
+      "Add #{  k}"           ]                                               %>
+    <add-item-or-row-form with="&that" unless="&this.blank?"
+      element="&element"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="#{this.list.id}"
+      pad="&this"
+    />
+  </repeat>
+  </if>
+</def>
+
+<def tag="content-rows">
+  <% scope.deep[:indents] << []
+     indents = scope.deep[:indents].reverse
+     indent  = indents.pop
+     rows    = scope.deep[:columns][:cells].normalize_and_transpose
+  %>
+  <repeat with="&rows">
+    <%  indent = indents.pop - 1 %>
+    <if test="&!row = this">
+      <tr><td>empty row</td></tr>
+    </if><else><if test="&!item = row[0]">
+       <!--tr><td>empty multiple item row</td></tr-->
+      </if><else><if test="&!item_multiple = item[0]">
+        <!--tr><td>empty single item row</td></tr-->
+      </if><else>
+     <content-row indent="&indent"/>
+    </else></else></else>
+  </repeat>
+</def>
+
+<def tag="aspect-cell">
+  <if   test="&false && all.mults.now && this.length == 1"> <!-- no multiples present -->
+    <single-cell />
+  </if>
+  <else>
+    <multiple-cell />
+  </else>
+</def>
+
+<def tag="multiple-cell">
+  <if test ="&!this">
+    <empty-cell />
+  </if>
+  <else>
+    <td class="multiple-cell">
+      <table class="multiple-cell" if>
+        <tr class="sub-cell" repeat="&this || []">
+          <single-cell />
+        </tr>
+      </table>
+    </td>
+  </else>
+</def>
+
+<def tag="single-cell">
+<%  main = this[0][0] || this[0]
+      subitems = main ? (this[0][1] || this[1] || []) : []
+      cel = [[main, subitems]] %>
+  <if test="&!main || main.name.blank?">
+    <td class="cell sub-cell">
+      <cell class="sub-cell" with="&cel" />
+    </td>
+  </if><else><if test="&main.numeric?">
+   <td class="numeric cell sub-cell">
+      <cell class="numeric sub-cell" with="&cel"/>
+    </td>
+  </if><else><!-- not numeric-->
+    <td     class="cell sub-cell">
+      <cell class="sub-cell" with="&cel"/>
+    </td>
+  </else></else>
+</def>
+
+<def tag="content-row" attrs="indent">
+  <%  row           = this
+      item_multiple = row[0] %>
+  <if test="&item_main = item_multiple[0][0] || item_multiple[0]"></if>
+  <tr class="content-row">
+    <%  column_counter = 0 %>
+    <left-tool-cell with="&item_main" if="&false"/>
+    <repeat> <!-- cells -->
+      <!-- this is a group of multiple cells in one display cell -->
+      <set main="&nil" />
+      <if test="&!multiple = this">
+        <empty-cell if="&false"/>
+      </if><else>
+        <% simple     = multiple[0] || multiple
+           main     = simple[0]
+           subitems = main ? (simple[1] || []) : []
+           cel = [[main, subitems]]
+        %>
+       <!--td>< %= this.peek %><br/>< %= subitems.peek %> </td-->
+        <if test="&!main">
+          <empty-cell />
+        </if><else>
+          <if test="&(column_counter+=1) == 1">
+            <item-cell   with="&cel" indent="&indent" />
+          </if><else>
+            <aspect-cell with="&cel" />
+          </else>
+        </else>
+      </else>
+    </repeat>
+    <empty-cell />
+  </tr>
+</def>
+
+<def tag="page" attrs="title, full-title">
+  <% full_title ||= "#{title} : #{app_name}" %>
+  <html merge-attrs>
+    <head param>
+      <title param><%=
+        if this.nil?
+          "Home"
+        elsif this.is_a? Card
+          this.reference_name
+        elsif this.is_a? User
+          this.name
+        elsif this.is_a? Array
+          "Suites"
+        else
+          "toy office"
+        end
+ %>   </title>
+      <do param="stylesheets">
+        <stylesheet name="reset, hobo-rapid"/>
+        <stylesheet name="application" param="app-stylesheet"/>
+      </do>
+
+      <do param="scripts">
+        <javascript param name="prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery, jquery.lavalamp, jquery.easing"/>
+        <if-ie version="lt IE 7" param="fix-ie6"><javascript name="IE7"/></if-ie>
+        <do param="custom-scripts"/>
+        <javascript param="application-javascript" name="application"/>
+      </do>
+    </head>
+
+    <body param>
+    <set-scoped flash-rendered="&false">
+        <ajax-progress param/>
+        <header class="page-header" param>
+          <div param="top-line" if="&params[:more] != 'bare'">
+            <main-nav current="&title" param/>
+            <account-nav if="&login_url(Hobo::User.default_user_model)" param />
+          </div>
+          <if test="&params[:more] != 'bare'">
+            <div       class="suite-name" if="&params[:id]">
+              <suite-name />
+              <!-- <live-search param if="&defined_route? :site_search"/>-->
+            </div>
+            <else><div class="app-name">
+              <h1 param="app-name"  ><a href="#{base_url}/"  ><app-name   /></a></h1>
+              <!-- <live-search param if="&defined_route? :site_search"/>-->
+            </div></else>
+          </if>
+        </header>
+        <section with-flash-messages param="content"/>
+        <footer class="page-footer" if="&params[:id]" param >
+          <h6 param="app-name">Powered by <a href="#{base_url}/"><app-name/></a></h6>
+        </footer>
+        <page-scripts param/>
+      </set-scoped>
+    </body>
+  </html>
+</def>
+
+<def tag="app-name">
+    <span class="logo"><span
+        class="toy"   ><span
+            class="t" >t</span><span
+            class="oy">o</span><span
+            class="y" >y</span></span><span
+        class="office"><span
+            class="o" >o</span><span
+            class="ff">f</span><span
+            class="fi">f</span><span
+            class="i" >i</span><span
+            class="c" >c</span><span
+            class="e" >e</span></span></span>
+</def>
+
+<def tag="add-item-or-row-form">                                              <%
+  style = "add-#{attributes[:element]}"
+  submit_style = "toy-nav tooltip #{style}"
+  new_card = this.class.new(
+    :list_id  => attributes[:collection_id]      ,
+    :kind     => attributes[:item_kind]     || '',
+    :suite_id => this.suite_group.id             ,
+    :view     => 'none'                          )
+  p = attributes[:pad]
+  case c = p.class.name
+  when 'NilClass'
+  when 'String'
+    if p && p.length > 0
+      new_card.mold = this.class.find_pad p
+    end
+  when 'Card'
+    new_card.mold = p
+  else
+    crash
+  end                                                                         %>
+  <form class="&style" with="&new_card">
+    <submit label=                    "&attributes[:label]"
+        title="&attributes[:tooltip] || attributes[:label]"
+        class="&submit_style" />
+    <after-submit uri="#{request.request_uri}"/>
+  </form>
+</def>
+
+<def tag="start-list-from-pad">                                               <%
+  that = this
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  pertinent = that                         &&
+              that.items.count == 0        &&
+              (pads = that.pertinent_pads)                                    %>
+  <repeat with="&pads" if="&pertinent">                                       <%
+    k = (is_row = this.class.name == 'Card') ? this.recursive_kind : this     %>
+    <unless test="&this.blank?">                                              <%
+      tooltip, label = [
+        "Start list with #{k.indefinite} #{element}",
+        "Start list with #{k}"                      ]                         %>
+      <add-item-or-row-form with="&that"
+                            element="&element"
+                            label="&label"
+                            tooltip="&tooltip"
+                            collection-id="#{that.id}"
+                            pad="&this"                />
+    </unless>
+  </repeat>
+</def>
+
+<def tag="sub-items">
+  <repeat with="&this.items">
+    <% Card.numbering_increment %>
+    <item-row merge-attrs/>
+  </repeat>
+</def>
+
+<def tag="list-row">
+  <do with="&this.recursive_ref || this">
+    <tr class="list-row" if="&this.items">
+  <%  Card.numbering_push
+      part = prep this, :items %>
+      <td class="list-row" colspan="2">
+        <if test="&part[:visible]">
+          <table class="list-rows" id="#{part[:domid]}" if="&this.items"
+                 style="display:inherit">
+            <sub-items />            <else><sub-items merge-attrs /></else>
+          </table>
+        </if><else>
+          <table class="list-rows" id="#{part[:domid]}" if="&this.items"
+                 style="display:none"   >
+            <sub-items />
+          </table>
+        </else>
+      </td>
+  <%  Card.numbering_pop             %>
+    </tr>
+  </do>
+</def>
+
+<def tag="core-body-row">                                                     <%
+  body_style       = "body-cell #{this.theme_class}"
+  body_row_dom_id  = dom_id this, :body_row
+  body_cell_dom_id = dom_id this, :body_cell
+  part = prep this, :body                                                     %>
+  <tr   class="body body-row" id="#{body_row_dom_id }"
+        style="display:<%=part[:display_style]%>">
+    <td class="#{body_style}" id="#{body_cell_dom_id}">
+      <if test="&this.body ">
+        <editor:body                   blank-message="A" />
+      </if><else>
+        <editor:body class="tiny-gray" blank-message="A" />
+      </else>
+    </td>
+    <empty-cell if="&!scope.deep[:no_aspects]" />
+  </tr>
+</def>
+
+<def tag="core-script-row">
+  <% part = prep this, :script %>
+  <tr class="script">
+    <td class="script-cell">
+      <% script_cell_dom_id = dom_id this, :script_cell %>
+      <div id="#{script_cell_dom_id}" style="display:<%=part[:display_style]%>">
+        <if test="&this.script">
+          <editor:script                   blank-message="....." />
+        </if><else>
+          <editor:script class="tiny-gray" blank-message="....." />
+        </else>
+      </div>
+    </td>
+   </tr>
+</def>
+
+<def tag="toggle-aspect-or-item">                                            <%=
+  horiz = attributes[:which] == "aspects"
+  sub_elements =  horiz ?       "aspects" : "items"
+  display_subs  = horiz ?       "Aspects" : "Sub-Items"
+  part = prep this, sub_elements
+  if this.send(sub_elements).count > 0
+    link_to "#{part[:show_hide]} #{display_subs}",
+      url_for(:controller => "cards"                          ,
+              :action     => "#{part[:action]}_#{part[:name]}",
+              :id         => this.id                          )
+  end                                                                         %>
+</def>
+
+<def tag="toggle-body">
+  <div class="tool">                                                         <%=
+    part = prep this, :body
+    link_to "#{part[:show_hide]} Body",
+      url_for(
+        :controller => "cards"                          ,
+        :action     => "#{part[:action]}_#{part[:name]}",
+        :id         => this.id                          )                     %>
+  </div>
+</def>
+
+<def tag="toggle-script-editor">
+  <span class="tool" if="&can_edit?(:script)">
+    <li class="script-show">                                                 <%=
+      part = prep this, :script
+      link_to "#{part[:show_hide]} Script",
+        url_for(
+          :controller => "cards"                          ,
+          :action     => "#{part[:action]}_#{part[:name]}",
+          :id         => this.id                          )                   %>
+    </li>
+  </span>
+</def>
+
+<def tag="manage-attachment">
+  <!--%= this.attachment.url.to_s %-->
+  <span class="tool" if="&can_edit?(:attachment)">                           <%=
+    cid = dom_id this, :attachment
+    link_to_function "Image", "$(#{cid.to_json}).show()"                      %>
+  </span>
+</def>
+
+<extend tag="form" for="Card">
+  <old-form merge multipart>
+    <field-list: fields="attachment"/>
+  </old-form>
+</extend>
+
+<def tag="core-image">                                                       <%
+  url= this.attachment.url
+  valid_url = url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'      %>
+  <img src="&url" if="&valid_url" />                                         <%
+  domid = dom_id this, :attachment                                            %>
+  <form id="#{domid}" style="display:none;" />
+</def>
+
+<def tag="core">
+  <% domid = dom_id this %>
+  <table id="#{domid}" class="core core-unit">
+    <core-image-row                                                   />
+    <core-main-row           if="&this.core_main_row? scope.deep"     />
+    <core-name-row           if="&this.core_name_row?"                />
+    <core-body-row if="&this.core_body_row? scope.deep"     />
+    <core-script-row         if="&this.core_script_row? current_user" />
+    <core-bottom-controls-tr if="&this.core_bottom_controls_row?" merge-attrs/>
+  </table>
+</def>
+
+<def tag="core-image-row">
+  <tr class="core-image-row">
+    <empty-cell />
+    <td class="core-image">
+      <core-image />
+    </td>
+    <empty-cell />
+  </tr>
+</def>
+
+<def tag="view" attrs="inline, block, if-blank, no-wrapper, truncate"><%=
+  #raise HoboError, "view of non-viewable field '#{this_field}' of #{this_parent.typed_id rescue this_parent}" unless
+  #  can_view?
+  res = if !can_view? ## fg
+          nil_view
+        elsif this.nil? && if_blank.nil?
+          this_type.is_a?(Class) && this_type <= String ? "" : nil_view
+        elsif (refl = this_field_reflection) && refl.macro == :has_many
+          collection_view(attributes)
+        else
+          view_tag = find_polymorphic_tag("view")
+
+          if view_tag == "view" # i.e. it didn't find a type specific tag
+            if this.respond_to?(:to_html)
+              this.to_html(scope.xmldoctype)
+            else
+              this.to_s
+            end
+          else
+            attrs = add_classes(attributes, "view", type_and_field._?.dasherize, model_id_class)
+
+            view_attrs = attrs_for(view_tag)
+            the_view = send(view_tag, attrs & view_attrs)
+            the_view = if_blank if if_blank && the_view.blank?
+
+            truncate = 30 if truncate == true
+            the_view = self.truncate(the_view, truncate.to_i) if truncate
+            the_view = the_view.strip
+
+            if no_wrapper
+              the_view
+            else
+              wrapper = if inline
+                          :span
+                        elsif block || this.is_a?(HoboFields::Text)
+                          :div
+                        else
+                          :span
+                        end
+              element(wrapper, attrs - view_attrs, the_view)
+            end
+          end
+        end
+   Hobo::Dryml.last_if = !res.blank?
+   res
+%></def>
+
+<def tag="javascript-variables">
+  <div id="activity-level" style="display:none;"><%=h ActivityLevel %></div>
+  <div id="current-pad"    style="display:none;"><%=h CurrentPad    %></div>
+</def>
+
+<def tag="core-main-row">
+  <tr class="core-main-row"   >
+    <% kind_style="kind-cell #{this.theme_class}"
+    n_rows = [
+      this.core_main_row?(scope.deep)    ,
+      this.core_name_row?                ,
+      this.core_body_row?(scope.deep)    ,
+      this.core_script_row?(current_user),
+      this.core_bottom_controls_row?
+    ].inject(0){|sum, n| sum + (n ? 1 : 0) }
+%>
+    <td class="core-left-controls" rowspan="<%=  n_rows + 1 %>">
+      <core-left-controls />
+    </td>
+    <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
+      <if test="&this.id == (the_mold = this.recursive_kind_mold).id">
+        <kind-editor blank-message="::"/>
+      </if>
+      <else>
+        <a kind with="&the_mold"><view field="kind" /></a>
+      </else>
+    </th>
+    <else><empty-cell /></else>
+    <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
+    <else><td rowspan="<%=  n_rows - 1 %>"></td></else>
+  </tr>
+</def>
+
+<def tag="core-name-row">
+  <tr class="name">
+    <%  name_style="name-cell #{this.theme_class}" %>
+    <td class="#{name_style}">
+      <if test="&params[:action] == 'opus'">
+          <recursive-numbering if="&this.list"/>
+      </if>
+      <if test="&params[:action] == 'list'">
+          <simple-numbering if="&this.list"/>
+      </if>
+      <editor:name blank-message="&this.blank_name"/>
+    </td>
+    <empty-cell if="&!scope.deep[:no_aspects]" />
+  </tr>
+</def>
+
+
+<def tag="card-number-editor">
+  <if test="&this.context_id">Number
+    <if            test="&this.whole_id">
+      <editor:whole_position />
+    </if><else><if test="&this.table_id" >
+      <editor:table_position />
+    </if><else><if test="&this.list_id"  >
+      <editor:list_position  />
+    </if></else></else>
+  </if>
+</def>
+
+<def tag="create-suite-button">
+  <set label="#{attributes[:label]}" />
+  <form class="new-suite" with="&c = Card.new_suite" >
+    <submit if class="new-suite" label="&label" />
+  </form>
+</def>
+
+<def tag="card-id" >
+  <if test="&current_user.administrator?">
+    <div class="tool">
+      <%= this.suite? ? 'Suite' : 'Card' %> <%= this.id %>
+    </div>
+    <div class="tool" >
+      <context-editors />
+    </div>
+  </if>
+</def>
+
+<def tag="context-editors">
+  <% can = current_user.name == "prog"
+     can_whole = can && can_view?(:whole)
+     can_table = can && can_view?(:table)  
+     can_list  = can && can_view?(:list )
+     can_suite = can && can_view?(:suite)
+     can_mold  = can && can_view?(:mold )
+     can_ref   = can && can_view?(:ref )
+  %>
+  <if            test="&this.whole_id  && can_whole">
+    aspect <editor:whole_position blank-message=".."/>
+    of       <view:whole_id /><view:whole /><br />
+  </if><else><if test="&this.table_id  && can_table">
+    column <editor:table_position blank-message=".."/>
+    of       <view:table_id /><view:table /><br />
+  </if><else><if test="&this.list_id   && can_list" >
+    item   <editor:list_position  blank-message=".."/>
+    of       <view:list_id  /><view:list  /><br />
+  </if><!--else>
+    <if test="&can_whole"    >aspect of <view:whole /><br /></if>
+    <if test="can_table"     >column of <view:table /><br /></if>
+    <if test="can_list"      >in list   <view:list  /><br /></if>
+  </else--></else></else>
+  <if               test="&this.suite">
+    <if                             test="&can_suite" >
+      in suite            <view:suite_id   />   <view:suite />
+    </if>
+  </if>
+  <if               test="&this.mold ">
+    <if                            test="&can_mold " >
+      <br />based on mold <view:mold_id    /> <editor:mold  />
+    </if>
+  </if>
+  <if               test="&this.ref  ">
+    <if                            test="&can_ref  "  >
+      <br />refers to     <view:ref_id     /> <editor:ref   />
+    </if>
+  </if>
+</def>
+
+<def tag="add-row">
+  <if test="&this && this.list">                                              <%
+    element, collection =
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    position = this.send "#{collection}_position"
+    tooltip, label      =
+      ["Add a row below this one",
+       "Add row"]                                                             %>
+    <add-item-or-row-form 
+       element="&element"
+       label="&label"
+       tooltip="&tooltip"
+       collection-id="#{this.list_id}"
+       position="&position"
+     />
+  </if>
+  <else>not a list</else>
+</def>
+
+<def tag="start-list">
+  <if test="&this">
+    <if test="&this.items.count == 0">
+<%    element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      label, tooltip =
+        ["Start #{collection}",
+         "Add a first #{element} to #{collection} #{this.reference_name}"] %>
+      <add-item-or-row-form
+          element="&element"
+          label="&label"
+          tooltip="&tooltip"
+          collection-id="#{this.id}"
+      />
+    </if>
+  </if>
+  <else>nothing to add an item to</else>
+</def>
+
+<def tag="out-slide">
+  <% the_item = this.list %>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">context</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+
+<def tag="next-slide">
+  <% the_item = this.higher_item %>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">next</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+
+<def tag="prev-slide">
+  <% the_item = this.lower_item %>
+  <a action="slide" with="&the_item" if="&the_item" class="slide-nav">prev</a>
+  <else>&nbsp;&nbsp;&nbsp;</else>
+</def>
+
+<def tag="recursive-numbering">
+  <%= Thread.current[:numbering].map{|x| x.to_s}.join "." %>&nbsp;
+</def>
+
+<def tag="simple-numbering">
+  <%= Thread.current[:numbering][-1].to_s %>&nbsp;
+</def>
+
+<def tag="core-left-controls">
+  <img if="&false" src="/images/blueball.png" alt="*" />
+  <else>&nbsp;</else>
+</def>
+
+<!-- view-page -->
+
+<def tag="drag-handle">
+  <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
+     domid = dom_id this, :drag_handle                      %>
+  <div class="tool" if="&this.suite && can_drag && !@no_move[0...-1].include?(true)">
+    <span class="drag_handle drag-handle" id="#{domid}">
+      Move
+    </span>
+  </div>
+</def>
+
+<!--def tag="toy-report" attrs="shallow, whole-off">
+  <if test="&whole_off ==  true  || !this.suite">
+    <card    whole-off="&whole_off" />
+  </if><else>
+    <card                           />
+  </else>
+</def-->
+
+<def tag="toy-edit"> <!--looks a lot like toy-show -->
+  <set-scoped deep="&@card.edit_deep" >
+    <show-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:>
+        <rails-authenticity-token />
+        <card first />
+      </content-body:  >
+      <aside:          >
+      </aside:         >
+    </show-page>
+  </set-scoped>
+</def>
+
+<!--def tag="toy-show" attrs="shallow, whole-off">
+  <set-scoped deep="&shallow                       ?
+              @card.look_deep(params[:action],2,2) :
+              @card.look_deep(params[:action])" >
+    <show-page>
+      <content-header:>
+        <views />
+        <context />
+      </content-header:>
+      <content-body:  >
+        <rails-authenticity-token/>
+        <toy-report merge-attrs/>
+      </content-body: >
+      <aside:><google /></aside:>
+    </show-page>
+  </set-scoped>
+</def-->
+
+<def tag="start-any-list">
+  <start-list />                                                              <%
+    pertinent = this                           &&
+                this.pertinent_pads.length > 0 &&
+                this.items.count == 0                                         %>
+  <start-list-from-pad if="&pertinent" />
+</def>
+
+<def tag="bottom-controls">
+  <table class="bottom-controls">
+    <tr   class="bottom-controls">
+      <td class="bottom-controls">
+        <add-rows/>
+      </td>
+      <td class="bottom-controls">
+        <start-any-list if="&true || this && this.items.count == 0" />
+        <if test="&false && can_edit?(:pad)" ><editor:pad/>Pad</if>           <%
+          new_card = this.class.new :list_id  => this.id            ,
+                                    :suite_id => this.suite_group.id          %>
+        <br if="&false && this && this.items.count == 0 && can_create?(new_card)" />
+        <editor:theme  if="&false && can_edit?(:theme)" />
+        <editor:access if="&can_edit?(:access) && !this.suite" />
+        <br if="&false && can_edit?(:theme) || can_edit?(:access) && !this.suite" />
+        <toggle-aspect-or-item which="items" with="&this" />
+        <toggle-body if="&scope.deep[:action] != 'list'"  />
+        <show-card-inline />
+        <trash />
+      </td>
+      <!--td class="core-add-item"><add-rows /></td>-->
+      <!--<td class="go"   ><show-card-inline /></td>
+      <td class="theme"><editor:theme     /></td>
+      <td class="access"><editor:access if="&can_edit? :access"/></td>
+      <td class="toggle"><toggle-aspect-or-item which="items" with="&this"/></td>
+      <td class="core-body-toggle"><toggle-body if="&scope.deep[:action] != 'list'"/></td>
+      <td class="core-trash"><trash/></td-->
+    </tr>
+  </table>
+</def>
+
+<def tag="add-aspect">
+  <if test="&this">
+    <% tooltip =
+         (this.aspects.count > 0 ?
+           " Describe another aspect of " : "Describe aspects of ") +
+         this.reference_name
+       new_card = this.class.new(
+               :whole_id => this.id            ,
+               :suite_id => this.suite_group.id)
+    %>
+    <form class="add-aspect" with="&new_card">
+      <submit label="Add an aspect" title="&tooltip" class="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
+<def tag="show-page" for="User">
+  <page merge title="User">
+    <body: class="show-page user" param/>
+    <content: param>
+       <header param="content-header">
+         <h2 param="heading"><name/></h2>
+         <record-flags fields="administrator" param/>
+         <a action="edit" if="&can_edit?" param="edit-link">Edit User</a>
+       </header>
+       <section param="content-body">
+          <field-list fields="email_address" param/>
+       </section>
+    </content:>
+  </page>
+</def>
+
+<def tag="main-nav">
+  <% shown = current_user.administrator? ||
+            !this.is_a?(Card)            ||
+             this.is_a?(Card) && current_user.id == this.the_suite.owner.id %>
+  <navigation class="main-nav" merge-attrs param="default" if="&shown">
+    <nav-item href="#{base_url}/">home</nav-item>
+    <nav-item with="&Card">suites</nav-item>
+    <nav-item with="&Card" if="&'workaround'">&nbsp;</nav-item>
+  </navigation>
+</def>
+
+<def tag="account-nav">
+  <do with="&current_user">
+    <ul class="navigation account-nav" param if="&!this.is_a? Card || RAILS_ENV == 'development'">
+      <if test="&logged_in?">
+        <li class='nav-item' param="logged-in-as">
+          <a to="&current_user">logged in as <name/></a>
+        </li>
+        <li class='nav-item' param="account">
+          <a action="account"  >your account        </a>
+        </li>
+        <li class='nav-item' param="log-out">
+          <a href="&logout_url">log out             </a>
+        </li>
+      </if>
+      <else>
+        <li class='nav-item' param="log-in">
+          <a href="&login_url" >log in              </a>
+        </li>
+        <li if="&signup_url" class="nav-item" param="sign-up">
+          <a href="&signup_url">sign up             </a>
+        </li>
+      </else>
+      <li class="dev-user-changer" if="&true || RAILS_ENV == 'development'">
+        <dev-user-changer/>
+       </li>
+    </ul>
+  </do>
+</def>
+
+<def tag="add-column">
+  <if test="&this">
+    <% tooltip =
+         if    (m = this.columns.length) >  0
+           "Add another standard column"
+         elsif (n = this.items.length)   >  1
+           "Add a standard column to these #{n} items"
+         elsif  n                        == 1
+           "Add a standard column to " + this.reference_name
+         else
+           "Add a table below "        + this.reference_name
+         end
+    %>
+    <form class="add-column" with="&Card.new(:table_id => this.id)">
+      <submit label="Add a column" title ="&tooltip" class ="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
+<def tag="title-rows">
+<% table = this
+   rows = Array.new table.column_name_rows(scope.deep)
+   if rows.length > 1 && rows[0][0]
+     rows[1][0] = rows[0][0]
+     rows[0].map!{{:kind =>'delete', :mold => nil, :type => 'control'}}
+     rows[0][0]
+   end
+   first_kind = true
+   row_count = 0
+#   rows.delete_at 0 # temporarily no control row
+%>
+  <tr class="title-row" repeat="&rows">
+    <empty-cell if="&false && 'use with left-tool'"/>
+    <title-cell with="&this[0]" item-cell />
+    <title-cell repeat="&this[1..-1]" />
+    <td class="add-column">
+      <add-column with="&table" if="&scope.deep[:action] == 'table' && (row_count += 1) == 1" />
+      <else><empty-cell /></else>
+    </td>
+  </tr>
+</def>
+
+<def tag="kind-editor">
+  <% b = attributes[:blank_message]
+     m = b ? b : "::::" %>
+  <if test="&this.kind "><editor:kind                   blank-message="&m" /></if>
+  <else                 ><editor:kind class="tiny-gray" blank-message="&m" /></else>
+</def>
+
+<def tag="trash" attrs="no-redirect" >
+  <%
+  tooltip             = "Permanently erase #{this.reference_name}"
+  number_of_aspects   = this.aspects.length
+  number_of_items     = this.items.length
+  if number_of_aspects > 0
+    if number_of_items > 0
+      tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+    else
+      tooltip += " and its #{number_of_aspects} items"
+    end
+  else # 0 aspects
+    if number_of_items > 0
+      tooltip += " and its #{number_of_items  } items"
+    end
+  end
+  redirect_uri = if @card.id == this.id then
+    if target = this.context then
+      url_for(:action => params[:action], :id => target)
+    else
+      cards_url
+    end
+  else
+    request.request_uri
+  end
+  #if attributes[:no_redirect] == "gggg" then
+    #redirect_uri             = nil
+    #attributes[:no_redirect] = nil
+  #end
+  %>
+  <!-- <delete-button
+                 with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
+  <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button"                               />
+</def>
+
+<def tag="google">
+  <if test="&false">
+    <script type="text/javascript"><!--
+      google_ad_client = "pub-2559479460830705";
+      /* 125x125, date de création 23/08/09 */
+      google_ad_slot = "0102698755";
+      google_ad_width = 125;
+      google_ad_height = 125;
+      //-->
+    </script>
+    <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+  </if>
+</def>
+
+<def tag="out">
+  <if            test="&this.whole && this.whole_id != this.suite_id"  >
+    <out         with="&this.whole" />
+  </if><else><if test="&this.list  && this.list_id  != this.suite_id"   >
+    <out         with="&this.list"  />
+  </if><else><if test="&this.table && this.table_id != this.suite_id"  >
+    <out         with="&this.table" />
+  </if></else></else>
+  <!-- <li                 unless="&attributes[:whole_off]" style="display:inline;background:white">
+    --><li class="out-tag" unless="&attributes[:whole_off]" >
+    <a action="&params[:action]"><%= this.reference_name %></a>
+  </li>
+</def>
+
+<def tag="nil-view">&nbsp;</def>
+
+<def tag="show-card-inline">
+  <%  tooltip =
+    "Leave this page to concentrate only on #{this.long_reference_name}" %>
+  <a class="zoom-in" title="&tooltip" if="&params[:id].to_i != this.id">
+    <%= "go" || image_tag("icons/zoom.png") %>
+  </a>
+</def>
+
+<def tag="report-card-inline">                                                <%
+  tooltip =
+    "Leave this page to concentrate only on #{this.long_reference_name}"     %>
+  <a class="zoom-in"
+     title="&tooltip"
+     if="&params[:id].to_i != this.id"
+     action="&params[:action]" >
+    <%= "go" || image_tag("icons/zoom.png") %>
+  </a>
+</def>
+
+<def tag="empty-cell">
+  <td unless="&attributes[:first]" class="grey-empty-cell"><span param="default">&nbsp;</span></td>
+</def>
+
+<def tag="right-border-cell">
+</def>
+
+<def tag="bottom-border-cell">
+  <td class="bottom-border-cell"><span param="default"></span></td>
+</def>
+
+<def tag="bottom-right-border-cell">
+  <td class="bottom-right-border-cell"><span param="default"></span></td>
+</def>
+
+<def tag="spacer-cell">
+  <td class="spacer">
+  <%= image_tag "spacer.gif", {:width => "4px"} %>
+  </td>
+</def>
+
+<def tag="pads">
+  <div class="pads" if="&params[:more] != 'bare' && this.all_pads" >
+
+    <ul class="navigation pad-nav">
+      <if test="&$CURRENT_PAD">Current pad</if>
+      <else>Pads</else>
+      <pad-none />
+      <repeat with="&this.all_pads">
+        <% li_style = "#{this.id == $CURRENT_PAD.to_i ? 'not-enabled ' : ''}pad-link" %>
+        <li class="<%=li_style%>"><%=
+          link_to this.kind, url_for(
+            :controller => "cards",
+            :action     => 'set_pad',
+            :id         => this.id
+          )%>
+        </li>
+      </repeat>
+    </ul>
+  </div>
+</def>
+
+<def tag="pad-none">
+  <li class="pad-link" if="&$CURRENT_PAD" style = "pad-link">
+    <%=   link_to "none", url_for(
+            :action     => "set_pad",
+            :id         => 0
+          )%>
+  </li>
+</def>
+
+<def tag="page-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("text", url_for(:action => "page" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="opus-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("opus", url_for(:action => "opus" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="slide-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("slide", url_for(:action => "slide" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="tree-view" attrs="off">
+  <li class="view-link advanced"><%= link_to("tree", url_for(:action => "edit" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="report-view">
+  <li class="view-link advanced"><%= link_to("report"  , url_for(:action => "report" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="table-view">
+  <li class="view-link"         ><%= link_to("table"   , url_for(:action => "table"), :disabled => false  )  %></li>
+</def>
+
+<def tag="list-view">
+  <li class="view-link"         ><%= link_to("list"    , url_for(:action => "list" ), :disabled => false  )  %></li>
+</def>
+
+<def tag="corner-controls">
+  <drag-handle merge-attrs/>
+</def>
+
+<def tag="core-bottom-controls-tr">
+  <tr class="core-controls" style="display:none">
+    <td class="bottom-controls">
+      <bottom-controls />
+    </td>
+    <td class="corner-controls">
+      <corner-controls merge-attrs/>
+    </td>
+  </tr>
+</def>
+
+<def tag="slide-card">
+  <p><editor:name blank-message="&this.blank_name"/></p>
+  <p><editor:body blank-message="A" /></p>
+  <ol class="point-form">
+    <li repeat="&this.items">
+      <a action="slide" if="&this.items.count > 0 || !this.body.blank?" />
+      <else>
+        <view:name if="&!this.name.blank?" />
+        <else>
+          <%= this.blank_name %>
+        </else>
+      </else>
+    </li>
+  </ol>
+  <p><prev-slide/><out-slide/><next-slide/></p>
+</def>
+
+<def tag="recursive-card">
+  <% (@no_move ||= []).push !!this.ref %>
+  <table               class="card inner" if="&@no_move.include? true">
+    <hierarchical-layout />
+  </table><else><table class="card inner drop-target"                 >
+    <hierarchical-layout />
+  </table></else>
+  <% @no_move.pop %>
+</def>
+
+<def tag="hierarchical-layout">
+  <self-and-aspects-row />
+  <list-row             />
+</def>
+
+<def tag="hierarchical-card">
+  <% (@no_move ||= []).push !!this.ref %>
+  <table               class="card first-card" if="&@no_move.include? true">
+    <hierarchical-layout />
+  </table><else><table class="card first-card drop-target"                 >
+    <hierarchical-layout />
+  </table                     ></else>
+  <% @no_move.pop %>
+</def>
+
+<def tag="item-row">
+  <tr class="item-row in-application-view model::card:#{this.id}">
+    <%  klass="item-cell #{this.theme_class}" %>
+    <td class="#{klass}">
+      <recursive-card item if="&true" merge-attrs/>
+    </td>
+  </tr>
+</def>
+
+<def tag="rails-authenticity-token">
+  <span style="display:none" id="rails.authtoken"><%= form_authenticity_token %></span>
+</def>
+
+<def tag="cells">
+  <table>
+    <title-rows />
+    <content-rows />
+  </table>
+</def>
+
+<def tag="left-tool-cell">
+  <td class="left-tool-cell">          
+    <report-card-inline with="&this.is_a?(Array) ? this[0] : this"/>
+  </td>
+</def>
+
+<!--def tag="content-rows">
+  <% #logger.debug "ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ" %>
+  <% #logger.debug "&scope.deep[:columns][:cells].class.name: #{scope.deep[:columns][:cells].class.name}" %>
+  <% #logger.debug "&scope.deep[:columns][:cells].dimensions.to_yaml: #{scope.deep[:columns][:cells].dimensions.to_yaml}" %>
+  <% scope.deep[:indents] << [] %>
+  <set indents    ="&scope.deep[:indents].reverse" />
+  <%#= indents.join "-"   %>
+  <%  indent = indents.pop %>
+  <tr class="content-row" repeat="&rows=scope.deep[:columns][:cells].normalize_and_transpose">
+    <%  indent = indents.pop - 1 %>
+    <set key-cell="&this[0]" />
+    <unless                  test="&key_cell.nil?"           >
+      <left-tool-cell with="&key_cell[0]"/>
+      <set counter="&0" />
+      <repeat>
+        <if test="&(counter += 1) == 1">
+        </if>
+        <else>
+
+
+        </else>
+      </repeat>
+      <empty-cell/>
+    </unless>
+  </tr>
+</def-->
+
+<def tag="empty-title">
+  <th class="empty-title-cell">&nbsp;</th>
+</def>
+
+<def tag="select-one-editor" attrs="include-none, blank-message, sort, update, options"><%
+  raise HoboError.new("Not allowed to edit") unless can_edit?
+  blank_message ||= "(No #{this_type.name.to_s.titleize})"
+  options ||= this_field_reflection.klass.recent(63).select {|x| can_view?(x) && !x.name.blank?}.map {|x|
+            [ name(:with => x, :no_wrapper => true), x.id ]
+          }[0..31]
+   options = options.sort if sort
+   options.insert(0, [blank_message, ""]) if this.nil? || include_none
+   f = ajax_updater(object_url(this_parent, :method => :put),
+                    update,
+                    :method => "put",
+                    :params => { this_parent.class.name.underscore => {
+                        this_field_reflection.primary_key_name => Hobo.raw_js('this.value')
+                      } })
+    %>
+  <select onchange="#{f}" merge-attrs>
+     <%= options_for_select(options, this ? this.id : "") %>
+  </select>
+</def>
+

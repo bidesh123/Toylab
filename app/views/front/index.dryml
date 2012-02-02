@@ -1,0 +1,149 @@
+<page title="Home">
+
+  <body: class="front-page"/>
+
+  <content:>
+    <section class="content-body">
+      <home-nav />
+      <pitch />
+    </section>
+  </content:>
+  
+</page>
+
+<def tag="pitch">
+  <div class="pitch">
+    <div class="sub-pitch"><why-toy-office if="&false"/></div>
+    <toy-office-metaphor if="&false"/>
+    <toy-office-uses     if="&false"/>
+    <toy-office-how-to   if="&false"/>
+  </div>
+</def>
+
+<def tag="get-started">
+  <ul class="sub-pitch pink">
+    Get started
+    <li if="&signup_url"                class="nav-item">
+      <create-suite-button label="Create your own office suite" />
+    </li>
+    <li if="&signup_url && !logged_in?" class="nav-item">
+      <a href="&signup_url">Sign up</a> for more privileges
+    </li>
+    <li if="&login_url && !logged_in?"  class="nav-item">
+      Or just <a href="&login_url">Log in</a> if you're already signed up
+    </li>
+  </ul>
+</def>
+
+<def tag="home-nav">
+  <div with="&current_user" class="sub-pitch">
+    <get-started />
+    <screencasts />
+    <see-suites  />
+    <caveat      />
+  </div>
+</def>
+
+<def tag="see-suites">
+  <ul class="sub-pitch orange">
+    See other toy office suites
+    <li if="&signup_url" class="nav-item class-link">
+      Click <a href="/cards">suites</a>
+    </li>
+  </ul>
+</def>
+
+<def tag="screencasts">
+  <ul class="sub-pitch orange">
+    Find out more
+    <li class="nav-item class-link">
+      Watch the <a href="http://www.youtube.com/watch?v=Lv7ar0_uObI">demo</a>
+    </li>
+  </ul>
+</def>
+
+<def tag="caveat">
+  <ul class="sub-pitch yellow">
+    Caveat
+    <li class ="tiny">
+      This pre-alpha demo is only for demonstrating our unique database technology.
+    </li>
+    <li class ="tiny">
+      It is lab version with known bugs, issues and ongoing work.
+    </li>
+     <li class ="tiny">
+      Please, do not use this site with real data. No yet...
+    </li>
+    <li class ="tiny">
+      For now, the best way to explore toy office is to see the <a href="http://www.youtube.com/watch?v=Lv7ar0_uObI">screencasts</a>.
+    </li>
+  </ul>
+</def>
+
+<def tag="why-toy-office">
+  <ul class="sub-pitch orange">
+    Get your information:
+    <li class="pink">On your own website</li>
+    <li class="orange">Safe and backed up automatically</li>
+    <li class="yellow">Available to you from any PC, iPhone, etc.</li>
+    <li class="green">Easily organized into lists, tables, reports, forms</li>
+    <li class="blue">Open to the contributions of others</li>
+    <li class="purple">Or for your eyes only</li>
+  </ul>
+</def>
+
+<def tag="toy-office-metaphor">
+  <ul class="sub-pitch yellow">
+    Build and manage your World like a game - using Building Blocks.
+    <li>Building Blocks are like the cells in your body.</li>
+    <li>They are separate parts, yet work together to make your whole body function.</li>
+    <li>Best of all they are all the same, so anyone quickly masters them.</li>
+  </ul>
+</def>
+
+<def tag="toy-office-uses">
+  <ul class="sub-pitch green">
+    Let's say that today your life is focused on the following areas
+    <li><i>Job search</i></li>
+    <li>Billy's school project</li>
+    <li>2010 family holiday</li>
+    <li>Buying a house in the city</li>
+    <li>Volunteering at the hospital</li>
+    <li><i>Mom's 80th Birthday</i></li>
+    <li>New customers follow-up</li>
+    <li>Researching Crohn's disease for Mitch</li>
+    <li>Getting fit</li>
+  </ul>
+</def>
+
+<def tag="toy-office-how-to">
+  <ul class="sub-pitch blue">
+    Here is where Toy Office comes in.
+    <li>   
+      In your toy office suite, you can construct and then manage the different
+      areas of your life as you would an office built with an erector set. Add a
+      building block for my job search, another for Mom's 80th Birthday, etc.
+    </li>
+    <li>
+      So, how do you build something meaningful, whether it's as simple as a
+      recipe or as complex as an order form, with a date and rows and columns?
+      Simply connect the blocks together into lists, tables, columns, rows,
+      forms, web pages. What would to take a geek a week is now easy for anyone
+      in seconds. That is the Toy Office breakthrough!
+    </li>
+  </ul>
+  <ul class="sub-pitch purple">Toy Office 101
+    <li>
+      Start by clicking the All button for an list of any publicly available
+      toy office suites.  Watch it appear at the top of the list as Untitled,
+      with your name. Click on it, change its name and choose the list view.
+      It's the easiest. The list view lets you add a list to your office suite.
+      You can get 80% of the benefit with just the list view and it only takes
+      minutes to learn. You get a instant web site, a place to share info and
+      pick up comments, a common ground to work together on stuff, a place to
+      post your resumé for higher visibility. And your own office in the toy
+      office cloud building. With your own web address like
+      toyoffice.net/suite/9003 (coming soon).
+    </li>
+  </ul>
+</def>
