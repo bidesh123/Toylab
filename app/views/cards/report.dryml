@@ -153,6 +153,7 @@
 
      <if test="real-mccoy">
 
+
        <kind-editor blank-message="::" />
      </if><else>
        <a kind with="&the_mold"><view field="kind" /></a>
@@ -161,7 +162,9 @@
   </if><else><if test="&k = this.recursive_kind">
     <th class="<%= css_class %>" if="&k = this.recursive_kind">
       <%=  this.recursive_kind || "&nbsp;" %>
+
     </th><else><empty-cell /></else>
+
   </if></else>
 </def>
 
