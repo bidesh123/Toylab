@@ -150,7 +150,7 @@
   <if test="&can_edit?(:name)">
     <th class="<%= css_class %>">
      <set real-mccoy="this.id == (the_mold = this.recursive_kind_mold).id" />
-     <if test="&real-mccoy">
+     <if test="real-mccoy">
        <kind-editor blank-message="::" />
      </if><else>
        <a kind with="&the_mold"><view field="kind" /></a>
