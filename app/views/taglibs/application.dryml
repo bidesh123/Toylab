@@ -667,7 +667,7 @@
   display_subs  = horiz ?       "Aspects" : "Sub-Items"
   part = prep this, sub_elements
   if this.send(sub_elements).count > 0
-    link_to "#{part[:show_hide]} #{display_subs}",
+    button_to "#{part[:show_hide]} #{display_subs}",
       url_for(:controller => "cards"                          ,
               :action     => "#{part[:action]}_#{part[:name]}",
               :id         => this.id                          )
@@ -677,7 +677,7 @@
 <def tag="toggle-body">
   <div class="tool">                                                         <%=
     part = prep this, :body
-    link_to "#{part[:show_hide]} Body",
+    button_to "#{part[:show_hide]} Body",
       url_for(
         :controller => "cards"                          ,
         :action     => "#{part[:action]}_#{part[:name]}",
@@ -689,7 +689,7 @@
   <span class="tool" if="&can_edit?(:script)">
     <li class="script-show">                                                 <%=
       part = prep this, :script
-      link_to "#{part[:show_hide]} Script",
+     button_to "#{part[:show_hide]} Script",
         url_for(
           :controller => "cards"                          ,
           :action     => "#{part[:action]}_#{part[:name]}",
@@ -702,7 +702,7 @@
   <!--%= this.attachment.url.to_s %-->
   <span class="tool" if="&can_edit?(:attachment)">                           <%=
     cid = dom_id this, :attachment
-    link_to_function "Image", "$(#{cid.to_json}).show()"                      %>
+   button_to_function "Image", "$(#{cid.to_json}).show()"                      %>
   </span>
 </def>
 
