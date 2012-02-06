@@ -3,7 +3,52 @@
 <include src="taglibs/auto/rapid/pages"/>
 <include src="taglibs/auto/rapid/forms"/>
 <include src="paperclip" plugin="paperclip_with_hobo"/>
-<include src="taglibs/application"
+<include src="taglibs/application"/>
+
+
+
+
+<def tag="start-list-from-pad">                                               <%
+  that = this
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  pertinent = that                         &&
+    that.items.count == 0        &&
+    (pads = that.pertinent_pads)                                    %>
+  <repeat with="&pads" if="&pertinent">                                       <%
+    k = (is_row = this.class.name == 'Card') ? this.recursive_kind : this     %>
+    <unless test="&this.blank?">                                              <%
+      tooltip, label = [
+        "Start list with #{k.indefinite} #{element}",
+        "Start list with #{k}"                      ]                         %>
+      <add-item-or-row-form with="&that"
+                            element="&element"
+                            label="&label"
+                            tooltip="&tooltip"
+                            collection-id="#{that.id}"
+                            pad="&this"                />
+    </unless>
+  </repeat>
+</def>
+
+<def tag="start-list">
+  <if test="&this">
+    <if test="&this.items.count == 0">
+      <%    element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      label, tooltip =
+        ["Start #{collection}",
+        "Add a first #{element} to #{collection} #{this.reference_name}"] %>
+      <add-item-or-row-form
+        element="&element"
+        label="&label"
+        tooltip="&tooltip"
+        collection-id="#{this.id}"
+        />
+    </if>
+  </if>
+  <else>nothing to add an item to</else>
+</def>
 
 <def tag="start-any-list">
   <start-list />                                                              <%
@@ -12,6 +57,7 @@
     this.items.count == 0                                         %>
   <start-list-from-pad if="&pertinent" />
 </def>
+
 
 
 <def tag="add-row">
@@ -33,6 +79,88 @@
   <else>not a list</else>
 </def>
 
+
+<def tag="start-list">
+  <if test="&this">
+    <if test="&this.items.count == 0">
+      <%    element, collection =
+        mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+      label, tooltip =
+        ["Start #{collection}",
+        "Add a first #{element} to #{collection} #{this.reference_name}"] %>
+      <add-item-or-row-form
+        element="&element"
+        label="&label"
+        tooltip="&tooltip"
+        collection-id="#{this.id}"
+        />
+    </if>
+  </if>
+  <else>nothing to add an item to</else>
+</def>
+
+<def tag="add-pad-rows">                                                      <%
+  element, collection =
+    mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+  unless this.list.nil? 
+    last_item = this.list.items.count == this.list_position
+  end
+  no_kind = ['', 'item'].include? this.kind
+  collection_id = this.list.id unless this.list.nil?
+  position = this.send "#{collection}_position"
+%>
+  <repeat with="&this.pertinent_pads"
+          if="&(that = this) && (list_id = this.list)">                       <%
+            k = (is_a_row = this.class.name == 'Card') ? this.recursive_kind : this
+            tooltip, label = [
+              "Add a #{k} row below this one",
+              "Add #{  k} row"]
+            el = "#{k} #{element}"
+            condition = this && is_a_row || this.length > 0
+            p = is_a_row ? this : "cf::#{this.id}"                                    %>
+    <add-item-or-row-form with="&that" if="&condition"
+                          element="&el"
+                          label="&label"
+                          tooltip="&tooltip"
+                          collection-id="&collection_id"
+                          pad="&p"
+                          position="&position"
+                          />
+  </repeat>
+</def>
+
+
+
+<def tag="add-item-or-row-form">                                              <%
+  style = "add-#{attributes[:element]}"
+  submit_style = "toy-nav tooltip #{style}"
+  new_card = this.class.new(
+    :list_id  => attributes[:collection_id]      ,
+    :kind     => attributes[:item_kind]     || '',
+    :suite_id => this.suite_group.id             ,
+    :view     => 'none'                          )
+  p = attributes[:pad]
+  case c = p.class.name
+  when 'NilClass'
+  when 'String'
+    if p && p.length > 0
+      new_card.mold = this.class.find_pad p
+    end
+  when 'Card'
+    new_card.mold = p
+  else
+    crash
+  end                                                                         %>
+  <form class="&style" with="&new_card">
+    <submit label=                    "&attributes[:label]"
+            title="&attributes[:tooltip] || attributes[:label]"
+            class="&submit_style" />
+    <after-submit uri="#{request.request_uri}"/>
+  </form>
+</def>
+
+
+
 <def tag="add-rows">
   <if test="&this && (list = this.list)">
     <%  element, collection =
@@ -48,6 +176,10 @@
 </def>
 
 
+
+
+
+
 <def tag="show-card-inline">
   <%  tooltip =
     "Leave this page to concentrate only on #{this.long_reference_name}" %>
@@ -60,8 +192,8 @@
   <table               class="card inner" if="&@no_move.include? true">
     <hierarchical-layout />
   </table><else><table class="card inner drop-target"                 >
-    <hierarchical-layout />
-  </table></else>
+      <hierarchical-layout />
+    </table></else>
   <% @no_move.pop %>
 </def>
 
@@ -75,8 +207,8 @@
   <table               class="card first-card" if="&@no_move.include? true">
     <hierarchical-layout />
   </table><else><table class="card first-card drop-target"                 >
-    <hierarchical-layout />
-  </table                     ></else>
+      <hierarchical-layout />
+    </table                     ></else>
   <% @no_move.pop %>
 </def>
 
@@ -99,10 +231,10 @@
 <def tag="aspects-table">
   <table class="aspects-table"     if="&this.saspects">
     <tr  class="aspects-row">
-      <repeat with="&this.aspects" if="&this.aspects">
-        <aspect-cell />
-      </repeat>
-      <spacer-cell />
+    <repeat with="&this.aspects" if="&this.aspects">
+      <aspect-cell />
+    </repeat>
+    <spacer-cell />
     </tr>
   </table>
 </def>
@@ -110,8 +242,8 @@
 <def tag="aspect-cell">
   <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
   <td class="#{klass}">
-    <recursive-card aspect if="&can_view?(:name)" />
-  </td>
+  <recursive-card aspect if="&can_view?(:name)" />
+</td>
 </def>
 
 
@@ -124,11 +256,51 @@
 </def>
 
 
+
+
+
+<def tag="trash" attrs="no-redirect" >
+  <%
+  tooltip             = "Permanently erase #{this.reference_name}"
+  number_of_aspects   = this.aspects.length
+  number_of_items     = this.items.length
+  if number_of_aspects > 0
+    if number_of_items > 0
+      tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+    else
+      tooltip += " and its #{number_of_aspects} items"
+    end
+  else # 0 aspects
+    if number_of_items > 0
+      tooltip += " and its #{number_of_items  } items"
+    end
+  end
+  redirect_uri =
+    if target = this.context then
+    url_for(:action => params[:action], :id => target)
+  else
+    cards_url
+  end
+
+  #if attributes[:no_redirect] == "gggg" then
+  #redirect_uri             = nil
+  #attributes[:no_redirect] = nil
+  #end
+  %>
+  <!-- <delete-button
+                 with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
+  <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button"                               />
+</def>
+
+
 <def tag="bottom-controls">
   <table class="bottom-controls">
     <tr   class="bottom-controls">
       <td class="bottom-controls">
-    <add-rows/>
+    <add-row/>
+    <add-pad-rows/>
     </td>
     <td class="bottom-controls">
     <start-any-list if="&true || this && this.items.count == 0" />
@@ -156,8 +328,8 @@
 </def>
 
 
-<td class="bottom-controls">
-  <bottom-controls />
+<td class="bottom-controls" id="bottom-<%=this.id%>">
+<bottom-controls />
 </td>
 
 

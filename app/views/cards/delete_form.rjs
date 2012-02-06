@@ -1,0 +1,4 @@
+# TODO Operate on the page object
+if page["bottom-#{@card.id}"]
+page.remove "bottom-#{@card.id}"
+end

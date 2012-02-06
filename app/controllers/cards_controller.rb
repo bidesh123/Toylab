@@ -22,10 +22,11 @@ class CardsController < ApplicationController
   show_action :custom
   index_action :manage
   index_action :view_form
+  index_action :delete_form
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
-  before_filter :grab_session, :except => "view_form"
+  before_filter :grab_session
   skip_before_filter :verify_authenticity_token, :only => "view_form"
   def grab_session
     @states = session[:states]
@@ -97,9 +98,9 @@ class CardsController < ApplicationController
 
   def view_form
    
-      @card=Card.find(params[:id])
+    @card=Card.find(params[:id])
       
-      render :layout => false if request.xhr?
+    render :layout => false if request.xhr?
     
   end
 
@@ -144,6 +145,12 @@ class CardsController < ApplicationController
       this.update_attribute(:view, "list")
       render :action => this.auto_view
     end
+  end
+
+
+  def delete_form
+    @card=Card.find(params[:id])
+    render :alyout => false if request.xhr?
   end
 
   def manage

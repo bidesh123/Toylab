@@ -1368,8 +1368,8 @@
 
 <def tag="core-bottom-controls-tr">
   <tr id="show-form-#{this.id}" class="core-controls">
+    
 
-   
 </tr>
 </def>
 

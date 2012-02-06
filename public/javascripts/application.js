@@ -109,54 +109,54 @@ var hideShowEngine = {
                 new Effect.Appear(context.aspectControls, {
                     duration: appearDuration
                 })
-                };
+            };
             new Effect.Appear(context.coreControls,   {
                 duration: appearDuration,
                 afterFinish: function() {
                     context.transition("showingDone");
                 }
             });
-        return 'showing';
-    }
-},
+            return 'showing';
+        }
+    },
 
-'hideTimeout': {
-    'waitToHide': function(context) {
-        if(context.aspectControls) {
-            new     Effect.Parallel(
-                [ new Effect.BlindUp( context.aspectControls               ,
-                {
-                    duration: hideDuration
-                } ) ,
-                new Effect.BlindUp( context.coreControls                 ,
-                {
-                    duration: hideDuration
-                } ) ] ,
+    'hideTimeout': {
+        'waitToHide': function(context) {
+            if(context.aspectControls) {
+                new     Effect.Parallel(
+                    [ new Effect.BlindUp( context.aspectControls               ,
+                    {
+                        duration: hideDuration
+                    } ) ,
+                    new Effect.BlindUp( context.coreControls                 ,
+                    {
+                        duration: hideDuration
+                    } ) ] ,
 {
-                    afterFinish:
-                    function() {
-                        context.transition("hidingDone");
-                    }
-                } )
-    }
-    else {
-        new     Effect.SlideUp( context.coreControls                      )
-    };
-    return 'hiding';
-}
-},
+                        afterFinish:
+                        function() {
+                            context.transition("hidingDone");
+                        }
+                    } )
+            }
+            else {
+                new     Effect.SlideUp( context.coreControls                      )
+            };
+            return 'hiding';
+        }
+    },
 
-'showingDone': {
-    'showing':    function(context) {
-        return 'shown';
-    }
-},
+    'showingDone': {
+        'showing':    function(context) {
+            return 'shown';
+        }
+    },
 
-'hidingDone': {
-    'hiding':     function(context) {
-        return 'hidden';
+    'hidingDone': {
+        'hiding':     function(context) {
+            return 'hidden';
+        }
     }
-}
 };
 
 Event.observe(window, "load", function() {
@@ -187,11 +187,19 @@ Event.observe(window, "load", function() {
 
         Event.observe(table, "mouseover", function() {
             
-            new Ajax.Request('/cards/view_form?id='+table.readAttribute("id").split("_")[1],{method: 'get'});
-             context.transition("mouseover");
+            new Ajax.Request('/cards/view_form?id='+table.readAttribute("id").split("_")[1],{
+                method: 'get'
+            });
+        // context.transition("mouseover");
         });
         Event.observe(table, "mouseout",  function() {
-            context.transition("mouseout");
+            //            $("bottom-"+table.readAttribute("id").split("_")[1]).hide();
+            if ($("bottom-"+table.readAttribute("id").split("_")[1])){
+            new Ajax.Request('/cards/delete_form?id='+table.readAttribute("id").split("_")[1],{
+                method: 'get'
+            });
+            }
+//            context.transition("mouseout");
         });
     });
 
@@ -217,7 +225,7 @@ Event.observe(window, "load", function() {
                 parameters: {
                     'card[name]': field.value,
                     'authenticity_token': $("rails.authtoken").innerHTML
-                    },
+                },
                 onSuccess: function() {
                 // TODO: hide spinner
                 }
@@ -287,6 +295,6 @@ function installAutocomplete(el, url, parentName) {
         method:'get',
         paramName: 'q',
         parameters: 'parent_id=' + id
-        });
+    });
 };
 

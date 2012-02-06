@@ -1,0 +1,385 @@
+<toy-report />
+
+
+<!-- 1===================== tag definitions ================================ -->
+
+<def tag="aspects">
+  <table>
+    <aspects-rows merge-attrs />
+  </table>
+</def>
+
+<def tag="aspects-kinds-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <aspect-kind-cells merge-attrs />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-kinds-cells />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-names-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <aspect-name-cells merge-attrs />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-names-cells />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-bodies-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <aspect-body-cells merge-attrs />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-bodies-cells />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="bottoms-borders-cells">
+  <% @depth+=1
+     aspects = this.or_ref.aspects %>
+  <if test="&@depth<99">
+    <bottom-border-cells/>
+    <repeat with="&aspects" if="&aspects">
+      <bottoms-borders-cells merge-attrs />
+    </repeat>
+  </if>
+  <% @depth-=1 %>
+</def>
+
+<def tag="aspects-kinds-row">
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="aspects-kinds-row" if= "&!attributes['kinds_off' ]">
+    <aspect-kind-cells first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-kinds-cells merge-attrs/>
+    </repeat>
+    <spacer-cell  />
+  </tr>
+</def>
+
+<def tag="bottoms-borders-row"> <!-- coming soon -->
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="bottoms-borders-row"
+      if="&!attributes['bottom_borders_off' ] && !attributes['borders_off' ]">
+    <bottom-border-cells first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <bottoms-borders-cells />
+    </repeat>
+    <spacer-cell  />
+  </tr>
+</def>
+
+<def tag="aspects-names-row">
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="aspects-names-row" if= "&!attributes['names_off' ]">
+    <aspect-name-cells   first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-names-cells merge-attrs />
+    </repeat>
+    <add-aspect-cell />
+  </tr>
+</def>
+
+<def tag="aspects-bodies-row">
+  <% @depth ||= 0
+     aspects = this.or_ref.aspects %>
+  <tr class="aspects-bodies-row" if= "&!attributes['bodies_off']">
+    <aspect-body-cells   first unless="&attributes['whole_off']" />
+    <repeat with="&aspects" if="&aspects">
+      <aspects-bodies-cells merge-attrs />
+    </repeat>
+    <spacer-cell />
+  </tr>
+</def>
+
+<def tag="toy-report" attrs="shallow">
+  <set-scoped deep="&shallow ?
+                    @card.look_deep(params[:action],2,2) :
+                    @card.look_deep(params[:action])" >
+    <show-page>
+      <content-header:>
+        <views />
+        <context />
+        <!-- % whole_off = "&false" %       -->
+        <!-- <toy-header if="&whole_off"/>  -->
+      </content-header:>
+
+      <content-body:  >
+        <rails-authenticity-token/>
+        <% whole_off = this.the_suite.id == this.id %>
+        <table>
+          <tr>
+            <td class="left-links">
+              <side-links />
+            </td>
+            <td>
+              <if test="&whole_off ==  true">
+                <card    whole-off />
+              </if><else>
+                <card              />
+              </else>
+            </td>
+            <td>
+              <google />
+            </td>
+          </tr>
+        </table>
+      </content-body: >
+      <aside:></aside:>
+    </show-page>
+  </set-scoped>
+</def>
+
+<def tag="aspect-kind-cell">
+  <% css_class  = "aspect-kind-cell"
+     css_class += " inner" if !attributes[:first] %>
+  <if test="&can_edit?(:name)">
+    <th class="<%= css_class %>">
+     <set real-mccoy="this.id == (the_mold = this.recursive_kind_mold).id" />
+<<<<<<< HEAD:app/views/cards/report.dryml
+
+     <if test="real-mccoy">
+
+=======
+     <if test="&real-mccoy">
+>>>>>>> 5d93c107e1a644a66169653f044bc7ea4f08f9b5:app/views/cards/report.dryml
+       <kind-editor blank-message="::" />
+     </if><else>
+       <a kind with="&the_mold"><view field="kind" /></a>
+     </else>
+    </th>
+  </if><else><if test="&k = this.recursive_kind">
+    <th class="<%= css_class %>" if="&k = this.recursive_kind">
+      <%=  this.recursive_kind || "&nbsp;" %>
+<<<<<<< HEAD:app/views/cards/report.dryml
+    </th><else><empty-cell /></else>
+=======
+    </th><else><empty-cell /></else>      
+>>>>>>> 5d93c107e1a644a66169653f044bc7ea4f08f9b5:app/views/cards/report.dryml
+  </if></else>
+</def>
+
+<def tag="aspect-name-cell">
+  <% css_class  = "aspect-name-cell"
+     css_class += " inner" if !attributes[:first] %>
+  <td class="<%= css_class %>">
+    <editor:name blank-message="..." />
+  </td>
+</def>
+
+<def tag="aspect-body-cell">
+  <% css_class  = "aspect-body-cell"
+     css_class += " inner" if !attributes[:first] %>
+  <td class="<%= css_class %>">
+    <editor:body if="&this.body"/>
+  </td>
+</def>
+
+<def tag="aspect-kind-cells">
+  <empty-title        unless="&attributes[:first]" merge-attrs />
+  <aspect-kind-cell                                merge-attrs />
+  <right-border-cell                               merge-attrs />
+</def>
+
+<def tag="aspect-name-cells">
+  <report-cell          unless="&attributes[:first]" merge attrs />
+  <aspect-name-cell                                merge-attrs />
+  <right-border-cell                               merge-attrs />
+</def>
+
+<def tag="aspect-body-cells">
+  <empty-cell         unless="&attributes[:first]" merge attrs />
+  <aspect-body-cell                                merge-attrs />
+  <right-border-cell                               merge-attrs />
+</def>
+
+<def tag="bottom-border-cells">
+  <bottom-border-cell unless="&attributes[:first]" merge attrs />
+  <bottom-border-cell                              merge attrs />
+  <bottom-right-border-cell                        merge attrs />
+</def>
+
+<def tag="aspects-rows">
+  <aspects-kinds-row   merge-attrs />
+  <aspects-names-row   merge-attrs />
+  <aspects-bodies-row  merge-attrs />
+  <bottoms-borders-row merge-attrs />
+</def>
+
+<def tag="card" for="Card"><!-- why non recursive ? -->
+  <report-card merge-attrs/>
+</def>
+
+<def tag="nav-item">
+  <% body = parameters.default
+     body = h(this.to_s) if body.blank? -%>
+  <li merge-attrs="&attributes - attrs_for(:a)" class="nav-item" >
+    <a merge-attrs="&attributes & attrs_for(:a)" class="toy-nav"><%= body %></a>
+  </li>
+</def>
+
+<def tag="report-cell">
+  <if test="&this">
+    <td><show-card-inline /></td>
+  </if><else>
+    <empty-cell />
+  </else>
+</def>
+
+<def tag="whole">
+  <tiny><view:name /> is the </tiny><editor:kind blank-message="aspect" /><tiny> of </tiny><a:whole param="parent-link" />
+</def>
+
+<def tag="list">
+  <tiny><view:name /> is item </tiny><editor:list_position blank-message="..."/><tiny> in </tiny><a:list param="parent-link" />
+</def>
+
+<def tag="tiny">
+  <small><small param="default" /></small>
+</def>
+
+<!--
+
+<def tag="items"> not used ??
+  <table>
+    item-ro
+  </table>
+  <add-item-row />
+</def>
+<def tag="items-rows" doc="this is deep items, an array">
+< % @list_depth ||= 0 % >
+  <unless       test="&attributes['items_off'  ]">
+    <tr>
+      <item-cells if="&attributes['numbers_off']" merge-attrs />
+    </tr>
+    <tr>
+      <table>
+        <repeat>
+          <item-row />
+        </repeat>
+      </table>
+    </tr>
+  </unless>
+</def>
+
+-->
+
+<def tag="item-row">
+  <tr>
+    <item-cells/><aspect-cells/>
+  </tr>
+</def>
+
+<def tag="aspect-cells">
+  <td>aspect cell A &nbsp;</td>
+  <td>aspect cell B &nbsp;</td>
+</def>
+
+<def tag="item-cells">
+  <td>item cell 1 &nbsp;</td>
+  <td>item cell 2 &nbsp; </td>
+</def>
+
+
+<def tag="add-aspect-cell">
+  <td class="add-aspect"><add-aspect /></td>
+</def>
+
+
+<def tag="development-stuff">
+  <if test="&false">
+   <div style="padding: 1em 0 0"><h3>For Development Only</h3></div>
+    <div>
+      Aspect of : <a field="whole" /><belongs-to-editor field="whole"/>
+    </div>
+    <div>
+      Item of : <a field="list" /><belongs-to-editor field="list"/>
+    </div>
+    <div if="&false" >
+      Aspects :
+      <ul>
+        <li repeat="&this.aspects"><view/></li>
+      </ul>
+    </div>
+  </if>
+ </def>
+
+<def tag="trash-cell">
+  <td class="transparent"><trash /></td>
+</def>
+
+<def tag="trace-cell">
+  <td>trace cell</td>
+</def>
+
+<!--
+<def tag="toy-header">
+  < %= attributes[:whole_off] %>
+  toy header is not used any more
+  <table class="toy-header">
+    <tr>
+      <if test="&this.kind">
+        <th class="kind"            ><h1><editor:kind   blank-message="toy header blank" /></h1></th>
+      </if><else><if test="&this.list">
+        <th class="number"          ><h1><editor:number blank-message="number"           /></h1></th>
+      </if><else>
+        <th class="empty-title-cell"    ><editor:kind   blank-message="toy header blank" /></th>
+      </else></else>
+    </tr>
+    <tr>
+      <td   class="name"            ><h1><editor:name   blank-message="name"             /></h1></td>
+    </tr>
+    <tr>
+      <td   class="body"            ><h3><editor:body   blank-message="name"             /></h3></td>
+    </tr>
+  </table>
+  <record-flags fields="" param/>
+</def>
+
+<report-page>
+  <content-header:>
+    <table>
+      <if test="&this.long_body?"><name-head-row /></if>
+      <else>                      <pair-head-row /></else>
+    </table>
+  </content-header:>
+  <content-aside:></content-aside:>
+  <content-body:>
+    <report-card>
+      <heading:></heading:>
+      <body:>
+        <div if="&this.long_body?">
+          <editor field="body"/>
+        </div>
+        <div>
+          <aspects/>
+        </div>
+      </body:>
+    </report-card>
+  </content-body:>
+</report-page>
+-->
+
+<def tag="report-view">
+  <li class="not-enabled view-link advanced"><%= link_to("report"  , url_for(:action => "report", :disabled => true), :disabled => true  )  %></li>
+</def>
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>
+<<<<<<< HEAD:app/views/cards/report.dryml
+
+=======
+>>>>>>> 5d93c107e1a644a66169653f044bc7ea4f08f9b5:app/views/cards/report.dryml
