@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect        '/reorders'       , :controller => "reorders", :action => "create"
   map.auto_card_kind '/cards/auto/kind', :controller => "cards"   , :action => "auto_kind"
   map.auto_card_name '/cards/auto/name', :controller => "cards"   , :action => "auto_name"
-
+  
   # The priority is based upon order of creation: first created -> highest priority.
 
 

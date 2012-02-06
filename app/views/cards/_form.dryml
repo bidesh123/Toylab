@@ -1,0 +1,169 @@
+<include src="rapid" plugin="hobo"/>
+<include src="taglibs/auto/rapid/cards"/>
+<include src="taglibs/auto/rapid/pages"/>
+<include src="taglibs/auto/rapid/forms"/>
+<include src="paperclip" plugin="paperclip_with_hobo"/>
+<include src="taglibs/application"
+
+<def tag="start-any-list">
+  <start-list />                                                              <%
+  pertinent = this                           &&
+    this.pertinent_pads.length > 0 &&
+    this.items.count == 0                                         %>
+  <start-list-from-pad if="&pertinent" />
+</def>
+
+
+<def tag="add-row">
+  <if test="&this && this.list">                                              <%
+    element, collection =
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    position = this.send "#{collection}_position"
+    tooltip, label      =
+      ["Add a row below this one",
+      "Add row"]                                                             %>
+    <add-item-or-row-form
+      element="&element"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="#{this.list_id}"
+      position="&position"
+      />
+  </if>
+  <else>not a list</else>
+</def>
+
+<def tag="add-rows">
+  <if test="&this && (list = this.list)">
+    <%  element, collection =
+      inner = this.id == @card.id ?  "" : "inner "
+    article = element == 'item' || inner > '' ? 'an' : 'a'
+    the_items = list.items
+    count = the_items.count     %>
+    <if test="&count > 0 && this.list_id != @card.list_id">
+      <add-row      with="&the_items[0]" />
+      <add-pad-rows with="&the_items[0]" />
+    </if>
+  </if>
+</def>
+
+
+<def tag="show-card-inline">
+  <%  tooltip =
+    "Leave this page to concentrate only on #{this.long_reference_name}" %>
+  <a class="zoom-in" title="&tooltip" if="&params[:id].to_i != this.id">
+    <%= "go" || image_tag("icons/zoom.png") %>
+  </a>
+</def>
+<def tag="recursive-card">
+  <% (@no_move ||= []).push !!this.ref %>
+  <table               class="card inner" if="&@no_move.include? true">
+    <hierarchical-layout />
+  </table><else><table class="card inner drop-target"                 >
+    <hierarchical-layout />
+  </table></else>
+  <% @no_move.pop %>
+</def>
+
+<def tag="hierarchical-layout">
+  <self-and-aspects-row />
+  <list-row             />
+</def>
+
+<def tag="hierarchical-card">
+  <% (@no_move ||= []).push !!this.ref %>
+  <table               class="card first-card" if="&@no_move.include? true">
+    <hierarchical-layout />
+  </table><else><table class="card first-card drop-target"                 >
+    <hierarchical-layout />
+  </table                     ></else>
+  <% @no_move.pop %>
+</def>
+
+
+
+<def tag="toggle-aspect-or-item">                                            <%=
+  horiz = attributes[:which] == "aspects"
+  sub_elements =  horiz ?       "aspects" : "items"
+  display_subs  = horiz ?       "Aspects" : "Sub-Items"
+  part = prep this, sub_elements
+  if this.send(sub_elements).count > 0
+    button_to "#{part[:show_hide]} #{display_subs}",
+      url_for(:controller => "cards"                          ,
+      :action     => "#{part[:action]}_#{part[:name]}",
+      :id         => this.id                          )
+  end                                                                         %>
+</def>
+
+
+<def tag="aspects-table">
+  <table class="aspects-table"     if="&this.saspects">
+    <tr  class="aspects-row">
+      <repeat with="&this.aspects" if="&this.aspects">
+        <aspect-cell />
+      </repeat>
+      <spacer-cell />
+    </tr>
+  </table>
+</def>
+
+<def tag="aspect-cell">
+  <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
+  <td class="#{klass}">
+    <recursive-card aspect if="&can_view?(:name)" />
+  </td>
+</def>
+
+
+<div id="auto_completer" style="display:none" class="auto_complete"></div>
+
+
+
+<def tag="corner-controls">
+  <drag-handle merge-attrs/>
+</def>
+
+
+<def tag="bottom-controls">
+  <table class="bottom-controls">
+    <tr   class="bottom-controls">
+      <td class="bottom-controls">
+    <add-rows/>
+    </td>
+    <td class="bottom-controls">
+    <start-any-list if="&true || this && this.items.count == 0" />
+    <if test="&false && can_edit?(:pad)" ><editor:pad/>Pad</if>           <%
+    new_card = Card.new :list_id  => this.id            ,
+      :suite_id => this.suite_group.id          %>
+    <br if="&false && this && this.items.count == 0 && can_create?(new_card)" />
+    <editor:theme  if="&false && can_edit?(:theme)" />
+    <editor:access if="&can_edit?(:access) && !this.suite" />
+    <br if="&false && can_edit?(:theme) || can_edit?(:access) && !this.suite" />
+    <toggle-aspect-or-item which="items" with="&this" />
+
+    <show-card-inline />
+    <trash />
+    </td>
+    <!--td class="core-add-item"><add-rows /></td>-->
+    <!--<td class="go"   ><show-card-inline /></td>
+    <td class="theme"><editor:theme     /></td>
+    <td class="access"><editor:access if="&can_edit? :access"/></td>
+    <td class="toggle"><toggle-aspect-or-item which="items" with="&this"/></td>
+    <td class="core-body-toggle"><toggle-body if="&scope.deep[:action] != 'list'"/></td>
+    <td class="core-trash"><trash/></td-->
+    </tr>
+  </table>
+</def>
+
+
+<td class="bottom-controls">
+  <bottom-controls />
+</td>
+
+
+
+<%= javascript_include_tag "prototype, effects, dragdrop, controls, lowpro, hobo-rapid, toy, jquery, jquery.lavalamp, jquery.easing" %>
+<%= javascript_include_tag "application" %>
+
+<%= stylesheet_link_tag "reset, hobo-rapid" %>
+<%= stylesheet_link_tag "application" %>

@@ -21,11 +21,12 @@ class CardsController < ApplicationController
   show_action :list
   show_action :custom
   index_action :manage
+  index_action :view_form
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
-  before_filter :grab_session
-
+  before_filter :grab_session, :except => "view_form"
+  skip_before_filter :verify_authenticity_token, :only => "view_form"
   def grab_session
     @states = session[:states]
   end
@@ -45,6 +46,8 @@ class CardsController < ApplicationController
     redirect_to :back
   end
 
+
+  
   def show_body
     set_the_current :body     , :visibility, 'on'
     redirect_to :back
@@ -91,6 +94,16 @@ class CardsController < ApplicationController
     end
   end
 
+
+  def view_form
+   
+      @card=Card.find(params[:id])
+      
+      render :layout => false if request.xhr?
+    
+  end
+
+  
   def table
     hobo_show do
       this.update_attribute(:view, "table")
@@ -167,17 +180,17 @@ class CardsController < ApplicationController
   def auto_kind #???
     # NOTE: To remove LOWER(name), remove the SQL condition and the 2nd Array element ====================================
     @cards = Card.all(:conditions => [
-      "LOWER(kind) LIKE ? AND LOWER(name) = ? AND (id = ? OR suite_id = ?)",
-      "#{params[:q].to_s.downcase}%",
-      @parent_card.name]).map(&:kind).uniq.sort, suite_id, suite_id
+        "LOWER(kind) LIKE ? AND LOWER(name) = ? AND (id = ? OR suite_id = ?)",
+        "#{params[:q].to_s.downcase}%",
+        @parent_card.name]).map(&:kind).uniq.sort, suite_id, suite_id
     render :action => :auto
   end
 
   def auto_name #???
     @cards = Card.all(:conditions => [
-      "LOWER(name) LIKE ? AND LOWER(kind) = ? AND (id = ? OR suite_id = ?)",
-      "%#{params[:q].to_s.downcase}%",
-      @parent_card.kind]).map(&:reference_name).uniq.sort, suite_id, suite_id
+        "LOWER(name) LIKE ? AND LOWER(kind) = ? AND (id = ? OR suite_id = ?)",
+        "%#{params[:q].to_s.downcase}%",
+        @parent_card.kind]).map(&:reference_name).uniq.sort, suite_id, suite_id
     render :action => :auto
   end
 
