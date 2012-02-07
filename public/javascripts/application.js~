@@ -199,7 +199,7 @@ Event.observe(window, "load", function() {
                 method: 'get'
             });
             }
-                       context.transition("mouseout");
+                  //     context.transition("mouseout");
         });
     });
 

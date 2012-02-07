@@ -323,12 +323,25 @@
   </table>
 </def>
 
+<def tag="drag-handle">
+  <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
+  domid = dom_id this, :drag_handle                      %>
+  <div class="tool" if="&this.suite && can_drag && !@no_move[0...-1].include?(true)">
+    <span class="drag_handle drag-handle" id="#{domid}">
+      Move
+    </span>
+  </div>
+</def>
 
-
+<def tag="corner-controls">
+  <drag-handle merge-attrs/>
+</def>
 <td class="bottom-controls" id="bottom-<%=this.id%>">
 <bottom-controls />
 </td>
-
+<td class="corner-controls">
+      <corner-controls merge-attrs/>
+</td>
 
 
 
