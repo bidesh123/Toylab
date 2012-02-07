@@ -220,7 +220,7 @@
   display_subs  = horiz ?       "Aspects" : "Sub-Items"
   part = prep this, sub_elements
   if this.send(sub_elements).count > 0
-    button_to "#{part[:show_hide]} #{display_subs}",
+    link_to "#{part[:show_hide]} #{display_subs}",
       url_for(:controller => "cards"                          ,
       :action     => "#{part[:action]}_#{part[:name]}",
       :id         => this.id                          )

@@ -330,7 +330,10 @@ div.slide input.delete-button {
    margin:3.618em;
 }
 
+.button{
+    background:none;border:0;color:#ffffff;
 
+}
 body.edit-page div.content-body {font-size:261.8%;}
 
 div.aside {float:left;}

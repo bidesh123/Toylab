@@ -1,4 +1,4 @@
 # TODO Operate on the page object
-if page["bottom-#{@card.id}"]
+unless page["bottom-#{@card.id}"].nil?
 page.remove "bottom-#{@card.id}"
 end
