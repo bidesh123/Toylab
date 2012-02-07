@@ -327,6 +327,7 @@
 
 <td class="bottom-controls" id="bottom-<%=this.id%>">
 <bottom-controls />
+<%= link_to_function "Menu Close", "menuClose(#{this.id})" %>
 </td>
 
 

@@ -1,3 +1,4 @@
 # TODO Operate on the page object
 
 page.remove "bottom-#{@card.id}"
+page.hide "corner-#{@card.id}"

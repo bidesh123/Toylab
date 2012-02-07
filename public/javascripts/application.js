@@ -187,19 +187,13 @@ Event.observe(window, "load", function() {
 
         Event.observe(table, "mouseover", function() {
 
-            new Ajax.Request('/cards/view_form?id='+table.readAttribute("id").split("_")[1],{
-                method: 'get'
-            });
-        context.transition("mouseover");
+            
+            //context.transition("mouseover");
         });
         Event.observe(table, "mouseout",  function() {
             //            $("bottom-"+table.readAttribute("id").split("_")[1]).hide();
-                      if ($("bottom-"+table.readAttribute("id").split("_")[1])){
-                                          new Ajax.Request('/cards/delete_form?id='+table.readAttribute("id").split("_")[1],{
-                method: 'get'
-            });
-            }
-                       context.transition("mouseout");
+                      
+            context.transition("mouseout");
         });
     });
 
@@ -264,6 +258,20 @@ Event.observe(window, "load", function() {
     });
 });
 
+function menuClose(id){
+    if (id){
+        new Ajax.Request('/cards/delete_form?id='+id,{
+            method: 'get'
+        });
+    }
+}
+
+function menuOpen(id){
+
+    new Ajax.Request('/cards/view_form?id='+id,{
+        method: 'get'
+    });
+}
 function adjustRows (textarea) {
     if (document.all) {
         while (textarea.scrollHeight > textarea.clientHeight)

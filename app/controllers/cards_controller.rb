@@ -150,7 +150,7 @@ class CardsController < ApplicationController
 
   def delete_form
     @card=Card.find(params[:id])
-    render :alyout => false if request.xhr?
+    render :layout => false if request.xhr?
   end
 
   def manage

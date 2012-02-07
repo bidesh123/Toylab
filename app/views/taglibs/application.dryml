@@ -833,6 +833,7 @@
     <simple-numbering if="&this.list"/>
   </if>
   <editor:name blank-message="&this.blank_name"/>
+  <%=  link_to_function "Menu", "menuOpen(#{this.id})" %>
 </td>
 <empty-cell if="&!scope.deep[:no_aspects]" />
 </tr>
@@ -1368,7 +1369,7 @@
 
 <def tag="core-bottom-controls-tr">
   <tr id="show-form-#{this.id}" class="core-controls" style="display:none;">
-    <td class="corner-controls">
+    <td class="corner-controls" id="corner-<%= this.id %>">
       <corner-controls merge-attrs/>
 </td>
 
