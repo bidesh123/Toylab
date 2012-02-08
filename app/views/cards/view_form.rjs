@@ -1,3 +1,5 @@
 # TODO Operate on the page object
 page.show "show-form-#{@card.id}"
-page.replace_html "show-form-#{@card.id}", :partial => "/cards/form", :locals => {:this => @card}
+page.show "right-controls-#{@card.id}"
+page.replace_html "show-form-#{@card.id}", :partial => "/cards/form", :locals => {:this => @card, :attributes => @card.attributes}
+page.replace_html "add-aspect-#{@card.id}", :partial => "/cards/aspect_form", :locals =>{:this => @card, :attributes => @card.attributes}

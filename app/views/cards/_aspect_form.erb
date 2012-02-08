@@ -1,0 +1,68 @@
+<def tag="add-aspect">
+  <if test="&this">
+    <% tooltip =
+      (this.aspects.count > 0 ?
+        " Describe another aspect of " : "Describe aspects of ") +
+      this.reference_name
+    new_card = this.class.new(
+      :whole_id => this.id            ,
+      :suite_id => this.suite_group.id)
+  %>
+    <form class="add-aspect" with="&new_card">
+      <submit label="Add an aspect" title="&tooltip" class="toy-nav add-aspect"/>
+      <after-submit uri="#{request.request_uri}"/>
+    </form>
+  </if>
+</def>
+
+
+<def tag="toggle-aspect-or-item">                                            <%=
+  horiz = attributes[:which] == "aspects"
+  sub_elements =  horiz ?       "aspects" : "items"
+  display_subs  = horiz ?       "Aspects" : "Sub-Items"
+  part = prep this, sub_elements
+  if this.send(sub_elements).count > 0
+    link_to "#{part[:show_hide]} #{display_subs}",
+      url_for(:controller => "cards"                          ,
+      :action     => "#{part[:action]}_#{part[:name]}",
+      :id         => this.id                          )
+  end                                                                         %>
+</def>
+<def tag="manage-attachment">
+  <!--%= this.attachment.url.to_s %-->
+  <span class="tool" if="&can_edit?(:attachment)">                           <%=
+    cid = dom_id this, :attachment
+    link_to_function "Image", "$(#{cid.to_json}).show()"                      %>
+  </span>
+</def>
+
+<def tag="toggle-script-editor">
+  <span class="tool" if="&can_edit?(:script)">
+    <li class="script-show">                                                 <%=
+      part = prep this, :script
+      link_to "#{part[:show_hide]} Script",
+        url_for(
+        :controller => "cards"                          ,
+        :action     => "#{part[:action]}_#{part[:name]}",
+        :id         => this.id                          )                   %>
+    </li>
+  </span>
+</def>
+
+
+<def tag="card-id" >
+  <if test="&current_user.administrator?">
+    <div class="tool">
+      <%= this.suite? ? 'Suite' : 'Card' %> <%= this.id %>
+    </div>
+    <div class="tool" >
+      <context-editors />
+    </div>
+  </if>
+</def>
+<toggle-aspect-or-item which="aspects"/>
+  <toggle-script-editor />
+  <card-id if="&current_user.name == 'prog'" />
+
+<add-aspect />
+<manage-attachment />

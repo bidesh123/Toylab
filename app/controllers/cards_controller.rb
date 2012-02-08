@@ -99,8 +99,10 @@ class CardsController < ApplicationController
   def view_form
    
     @card=Card.find(params[:id])
-      
-    render :layout => false if request.xhr?
+    if request.xhr?
+      render :layout => false
+   
+    end
     
   end
 
@@ -175,7 +177,7 @@ class CardsController < ApplicationController
               uri << "?edit_id=#{@card.id}"
             end
 
-            redirect_to uri
+            redirect_to @card
           else
             redirect_to @card
           end

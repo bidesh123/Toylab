@@ -5,13 +5,13 @@
 </def>
 
 <def tag="core-right-controls-td">
-  <td class="right-controls" rowspan="3" style="display:none">
-    <toggle-aspect-or-item which="aspects"/>
-    <toggle-script-editor />
-    <card-id if="&current_user.name == 'prog'" />
-    <add-aspect />
-    <manage-attachment />
-  </td>
+  <td class="right-controls" rowspan="3" style="display:none" id="right-controls-#{this.id}">
+  
+  
+  <div id="add-aspect-#{this.id}">
+    
+  </div>
+</td>
 </def>
 <def tag="toy-edit">
   <set-scoped deep="&@card.edit_deep" >
@@ -24,8 +24,8 @@
       <content-body:>
         <rails-authenticity-token />
         <javascript-variables if="&false"/>
-      <% Card.recursivity_reset
-         Card.numbering_reset #tree only %>
+        <% Card.recursivity_reset
+        Card.numbering_reset #tree only %>
         <card first tree-view />
       </content-body:  >
       <aside:></aside:>
@@ -36,10 +36,10 @@
 <def tag="aspects-table">
   <table class="aspects-table"     if="&this.aspects">
     <tr  class="aspects-row">
-      <repeat with="&this.aspects" if="&this.aspects">
-        <aspect-cell />
-      </repeat>
-      <spacer-cell />
+    <repeat with="&this.aspects" if="&this.aspects">
+      <aspect-cell />
+    </repeat>
+    <spacer-cell />
     </tr>
   </table>
 </def>
@@ -47,15 +47,15 @@
 <def tag="aspect-cell">
   <%  klass="aspect-cell #{this.theme_class} model::card:#{this.id}" %>
   <td class="#{klass}">
-    <recursive-card aspect if="&can_view?(:name)" />
-  </td>
+  <recursive-card aspect if="&can_view?(:name)" />
+</td>
 </def>
 
 <def tag="tree-view">
   <li class="not-enabled view-link advanced">
-     <%= link_to("tree"                                       ,
-                 url_for(:action => "edit", :disabled => true),
-                 :disabled => true)                           %>
+    <%= link_to("tree"                                       ,
+      url_for(:action => "edit", :disabled => true),
+      :disabled => true)                           %>
   </li>
 </def>
 

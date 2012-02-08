@@ -155,7 +155,7 @@
     <submit label=                    "&attributes[:label]"
             title="&attributes[:tooltip] || attributes[:label]"
             class="&submit_style" />
-    <after-submit uri="#{request.request_uri}"/>
+    
   </form>
 </def>
 
@@ -286,7 +286,7 @@
   <!-- <delete-button
                  with="&this" after-submit="&redirect_uri" title="#{tooltip}"
                  label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
-  <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+  <delete-button with="&this"  title="#{tooltip}"
                  label="Erase!" class="nav-button"                               />
 </def>
 
