@@ -1,0 +1,6 @@
+<%
+  url= this.attachment.url
+  valid_url = url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'      %>
+  <img src="&url" if="&valid_url" />                                         <%
+  domid = id, :attachment                                            %>
+  <form id="#{domid}"  />

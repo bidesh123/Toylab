@@ -258,6 +258,15 @@ Event.observe(window, "load", function() {
     });
 });
 
+
+function showImage(id,card_id){
+
+    if (id){
+        new Ajax.Request('/cards/show_image?id='+id+'&card_id='+card_id,{
+            method: 'get'
+        });
+    }
+}
 function menuClose(id){
     if (id){
         new Ajax.Request('/cards/delete_form?id='+id,{

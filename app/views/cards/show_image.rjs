@@ -1,0 +1,2 @@
+# TODO Operate on the page object
+page.replace_html "show-image-#{@card.id}", :partial => "/cards/show_image", :locals => {:id => params[:id], :this => @card}

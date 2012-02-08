@@ -1,0 +1,24 @@
+
+
+<def tag="core-image-row">
+  <tr class="core-image-row">
+  <empty-cell />
+  <td class="core-image">
+  <core-image />
+</td>
+<empty-cell />
+</tr>
+</def>
+
+<def tag="core-image">                                                       <%
+  url= this.attachment.url
+  valid_url = url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'      %>
+  <img src="&url" if="&valid_url" />                                         <%
+  domid = dom_id this, :attachment                                            %>
+  <form id="#{domid}" style="display:none;" />
+</def>
+
+
+
+
+<core-image-row                                                   />

@@ -23,6 +23,7 @@ class CardsController < ApplicationController
   index_action :manage
   index_action :view_form
   index_action :delete_form
+  index_action :show_image
 
   before_filter :load_editable_card, :only => %w(show edit)
   before_filter :load_parent_card  , :only => %w(auto_kind auto_name)
@@ -149,6 +150,10 @@ class CardsController < ApplicationController
     end
   end
 
+  def show_image
+    @card=Card.find(params[:card_id])
+    render :layout => false if request.xhr?
+  end
 
   def delete_form
     @card=Card.find(params[:id])
