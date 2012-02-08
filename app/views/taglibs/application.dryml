@@ -702,7 +702,7 @@
   <!--%= this.attachment.url.to_s %-->
   <span class="tool" if="&can_edit?(:attachment)">                           <%=
     cid = dom_id this, :attachment
-    link_to_function "Image", "$(#{cid.to_json}).show()"                      %>
+    link_to_function "Image", "showImage($(#{cid.to_json}, #{this.id})"                      %>
   </span>
 </def>
 
@@ -713,7 +713,10 @@
 </extend>
 
 <def tag="core-image">
-
+<%
+  url= this.attachment.url
+  valid_url = url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'      %>
+  <img src="&url" if="&valid_url" />   
   <div id="show-image-#{this.id}"></div>
 
 </def>
