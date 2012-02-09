@@ -165,7 +165,7 @@ Event.observe(window, "load", function() {
             state          : 'hidden',
             coreControls   : table.down(".core-controls"),
             aspectControls : table.down(".right-controls"),
-
+            menu           : table.down(".menu"),
             // Executes a function after a timeout
             delay          : function(delay, fn) {
                 this.cancellableFunction = fn.delay(delay, this);
@@ -186,16 +186,20 @@ Event.observe(window, "load", function() {
         };
 
         Event.observe(table, "mouseover", function() {
-
+            context.menu.show();
             
-            //context.transition("mouseover");
+           
         });
         Event.observe(table, "mouseout",  function() {
             //            $("bottom-"+table.readAttribute("id").split("_")[1]).hide();
-                      
+             context.menu.hide();
             context.transition("mouseout");
         });
     });
+
+
+
+
 
     $$(".editor.in-place-edit.card-kind").each(function(el) {
         Event.observe(el, "click", function() {
@@ -276,6 +280,9 @@ function menuClose(id){
 }
 
 function menuOpen(id){
+
+
+
 
     new Ajax.Request('/cards/view_form?id='+id,{
         method: 'get'
