@@ -8,6 +8,8 @@
 
 
 
+
+
 <def tag="start-list-from-pad">                                               <%
   that = this
   element, collection =
@@ -155,7 +157,7 @@
     <submit label=                    "&attributes[:label]"
             title="&attributes[:tooltip] || attributes[:label]"
             class="&submit_style" />
-    
+
   </form>
 </def>
 
@@ -325,10 +327,10 @@
 
 
 
-<td class="bottom-controls" id="bottom-<%=this.id%>">
+
 <bottom-controls />
 <%= link_to_function "Menu Close", "menuClose(#{this.id})" %>
-</td>
+
 
 
 

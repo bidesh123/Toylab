@@ -713,7 +713,7 @@
 </extend>
 
 <def tag="core-image">
-<%
+  <%
   url= this.attachment.url
   valid_url = url.to_s[-12,12] != '/missing.png' && url.to_s[-1,1] !='.'      %>
   <img src="&url" if="&valid_url" />   
@@ -1369,9 +1369,13 @@
 </def>
 
 <def tag="core-bottom-controls-tr">
-  <tr id="show-form-#{this.id}" class="core-controls" style="display:none;">
-    <td class="corner-controls" id="corner-<%= this.id %>">
-      <corner-controls merge-attrs/>
+  <tr  id="show-form-#{this.id}" class="core-controls">
+    <td class="bottom-controls" id="bottom-<%=this.id%>">
+
+    </td>
+
+    <td class="corner-controls" id="corner-<%= this.id %>" style="display:none;">
+  <corner-controls merge-attrs/>
 </td>
 
 </tr>

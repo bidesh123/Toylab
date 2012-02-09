@@ -280,6 +280,7 @@ function menuOpen(id){
     new Ajax.Request('/cards/view_form?id='+id,{
         method: 'get'
     });
+    $("corner-"+id).show();
 }
 function adjustRows (textarea) {
     if (document.all) {

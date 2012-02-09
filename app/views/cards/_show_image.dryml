@@ -1,3 +1,2 @@
-                                      <%
-  domid = id, :attachment                                            %>
+ <%domid = id, :attachment%>
   <form id="#{domid}"  />
