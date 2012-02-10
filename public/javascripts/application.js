@@ -279,15 +279,26 @@ function menuClose(id){
     }
 }
 
-function menuOpen(id){
+function menuOpen(id,element){
 
+   
 
-
-
+    if ($(element).readAttribute("value") == "true"){
     new Ajax.Request('/cards/view_form?id='+id,{
         method: 'get'
     });
     $("corner-"+id).show();
+    $(element).setAttribute("value", false);
+    }
+    else{
+        if (id){
+        new Ajax.Request('/cards/delete_form?id='+id,{
+            method: 'get'
+        });
+        $(element).setAttribute("value", true);
+    }
+    }
+
 }
 function adjustRows (textarea) {
     if (document.all) {

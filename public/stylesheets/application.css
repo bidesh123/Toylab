@@ -332,7 +332,7 @@ div.slide input.delete-button {
 
 .button{
     background:none;border:0;color:#ffffff;
-
+    font-size: 16px;
 }
 body.edit-page div.content-body {font-size:261.8%;}
 

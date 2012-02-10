@@ -78,7 +78,7 @@
       position="&position"
       />
   </if>
-  <else>not a list</else>
+  <else></else>
 </def>
 
 
