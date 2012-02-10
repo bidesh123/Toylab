@@ -834,7 +834,7 @@
     <simple-numbering if="&this.list"/>
   </if>
   <editor:name blank-message="&this.blank_name"/>
-  <%=  link_to_function image_tag("/images/menu_down.png"), "menuOpen(#{this.id},this)", :style => "display:none;", :class => "menu", :value => true %>
+  <%=  link_to_function "Menu", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %>
 </td>
 <empty-cell if="&!scope.deep[:no_aspects]" />
 </tr>

@@ -329,7 +329,7 @@
 
 <div id="bottom-control-<%= this.id %>">
 <bottom-controls />
-<%= link_to_function "Menu Close", "menuClose(#{this.id})" %>
+
 </div>
 
 
