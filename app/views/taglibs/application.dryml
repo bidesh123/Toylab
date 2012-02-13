@@ -818,6 +818,7 @@
 </else>
 </th>
 <else><empty-cell /></else>
+ <th class="#{kind_style}" align="right"> <%=  link_to_function "Menu", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %></th>
 <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
 <else><td rowspan="<%=  n_rows - 1 %>"></td></else>
 </tr>
@@ -834,7 +835,7 @@
     <simple-numbering if="&this.list"/>
   </if>
   <editor:name blank-message="&this.blank_name"/>
-  <%=  link_to_function "Menu", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %>
+ 
 </td>
 <empty-cell if="&!scope.deep[:no_aspects]" />
 </tr>
