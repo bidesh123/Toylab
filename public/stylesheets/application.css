@@ -360,7 +360,7 @@ td.body-cell {font-size:61.8%;}
 div.slide {margin-top:.618em;}
 div.card-body{margin-top:.00em;}
 td.right-controls, tr.core-controls{font-size:12pt;background: #9cf}
-td.right-controls a, tr.core-controls a, .drag-handle {color:white;}
+td.right-controls a, tr.core-controls a, .drag-handle {color:white; text-decoration: none;}
 td.right-controls a:hover, tr.core-controls a:hover, .drag-handle:hover{color:#f9c;}
 /*report*/
 td.aspect-name-cell {font-size:262%;}
