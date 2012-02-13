@@ -1475,7 +1475,11 @@ th.numeric {
             margin: auto 10px;
         }
 
-        .menu:hover{
+
+       th.kind-cell a.menu{
+            color:#eee;
+}
+       th.kind-cell a.menu:hover{
 
             color:#9cf;
 }
