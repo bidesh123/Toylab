@@ -269,6 +269,7 @@ class Card < ActiveRecord::Base
   end
 
   def follow_up_on_create
+    self.update_attribute(:name, Card.find(self.mold_id).name) unless self.mold_id.nil? || Card.find(self.mold_id).nil?  || Card.find(self.mold_id).name.nil?
     uniquely do
       generate_dependents mold
     end
@@ -295,11 +296,7 @@ class Card < ActiveRecord::Base
             :name => Card.find(source_mold(sub_source).id).name,
             :body => Card.find(source_mold(sub_source).id).body,
             :suite_id => suite_id
-        elsif  !Card.find(suite_id).nil?
-          self.send(part).create! :mold_id  => source_mold(sub_source).id,
-            :name => Card.find(suite_id).name,
-            :body => Card.find(suite_id).body,
-            :suite_id => suite_id
+       
         else
           self.send(part).create! :mold_id  => source_mold(sub_source).id,
             :suite_id => suite_id
