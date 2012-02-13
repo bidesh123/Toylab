@@ -818,7 +818,9 @@
 <else>
   <a kind with="&the_mold"><view field="kind" /></a>
 </else>
-<span style="float:right;"><%=  link_to_function "o", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %></span>
+<span style="float:right;"><%=  link_to_function "o", "menuOpen(#{this.id},this)", :class => "menu tiny-gray", :value => true, :style => "text-decoration:none; color: #EEEEEE;
+    
+    padding-top: 0;" %></span>
 </th>
 <else><empty-cell /></else>
 

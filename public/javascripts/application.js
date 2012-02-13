@@ -186,13 +186,13 @@ Event.observe(window, "load", function() {
         };
 
         Event.observe(table, "mouseover", function() {
-            context.menu.show();
+           // context.menu.show();
             
            
         });
         Event.observe(table, "mouseout",  function() {
             //            $("bottom-"+table.readAttribute("id").split("_")[1]).hide();
-             context.menu.hide();
+             //context.menu.hide();
             context.transition("mouseout");
         });
     });
