@@ -818,10 +818,10 @@
 <else>
   <a kind with="&the_mold"><view field="kind" /></a>
 </else>
-<th class="#{kind_style}" align="right"> <%=  link_to_function "Menu", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %></th>
+
 </th>
 <else><empty-cell /></else>
- 
+ <th class="#{kind_style}" align="right"> <%=  link_to_function "Menu", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %></th>
 <core-right-controls-td if="&!scope.deep[:no_aspects]"/>
 <else><td rowspan="<%=  n_rows - 1 %>"></td></else>
 </tr>
