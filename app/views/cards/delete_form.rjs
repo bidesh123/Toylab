@@ -3,3 +3,4 @@ page.hide "right-controls-#{@card.id}"
 page.visual_effect :highlight, "bottom-control-#{@card.id}", :duration => 3
 page.remove "bottom-control-#{@card.id}"
 page.hide "corner-#{@card.id}"
+page.replace_html "menu-#{@card.id}", :partial => "/cards/hide_menu", :locals => {:card => @card}
