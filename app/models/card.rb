@@ -17,9 +17,9 @@ class Card < ActiveRecord::Base
 
   def self.default_body
     get toy("Toy Controls").s("Defaults", "Suite") rescue nil
-#    get its("Defaults")
-#    get its("Suite")
-#    its :body
+    #    get its("Defaults")
+    #    get its("Suite")
+    #    its :body
   end
 
   def s *refs
@@ -62,40 +62,40 @@ class Card < ActiveRecord::Base
     it.fild reference
   end
 
-#  def it
-#    self.class.it
-#  end
-#
-#  def self.the a
-#    its a
-#  end
-#  this behavior seems covered by the aliases above
+  #  def it
+  #    self.class.it
+  #  end
+  #
+  #  def self.the a
+  #    its a
+  #  end
+  #  this behavior seems covered by the aliases above
 
   def self.sub reference
     return unless self.it.class.name == "Card"
     self.it.sub reference
-#    relevant = self.it.aspects.select do |aspect|
-#      aspect.recursive_kind ==  reference
-#    end + Card.find(:all                                               ,
-#                    :conditions => ["list_id = ? and name = ?"       ,
-#                                               self.it.id,  reference] )
-#    relevant[0] if relevant.length > 0
+    #    relevant = self.it.aspects.select do |aspect|
+    #      aspect.recursive_kind ==  reference
+    #    end + Card.find(:all                                               ,
+    #                    :conditions => ["list_id = ? and name = ?"       ,
+    #                                               self.it.id,  reference] )
+    #    relevant[0] if relevant.length > 0
   end
 
   def sub reference
     relevant = aspects.select do |aspect|
       aspect.recursive_kind ==  reference
     end + Card.find(:all                                               ,
-                    :conditions => ["list_id = ? and name = ?"       ,
-                                               id,          reference] )
+      :conditions => ["list_id = ? and name = ?"       ,
+        id,          reference] )
     relevant[0] if relevant.length > 0
   end
 
   def self.toy reference
     Card.find(        :first, :conditions => [
-      "owner_id = ?        and name      = ?",
-      User.administrator_id,   reference
-    ])
+        "owner_id = ?        and name      = ?",
+        User.administrator_id,   reference
+      ])
   end
 
   def look_wider                 contexts, deep, max_aspect_depth, aspect_depth
@@ -122,7 +122,7 @@ class Card < ActiveRecord::Base
     aspect_depth -= 1
     deep
   end
-# build up columns
+  # build up columns
   
   fields do
     name             :string
@@ -131,14 +131,14 @@ class Card < ActiveRecord::Base
     script           :text
     pad              :boolean
     view             enum_string(:view   , :none  , :custom,
-                                 :page   , :slide ,
-                                 :list   , :opus  , :tree  ,
-                                 :table  , :report, :chart                  )
+      :page   , :slide ,
+      :list   , :opus  , :tree  ,
+      :table  , :report, :chart                  )
     access           enum_string(:access ,
-                                 :private, :public, :shared, :open , :closed)
+      :private, :public, :shared, :open , :closed)
     theme            enum_string(:theme  ,
-                                 :pink   , :orange, :yellow, :green, :purple,
-                                 :none                                      )
+      :pink   , :orange, :yellow, :green, :purple,
+      :none                                      )
     list_position    :integer
     whole_position   :integer
     table_position   :integer
@@ -151,57 +151,57 @@ class Card < ActiveRecord::Base
   #1
   belongs_to :list     , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true
   has_many   :items    , :class_name => "Card"  , :foreign_key => :list_id    , :accessible => true,
-                         :dependent  => :destroy, :order       => "list_position"
+    :dependent  => :destroy, :order       => "list_position"
   #2
   belongs_to :whole    , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true
   has_many   :aspects  , :class_name => "Card"  , :foreign_key => :whole_id   , :accessible => true,
-                         :dependent  => :destroy, :order       => "whole_position"
+    :dependent  => :destroy, :order       => "whole_position"
   #3
   belongs_to :table    , :class_name => "Card"  , :foreign_key => :table_id   , :accessible => true
   has_many   :columns  , :class_name => "Card"  , :foreign_key => :table_id   , :accessible => true,
-                         :dependent  => :destroy, :order       => "table_position"
+    :dependent  => :destroy, :order       => "table_position"
   #4
   belongs_to :mold     , :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
-# has_many   :instances, :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
+  # has_many   :instances, :class_name => "Card"  , :foreign_key => :mold_id    , :accessible => true
   #5
   belongs_to :ref      , :class_name => "Card"  , :foreign_key => :ref_id      , :accessible => true
-# has_many   :akas     , :class_name => "Card"  , :foreign_key => :ref_id      , :accessible => true
+  # has_many   :akas     , :class_name => "Card"  , :foreign_key => :ref_id      , :accessible => true
   #6
   belongs_to :suite    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true
   has_many   :parts    , :class_name => "Card"  , :foreign_key => :suite_id   , :accessible => true,
-                         :dependent  => :destroy
+    :dependent  => :destroy
 
   sortable :scope => :list_id , :list_name => :list ,  :column =>  :list_position
   sortable :scope => :whole_id, :list_name => :whole,  :column => :whole_position
   sortable :scope => :table_id, :list_name => :table,  :column => :table_position
 
   named_scope :suites    ,
-     :conditions  => "suite_id IS NULL",
-     :order       => "created_at DESC"
+    :conditions  => "suite_id IS NULL",
+    :order       => "created_at DESC"
 
   named_scope :named    , lambda {             |nam | {
-    :conditions   => ["name = ?"              , nam                    ]
-  }}
+      :conditions   => ["name = ?"              , nam                    ]
+    }}
 
   named_scope :as_a     , lambda {             |kind| {
-    :conditions   => ["kind = ? OR kind = '' OR kind IS NULL"   , kind ]
-  }}
+      :conditions   => ["kind = ? OR kind = '' OR kind IS NULL"   , kind ]
+    }}
 
   named_scope :part_of  , lambda {             |s_id| {
-    :conditions   => ["suite_id = ?"          , s_id                   ]
-  }}
+      :conditions   => ["suite_id = ?"          , s_id                   ]
+    }}
 
   named_scope :but_not  , lambda {             |i_d | {
-    :conditions   => ["id != ?"               , i_d                    ]
-  }}
+      :conditions   => ["id != ?"               , i_d                    ]
+    }}
 
   named_scope :originals, lambda {                    {
-    :conditions   => ["ref_id IS NULL"                                 ]
-  }}
+      :conditions   => ["ref_id IS NULL"                                 ]
+    }}
 
   named_scope :latest   , lambda {                    {
-    :order        => "created_at DESC"
-  }}
+      :order        => "created_at DESC"
+    }}
 
   IDMark = 'cf::'
   RecursivityMax = 3
@@ -232,34 +232,34 @@ class Card < ActiveRecord::Base
   end
 
   def follow_up_on_update
-#        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-#        logger.debug "@catch"
-#        logger.debug "catch"
+    #        logger.debug "follow up on updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    #        logger.debug "@catch"
+    #        logger.debug "catch"
     return if on_automatic? || !whole
-#        logger.debug "not on automaticccccccccccccccccc"
+    #        logger.debug "not on automaticccccccccccccccccc"
     on_automatic do
-#          logger.debug "now yessssssssssssssssssssssssss"
+      #          logger.debug "now yessssssssssssssssssssssssss"
       return unless name && k = recursive_kind
       return if name.strip.match(/^(\+|-)?\d+(,|.)\d*/)
-#          logger.debug "name: #{name}"
+      #          logger.debug "name: #{name}"
       names      = self.class.named(name)
-#          logger.debug "#{names.length} namesssssssssss"
-#          logger.debug "recursive_kind: #{k}"
+      #          logger.debug "#{names.length} namesssssssssss"
+      #          logger.debug "recursive_kind: #{k}"
       kinds      = names #.as_a(k)
-#          logger.debug "#{kinds.length} as a #{k}"
+      #          logger.debug "#{kinds.length} as a #{k}"
       suites     = kinds.part_of(suite_id)
-#          logger.debug "#{suites.length} part of #{suite_id}"
+      #          logger.debug "#{suites.length} part of #{suite_id}"
       all_but    = suites.but_not(id)
-#          logger.debug "#{all_but.length} but not #{id}"
+      #          logger.debug "#{all_but.length} but not #{id}"
       origs      = all_but.originals
-#          logger.debug "#{origs.length} originals"
+      #          logger.debug "#{origs.length} originals"
       candidates = origs.latest
-#          logger.debug "candidatessssssssss"
-#          logger.debug candidates.to_yaml
+      #          logger.debug "candidatessssssssss"
+      #          logger.debug candidates.to_yaml
       match = candidates.detect {|c| c.recursive_kind == k}
       return unless match
-#          logger.debug "match : #{match.id}"
-#          logger.debug "uuuuuuuuuuuuuuuuuuuu"
+      #          logger.debug "match : #{match.id}"
+      #          logger.debug "uuuuuuuuuuuuuuuuuuuu"
       update_attributes :ref_id => match.id
     end
   end
@@ -275,7 +275,11 @@ class Card < ActiveRecord::Base
   end
 
   def      uniquely # expects a block
+    
     t = Thread.current[:recursivity] ||= []
+    puts "============================================="
+    puts t
+    puts "--------------------------------"
     already_there = t.include? id
     t.push id
     yield if t.length <= RecursivityMax && !already_there
@@ -286,8 +290,20 @@ class Card < ActiveRecord::Base
   def generate_dependents source
     [:aspects, :items].each do |part|
       source.send(part).each do |sub_source|
-        self.send(part).create! :mold_id  => source_mold(sub_source).id,
-                                :suite_id => suite_id
+        if !Card.find(source_mold(sub_source).id).nil?
+          self.send(part).create! :mold_id  => source_mold(sub_source).id,
+            :name => Card.find(source_mold(sub_source).id).name,
+            :body => Card.find(source_mold(sub_source).id).body,
+            :suite_id => suite_id
+        elsif  !Card.find(suite_id).nil?
+          self.send(part).create! :mold_id  => source_mold(sub_source).id,
+            :name => Card.find(suite_id).name,
+            :body => Card.find(suite_id).body,
+            :suite_id => suite_id
+        else
+          self.send(part).create! :mold_id  => source_mold(sub_source).id,
+            :suite_id => suite_id
+        end
       end
     end if source.is_a? Card
   end
@@ -310,12 +326,12 @@ class Card < ActiveRecord::Base
   end
 
   has_attached_file :attachment,
-#    :styles => {
-#      :icon    => "32x32"  ,
-#      :preview => "160x160",
-#      :large   => "400x400"
-#    },
-    :storage        => :s3                                ,
+    #    :styles => {
+  #      :icon    => "32x32"  ,
+  #      :preview => "160x160",
+  #      :large   => "400x400"
+  #    },
+  :storage        => :s3                                ,
     :s3_credentials => "#{RAILS_ROOT}/config/s3.yml"      ,
     :path           => ":attachment/:id/:style.:extension",
     :bucket         => 'toy-office-development'
@@ -323,12 +339,12 @@ class Card < ActiveRecord::Base
   def init_from_s3_upload
     self.attachment_content_type =
       file_extension_content_type(self.attachment_file_name)
-#    acl_obj = self.attachment.s3_object.acl
-#    if acl_obj.grants.find { |g| g.to_s =~ /READ to AllUsers/ }
-#      self.acl = 'public-read'
-#    else
-#      self.acl = 'private'
-#    end
+    #    acl_obj = self.attachment.s3_object.acl
+    #    if acl_obj.grants.find { |g| g.to_s =~ /READ to AllUsers/ }
+    #      self.acl = 'public-read'
+    #    else
+    #      self.acl = 'private'
+    #    end
   end
 
   before_save do |c|
@@ -353,7 +369,7 @@ class Card < ActiveRecord::Base
     when :list
       [list , target_context.items  ]
     else
-     return # not supported
+      return # not supported
     end
     remove_from_list grouping
     destination_collection << self
@@ -375,8 +391,8 @@ class Card < ActiveRecord::Base
         insert_in_context target.list , grouping, target.list_position
       end
     else    # target is a context
-        logger.debug "insert_in_context target      , grouping                        #{[target         , grouping                       ].to_yaml}jjjjjjjjjjjjjjjjjjjjjjjj"
-        insert_in_context target      , grouping
+      logger.debug "insert_in_context target      , grouping                        #{[target         , grouping                       ].to_yaml}jjjjjjjjjjjjjjjjjjjjjjjj"
+      insert_in_context target      , grouping
     end
   end
  
@@ -399,7 +415,7 @@ class Card < ActiveRecord::Base
     n, bad = Card.count, Thread.current[:bad_suites]
     if bad = Thread.current[:bad_suites]
       "#{bad} fixed of #{Card.count}"
-     else
+    else
       "#{Card.count} OK"
     end
   end
@@ -422,10 +438,10 @@ class Card < ActiveRecord::Base
     (attachment.content_type =~ /^image.*/) ? true : false
   end
 
-#  def create_image_on_cloud
-##    self.attachment.reprocess!
-#  end
-#
+  #  def create_image_on_cloud
+  ##    self.attachment.reprocess!
+  #  end
+  #
   def file_extension_content_type filename
     types = MIME::Types.type_for(filename)
     types.empty? ? nil : types.first.content_type
@@ -436,25 +452,25 @@ class Card < ActiveRecord::Base
     when "Card"
       case reference
       when
-           nil             , :owner,
-           :id             , :owner_id       ,
-           :name           , :kind           , :attachment     ,
-           :ref            , :mold           , :suite          ,
-           :ref_id         , :mold_id        , :suite_id       ,
-           :akas           , :instances      , :parts          ,
+        nil             , :owner,
+          :id             , :owner_id       ,
+          :name           , :kind           , :attachment     ,
+          :ref            , :mold           , :suite          ,
+          :ref_id         , :mold_id        , :suite_id       ,
+          :akas           , :instances      , :parts          ,
 
-           :list_id        , :whole_id       , :table_id       ,
-           :list_position  , :whole_position , :table_position ,
-           :list           , :whole          , :table          ,
-           :items          , :aspects        , :columns        ,
+          :list_id        , :whole_id       , :table_id       ,
+          :list_position  , :whole_position , :table_position ,
+          :list           , :whole          , :table          ,
+          :items          , :aspects        , :columns        ,
 
-           :body           , :access         , :theme          ,
-           :script         , :view           , :pad            ,
-           :created_at     , :updated_at                       ,
-           :attachment_file_name             ,
-           :attachment_content_type          ,
-           :attachment_file_size             ,
-           :attachment_updated_at
+          :body           , :access         , :theme          ,
+          :script         , :view           , :pad            ,
+          :created_at     , :updated_at                       ,
+          :attachment_file_name             ,
+          :attachment_content_type          ,
+          :attachment_file_size             ,
+          :attachment_updated_at
         it.send("#{reference}=", val)
       else
         ""
@@ -466,133 +482,133 @@ class Card < ActiveRecord::Base
 
   def edit_permitted?(attribute) #try_the_automatically_derived_version_first
     demand = case attribute
-      when nil
-        :see
-      when
-                             :owner                            ,
-           :id             , :owner_id                         ,
-           :ref            , :mold           , :suite          ,
-           :ref_id         , :mold_id        , :suite_id       ,
-           :akas                             , :parts          ,
+    when nil
+      :see
+    when
+      :owner                            ,
+        :id             , :owner_id                         ,
+        :ref            , :mold           , :suite          ,
+        :ref_id         , :mold_id        , :suite_id       ,
+        :akas                             , :parts          ,
 
-           :list_id        , :whole_id       , :table_id       ,
-           :list           , :whole          , :table          ,
-           :items          , :aspects        , :columns        ,
+        :list_id        , :whole_id       , :table_id       ,
+        :list           , :whole          , :table          ,
+        :items          , :aspects        , :columns        ,
 
-           :body                             , :theme          ,
-                             :view                             ,
-           :created_at     , :updated_at
-        :program
-      when :list_position  , :whole_position , :table_position
-        :manage
-      when :script
-        :script
-      when                   :access
-        :control_access
-      when                   :kind                             ,
-            :view          , :pad
-        :edit_structure
-      when :name                             , :attachment     ,
-           :body                             , :theme          ,
-                             :view                             ,
-                             :instances                        ,
-           :attachment_file_name             ,
-           :attachment_content_type          ,
-           :attachment_file_size             ,
-           :attachment_updated_at
-        :edit_data
-      else
-        "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
-      end
-#    logger.debug "edit permitted on #{attribute.inspect} yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-#    logger.debug "demand #{demand.to_yaml}"
+        :body                             , :theme          ,
+        :view                             ,
+        :created_at     , :updated_at
+      :program
+    when :list_position  , :whole_position , :table_position
+      :manage
+    when :script
+      :script
+    when                   :access
+      :control_access
+    when                   :kind                             ,
+        :view          , :pad
+      :edit_structure
+    when :name                             , :attachment     ,
+        :body                             , :theme          ,
+        :view                             ,
+        :instances                        ,
+        :attachment_file_name             ,
+        :attachment_content_type          ,
+        :attachment_file_size             ,
+        :attachment_updated_at
+      :edit_data
+    else
+      "error_edit_unknown_attribute_#{attribute.inspect}".to_sym
+    end
+    #    logger.debug "edit permitted on #{attribute.inspect} yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+    #    logger.debug "demand #{demand.to_yaml}"
     permitted? demand
   end
 
   def update_permitted?
-#    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
-#    logger.debug changed?.to_yaml
+    #    logger.debug "changed yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+    #    logger.debug changed?.to_yaml
     demand = case
-      when any_changed?(     :owner                            ,
-           :id             , :owner_id                         ,
-           :ref            , :mold           , :suite          ,
-           :ref_id         , :mold_id        , :suite_id       ,
-           :akas                             , :parts          ,
+    when any_changed?(     :owner                            ,
+        :id             , :owner_id                         ,
+        :ref            , :mold           , :suite          ,
+        :ref_id         , :mold_id        , :suite_id       ,
+        :akas                             , :parts          ,
 
-           :list_id        , :whole_id       , :table_id       ,
-           :list           , :whole          , :table          ,
-           :items          , :aspects        , :columns        ,
+        :list_id        , :whole_id       , :table_id       ,
+        :list           , :whole          , :table          ,
+        :items          , :aspects        , :columns        ,
 
-           :body                             , :theme          ,
-                             :view                             ,
-           :created_at     , :updated_at                       )
-        :program
-      when any_changed?(
-           :list_position  , :whole_position , :table_position )
-        :manage
-      when any_changed?(
-           :script                                             )
-        :script
-      when any_changed?(     :access                           )
-        :control_access
-      when any_changed?(     :kind                             ,
-                             :view           , :pad            )
-        :edit_structure
-      when any_changed?(
-           :name                             , :attachment     ,
-           :attachment_file_name                               ,
-           :attachment_updated_at                              ,
-           :attachment_content_type                            ,
-           :attachment_file_size                               ,
-           :body                             , :theme          ,
-                             :view                             ,
-                             :instances                        ,
-           :attachment_file_name             ,
-           :attachment_content_type          ,
-           :attachment_file_size             ,
-           :attachment_updated_at                              )
-        :edit_data
-      when changed?
-#        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
-#        logger.debug changed?.to_yaml
-        "unknown attribute changed: #{changed?.to_s}"
-      else #nothing is changed???
-        :see
-     end
+        :body                             , :theme          ,
+        :view                             ,
+        :created_at     , :updated_at                       )
+      :program
+    when any_changed?(
+        :list_position  , :whole_position , :table_position )
+      :manage
+    when any_changed?(
+        :script                                             )
+      :script
+    when any_changed?(     :access                           )
+      :control_access
+    when any_changed?(     :kind                             ,
+        :view           , :pad            )
+      :edit_structure
+    when any_changed?(
+        :name                             , :attachment     ,
+        :attachment_file_name                               ,
+        :attachment_updated_at                              ,
+        :attachment_content_type                            ,
+        :attachment_file_size                               ,
+        :body                             , :theme          ,
+        :view                             ,
+        :instances                        ,
+        :attachment_file_name             ,
+        :attachment_content_type          ,
+        :attachment_file_size             ,
+        :attachment_updated_at                              )
+      :edit_data
+    when changed?
+      #        logger.debug "changed uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu"
+      #        logger.debug changed?.to_yaml
+      "unknown attribute changed: #{changed?.to_s}"
+    else #nothing is changed???
+      :see
+    end
     permitted? demand
   end
 
   def view_permitted? attribute
     demand = case attribute
-      when                   :owner                            ,
-           :id             , :owner_id                         ,
-           :ref            , :mold           , :suite          ,
-           :ref_id         , :mold_id        , :suite_id       ,
-           :akas                             , :parts          ,
+    when                   :owner                            ,
+        :id             , :owner_id                         ,
+        :ref            , :mold           , :suite          ,
+        :ref_id         , :mold_id        , :suite_id       ,
+        :akas                             , :parts          ,
 
-           :list_id        , :whole_id       , :table_id       ,
-           :list_position  , :whole_position , :table_position ,
-           :list           , :whole          , :table          ,
+        :list_id        , :whole_id       , :table_id       ,
+        :list_position  , :whole_position , :table_position ,
+        :list           , :whole          , :table          ,
 
-           :created_at     , :updated_at
-        :manage
-      when :script
-        :script
-      when                   :access
-        :control_access
-      when nil             ,
-           :name           , :kind           , :attachment     ,
-           :items          , :aspects        , :columns        ,
-           :body                             , :theme          ,
-                             :view           , :pad            ,
-           :attachment_file_name             ,
-           :attachment_content_type          ,
-           :attachment_file_size             ,
-           :attachment_updated_at
-        :see
-      else
-        "error_view_unknown_attribute_#{attribute.inspect}".to_sym
-      end
+        :created_at     , :updated_at
+      :manage
+    when :script
+      :script
+    when                   :access
+      :control_access
+    when nil             ,
+        :name           , :kind           , :attachment     ,
+        :items          , :aspects        , :columns        ,
+        :body                             , :theme          ,
+        :view           , :pad            ,
+        :attachment_file_name             ,
+        :attachment_content_type          ,
+        :attachment_file_size             ,
+        :attachment_updated_at
+      :see
+    else
+      "error_view_unknown_attribute_#{attribute.inspect}".to_sym
+    end
     permitted? demand
   end
 
@@ -644,21 +660,21 @@ class Card < ActiveRecord::Base
     ctx.recursive_suite
   end
 
-#  def local_pads
-#    return [] unless list
-#    pads = {}
-#    list.items.reverse.map do |i|
-#      unless (i_kind = i.recursive_kind).blank?
-#        pad_hash[i_kind] = find_pad(i_kind) || i
-#      end
-#    end
-#    pads.delete_if {|k,v| !(k && k.length > 0)}.values
-#  end
-#
-#  def pertinent_pads
-#    [self.class.current_pad].concat(local_pads).uniq.compact
-#  end
-#
+  #  def local_pads
+  #    return [] unless list
+  #    pads = {}
+  #    list.items.reverse.map do |i|
+  #      unless (i_kind = i.recursive_kind).blank?
+  #        pad_hash[i_kind] = find_pad(i_kind) || i
+  #      end
+  #    end
+  #    pads.delete_if {|k,v| !(k && k.length > 0)}.values
+  #  end
+  #
+  #  def pertinent_pads
+  #    [self.class.current_pad].concat(local_pads).uniq.compact
+  #  end
+  #
   def pertinent_pads
     current = self.class.current_pad
     pads = {}
@@ -673,7 +689,7 @@ class Card < ActiveRecord::Base
 
   def self.current_pad
     return unless
-      $CURRENT_PAD     &&
+    $CURRENT_PAD     &&
       current = self.find_by_id($CURRENT_PAD)
     current.kind unless (["", "none"].include? current.kind)
   end
@@ -715,14 +731,14 @@ class Card < ActiveRecord::Base
     return unless dest_items = this_table.items    
     if this_table.columns.length == 1 #special case for no pre-existing columns
       on_automatic do
-#       if (the_mold = self.table.mold) &&
-#          (cols = the_mold.columns   ) &&
-#          (col = cols[0]             )
-#         update_attributes :mold_id => col.id  ,
-#                           :kind        => col.kind
+        #       if (the_mold = self.table.mold) &&
+        #          (cols = the_mold.columns   ) &&
+        #          (col = cols[0]             )
+        #         update_attributes :mold_id => col.id  ,
+        #                           :kind        => col.kind
         dest_items.each do |dest_item|
           dest_item.update_attributes(:mold_id => id  ,
-                                      :kind        => kind) if dest_item
+            :kind        => kind) if dest_item
         end
         this_table.columns.create! #1st column used for items, so introduce another
       end
@@ -755,9 +771,9 @@ class Card < ActiveRecord::Base
     end
   end
   
-# def follow_up_on_update
-#   what has changed???
-# end
+  # def follow_up_on_update
+  #   what has changed???
+  # end
 
   def inherit_from_siblings this_list
     return #disabled
@@ -767,7 +783,7 @@ class Card < ActiveRecord::Base
     end
   end
 
-# Return the next higher item in the list.
+  # Return the next higher item in the list.
   def higher_item
     return nil unless list_id
     Card.find :first,
@@ -785,11 +801,11 @@ class Card < ActiveRecord::Base
 
   def same_heading_stack?  desired, existing, deep, mode = :normal
     last_row = case mode
-      when :partial
-        desired.length - 1
-      else
-        [desired.length, existing.length].max
-      end
+    when :partial
+      desired.length - 1
+    else
+      [desired.length, existing.length].max
+    end
     (0..last_row).each do |row|
       return false if different_heading? desired[row], existing[row], deep
     end
@@ -846,7 +862,7 @@ class Card < ActiveRecord::Base
     when "aspect"
       "#{k}"
     when "nil"
-     "nil heading"
+      "nil heading"
     else
       crash
     end
@@ -857,7 +873,7 @@ class Card < ActiveRecord::Base
     { :type => mold ? "column" : "aspect",
       :mold => b.recursive_kind_mold         ,
       :kind => b.recursive_kind                }
-   end
+  end
 
   #use built-up columns
   def column_name_rows deep
@@ -893,11 +909,11 @@ class Card < ActiveRecord::Base
 
   def with_subs
     [[[self,
-      if s = subs
-        s
-      else
-        []
-      end]]]
+          if s = subs
+            s
+          else
+            []
+          end]]]
   end
 
   def new_column row
@@ -908,7 +924,7 @@ class Card < ActiveRecord::Base
   def subs
     return [] if list
     items.select{|item| item.name && item.name.strip.length > 0   || []}
-#     items.select{|item| item.name && item.name.strip.match(/(^(\+|-)?\d|\d(\,|\.)\d*$)/) || nil} # alternate
+    #     items.select{|item| item.name && item.name.strip.match(/(^(\+|-)?\d|\d(\,|\.)\d*$)/) || nil} # alternate
   end
   
   def fit_into_existing_column deep, column_number
@@ -919,18 +935,18 @@ class Card < ActiveRecord::Base
       column[row] << with_subs[0]
     end
   end
-# build up columns
+  # build up columns
   def add_a_first_column contexts, column, deep
     deep[:columns][:names] << contexts
     deep[:columns][:cells] << column
   end
-# build up columns
+  # build up columns
   def add_column_to_existing_ones name_stack, column, deep
     column_number = where_to_insert name_stack, deep
     deep[:columns][:names].insert(column_number, name_stack)
     deep[:columns][:cells].insert(column_number, column  )
   end
-# build up columns
+  # build up columns
   def where_to_insert name_stack, deep
     desired = Array.new name_stack
     found = nil
@@ -938,10 +954,10 @@ class Card < ActiveRecord::Base
       found = find_name_stack :insertion_point, desired, deep
       return found if found
       desired.pop
-     end
+    end
     found || -1
   end
-# build up columns
+  # build up columns
 
   def number_of_columns deep
     deep[:columns][:names].length
@@ -967,8 +983,8 @@ class Card < ActiveRecord::Base
  
   def strict_heading_match? desired, existing
     partial_heading_match?( desired, existing, :type) &&
-    partial_heading_match?( desired, existing, :mold) &&
-    partial_heading_match?( desired, existing, :kind)
+      partial_heading_match?( desired, existing, :mold) &&
+      partial_heading_match?( desired, existing, :kind)
   end
     
   def partial_heading_match? desired, existing, part
@@ -984,7 +1000,7 @@ class Card < ActiveRecord::Base
  
   def self.heading_marker
     "=>" ||
-    "5216731900414d06fc80654fbc27fcc88e6e9e4a"
+      "5216731900414d06fc80654fbc27fcc88e6e9e4a"
   end
 
   def recursive_kind
@@ -1033,9 +1049,9 @@ class Card < ActiveRecord::Base
   end
 
   def previous_slide #totlbull
-     return previous_item if previous_item =  lower_item(:list)
-     #if parent = list
-     return first_item_down if first_item_down = (items || [nil])[0]
+    return previous_item if previous_item =  lower_item(:list)
+    #if parent = list
+    return first_item_down if first_item_down = (items || [nil])[0]
   end
   
   def self.default_access
@@ -1050,10 +1066,10 @@ class Card < ActiveRecord::Base
     "...."
   end
 
-#  def field x = :name
-#    return nil unless x && !x.blank?
-#  end
-#
+  #  def field x = :name
+  #    return nil unless x && !x.blank?
+  #  end
+  #
   def recursive_owner
     recursive_owner_context.owner
   end
@@ -1066,7 +1082,7 @@ class Card < ActiveRecord::Base
   def recursive_owner_context
     return self                            if owner   && owner.name.strip
     return context.recursive_owner_context if context
-           self
+    self
   end
 
   def recursive_access
@@ -1083,7 +1099,7 @@ class Card < ActiveRecord::Base
     if view && view != "view"
       view
     elsif context
-#      logger.debug "context:#{context.to_yaml}"
+      #      logger.debug "context:#{context.to_yaml}"
       context.recursive_view
     else
       self.class.default_view
@@ -1114,46 +1130,46 @@ class Card < ActiveRecord::Base
 
   def context
     @context ||= case
-      when list_id
-        list if list
-      when whole
-        whole if whole
-      when table_id
-        table if table
-      end
+    when list_id
+      list if list
+    when whole
+      whole if whole
+    when table_id
+      table if table
+    end
   end
   
   def context_id
     list_id || whole_id || table_id
   end
 
-#  def position
-#    case
-#    when whole_id; whole_position
-#    when table_id; table_position
-#    else         ; list_position
-#    end
-#  end
-#
-#  def position=(value)
-#    attr = case
-#      when whole_id; :whole_position
-#      when table_id; :table_position
-#      else;          :list_position
-#      end
-#    write_attribute(attr, value)
-#  end
-#
+  #  def position
+  #    case
+  #    when whole_id; whole_position
+  #    when table_id; table_position
+  #    else         ; list_position
+  #    end
+  #  end
+  #
+  #  def position=(value)
+  #    attr = case
+  #      when whole_id; :whole_position
+  #      when table_id; :table_position
+  #      else;          :list_position
+  #      end
+  #    write_attribute(attr, value)
+  #  end
+  #
   def suite?
     !list_id && !whole_id && !table_id || !suite
   end
 
   def horizontal?
-                 whole_id ||  table_id
+    whole_id ||  table_id
   end
 
   def vertical?
-     list    || !whole    && !table
+    list    || !whole    && !table
   end
 
   def next_up_id
@@ -1191,12 +1207,12 @@ class Card < ActiveRecord::Base
     Thread.current[:numbering]
   end
 
-#  def inherit_from_mold
-#    return false unless example = self
-#    #inherit_by_example example
-#    true
-#  end
-#
+  #  def inherit_from_mold
+  #    return false unless example = self
+  #    #inherit_by_example example
+  #    true
+  #  end
+  #
   #def look_wide
   #end
 
@@ -1206,9 +1222,9 @@ class Card < ActiveRecord::Base
       deep[:row] += 1
     end
     deep[:indents]   ||= []
-#    deep[:numberings] ||= []
+    #    deep[:numberings] ||= []
     deep[:indents   ][deep[:row]] = item_depth || 0
-#    deep[:numberings][deep[:row]] = self.class.numbering_list || []
+    #    deep[:numberings][deep[:row]] = self.class.numbering_list || []
     self.class.numbering_push
     unless (item_depth += 1) >= max_item_depth
       items.each do |item|
@@ -1251,19 +1267,19 @@ class Card < ActiveRecord::Base
     self.class.numbering_reset
     r = look_deeper \
       []                                , #no context yet
-      {                                   #deep
-        :root                    => id,
-        :row                     => 0 ,
-        :columns                 => {
-            :names => Array.new,
-            :cells => Array.new
-        }                             ,
-        :action       => action       ,
-        :debug_log    => ''
-      }                                 ,
+    {                                   #deep
+      :root                    => id,
+      :row                     => 0 ,
+      :columns                 => {
+        :names => Array.new,
+        :cells => Array.new
+      }                             ,
+      :action       => action       ,
+      :debug_log    => ''
+    }                                 ,
       max_item_depth                    ,  #optional
-      max_aspect_depth                  ,  #optional
-      0                                    #item_depth
+    max_aspect_depth                  ,  #optional
+    0                                    #item_depth
     @toy_debug = self.class.debug_map r
     r
   end
@@ -1271,8 +1287,8 @@ class Card < ActiveRecord::Base
   def self.new_suite
     on_automatic do
       new :body   => default_body  ,
-          :view   => default_view  ,
-          :access => default_access
+        :view   => default_view  ,
+        :access => default_access
     end
   end
 
@@ -1310,11 +1326,11 @@ class Card < ActiveRecord::Base
   end
   protected :find_deep_aspects_helper
 
- def theme_class
-   theme.blank? ? "" : "theme-#{theme.downcase}"
- end
+  def theme_class
+    theme.blank? ? "" : "theme-#{theme.downcase}"
+  end
 
- ## --- Toy --- #
+  ## --- Toy --- #
 
   def edit_deep
     {:origin => id}
@@ -1382,7 +1398,7 @@ class Card < ActiveRecord::Base
     end
   end
 
- # --- Permissions --- #
+  # --- Permissions --- #
 
   def creating_child_aspects?
     Thread.current["creating_child_aspects"]
@@ -1393,40 +1409,40 @@ class Card < ActiveRecord::Base
   end
 
   def create_permitted?
-#   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
-#   logger.debug self.to_yaml
+    #   logger.debug "ahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaahaaha"
+    #   logger.debug self.to_yaml
     demand = case
-      when !context_id
-        :add_suite
-      when !context
-        :error_context_not_found
-      when whole_id
-        :add_aspect
-      when table_id
-        :add_column
-      when list_id
-        :add_item
-      else
-        :error_invalid_creation_context
-      end
+    when !context_id
+      :add_suite
+    when !context
+      :error_context_not_found
+    when whole_id
+      :add_aspect
+    when table_id
+      :add_column
+    when list_id
+      :add_item
+    else
+      :error_invalid_creation_context
+    end
     !forbidden? demand
   end
 
   def destroy_permitted?
     demand = case
-      when !context_id
-        :delete_suite
-      when !context
-        :delete_orphan
-      when whole_id
-        :delete_aspect
-      when table_id
-        :delete_column
-      when list_id
-        :delete_item
-      else
-        :error_invalid_destruction_context
-      end
+    when !context_id
+      :delete_suite
+    when !context
+      :delete_orphan
+    when whole_id
+      :delete_aspect
+    when table_id
+      :delete_column
+    when list_id
+      :delete_item
+    else
+      :error_invalid_destruction_context
+    end
     permitted? demand
   end
 
@@ -1446,53 +1462,53 @@ class Card < ActiveRecord::Base
   end
   
   def forbidden? demand
-#    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
+    #    logger.debug "Ahoy cap'n, don't shoot. I just be wantin to #{demand} #{self.reference_name}!"
     intent = case demand
-      when :program
-        :program
-      when :manage, :delete_orphan
-        :manage
-      when :control_access
-        :control
-      when :script
-        :script
-      when :add_aspect, :delete_aspect,
-           :add_column, :delete_column,
-           :delete_suite,
-           :edit_structure, :delete_item
-        :design
-      when :add_item
-        :use
-      when :edit_data
-        :use
-      when :add_suite
-        :initiate
-      when :see
-        :see
-      else
-        return "unsupported_demand_#{demand.inspect}"
-      end
+    when :program
+      :program
+    when :manage, :delete_orphan
+      :manage
+    when :control_access
+      :control
+    when :script
+      :script
+    when :add_aspect, :delete_aspect,
+        :add_column, :delete_column,
+        :delete_suite,
+        :edit_structure, :delete_item
+      :design
+    when :add_item
+      :use
+    when :edit_data
+      :use
+    when :add_suite
+      :initiate
+    when :see
+      :see
+    else
+      return "unsupported_demand_#{demand.inspect}"
+    end
     intent_forbidden? intent
   end
 
   def intent_forbidden?    intent
     inherited_access = recursive_access
-#   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
-#   logger.debug "I be talkin about #{self.full_reference}"
+    #   logger.debug "Now let's see, lad. That would be a #{inherited_access} document ye be tryin to #{intent}! "
+    #   logger.debug "I be talkin about #{self.full_reference}"
     requirements = case inherited_access
-      when "open"
-        open_requirements    intent
-      when "shared"
-        shared_requirements  intent
-      when "public"
-        public_requirements  intent
-      when "private"
-        private_requirements intent
-      when "closed"
-        closed_requirements  intent
-      else
-        shared_requirements  intent
-      end
+    when "open"
+      open_requirements    intent
+    when "shared"
+      shared_requirements  intent
+    when "public"
+      public_requirements  intent
+    when "private"
+      private_requirements intent
+    when "closed"
+      closed_requirements  intent
+    else
+      shared_requirements  intent
+    end
     permission_withheld? requirements
   end
 
@@ -1501,76 +1517,76 @@ class Card < ActiveRecord::Base
   end
 
   def permission_withheld? requirements
-#    logger.debug(
-#      "#{who}!" +
-#      "Are ye at least #{requirements} " +
-#      "for owner: #{owner.name if owner}'s " +
-#      "#{self.reference_name}?")
+    #    logger.debug(
+    #      "#{who}!" +
+    #      "Are ye at least #{requirements} " +
+    #      "for owner: #{owner.name if owner}'s " +
+    #      "#{self.reference_name}?")
     return false if on_automatic?
     admin = acting_user.administrator?
-#    logger.debug "I can see yer #{admin ? 'an' : 'not an' } administrator 9999999999999999999999999 #{acting_user.name}"
+    #    logger.debug "I can see yer #{admin ? 'an' : 'not an' } administrator 9999999999999999999999999 #{acting_user.name}"
     withheld = case requirements
     when :guest
-#     logger.debug "this only needs a guest"
+      #     logger.debug "this only needs a guest"
       false
     when :signed_up
-#     logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
+      #     logger.debug "this needs a signed_up user, which #{who} #{acting_user.signed_up? ? 'is' : 'is NOT'}"
       !acting_user.signed_up?
     when :owner
-#      logger.debug "You must be the owner!"
-#      logger.debug "You are #{acting_user.name}."
-#      logger.debug "The owner is #{recursive_owner.name}."
-#      logger.debug "You #{recursive_owner_is? acting_user ? 'ARE' : 'are NOT'} the owner!"
-       !recursive_owner_is?(acting_user) && !admin
+      #      logger.debug "You must be the owner!"
+      #      logger.debug "You are #{acting_user.name}."
+      #      logger.debug "The owner is #{recursive_owner.name}."
+      #      logger.debug "You #{recursive_owner_is? acting_user ? 'ARE' : 'are NOT'} the owner!"
+      !recursive_owner_is?(acting_user) && !admin
     when :administrator
-#      logger.debug "this needs an administrator"
+      #      logger.debug "this needs an administrator"
       !admin
     when :no_one
       true
     else
-#      logger.debug "this seems to need #{requirements}"
+      #      logger.debug "this seems to need #{requirements}"
       requirements
     end
-#    logger.debug "requirements #{requirements}" if withheld
-#    logger.debug "full reference: #{full_reference}" if withheld
-#    logger.debug "PERMISSION WITHHELD" if withheld
+    #    logger.debug "requirements #{requirements}" if withheld
+    #    logger.debug "full reference: #{full_reference}" if withheld
+    #    logger.debug "PERMISSION WITHHELD" if withheld
     withheld
   end
 
-#  def acting_user_with_logging=(*args)
-#    logger.debug {"==> acting_user=(#{args.inspect})"}
-#    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
-#    send("acting_user_without_logging=", *args)
-#  end
+  #  def acting_user_with_logging=(*args)
+  #    logger.debug {"==> acting_user=(#{args.inspect})"}
+  #    logger.debug { %Q(caller\n#{caller.join("\n")}) } unless args[0]
+  #    send("acting_user_without_logging=", *args)
+  #  end
 
-#  alias_method_chain :acting_user=, :logging
+  #  alias_method_chain :acting_user=, :logging
 
   def open_requirements intent
-#   logger.debug "So Cap'n can I #{intent} this shared booty?"
+    #   logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_up if intent == :design
     return :guest     if intent == :use
     shared_requirements intent
   end
 
   def shared_requirements intent
-#   logger.debug "So Cap'n can I #{intent} this shared booty?"
+    #   logger.debug "So Cap'n can I #{intent} this shared booty?"
     return :signed_up if intent == :use
     public_requirements intent
   end
 
   def public_requirements intent
-#   logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
+    #   logger.debug "Well, Cap'n do I #{intent} this publick dock you meant or not?"
     return :guest     if intent == :see
     private_requirements intent
   end
 
   def private_requirements intent
-#   logger.debug "So Cap'n may I #{intent} the private doc?"
+    #   logger.debug "So Cap'n may I #{intent} the private doc?"
     tightest_requirements intent
   end
 
   def closed_requirements intent
-#   logger.debug "Great grand Cap'n when do I get to #{intent} the closed doc?"
+    #   logger.debug "Great grand Cap'n when do I get to #{intent} the closed doc?"
     case intent
     when :program, :manage, :script
       :no_one
@@ -1588,7 +1604,7 @@ class Card < ActiveRecord::Base
   end
 
   def tightest_requirements intent
-#   logger.debug "So Cap'n can I #{intent} the private doc now?"
+    #   logger.debug "So Cap'n can I #{intent} the private doc now?"
     case intent
     when :program, :manage
       :administrator
@@ -1602,126 +1618,126 @@ class Card < ActiveRecord::Base
   end
 
   module AttributeWatcher
-  #  define_callbacks :attribute_changed
-  #  attribute_changed :flag_attribute_changed
-  #  def write_attribute(attr_name, value)
-  #    returning(super) do
-  #      @last_attribute_name = attr_name
-  #      run_callbacks(:attribute_changed)
-  #    end
-  #  end
-  #  private
-  #  def flag_attribute_changed
-  #     attribute = @last_attribute_name
-  #    old_val, new_val = send("#{attribute}_change")
-  #    logger.info "Changed! #{attribute} from #{old_val} to #{new_val}"
-  #  end
+    #  define_callbacks :attribute_changed
+    #  attribute_changed :flag_attribute_changed
+    #  def write_attribute(attr_name, value)
+    #    returning(super) do
+    #      @last_attribute_name = attr_name
+    #      run_callbacks(:attribute_changed)
+    #    end
+    #  end
+    #  private
+    #  def flag_attribute_changed
+    #     attribute = @last_attribute_name
+    #    old_val, new_val = send("#{attribute}_change")
+    #    logger.info "Changed! #{attribute} from #{old_val} to #{new_val}"
+    #  end
   end
 
 
-#  def itself
-#    @itself ||= self.class.find_by_id id
-#  end
-#
-#  def generate_row_cells
-#    adadad;#self is a new item in a list
-#    cols = list.columns
-#    return false unless cols && cols.length > 0 && (first_column = cols.shift)
-#    on_automatic do
-#      update_attributes :mold_id => first_column.id, :kind =>first_column.kind
-#      cols.each do |col|
-#        this_new_aspect = self.aspects.create!(
-#          :mold_id => col.id,
-#          :kind        => col.kind
-#        )
-#        this_new_aspect.generate_aspects_recursively col
-#      end
-#    end
-#  end
-#
-#  def generate_aspects_recursively source
-#    adadadad; self.kind = source.kind if source.kind
-#    source.aspects.each do |source_aspect|
-#      sub_aspect = self.aspects.create!(
-#        :mold_id => source_aspect.id,
-#        :kind        => source_aspect.kind
-#      )
-#      sub_aspect.generate_aspects_recursively source_aspect
-#    end
-#  end
-#
-#  def inherit_from_kind
-#    adadad; return unless example = find_pad
-#    inherit_by_example example
-#  end
-#
-#  def generate_columns #called directly after create
-#    #self is new item in a list
-#    adadad; return unless source = find_pad
-#    cols = source.columns
-#    return unless cols && cols.length > 0
-#    self.kind ||= source.kind if source.kind
-#    source.columns.each do |source_column|
-#      self.columns.create!(
-#        :mold_id => source_column.mold_id  ,
-#        :kind        => source_column.kind
-#      )
-#    end
-#  end
-#
-#  def generate_items_recursively source
-#     adadad; self.kind ||= source.kind if source.kind
-#     source.items.each do |source_item|
-#       new_item = self.items.create!(
-#          :mold_id => source_item.id  , #but this is already set to the column is it not?
-#          :kind        => source_item.kind
-#        )
-#      new_item.generate_aspects_recursively source_item
-#      new_item.generate_items_recursively   source_item
-#    end
-#  end
-#
-#  def generate_sub_items #called directly after create
-#    #self is new item in its list
-#    adadad; return unless example = find_pad
-#    itms = example.items
-#    return unless itms && itms.length > 0
-#    generate_items_recursively example
-#  end
-#
-#
-#
-#  def inherit_by_example example
-#    adadad; return unless example
-#    on_automatic do
-#      generate_aspects_recursively example
-#      generate_columns             example
-#      generate_items_recursively   example
-#    end
-#  end
-#
-#  def inherit_dependents_from example
-#    adadad; return unless example
-#    on_automatic do
-#      generate_dependents_recursively example
-#    end
-#  end
-#
+  #  def itself
+  #    @itself ||= self.class.find_by_id id
+  #  end
+  #
+  #  def generate_row_cells
+  #    adadad;#self is a new item in a list
+  #    cols = list.columns
+  #    return false unless cols && cols.length > 0 && (first_column = cols.shift)
+  #    on_automatic do
+  #      update_attributes :mold_id => first_column.id, :kind =>first_column.kind
+  #      cols.each do |col|
+  #        this_new_aspect = self.aspects.create!(
+  #          :mold_id => col.id,
+  #          :kind        => col.kind
+  #        )
+  #        this_new_aspect.generate_aspects_recursively col
+  #      end
+  #    end
+  #  end
+  #
+  #  def generate_aspects_recursively source
+  #    adadadad; self.kind = source.kind if source.kind
+  #    source.aspects.each do |source_aspect|
+  #      sub_aspect = self.aspects.create!(
+  #        :mold_id => source_aspect.id,
+  #        :kind        => source_aspect.kind
+  #      )
+  #      sub_aspect.generate_aspects_recursively source_aspect
+  #    end
+  #  end
+  #
+  #  def inherit_from_kind
+  #    adadad; return unless example = find_pad
+  #    inherit_by_example example
+  #  end
+  #
+  #  def generate_columns #called directly after create
+  #    #self is new item in a list
+  #    adadad; return unless source = find_pad
+  #    cols = source.columns
+  #    return unless cols && cols.length > 0
+  #    self.kind ||= source.kind if source.kind
+  #    source.columns.each do |source_column|
+  #      self.columns.create!(
+  #        :mold_id => source_column.mold_id  ,
+  #        :kind        => source_column.kind
+  #      )
+  #    end
+  #  end
+  #
+  #  def generate_items_recursively source
+  #     adadad; self.kind ||= source.kind if source.kind
+  #     source.items.each do |source_item|
+  #       new_item = self.items.create!(
+  #          :mold_id => source_item.id  , #but this is already set to the column is it not?
+  #          :kind        => source_item.kind
+  #        )
+  #      new_item.generate_aspects_recursively source_item
+  #      new_item.generate_items_recursively   source_item
+  #    end
+  #  end
+  #
+  #  def generate_sub_items #called directly after create
+  #    #self is new item in its list
+  #    adadad; return unless example = find_pad
+  #    itms = example.items
+  #    return unless itms && itms.length > 0
+  #    generate_items_recursively example
+  #  end
+  #
+  #
+  #
+  #  def inherit_by_example example
+  #    adadad; return unless example
+  #    on_automatic do
+  #      generate_aspects_recursively example
+  #      generate_columns             example
+  #      generate_items_recursively   example
+  #    end
+  #  end
+  #
+  #  def inherit_dependents_from example
+  #    adadad; return unless example
+  #    on_automatic do
+  #      generate_dependents_recursively example
+  #    end
+  #  end
+  #
 
-#  def follow_up_on_create
-#    uniquely do
-#      generate_dependents mold
-#    end if mold
-##    if table
-##      mold_existing_items_on_this_column if table.columns.length == 1 #first column
-##      generate_column_cells table # new columns are inherited from in each row
-##    elsif list # new row inherits from list
-##      return
-##      generate_row_cells # it can inherit from the columns
-##      generate_columns   # it can inherit columns from a pad of its kind
-##      generate_sub_items # it can inherit items   from a pad of its kind
-##    end
-#  end
-#
+  #  def follow_up_on_create
+  #    uniquely do
+  #      generate_dependents mold
+  #    end if mold
+  ##    if table
+  ##      mold_existing_items_on_this_column if table.columns.length == 1 #first column
+  ##      generate_column_cells table # new columns are inherited from in each row
+  ##    elsif list # new row inherits from list
+  ##      return
+  ##      generate_row_cells # it can inherit from the columns
+  ##      generate_columns   # it can inherit columns from a pad of its kind
+  ##      generate_sub_items # it can inherit items   from a pad of its kind
+  ##    end
+  #  end
+  #
 
 end
