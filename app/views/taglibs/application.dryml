@@ -809,7 +809,7 @@
     <td class="core-left-controls" rowspan="<%=  n_rows + 1 %>">
   <core-left-controls />
 </td>
-<span align="right">aha</span>
+
 
 <th class="#{kind_style}" if="&!scope.deep[:no_aspects]">
 <if test="&this.id == (the_mold = this.recursive_kind_mold).id">
@@ -818,7 +818,7 @@
 <else>
   <a kind with="&the_mold"><view field="kind" /></a>
 </else>
-
+<span align="right">aha</span>
 </th>
 <else><empty-cell /></else>
  <th class="#{kind_style}" align="right"> <%=  link_to_function "Menu", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "color:black;text-decoration:none;display:none;" %></th>
