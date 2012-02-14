@@ -82,6 +82,28 @@
 </def>
 
 
+<def tag="add-main-row">
+  <if test="&this && this.list">                                              <%
+    element, collection =
+      mainly_tabular_view ? ["row" ,"table"] : ["item","list" ]
+    position = this.send "#{collection}_position"
+    main_id=this.id
+    tooltip, label      =
+      ["Add a row below this one",
+      "Add this row"]                                                             %>
+    <add-item-or-row-form
+      element="&element"
+      label="&label"
+      tooltip="&tooltip"
+      collection-id="#{this.list_id}"
+      main-id="&main_id"
+      position="&position"
+      />
+  </if>
+  <else></else>
+</def>
+
+
 <def tag="start-list">
   <if test="&this">
     <if test="&this.items.count == 0">
@@ -136,11 +158,20 @@
 <def tag="add-item-or-row-form">                                              <%
   style = "add-#{attributes[:element]}"
   submit_style = "toy-nav tooltip #{style}"
+  if attributes[:main_id].nil?
   new_card = this.class.new(
     :list_id  => attributes[:collection_id]      ,
     :kind     => attributes[:item_kind]     || '',
     :suite_id => this.suite_group.id             ,
     :view     => 'none'                          )
+  else
+    new_card = this.class.new(
+    :mold_id => attributes[:main_id],
+    :list_id  => attributes[:collection_id]      ,
+    :kind     => attributes[:item_kind]     || '',
+    :suite_id => this.suite_group.id             ,
+    :view     => 'none'                          )
+  end
   p = attributes[:pad]
   case c = p.class.name
   when 'NilClass'
@@ -299,6 +330,7 @@
       <td class="bottom-controls">
     <add-row/>
     <add-pad-rows/>
+    <add-main-row/>
     </td>
     <td class="bottom-controls">
     <start-any-list if="&true || this && this.items.count == 0" />

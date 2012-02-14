@@ -7,7 +7,7 @@
 <def tag="core-right-controls-td">
   <td class="right-controls" rowspan="3" style="display:none" id="right-controls-#{this.id}">
   
-  
+   
   <div id="add-aspect-#{this.id}">
     
   </div>

@@ -1,5 +1,12 @@
+<include src="rapid" plugin="hobo"/>
+<include src="taglibs/auto/rapid/cards"/>
+<include src="taglibs/auto/rapid/pages"/>
+<include src="taglibs/auto/rapid/forms"/>
+<include src="paperclip" plugin="paperclip_with_hobo"/>
+<include src="taglibs/application"/>
+
 <def tag="add-aspect">
-  <if test="&this">
+  
     <% tooltip =
       (this.aspects.count > 0 ?
         " Describe another aspect of " : "Describe aspects of ") +
@@ -12,7 +19,7 @@
       <submit label="Add an aspect" title="&tooltip" class="toy-nav add-aspect"/>
       <after-submit uri="#{request.request_uri}"/>
     </form>
-  </if>
+  
 </def>
 
 
@@ -64,5 +71,6 @@
 <toggle-script-editor />
 <card-id if="&current_user.name == 'prog'" />
 
-  <add-aspect />
+ 
   <manage-attachment />
+   <add-aspect />
