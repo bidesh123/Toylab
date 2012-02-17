@@ -1021,7 +1021,7 @@
   </set-scoped>
 </def>
 
-<!--def tag="toy-show" attrs="shallow, whole-off">
+<def tag="toy-show" attrs="shallow, whole-off">
   <set-scoped deep="&shallow                       ?
               @card.look_deep(params[:action],2,2) :
               @card.look_deep(params[:action])" >
@@ -1037,7 +1037,7 @@
       <aside:><google /></aside:>
     </show-page>
   </set-scoped>
-</def-->
+</def>
 
 <def tag="start-any-list">
   <start-list />                                                              <%

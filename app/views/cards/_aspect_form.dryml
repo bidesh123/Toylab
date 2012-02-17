@@ -67,6 +67,7 @@
     </div>
   </if>
 </def>
+
 <toggle-aspect-or-item which="aspects"/>
 <toggle-script-editor />
 <card-id if="&current_user.name == 'prog'" />
