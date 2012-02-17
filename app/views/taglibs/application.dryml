@@ -1241,7 +1241,6 @@
 </def>
 
 <def tag="google">
-
   <script type="text/javascript"><!--
     google_ad_client = "ca-pub-6014265518419733";
     /* localhost:3000 */
@@ -1253,8 +1252,6 @@
   <script type="text/javascript"
           src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   </script>
-
-
 
 </def>
 
@@ -1278,7 +1275,7 @@
   <%  tooltip =
     "Leave this page to concentrate only on #{this.long_reference_name}" %>
   <a class="zoom-in" title="&tooltip" if="&params[:id].to_i != this.id">
-    <%= "go" || image_tag("icons/zoom.png") %>
+    <%= "Go" || image_tag("icons/zoom.png") %>
   </a>
 </def>
 
@@ -1289,7 +1286,7 @@
      title="&tooltip"
      if="&params[:id].to_i != this.id"
      action="&params[:action]" >
-       <%= "go" || image_tag("icons/zoom.png") %>
+       <%= "Go" || image_tag("icons/zoom.png") %>
   </a>
 </def>
 

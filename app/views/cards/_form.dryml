@@ -217,7 +217,7 @@
   <%  tooltip =
     "Leave this page to concentrate only on #{this.long_reference_name}" %>
   <a class="zoom-in" title="&tooltip">
-    <%= "go" || image_tag("icons/zoom.png") %>
+    <%= "Go" || image_tag("icons/zoom.png") %>
   </a>
 </def>
 <def tag="recursive-card">
