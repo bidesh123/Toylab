@@ -506,6 +506,7 @@
     <set-scoped flash-rendered="&false">
       <ajax-progress param/>
       <header class="page-header" param>
+        <div class="aside" style="width:100%;"><google /></div>
         <div param="top-line" if="&params[:more] != 'bare'">
           <main-nav current="&title" param/>
           <account-nav if="&login_url(Hobo::User.default_user_model)" param />
@@ -527,6 +528,7 @@
       </footer>
       <page-scripts param/>
     </set-scoped>
+    
     </body>
   </html>
 </def>
@@ -1240,17 +1242,17 @@
 
 <def tag="google">
 
- <script type="text/javascript"><!--
-google_ad_client = "ca-pub-6014265518419733";
-/* toylab.heroku.com */
-google_ad_slot = "3066460070";
-google_ad_width = 728;
-google_ad_height = 90;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
+  <script type="text/javascript"><!--
+    google_ad_client = "ca-pub-6014265518419733";
+    /* localhost:3000 */
+    google_ad_slot = "9063261819";
+    google_ad_width = 728;
+    google_ad_height = 90;
+    //-->
+  </script>
+  <script type="text/javascript"
+          src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+  </script>
 
 
 
