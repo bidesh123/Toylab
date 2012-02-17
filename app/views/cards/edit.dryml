@@ -1,3 +1,4 @@
+<toy-show />
 <toy-edit />
 
 <def tag="card" for="Card">
