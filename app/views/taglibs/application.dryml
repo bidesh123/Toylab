@@ -996,13 +996,13 @@
   </div>
 </def>
 
-<!--def tag="toy-report" attrs="shallow, whole-off">
+<def tag="toy-report" attrs="shallow, whole-off">
   <if test="&whole_off ==  true  || !this.suite">
     <card    whole-off="&whole_off" />
   </if><else>
     <card                           />
   </else>
-</def-->
+</def>
 
 <def tag="toy-edit"> <!--looks a lot like toy-show -->
   <set-scoped deep="&@card.edit_deep" >
