@@ -7,6 +7,6 @@ page.replace_html "bottom-#{@card.id}", :partial => "/cards/form", :locals => {:
 page.visual_effect :appear, "add-aspect-#{@card.id}", :duration=> 2
 page.replace_html "add-aspect-#{@card.id}", :partial => "/cards/aspect_form", :locals =>{:this => @card, :attributes => @card.attributes}
 page.replace_html "menu-#{@card.id}", :partial => "/cards/replace_menu", :locals => {:card => @card}
-page.replace_html "corner-menu-#{@card.id}", :partial => "/cards/replace_corner", :locals => {:this => @card}
+page.replace_html "corner-menu-#{@card.id}", :partial => "/cards/replace_corner", :locals => {:this => @card, :attributes => @card.attributes}
 
 
