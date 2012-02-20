@@ -1400,8 +1400,8 @@
 
     <td class="corner-controls" id="corner-<%= this.id %>" style="display:none;">
   <corner-controls merge-attrs/>
-  <div id ="corner-<%= this.id%> ">
-    
+  <div id ="corner-menu-<%= this.id%>">
+
   </div>
 </td>
 
