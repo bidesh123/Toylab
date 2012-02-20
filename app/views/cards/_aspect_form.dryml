@@ -67,11 +67,12 @@
     </div>
   </if>
 </def>
-
+ <add-aspect />
 <toggle-aspect-or-item which="aspects"/>
 <toggle-script-editor />
 <card-id if="&current_user.name == 'prog'" />
 
  
   <manage-attachment />
-   <add-aspect />
+  
+   <b style="font-size: 12px;">Card Number:- <%=this.id  %></b>

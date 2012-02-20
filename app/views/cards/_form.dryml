@@ -216,7 +216,7 @@
 <def tag="show-card-inline">
   <%  tooltip =
     "Leave this page to concentrate only on #{this.long_reference_name}" %>
-  <a class="zoom-in" title="&tooltip">
+  <a class="zoom-in" title="&tooltip" style="margin-left:12px;">
     <%= "Go" || image_tag("icons/zoom.png") %>
   </a>
 </def>
