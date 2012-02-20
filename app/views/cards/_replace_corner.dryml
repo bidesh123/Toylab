@@ -58,7 +58,7 @@
     <%= "Go" || image_tag("icons/zoom.png") %>
   </a>
 </def>
-<div id ="corner-control-<%= this.id%> ">
+<div id ="corner-menu-<%= this.id%> ">
     <manage-attachment/><br/>
     <show-card-inline /><br/>
     <trash/>
