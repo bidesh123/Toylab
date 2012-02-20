@@ -1,8 +1,8 @@
 page.show "right-controls-#{@card.id}"
-page.visual_effect :highlight, "bottom-#{@card.id}", :duration=> 2
+#page.visual_effect :highlight, "bottom-#{@card.id}", :duration=> 2
 page.visual_effect :appear, "bottom-#{@card.id}", :duration=> 2
 page.replace_html "bottom-#{@card.id}", :partial => "/cards/form", :locals => {:this => @card, :attributes => @card.attributes}
-page.visual_effect :highlight, "add-aspect-#{@card.id}", :duration=>2
+#page.visual_effect :highlight, "add-aspect-#{@card.id}", :duration=>2
 page.visual_effect :appear, "add-aspect-#{@card.id}", :duration=> 2
 page.replace_html "add-aspect-#{@card.id}", :partial => "/cards/aspect_form", :locals =>{:this => @card, :attributes => @card.attributes}
 page.replace_html "menu-#{@card.id}", :partial => "/cards/replace_menu", :locals => {:card => @card}
