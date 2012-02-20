@@ -506,7 +506,7 @@
     <set-scoped flash-rendered="&false">
       <ajax-progress param/>
       <header class="page-header" param>
-        <div class="aside" style="float:right;width:160px;"><google /></div>
+        <div class="aside" style="float:right;width:160px;margin-top:91px;"><google /></div>
         <div param="top-line" if="&params[:more] != 'bare'">
           <main-nav current="&title" param/>
           <account-nav if="&login_url(Hobo::User.default_user_model)" param />
