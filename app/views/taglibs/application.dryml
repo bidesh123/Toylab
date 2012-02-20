@@ -1392,13 +1392,7 @@
 
 <def tag="core-bottom-controls-tr">
   <tr  id="show-form-#{this.id}" class="core-controls">
-    <td class="right-controls" rowspan="3" style="display:none" id="right-controls-#{this.id}">
-
-
-      <div id="add-aspect-#{this.id}">
-
-      </div>
-    </td>
+    
 
     <td class="bottom-controls" id="bottom-<%=this.id%>">
 
