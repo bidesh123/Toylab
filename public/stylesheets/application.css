@@ -319,7 +319,7 @@ td.body-cell div.card-body tiny-gray { padding-top:0; }
 
 table.card {border:1px 1px 1px 1px solid transparent; }
 
-body.show-page input.add-aspect {margin-left:1.617em;}
+body.show-page input.add-aspect {margin:0px;padding:0px;}
 body.show-page .inner {font-size:1em;}
 
 
