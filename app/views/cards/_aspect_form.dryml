@@ -72,7 +72,7 @@
 <toggle-script-editor />
 <card-id if="&current_user.name == 'prog'" />
 
- 
+ <b style="font-size: 12px;">Card Number:- <%=this.id  %></b><br/>
   <manage-attachment />
   
-   <b style="font-size: 12px;">Card Number:- <%=this.id  %></b>
+   
