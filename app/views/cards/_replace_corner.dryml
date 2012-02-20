@@ -1,0 +1,63 @@
+<include src="rapid" plugin="hobo"/>
+<include src="taglibs/auto/rapid/cards"/>
+<include src="taglibs/auto/rapid/pages"/>
+<include src="taglibs/auto/rapid/forms"/>
+<include src="paperclip" plugin="paperclip_with_hobo"/>
+<include src="taglibs/application"/>
+
+
+<def tag="trash" attrs="no-redirect" >
+  <%
+  tooltip             = "Permanently erase #{this.reference_name}"
+  number_of_aspects   = this.aspects.length
+  number_of_items     = this.items.length
+  if number_of_aspects > 0
+    if number_of_items > 0
+      tooltip += ", its #{   number_of_aspects} aspects and its #{number_of_items} items"
+    else
+      tooltip += " and its #{number_of_aspects} items"
+    end
+  else # 0 aspects
+    if number_of_items > 0
+      tooltip += " and its #{number_of_items  } items"
+    end
+  end
+  redirect_uri =
+    if target = this.context then
+    url_for(:action => params[:action], :id => target)
+  else
+    cards_url
+  end
+
+  #if attributes[:no_redirect] == "gggg" then
+  #redirect_uri             = nil
+  #attributes[:no_redirect] = nil
+  #end
+  %>
+  <!-- <delete-button
+                 with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+                 label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
+  <delete-button with="&this"  title="#{tooltip}"
+                 label="Erase!" class="nav-button" style="padding:0;margin:0;"                              />
+</def>
+
+
+<def tag="manage-attachment">
+  <!--%= this.attachment.url.to_s %-->
+  <span class="tool" if="&can_edit?(:attachment)">                           <%=
+    cid = dom_id this, :attachment
+    link_to_function "Image", "showImage($(#{cid.to_json}, #{this.id})"                      %>
+  </span>
+</def>
+
+
+<def tag="show-card-inline">
+  <%  tooltip =
+    "Leave this page to concentrate only on #{this.long_reference_name}" %>
+  <a class="zoom-in" title="&tooltip">
+    <%= "Go" || image_tag("icons/zoom.png") %>
+  </a>
+</def>
+<manage-attachment/><br/>
+    <show-card-inline /><br/>
+    <trash/>

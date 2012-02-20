@@ -35,13 +35,7 @@
       :id         => this.id                          )
   end                                                                         %>
 </def>
-<def tag="manage-attachment">
-  <!--%= this.attachment.url.to_s %-->
-  <span class="tool" if="&can_edit?(:attachment)">                           <%=
-    cid = dom_id this, :attachment
-    link_to_function "Image", "showImage(#{cid.to_json}, #{this.id})"                    %>
-  </span>
-</def>
+
 
 <def tag="toggle-script-editor">
   <span class="tool" if="&can_edit?(:script)">
@@ -73,6 +67,6 @@
 <card-id if="&current_user.name == 'prog'" />
 
  <b style="font-size: 12px;">Card Number:- <%=this.id  %></b><br/>
-  <manage-attachment />
+ <!-- <manage-attachment />-->
   
    

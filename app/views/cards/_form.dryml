@@ -343,8 +343,8 @@
     <br if="&false && can_edit?(:theme) || can_edit?(:access) && !this.suite" />
     <toggle-aspect-or-item which="items" with="&this" />
 
-    <show-card-inline />
-    <trash />
+    <!--<show-card-inline />-->
+    <!--<trash />-->
     </td>
     <!--td class="core-add-item"><add-rows /></td>-->
     <!--<td class="go"   ><show-card-inline /></td>
