@@ -65,8 +65,10 @@
 <toggle-aspect-or-item which="aspects"/>
 <toggle-script-editor />
 <card-id if="&current_user.name == 'prog'" />
-
+<% if current_user.administartor? %>
  <b style="font-size: 12px;">Card Number:- <%=this.id  %></b><br/>
+
+ <% end %>
  <!-- <manage-attachment />-->
   
    
