@@ -17,7 +17,7 @@
   %>
     <form class="add-aspect" with="&new_card">
       <submit label="Add an aspect" title="&tooltip" class="toy-nav add-aspect"/>
-     
+      <after-submit uri="#{request.referrer}"/>
     </form>
   
 </def>

@@ -10,7 +10,7 @@
     <page-nav class="bottom-page-nav"/>
   </content-body:>
 </index-page>
-
+<%#= request.page %>
 <def tag="index-page">
   <page merge title="Suites">
     <body: class="index-page card" param/>
