@@ -2,7 +2,9 @@
   <content-header:></content-header>
   <new_link:></new_link:>
   <content-body:>
+    <% if current_user.administrator? %>
     <create-suite-button label="Create your own office suite" />
+    <% end %>
     <page-nav class="top-page-nav"/>
     <collection />
     <page-nav class="bottom-page-nav"/>

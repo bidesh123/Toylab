@@ -862,7 +862,7 @@
 <def tag="create-suite-button">
   <set label="#{attributes[:label]}" />
   <form class="new-suite" with="&c = Card.new_suite" >
-    <submit if class="new-suite" label="&label" />
+    <submit label="&label" class="submit-button" />
   </form>
 </def>
 

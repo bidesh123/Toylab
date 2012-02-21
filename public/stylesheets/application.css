@@ -1484,3 +1484,6 @@ th.numeric {
             color:#9cf;
 }
 
+.section .new-suite .submit-button{
+    background-color: SlateGray;
+}
