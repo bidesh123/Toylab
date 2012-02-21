@@ -65,7 +65,7 @@
 <toggle-aspect-or-item which="aspects"/>
 <toggle-script-editor />
 <card-id if="&current_user.name == 'prog'" />
-<% if current_user.administartor? %>
+<% if current_user.administrator %>
  <b style="font-size: 12px;">Card Number:- <%=this.id  %></b><br/>
 
  <% end %>
