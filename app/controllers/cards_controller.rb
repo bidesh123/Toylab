@@ -182,7 +182,7 @@ class CardsController < ApplicationController
               uri << "?edit_id=#{@card.id}"
             end
 
-            redirect_to @card
+            redirect_to uri
           else
             redirect_to @card
           end
