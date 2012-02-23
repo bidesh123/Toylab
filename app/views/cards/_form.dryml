@@ -188,7 +188,7 @@
     <submit label=                    "&attributes[:label]"
             title="&attributes[:tooltip] || attributes[:label]"
             class="&submit_style" />
-
+    <after-submit uri="#{request.referrer}"/>
   </form>
 </def>
 
