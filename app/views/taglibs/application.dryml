@@ -820,7 +820,7 @@
 <else>
   <a kind with="&the_mold"><view field="kind" /></a>
 </else>
-<span style="float:right;" id="menu-<%= this.id %>"><%=  link_to_function "&nbsp;", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "text-decoration:none; padding-top: 0;" %></span>
+<span style="float:right;" id="menu-<%= this.id %>"><%=  link_to_function ">", "menuOpen(#{this.id},this)", :class => "menu", :value => true, :style => "text-decoration:none; padding-top: 0;" %></span>
 </th>
 <else><empty-cell /></else>
 
@@ -991,11 +991,11 @@
 <def tag="drag-handle">
   <% can_drag = can_edit?(this.horizontal? ? :kind : :name)
   domid = dom_id this, :drag_handle                      %>
-  <div class="tool" if="&this.suite && can_drag && !@no_move[0...-1].include?(true)">
-    <span class="drag_handle drag-handle" id="#{domid}">
-      Move
-    </span>
-  </div>
+  <%#*<div class="tool" if="&this.suite && can_drag && !@no_move[0...-1].include?(true)">%>
+    <%#*<span class="drag_handle drag-handle" id="#{domid}">%>
+      <%#*Move%>
+    <%#*</span>%>
+  <%#*</div>%>
 </def>
 
 <def tag="toy-report" attrs="shallow, whole-off">
