@@ -1236,7 +1236,7 @@
   <!-- <delete-button
                  with="&this" after-submit="&redirect_uri" title="#{tooltip}"
                  label="Erase!" class="nav-button" image="icons/bin_closed.png " /> -->
-  <delete-button with="&this" after-submit="&redirect_uri" title="#{tooltip}"
+  <delete-button with="&this" after-submit="#{request.referrer}" title="#{tooltip}"
                  label="Erase!" class="nav-button"                               />
 </def>
 
