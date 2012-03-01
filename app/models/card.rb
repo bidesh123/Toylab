@@ -269,7 +269,7 @@ class Card < ActiveRecord::Base
   end
 
   def follow_up_on_create
-    self.update_attribute(:name, Card.find(self.mold_id).name) unless self.mold_id.nil? || Card.find(self.mold_id).nil?  || Card.find(self.mold_id).name.nil?
+    #self.update_attribute(:name, Card.find(self.mold_id).name) unless self.mold_id.nil? || Card.find(self.mold_id).nil?  || Card.find(self.mold_id).name.nil?
     uniquely do
       generate_dependents mold
     end
@@ -837,7 +837,7 @@ class Card < ActiveRecord::Base
     when "table"
       !strict_heading_match? desired, existing
     else
-      unsupported
+      ""
     end
     r
   end
